@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 %}
-%x<COMMENT>
+%x COMMENT
 %%
 
 Dim { printf("Special word \"Dim\" has found\n"); }
