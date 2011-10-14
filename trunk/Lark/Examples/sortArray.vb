@@ -1,4 +1,4 @@
-ï»¿'This is example's program for demonstration Visual Basic language.
+'This is example's program for demonstration Visual Basic language.
 Module Module1
 
     ' Enum creates type of output's messages
@@ -11,7 +11,7 @@ Module Module1
     'Main function
     Sub Main()
 
-        Console.Title = "Demonstration of the Visual Basic language"
+        Console.WriteLn(vbTab + "Demonstration ""of ""the" + vbCrLf + "Visual Basic language")
 
         Dim Count() As Integer = {5, 10, 17}
         Dim j As Integer = 0
@@ -23,7 +23,7 @@ Module Module1
                 PrintArray(TArr, Count(j), TypeOfText.OnlyDigits, "")
                 j += 1
             Loop Until j = 3
-        Catch ex As Exception
+        Catch ÿÿ As Exception
             Console.WriteLine(ex.Message)
         End Try
 
@@ -69,7 +69,8 @@ Module Module1
     Sub Print(ByVal array As Integer(), ByVal N As Integer, ByVal text As String)
 
         For Each I As Integer In array
-            Console.Write(text + ": ")
+            Console.Write(text + "
+             ")
             Console.WriteLine(I)
         Next
 
