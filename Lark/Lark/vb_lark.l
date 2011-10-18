@@ -94,7 +94,7 @@ Mod                      { fprintf(file,"\nKeyword \"Mod\" has found\n");       
 <COMMENT>.*              {                                                                              }
 
 \"                       { strcpy(literal,""); BEGIN(STRING);                                           }
-<STRING>[^\"\n]+        { strcat(literal,yytext);                                                      }
+<STRING>[^\"\n]+         { strcat(literal,yytext);                                                      }
 <STRING>\n               { fprintf(file,"\nString has ended by \\n \"%s\"\n", literal); BEGIN(INITIAL); }
 <STRING>\"\"             { strcat(literal,"\"");                                                        }
 <STRING>\"               { fprintf(file,"\nString literal \"%s\"",literal); BEGIN(INITIAL);             }
