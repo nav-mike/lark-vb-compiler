@@ -406,14 +406,30 @@ NullChar                 { fprintf(file,"\nSynbol \"\\0\" has found");          
 
 [a-zA-Z_][_a-zA-Z0-9]*   {
                            fprintf(file,"\nID %s has found\n", yytext);
-						   yyval.str = (char*)malloc(strlen(yytext)+1);
-						   strcpy(yyval.str, yytext);
+						   yylval.str = (char*)malloc(strlen(yytext)+1);
+						   strcpy(yylval.str, yytext);
 						   return ID;
 						 }
 
-{DIGIT}+                 { fprintf(file,"\nNumber %d has found\n", atoi(yytext));                       }
-\&H[0-9A-F]+             { sscanf(yytext, "%h", &num); fprintf(file,"\nNumber %d has found\n", num);    }
-\&O[0-7]+                { sscanf(yytext, "%o", &num); fprintf(file,"\nNumber %d has found\n", num);    }
+{DIGIT}+                 {
+                           fprintf(file,"\nNumber %d has found\n", atoi(yytext));
+						   yylval.ival = atoi(yytext);
+						   return INT_CONST;
+						 }
+						 
+\&H[0-9A-F]+             {
+                           sscanf(yytext, "%h", &num);
+						   fprintf(file,"\nNumber %d has found\n", num);
+						   yylval.ival = num;
+						   return INT_CONST;
+						 }
+						 
+\&O[0-7]+                {
+                           sscanf(yytext, "%o", &num);
+						   fprintf(file,"\nNumber %d has found\n", num);
+						   yylval.ival = num;
+						   return INT_CONST;
+						 }
 
 
 %%
