@@ -120,3 +120,9 @@ int add_node_expr (struct VB_Expr* node, int number)
 
 	return 0;
 }
+
+struct VB_Expr Create_VB_Expr(	enum VB_Type_of_expr type, 
+								char* expr_string, int val,
+								struct VB_Expr* FirstSon,
+								struct VB_Expr* LastSon);
+
