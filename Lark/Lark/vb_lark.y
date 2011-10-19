@@ -1,6 +1,8 @@
 %{
-	Пролог
+	#include "tree_nodes.h"
+	
 %}
+%start stmt_module
 
 %token ENDL
 %token DIM
@@ -53,21 +55,12 @@
 %left '^'
 %left UMINUS UPLUS
 %nonassoc ')'
- 
-%start stmt_module
 
 %%
-	stmt_module: stmt_list
-			   ;
-	
-		stmt: expr ENDL
-		| if_stmt
-		;
-		
-	stmt_list: stmt
-			 | stmt_list stmt
+	expr_list: expr
+			 | expr_list ',' expr
 			 ;
-			 
+			  
 	expr:
 		| ID
 		| INT_CONST
@@ -96,6 +89,18 @@
 		| '+' expr %prec UPLUS
 		;
 		
+	stmt: expr ENDL
+		| if_stmt
+		| dim_stmt
+		;
+		
+	stmt_list: stmt
+			 | stmt_list stmt
+			 ;
+			 
+	stmt_module: stmt_list
+			   ;
+		
 	elseif_stmt: ELSEIF expr THEN stmt_list
 	
 	elseif_stmt_list: elseif_stmt
@@ -108,10 +113,19 @@
 		   | IF expr THEN stmt_list elseif_stmt_list ELSE stmt_list END_IF
 		   ;
 		   
-		
+	dim_stmt: DIM expr_list AS INTEGER
+			| DIM expr_list AS BOOLEAN
+			| DIM expr_list AS CHAR
+			| DIM expr_list AS STRING
+			| DIM expr AS INTEGER '=' expr
+			| DIM expr AS BOOLEAN '=' expr
+			| DIM expr AS CHAR '=' expr
+			| DIM expr AS STRING '=' expr
+			;
+			
 	
 %%
-	Секция пользовательского кода
+
 int main (int argc, char* argv[])
 {
 	return 0;
