@@ -404,7 +404,12 @@ vbCrLf                   { fprintf(file,"\nSymbol \"\\n\" has found");          
 vbTab                    { fprintf(file,"\nSymbol \"\\t\" has found");                                  }
 NullChar                 { fprintf(file,"\nSynbol \"\\0\" has found");                                  }
 
-[a-zA-Z_][_a-zA-Z0-9]*   { fprintf(file,"\nID %s has found\n", yytext);                                 }
+[a-zA-Z_][_a-zA-Z0-9]*   {
+                           fprintf(file,"\nID %s has found\n", yytext);
+						   yyval.str = (char*)malloc(strlen(yytext)+1);
+						   strcpy(yyval.str, yytext);
+						   return ID;
+						 }
 
 {DIGIT}+                 { fprintf(file,"\nNumber %d has found\n", atoi(yytext));                       }
 \&H[0-9A-F]+             { sscanf(yytext, "%h", &num); fprintf(file,"\nNumber %d has found\n", num);    }
