@@ -1,32 +1,6 @@
 #include <stdio.h>
 
-/* Перечисление типов выражения. */
-enum VB_Type_of_expr
-{
-	_ID_vb,
-	_CHAR_CONST_vb,
-	_INT_CONST_vb,
-	_STRING_CONST_vb,
-	_BOOLEAN_CONST_vb,
-	_ASSIGN_OPERATOR_vb,
-	_PLUS_OPERATOR_vb,
-	_MINUS_OPERATOR_vb,
-	_MUL_OPERATOR_vb,
-	_INT_DIV_OPERATOR_vb,
-	_DIV_OPERATOR_vb,
-	_POWER_OPERATOR_vb,
-	_MORE_OPERATOR_vb,
-	_LESS_OPERATOR_vb,
-	_MORE_OR_EQUAL_OPERATOR_vb,
-	_LESS_OR_EQUAL_OPERATOR_vb,
-	_ASSIGN_PLUS_OPERATOR_vb,
-	_ASSIGN_MINUS_OPERATOR_vb,
-	_ASSIGN_MUL_OPERATOR_vb,
-	_ASSIGN_DIV_OPERATOR_vb,
-	_ASSIGN_INT_DIV_OPERATOR_vb,
-	_ASSIGN_NONEQUAL_OPERATOR_vb,
-	_UMINUS_OPERATOR_vb,
-};
+
 
 /*!
     Функция преобразует тип в его строковое представление.
@@ -87,16 +61,6 @@ char* VB_Type_of_expr_to_string (enum VB_Type_of_expr type)
 
 	return "";
 }
-
-/* Структура дерева для хранения "Expression". */
-struct VB_Expr
-{
-	enum VB_Type_of_expr type;  // Определение типа выражения.
-	char* expr_string;            // Имя идентификатора, строка.
-	int int_val;                // Значение выражения. Используется для bool, int, char.
-	struct VB_Expr* FirstSon;   // Указатель на левого сына.
-	struct VB_Expr* LastSon;    // Указатель на правого сына.
-};
 
 /*!
     Функция открывает файл для GrphViz и записывает в него верхнюю шапку.
@@ -181,7 +145,7 @@ int add_node_expr (struct VB_Expr* node, int number)
 	return 0;
 }
 
-struct VB_Expr Create_VB_Expr(	enum VB_Type_of_expr type, 
+struct VB_Expr Create_VB_Expr(enum VB_Type_of_expr type, 
 								char* expr_string, int val,
 								struct VB_Expr* FirstSon,
 								struct VB_Expr* LastSon);
