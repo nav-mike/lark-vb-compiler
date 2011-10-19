@@ -2,7 +2,7 @@
 	#include "tree_nodes.h"
 	
 %}
-%start stmt_module
+%start stmt_module			// ѕереопредел€ем им€ стартового нетерминала
 
 %token ENDL
 %token DIM
@@ -51,7 +51,7 @@
 
 %right '=' ASSIGN_PLUS ASSIGN_MINUS ASSIGN_MUL ASSIGN_DIV ASSIGN_INT_DIV
 %left '+' '-' '>' '<' MORE_OR_EQUAL LESS_OR_EQUAL NONEQUAL
-%left '*' '/' '\'
+%left '*' '/' '\\'
 %left '^'
 %left UMINUS UPLUS
 %nonassoc ')'
@@ -72,7 +72,7 @@
 		| expr '-' expr
 		| expt '*' expr
 		| expr '/' expr
-		| expr '\' expr
+		| expr '\\' expr
 		| expr '^' expr
 		| expr '>' expr
 		| expr '<' expr
@@ -94,6 +94,34 @@
 		| dim_stmt
 		;
 		
+	type_vb: INTEGER
+		   | CHAR
+		   | STRING
+		   | BOOLEAN
+		   ;
+		   
+	sub_stmt_list: stmt_list
+				 ;
+				 
+	parametr: BYREF as_expr
+			| BYVAL as_expr
+			| PARAM_ARRAY as_expr
+			;
+				 
+	parametrs_list: parametr
+				  | parametr_list parametr
+				  ;
+	
+	sub_proc: SUB ID '('')' sub_stmt_list END_SUB
+			| SUB ID '('parametrs_list')' sub_stmt_list END_SUB
+			;
+			
+	func_stmt_list: sub_stmt_list RETURN expr
+	
+	func_proc: FUNCTION '('')' AS type_vb func_stmt_list END_FUNCTION
+			 | FUNCTION '('parametrs_list')' func_stmt_list END_FUNCTION
+			 ;
+		
 	stmt_list: stmt
 			 | stmt_list stmt
 			 ;
@@ -113,16 +141,62 @@
 		   | IF expr THEN stmt_list elseif_stmt_list ELSE stmt_list END_IF
 		   ;
 		   
-	dim_stmt: DIM expr_list AS INTEGER
-			| DIM expr_list AS BOOLEAN
-			| DIM expr_list AS CHAR
-			| DIM expr_list AS STRING
-			| DIM expr AS INTEGER '=' expr
-			| DIM expr AS BOOLEAN '=' expr
-			| DIM expr AS CHAR '=' expr
-			| DIM expr AS STRING '=' expr
+	as_expr: expr_list AS type_vb
+		   | expr AS type_vb '=' expr
+		   ;
+		   
+	dim_stmt: DIM as_expr
+			| DIM as_expr
 			;
 			
+	catch_stmt: CATCH as_expr
+			  ;
+	
+	catch_stmt_list: catch_stmt stmt_list
+				   ;
+			
+	try_stmt: TRY stmt_list catch_stmt_list END_TRY
+			;
+			
+	throw_stmt: THROW NEW SYSTEM '.' EXCEPTION '(' STRING ')'
+			  ;
+			  
+	for_each_stmt: FOR EACH as_expr IN ID stmt_list NEXT
+				 ;
+				 
+	foe_stmt: FOR ID '=' INT_CONST TO ID stmt_list NEXT
+			;
+			
+	while_stmt: WHILE expr stmt_list END_WHILE
+			  ;
+			  
+	do_loop_until_stmt: DO stmt_list LOOP UNTIL expr
+					  ;
+					  
+	enum_expr: ID
+			 | ID '=' INT_CONST
+			 ;
+			 
+	enum_expr_list: enum_expr
+				  | eunum_expr_list enum_expr
+				  ;
+				  
+	enum_stmt: ENUM ID enum_expr_list END_ENUM
+			 ;
+			
+	console_print: CONSOLE '.' WRITE '(' STRING ')'
+				 ;
+	console_println: CONSOLE '.' WRITELINE '(' STRING ')'
+				   ;
+	console_read: CONSOLE '.' READ '('')'
+				;
+	console_readln: CONSOLE '.' READLINE '('')'
+				  ;
+	console_read_key: CONSOLE '.' READKEY '('')'
+					;
+					
+	module_stmt: MODULE ID stmt_list END_MODULE
+			   ;
 	
 %%
 
