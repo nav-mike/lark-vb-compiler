@@ -58,7 +58,7 @@
 
 %%
 	expr_list: expr
-			 | expr_list ',' expr
+			 | expr_list',' expr
 			 ;
 			  
 	expr:
@@ -89,10 +89,40 @@
 		| '+' expr %prec UPLUS
 		;
 		
+	stmt_module: stmt_list
+			   ;
+
+	stmt_list: stmt
+			 | stmt_list stmt
+			 ;		
+		
 	stmt: expr ENDL
 		| if_stmt
-		| dim_stmt
-		;
+		;		
+		
+	if_stmt: IF expr THEN stmt_list end_if_stmt
+		   | IF expr ENDL stmt_list end_if_stmt
+		   ;
+					
+	end_if_stmt: END_IF
+			   | ELSE stmt_list END_IF
+		       | ELSE_IF expr THEN stmt_list end_if_stmt
+		       | ELSE_IF expr ENDL stmt_list end_if_stmt
+		       ;		
+
+		
+		
+		
+		
+		
+		
+
+
+
+
+
+
+
 		
 	type_vb: INTEGER
 		   | CHAR
@@ -122,24 +152,12 @@
 			 | FUNCTION '('parametrs_list')' func_stmt_list END_FUNCTION
 			 ;
 		
-	stmt_list: stmt
-			 | stmt_list stmt
-			 ;
+
 			 
 	stmt_module: stmt_list
 			   ;
-		
-	elseif_stmt: ELSEIF expr THEN stmt_list
-	
-	elseif_stmt_list: elseif_stmt
-					| elseif_stmt_list elseif_stmt
-					;
-	
-	if_stmt: IF expr THEN stmt_list END_IF
-		   | IF expr THEN stmt_list ELSE stmt_list END_IF
-		   | IF expr THEN stmt_list elseif_stmt_list END_IF
-		   | IF expr THEN stmt_list elseif_stmt_list ELSE stmt_list END_IF
-		   ;
+					   	
+		 
 		   
 	as_expr: expr_list AS type_vb
 		   | expr AS type_vb '=' expr

@@ -47,16 +47,24 @@ enum VB_Stmt_type
 };
 
 
-/*! \struct VB_Expr
-    Структура дерева для хранения выражения.
+/*! \enum VB_End_if_stmt_type
+    Перечисление типов окончания операции условного перехода. 
  */
-struct VB_Expr
+enum VB_End_if_stmt_type
 {
-	enum VB_Expr_type type;			//!< Тип выражения.
-	char* expr_string;				//!< Имя идентификатора, либо строка.
-	int int_val;					//!< Значение выражения. Используется для bool, int, char.
-	struct VB_Expr* left_chld;		//!< Указатель на левого сына.
-	struct VB_Expr* right_chld;		//!< Указатель на правого сына.
+	ENDIF,						//!< Операция завершилась
+	ELSE,						//!< Есть альтернативное действие
+	ELSE_IF_THEN,				//!< Есть альтернативное действие с условием и на конце условия стоит "Then"
+	ELSE_IF_ENDL				//!< Есть альтернативное действие с условием и на конце условия стоит ENDL
+};
+
+
+/*! \struct VB_Stmt_module
+    Структура дерева для хранения корня дерева.
+ */
+struct VB_Stmt_module
+{
+	struct VB_Stmt_list* stmt_list; //!< Список операций
 };
 
 
@@ -80,3 +88,48 @@ struct VB_Stmt
 	struct VB_Stmt_list* stmt_list;	//!< Указатель на список операций включающихся в данную операцию.
 	struct VB_Stmt* next;			//!< Указатель на следующий элемент последовательности операторов.
 };
+
+
+/*! \struct VB_Expr
+    Структура дерева для хранения выражения.
+ */
+struct VB_Expr
+{
+	enum VB_Expr_type type;			//!< Тип выражения.
+	char* expr_string;				//!< Имя идентификатора, либо строка.
+	int int_val;					//!< Значение выражения. Используется для bool, int, char.
+	struct VB_Expr* left_chld;		//!< Указатель на левого сына.
+	struct VB_Expr* right_chld;		//!< Указатель на правого сына.
+};
+
+
+/*! \struct VB_If_stmt
+    Структура дерева для хранения оператора условного перехода.
+ */
+struct VB_If_stmt
+{
+	bool hasThen;					//!< Есть ли "Then" или после условия идет конец строки
+	struct VB_Expr* expr;			//!< Условие
+	struct VB_Stmt_list* stmt_list;	//!< Указатель на список операций при истинном условии.
+	struct VB_End_if_stmt* end_stmt;//!< Указатель на список операций при ложном условии условии.
+	struct VB_Stmt* next;			//!< Указатель на следующий элемент последовательности операторов.
+
+};
+
+/*! \struct VB_End_if_stmt
+    Структура дерева для хранения действий при ложном условии
+	оператора условного перехода.
+ */
+struct VB_End_if_stmt
+{
+	enum VB_End_if_stmt_type type;		//!< Тип окончания условия
+	struct VB_Expr* expr;				//!< Дополнительное условие, если есть
+	struct VB_Stmt_list* stmt_list;		//!< Указатель на список операций при истинном дополнительном условии.
+	struct VB_End_if_stmt* end_stmt;	//!< Указатель на список операций при ложном дополнительном условии условии.
+};
+
+
+
+
+
+
