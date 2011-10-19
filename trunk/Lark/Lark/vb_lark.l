@@ -19,6 +19,7 @@ LETTER [A-Za-z]
 
 %%
 
+[à-ÿÀ-ß]+                { fprintf(file, "\nIncorrect characters\n"); getchar(); exit(1);               }
 Dim                      { fprintf(file,"\nKeyword \"Dim\" has found\n");                               }
 As                       { fprintf(file,"\nKeyword \"As\" has found\n");                                }
 If                       { fprintf(file,"\nKeyword \"If\" has found\n");                                }
@@ -63,6 +64,15 @@ Next                     { fprintf(file,"\nKeyword \"Next\" has found\n");      
 In                       { fprintf(file,"\nKeyword \"In\" has found\n");                                }
 String                   { fprintf(file,"\nKeyword \"String\" has found\n");                            }
 Mod                      { fprintf(file,"\nKeyword \"Mod\" has found\n");                               }
+ParamArray               { fprintf(file,"\nKeyword \"ParamArray\" has found\n");                        }
+Console                  { fprintf(file,"\nKeyword \"Console\" has found\n");                           }
+Write                    { fprintf(file,"\nKeyword \"Write\" has found\n");                             }
+WriteLine                { fprintf(file,"\nKeyword \"WriteLine\" has found\n");                         }
+Read                     { fprintf(file,"\nKeyword \"Read\" has found\n");                              }
+ReadLine                 { fprintf(file,"\nKeyword \"ReadLine\" has found\n");                          }
+ReadKey                  { fprintf(file,"\nKeyword \"ReadKey\" has found\n");                           }
+System                   { fprintf(file,"\nKeyword \"System\" has found\n");                            }
+Exception                { fprintf(file,"\nKeyword \"Exception\" has found\n");                         }
 
 \=                       { fprintf(file,"\nOperator \"=\" has found\n");                                }
 \+                       { fprintf(file,"\nOperator \"+\" has found\n");                                }
@@ -97,6 +107,7 @@ Mod                      { fprintf(file,"\nKeyword \"Mod\" has found\n");       
 <STRING>[^\"\n]+         { strcat(literal,yytext);                                                      }
 <STRING>\n               { fprintf(file,"\nString has ended by \\n \"%s\"\n", literal); BEGIN(INITIAL); }
 <STRING>\"\"             { strcat(literal,"\"");                                                        }
+<STRING>[à-ÿÀ-ß]+        { fprintf(file, "\nIncorrect characters\n"); getchar(); exit(1);               }
 <STRING>\"               { fprintf(file,"\nString literal \"%s\"",literal); BEGIN(INITIAL);             }
 vbCrLf                   { fprintf(file,"\nSymbol \"\\n\" has found");                                  }
 vbTab                    { fprintf(file,"\nSymbol \"\\t\" has found");                                  }
