@@ -66,7 +66,7 @@
 		| INT_CONST
 		| CHAR_CONST
 		| STRING_CONST
-		| BOOL_CONST
+		| BOOLEAN_CONST
 		| expr '=' expr
 		| expr '+' expr
 		| expr '-' expr
@@ -109,26 +109,31 @@
 		       | ELSE_IF expr THEN stmt_list end_if_stmt
 		       | ELSE_IF expr ENDL stmt_list end_if_stmt
 		       ;		
-
+		       
+	dim_stmt: DIM as_stmt_list
+			;
+			
+	as_stmt_list: as_stmt
+				| as_stmt_list',' as_stmt
+				;			
+		
+	as_stmt: AS	id_list INTEGER
+		   | AS	id_list BOOLEAN
+		   | AS	id_list CHAR
+		   | AS	id_list STRING
+		   | AS	ID INTEGER = expr
+		   | AS	ID BOOLEAN = expr
+		   | AS	ID CHAR = expr
+		   | AS	ID STRING = expr		
+		
+	id_list: ID
+		   | id_list',' ID
+		   ;		
 		
 		
-		
-		
-		
-		
 
 
 
-
-
-
-
-		
-	type_vb: INTEGER
-		   | CHAR
-		   | STRING
-		   | BOOLEAN
-		   ;
 		   
 	sub_stmt_list: stmt_list
 				 ;
@@ -139,7 +144,7 @@
 			;
 				 
 	parametrs_list: parametr
-				  | parametr_list parametr
+				  | parametr_list',' parametr
 				  ;
 	
 	sub_proc: SUB ID '('')' sub_stmt_list END_SUB
@@ -151,22 +156,8 @@
 	func_proc: FUNCTION '('')' AS type_vb func_stmt_list END_FUNCTION
 			 | FUNCTION '('parametrs_list')' func_stmt_list END_FUNCTION
 			 ;
-		
+			   
 
-			 
-	stmt_module: stmt_list
-			   ;
-					   	
-		 
-		   
-	as_expr: expr_list AS type_vb
-		   | expr AS type_vb '=' expr
-		   ;
-		   
-	dim_stmt: DIM as_expr
-			| DIM as_expr
-			;
-			
 	catch_stmt: CATCH as_expr
 			  ;
 	
@@ -182,7 +173,7 @@
 	for_each_stmt: FOR EACH as_expr IN ID stmt_list NEXT
 				 ;
 				 
-	foe_stmt: FOR ID '=' INT_CONST TO ID stmt_list NEXT
+	for_stmt: FOR ID '=' INT_CONST TO ID stmt_list NEXT
 			;
 			
 	while_stmt: WHILE expr stmt_list END_WHILE
