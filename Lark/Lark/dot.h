@@ -17,7 +17,7 @@ enum VB_Type_of_expr
 	_POWER_OPERATOR_vb,
 	_MORE_OPERATOR_vb,
 	_LESS_OPERATOR_vb,
-	_MORE_OR_LESS_OPERATOR_vb,
+	_MORE_OR_EQUAL_OPERATOR_vb,
 	_LESS_OR_EQUAL_OPERATOR_vb,
 	_ASSIGN_PLUS_OPERATOR_vb,
 	_ASSIGN_MINUS_OPERATOR_vb,
@@ -25,8 +25,68 @@ enum VB_Type_of_expr
 	_ASSIGN_DIV_OPERATOR_vb,
 	_ASSIGN_INT_DIV_OPERATOR_vb,
 	_ASSIGN_NONEQUAL_OPERATOR_vb,
-	_ASSIGN_UMINUS_OPERATOR_vb
+	_UMINUS_OPERATOR_vb,
 };
+
+/*!
+    ‘ункци€ преобразует тип в его строковое представление.
+  \param type - тип выражени€.
+  \return       строковое представление типа.
+*/
+char* VB_Type_of_expr_to_string (enum VB_Type_of_expr type)
+{
+	switch(type)
+	{
+	case(_ID_vb):
+		return "id";
+	case(_CHAR_CONST_vb):
+		return "char";
+	case(_INT_CONST_vb):
+		return "int";
+	case(_STRING_CONST_vb):
+		return "string";
+	case(_BOOLEAN_CONST_vb):
+		return "bool";
+	case(_ASSIGN_OPERATOR_vb):
+		return "=";
+	case(_PLUS_OPERATOR_vb):
+		return "+";
+	case(_MINUS_OPERATOR_vb):
+		return "-";
+	case(_MUL_OPERATOR_vb):
+		return "*";
+	case(_INT_DIV_OPERATOR_vb):
+		return "\\";
+	case(_DIV_OPERATOR_vb):
+		return "/";
+	case(_POWER_OPERATOR_vb):
+		return "^";
+	case(_MORE_OPERATOR_vb):
+		return ">";
+	case(_LESS_OPERATOR_vb):
+		return "<";
+	case(_MORE_OR_EQUAL_OPERATOR_vb):
+		return ">=";
+	case(_LESS_OR_EQUAL_OPERATOR_vb):
+		return "<=";
+	case(_ASSIGN_PLUS_OPERATOR_vb):
+		return "+=";
+	case(_ASSIGN_MINUS_OPERATOR_vb):
+		return "-=";
+	case(_ASSIGN_MUL_OPERATOR_vb):
+		return "*=";
+	case(_ASSIGN_DIV_OPERATOR_vb):
+		return "/=";
+	case(_ASSIGN_INT_DIV_OPERATOR_vb):
+		return "\\=";
+	case(_ASSIGN_NONEQUAL_OPERATOR_vb):
+		return "<>";
+	case(_UMINUS_OPERATOR_vb):
+		return "-";
+	}
+
+	return "";
+}
 
 /* —труктура дерева дл€ хранени€ "Expression". */
 struct VB_Expr
