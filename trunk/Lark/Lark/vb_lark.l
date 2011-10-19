@@ -394,15 +394,56 @@ Exception                {
 <COMMENT>\n              { fprintf(file,"\nComment\n"); BEGIN(INITIAL);                                 }
 <COMMENT>.*              {                                                                              }
 
-\"                       { strcpy(literal,""); BEGIN(STRING);                                           }
-<STRING>[^\"\n]+         { strcat(literal,yytext);                                                      }
-<STRING>\n               { fprintf(file,"\nString has ended by \\n \"%s\"\n", literal); BEGIN(INITIAL); }
-<STRING>\"\"             { strcat(literal,"\"");                                                        }
-<STRING>[à-ÿÀ-ß]+        { fprintf(file, "\nIncorrect characters\n"); getchar(); exit(1);               }
-<STRING>\"               { fprintf(file,"\nString literal \"%s\"",literal); BEGIN(INITIAL);             }
-vbCrLf                   { fprintf(file,"\nSymbol \"\\n\" has found");                                  }
-vbTab                    { fprintf(file,"\nSymbol \"\\t\" has found");                                  }
-NullChar                 { fprintf(file,"\nSynbol \"\\0\" has found");                                  }
+\"                       {
+                           strcpy(literal,"");
+						   BEGIN(STRING);
+						 }
+						 
+<STRING>[^\"\n]+         {
+                           strcat(literal,yytext);
+						 }
+						 
+<STRING>\n               {
+                           fprintf(file,"\nString has ended by \\n \"%s\"\n", literal);
+						   BEGIN(INITIAL);
+						 }
+						 
+<STRING>\"\"             {
+                           strcat(literal,"\"");
+						 }
+						 
+<STRING>[à-ÿÀ-ß]+        {
+                           fprintf(file, "\nIncorrect characters\n"); getchar(); exit(1);
+						 }
+						 
+<STRING>\"               {
+                           fprintf(file,"\nString literal \"%s\"",literal);
+						   BEGIN(INITIAL);
+						   yylval.str = (char*)malloc(strlen(literal)+1);
+						   strcpy(yylval.str, literal);
+						   return STRING_CONST;
+						 }
+						 
+vbCrLf                   {
+                           fprintf(file,"\nSymbol \"\\n\" has found");
+						   yylval.str = (char*)malloc(2);
+						   strcpy(yylval.str, "\n");
+						   return STRING_CONST;
+						 }
+						 
+vbTab                    {
+                           fprintf(file,"\nSymbol \"\\t\" has found");
+						   yylval.str = (char*)malloc(2);
+						   strcpy(yylval.str, "\t");
+						   return STRING_CONST;
+						 }
+						 
+NullChar                 {
+                           fprintf(file,"\nSynbol \"\\0\" has found");
+						   yylval.str = (char*)malloc(1);
+						   strcpy(yylval.str, "\0");
+						   return STRING_CONST;
+						 }
 
 [a-zA-Z_][_a-zA-Z0-9]*   {
                            fprintf(file,"\nID %s has found\n", yytext);
