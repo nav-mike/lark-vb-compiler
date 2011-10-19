@@ -20,59 +20,265 @@ LETTER [A-Za-z]
 %%
 
 [à-ÿÀ-ß]+                { fprintf(file, "\nIncorrect characters\n"); getchar(); exit(1);               }
-Dim                      { fprintf(file,"\nKeyword \"Dim\" has found\n");                               }
-As                       { fprintf(file,"\nKeyword \"As\" has found\n");                                }
-If                       { fprintf(file,"\nKeyword \"If\" has found\n");                                }
-Then                     { fprintf(file,"\nKeyword \"Then\" has found\n");                              }
-ElseIf                   { fprintf(file,"\nKeyword \"ElseIf\" has found\n");                            }
-Else                     { fprintf(file,"\nKeyword \"Else\" has found\n");                              }
-(End[[:space:]]If)       { fprintf(file,"\nKeywords \"End If\" has found\n");                           }
-Function                 { fprintf(file,"\nKeyword \"Function\" has found\n");                          }
-ByVal                    { fprintf(file,"\nKeyword \"ByVal\" has found\n");                             }
-Return                   { fprintf(file,"\nKeyword \"Return\" has found\n");                            }
-(End[[:space:]]Function) { fprintf(file,"\nKeywords \"End Function\" has found\n");                     }
-Sub                      { fprintf(file,"\nKeyword \"Sub\" has found\n");                               }
-(End[[:space:]]Sub)      { fprintf(file,"\nKeywords \"End Sub\" has found\n");                          }
-Try                      { fprintf(file,"\nKeywords \"Try\" has found\n");                              }
-Catch                    { fprintf(file,"\nKeywords \"Catch\" has found\n");                            }
-(End[[:space:]]Try)      { fprintf(file,"\nKeywords \"End Try\" has found\n");                          }
-Throw                    { fprintf(file,"\nKeywords \"Throw\" has found\n");                            }
-And                      { fprintf(file,"\nKeyword \"And\" has found\n");                               }
-Boolean                  { fprintf(file,"\nKeyword \"Boolean\" has found\n");                           }
-Integer                  { fprintf(file,"\nKeyword \"Integer\" has found\n");                           }
-New                      { fprintf(file,"\nKeyword \"New\" has found\n");                               }
-ByRef                    { fprintf(file,"\nKeyword \"ByRef\" has found\n");                             }
-Call                     { fprintf(file,"\nKeyword \"Call\" has found\n");                              }
-Case                     { fprintf(file,"\nKeyword \"Case\" has found\n");                              }
-Char                     { fprintf(file,"\nKeyword \"Char\" has found\n");                              }
-Const                    { fprintf(file,"\nKeyword \"Const\" has found\n");                             }
-Select                   { fprintf(file,"\nKeyword \"Select\" has found\n");                            }
-(Do[[:space:]]While)     { fprintf(file,"\nKeywords \"Do While\" has found\n");                         }
-(Do[[:space:]]Until)     { fprintf(file,"\nKeywords \"Do Until\" has found\n");                         }
-Module                   { fprintf(file,"\nKeyword \"Module\" has found\n");                            }
-Do                       { fprintf(file,"\nKeyword \"Do\" has found\n");                                }
-Enum                     { fprintf(file,"\nKeyword \"Enum\" has found\n");                              }
-(End[[:space:]]Enum)     { fprintf(file,"\nKeywords \"End Enum\" has found\n");                         }
-(End[[:space:]]Module)   { fprintf(file,"\nKeywords \"End Module\" has found\n");                       }
-(End[[:space:]]Select)   { fprintf(file,"\nKeywords \"End Select\" has found\n");                       }
-(End[[:space:]]While)    { fprintf(file,"\nKeywords \"End While\" has found\n");                        }
-Loop                     { fprintf(file,"\nKeyword \"End While\" has found\n");                         }
-(For[[:space:]]Each)     { fprintf(file,"\nKeywords \"For Each\" has found\n");                         }
-For                      { fprintf(file,"\nKeyword \"For\" has found\n");                               }
-To                       { fprintf(file,"\nKeyword \"To\" has found\n");                                }
-Next                     { fprintf(file,"\nKeyword \"Next\" has found\n");                              }
-In                       { fprintf(file,"\nKeyword \"In\" has found\n");                                }
-String                   { fprintf(file,"\nKeyword \"String\" has found\n");                            }
-Mod                      { fprintf(file,"\nKeyword \"Mod\" has found\n");                               }
-ParamArray               { fprintf(file,"\nKeyword \"ParamArray\" has found\n");                        }
-Console                  { fprintf(file,"\nKeyword \"Console\" has found\n");                           }
-Write                    { fprintf(file,"\nKeyword \"Write\" has found\n");                             }
-WriteLine                { fprintf(file,"\nKeyword \"WriteLine\" has found\n");                         }
-Read                     { fprintf(file,"\nKeyword \"Read\" has found\n");                              }
-ReadLine                 { fprintf(file,"\nKeyword \"ReadLine\" has found\n");                          }
-ReadKey                  { fprintf(file,"\nKeyword \"ReadKey\" has found\n");                           }
-System                   { fprintf(file,"\nKeyword \"System\" has found\n");                            }
-Exception                { fprintf(file,"\nKeyword \"Exception\" has found\n");                         }
+
+Dim                      {
+                           fprintf(file,"\nKeyword \"Dim\" has found\n");
+						   return DIM;
+						 }
+						 
+As                       {
+                           fprintf(file,"\nKeyword \"As\" has found\n");
+						   return AS;
+						 }
+						 
+If                       {
+                           fprintf(file,"\nKeyword \"If\" has found\n");
+						   return IF;
+						 }
+						 
+Then                     {
+                           fprintf(file,"\nKeyword \"Then\" has found\n");
+						   return THEN;
+						 }
+						 
+ElseIf                   {
+                           fprintf(file,"\nKeyword \"ElseIf\" has found\n");
+						   return ELSE_IF;
+						 }
+						 
+Else                     {
+                           fprintf(file,"\nKeyword \"Else\" has found\n");
+						   return ELSE;
+						 }
+						 
+(End[[:space:]]If)       {
+                           fprintf(file,"\nKeywords \"End If\" has found\n");
+						   return END_IF;
+						 }
+						 
+Function                 {
+                           fprintf(file,"\nKeyword \"Function\" has found\n");
+						   return FUNCTION;
+						 }
+						 
+ByVal                    {
+                           fprintf(file,"\nKeyword \"ByVal\" has found\n");
+						   return BY_VAL;
+						 }
+						 
+Return                   {
+                           fprintf(file,"\nKeyword \"Return\" has found\n");
+						   return RETURN;
+						 }
+						 
+(End[[:space:]]Function) {
+                           fprintf(file,"\nKeywords \"End Function\" has found\n");
+						   return END_FUNCTION;
+						 }
+						 
+Sub                      {
+                           fprintf(file,"\nKeyword \"Sub\" has found\n");
+						   return SUB;
+						 }
+						 
+(End[[:space:]]Sub)      {
+                           fprintf(file,"\nKeywords \"End Sub\" has found\n");
+						   return END_SUB;
+						 }
+						 
+Try                      {
+                           fprintf(file,"\nKeywords \"Try\" has found\n");
+						   return TRY;
+						 }
+						 
+Catch                    {
+                           fprintf(file,"\nKeywords \"Catch\" has found\n");
+						   return CATCH;
+						 }
+						 
+(End[[:space:]]Try)      {
+                           fprintf(file,"\nKeywords \"End Try\" has found\n");
+						   return END_TRY;
+						 }
+						 
+Throw                    {
+                           fprintf(file,"\nKeywords \"Throw\" has found\n");
+						   return THROW;
+						 }
+						 
+Boolean                  {
+                           fprintf(file,"\nKeyword \"Boolean\" has found\n");
+						   return BOOLEAN;
+						 }
+						 
+Integer                  {
+                           fprintf(file,"\nKeyword \"Integer\" has found\n");
+						   return INTEGER;
+						 }
+						 
+New                      {
+                           fprintf(file,"\nKeyword \"New\" has found\n");
+						   return NEW;
+						 }
+						 
+ByRef                    {
+                           fprintf(file,"\nKeyword \"ByRef\" has found\n");
+						   return BY_REF;
+						 }
+						 
+Call                     {
+                           fprintf(file,"\nKeyword \"Call\" has found\n");
+						   return CALL;
+						 }
+						 
+Case                     {
+                           fprintf(file,"\nKeyword \"Case\" has found\n");
+						   return CASE;
+						 }
+						 
+Char                     {
+                           fprintf(file,"\nKeyword \"Char\" has found\n");
+						   return CHAR;
+						 }
+						 
+Const                    {
+                           fprintf(file,"\nKeyword \"Const\" has found\n");
+						   return CONST;
+						 }
+						 
+Select                   {
+                           fprintf(file,"\nKeyword \"Select\" has found\n");
+						   return SELECT;
+						 }
+						 
+(Do[[:space:]]While)     {
+                           fprintf(file,"\nKeywords \"Do While\" has found\n");
+						   return DO_WHILE;
+						 }
+						 
+(Do[[:space:]]Until)     {
+                           fprintf(file,"\nKeywords \"Do Until\" has found\n");
+						   return DO_UNTIL;
+						 }
+						 
+Module                   {
+                           fprintf(file,"\nKeyword \"Module\" has found\n");
+						   return MODULE;
+						 }
+						 
+Do                       {
+                           fprintf(file,"\nKeyword \"Do\" has found\n");
+						   return DO;
+						 }
+Enum                     {
+                           fprintf(file,"\nKeyword \"Enum\" has found\n");
+						   return ENUM;
+						 }
+						 
+(End[[:space:]]Enum)     {
+                           fprintf(file,"\nKeywords \"End Enum\" has found\n");
+						   return END_ENUM;
+						 }
+						 
+(End[[:space:]]Module)   {
+                           fprintf(file,"\nKeywords \"End Module\" has found\n");
+						   return END_MODULE;
+						 }
+						 
+(End[[:space:]]Select)   {
+                           fprintf(file,"\nKeywords \"End Select\" has found\n");
+						   return END_SELECT;
+						 }
+						 
+(End[[:space:]]While)    {
+                           fprintf(file,"\nKeywords \"End While\" has found\n");
+						   return END_WHILE;
+						 }
+						 
+Loop                     {
+                           fprintf(file,"\nKeyword \"End While\" has found\n");
+						   return LOOP;
+						 }
+						 
+(For[[:space:]]Each)     {
+                           fprintf(file,"\nKeywords \"For Each\" has found\n");
+						   return FOR_EACH;
+						 }
+						 
+For                      {
+                           fprintf(file,"\nKeyword \"For\" has found\n");
+						   return FOR;
+						 }
+						 
+To                       {
+                           fprintf(file,"\nKeyword \"To\" has found\n");
+						   return TO;
+						 }
+						 
+Next                     {
+                           fprintf(file,"\nKeyword \"Next\" has found\n");
+						   return NEXT;
+						 }
+						 
+In                       {
+                           fprintf(file,"\nKeyword \"In\" has found\n");
+						   return IN;
+						 }
+						 
+String                   {
+                           fprintf(file,"\nKeyword \"String\" has found\n");
+						   return STRING;
+						 }
+						 
+Mod                      {
+                           fprintf(file,"\nKeyword \"Mod\" has found\n");
+						   return MOD;
+						 }
+						 
+ParamArray               {
+                           fprintf(file,"\nKeyword \"ParamArray\" has found\n");
+						   return PARAM_ARRAY;
+						 }
+						 
+Console                  {
+                           fprintf(file,"\nKeyword \"Console\" has found\n");
+						   return CONSOLE;
+						 }
+						 
+Write                    {
+                           fprintf(file,"\nKeyword \"Write\" has found\n");
+						   return WRITE;
+						 }
+						 
+WriteLine                {
+                           fprintf(file,"\nKeyword \"WriteLine\" has found\n");
+						   return WRITE_LINE;
+						 }
+						 
+Read                     { 
+                           fprintf(file,"\nKeyword \"Read\" has found\n");
+						   return READ;
+						 }
+						 
+ReadLine                 {
+                           fprintf(file,"\nKeyword \"ReadLine\" has found\n");
+						   return READ_LINE;
+						 }
+						 
+ReadKey                  {
+                           fprintf(file,"\nKeyword \"ReadKey\" has found\n");
+						   return READ_KEY;
+						 }
+						 
+System                   {
+                           fprintf(file,"\nKeyword \"System\" has found\n");
+						   return SYSTEM;
+						 }
+						 
+Exception                {
+                           fprintf(file,"\nKeyword \"Exception\" has found\n");
+						   return EXCEPTION;
+						 }
 
 \=                       { fprintf(file,"\nOperator \"=\" has found\n");                                }
 \+                       { fprintf(file,"\nOperator \"+\" has found\n");                                }
