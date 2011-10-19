@@ -1,9 +1,38 @@
 #include <stdio.h>
 
+/* Перечисление типов выражения. */
+enum VB_Type_of_expr
+{
+	_ID_vb,
+	_CHAR_CONST_vb,
+	_INT_CONST_vb,
+	_STRING_CONST_vb,
+	_BOOLEAN_CONST_vb,
+	_ASSIGN_OPERATOR_vb,
+	_PLUS_OPERATOR_vb,
+	_MINUS_OPERATOR_vb,
+	_MUL_OPERATOR_vb,
+	_INT_DIV_OPERATOR_vb,
+	_DIV_OPERATOR_vb,
+	_POWER_OPERATOR_vb,
+	_MORE_OPERATOR_vb,
+	_LESS_OPERATOR_vb,
+	_MORE_OR_LESS_OPERATOR_vb,
+	_LESS_OR_EQUAL_OPERATOR_vb,
+	_ASSIGN_PLUS_OPERATOR_vb,
+	_ASSIGN_MINUS_OPERATOR_vb,
+	_ASSIGN_MUL_OPERATOR_vb,
+	_ASSIGN_DIV_OPERATOR_vb,
+	_ASSIGN_INT_DIV_OPERATOR_vb,
+	_ASSIGN_NONEQUAL_OPERATOR_vb,
+	_ASSIGN_UMINUS_OPERATOR_vb
+};
+
 /* Структура дерева для хранения "Expression". */
 struct VB_Expr
 {
-	char* expr_name;            // Имя идентификатора, строка.
+	enum VB_Type_of_expr type;  // Определение типа выражения.
+	char* expr_string;            // Имя идентификатора, строка.
 	int int_val;                // Значение выражения. Используется для bool, int, char.
 	struct VB_Expr* FirstSon;   // Указатель на левого сына.
 	struct VB_Expr* LastSon;    // Указатель на правого сына.
@@ -60,7 +89,7 @@ int add_node_expr (struct VB_Expr* node, int number)
 	error = fprintf(file, "\n\t\"node%d\" [", number);
 	if (error == -1) return 1;
 	error = fprintf(file, "\n\t\tlabel = \"<f0> %s | <f1> %d\"",
-		                          node->expr_name, node->int_val);
+		                          node->expr_string, node->int_val);
 	if (error == -1) return 1;
 	error = fprintf(file, "\n\t\tshape = \"record\"\n\t];");
 	if (error == -1) return 1;
