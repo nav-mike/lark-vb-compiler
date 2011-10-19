@@ -11,7 +11,7 @@ Module Module1
     'Main function
     Sub Main()
 
-        Console.WriteLn(vbTab + "Demonstration ""of ""the" + vbCrLf + "Visual Basic language")
+        Console.WriteLine(vbTab + "Demonstration ""of ""the" + vbCrLf + "Visual Basic language")
 
         Dim Count() As Integer = {5, 10, 17}
         Dim j As Integer = 0
@@ -23,7 +23,7 @@ Module Module1
                 PrintArray(TArr, Count(j), TypeOfText.OnlyDigits, "")
                 j += 1
             Loop Until j = 3
-        Catch ÿÿ As Exception
+        Catch ex As Exception
             Console.WriteLine(ex.Message)
         End Try
 
