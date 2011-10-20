@@ -469,21 +469,21 @@ NullChar                 {
 
 {DIGIT}+                 {
                            fprintf(file,"\nNumber %d has found\n", atoi(yytext));
-						   yylval.ival = atoi(yytext);
+						   yylval.i_const = atoi(yytext);
 						   return INT_CONST;
 						 }
 						 
 \&H[0-9A-F]+             {
                            sscanf(yytext, "%h", &num);
 						   fprintf(file,"\nNumber %d has found\n", num);
-						   yylval.ival = num;
+						   yylval.i_const = num;
 						   return INT_CONST;
 						 }
 						 
 \&O[0-7]+                {
                            sscanf(yytext, "%o", &num);
 						   fprintf(file,"\nNumber %d has found\n", num);
-						   yylval.ival = num;
+						   yylval.i_const = num;
 						   return INT_CONST;
 						 }
 
