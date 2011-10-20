@@ -24,7 +24,6 @@
 	struct VB_As_Stmt_list*	as_list_str;
 	struct VB_As_stmt*		as_str;
 	struct VB_Id_list*		id_list_str;
-	struct VB_Id*			id_str;
 }
 
 %type <module_str>	stmt_module
@@ -39,7 +38,7 @@
 %type <id_list_str> id_list
 
 
-%token <id_str>		ID
+%token <expr_str>		ID
 
 
 %token <b_const> BOOLEAN_CONST
@@ -88,13 +87,15 @@
 %token NEXT
 %token IN
 %token MOD
+%token STEP
 
 
 %right '=' ASSIGN_PLUS ASSIGN_MINUS ASSIGN_MUL ASSIGN_DIV ASSIGN_INT_DIV
-%left '+' '-' '>' '<' MORE_OR_EQUAL LESS_OR_EQUAL NONEQUAL
+%left '>' '<' MORE_OR_EQUAL LESS_OR_EQUAL NONEQUAL
+%left '+' '-'
 %left '*' '/' '\\'
 %left '^'
-%left UMINUS UPLUS
+%left UMINUS
 %nonassoc ')'
 
 %%
@@ -169,10 +170,16 @@
 		   | id_list',' ID
 		   ;		
 		
-		
+	for_stmt: FOR ID '=' INT_CONST TO ID stmt_list NEXT
+			| FOR ID '=' INT_CONST TO ID stmt_list STEP INT_CONST NEXT
+			| FOR ID as_stmt '=' INT_CONST TO ID stmt_list NEXT
+			| FOR ID as_stmt '=' INT_CONST TO ID stmt_list STEP INT_CONST NEXT
+			;	
+			
+	while_stmt: WHILE expr stmt_list END_WHILE
+			  ;	
 
-
-
+	do_loop_while: 
 
 
 
@@ -220,14 +227,9 @@
 	throw_stmt: THROW NEW SYSTEM '.' EXCEPTION '(' STRING ')'
 			  ;
 			  
-	for_each_stmt: FOR EACH as_expr IN ID stmt_list NEXT
-				 ;
-				 
-	for_stmt: FOR ID '=' INT_CONST TO ID stmt_list NEXT
-			;
-			
-	while_stmt: WHILE expr stmt_list END_WHILE
-			  ;
+
+				 			
+
 			  
 	do_loop_until_stmt: DO stmt_list LOOP UNTIL expr
 					  ;
