@@ -462,8 +462,8 @@ NullChar                 {
 
 [a-zA-Z_][_a-zA-Z0-9]*   {
                            fprintf(file,"\nID %s has found\n", yytext);
-						   yylval.str = (char*)malloc(strlen(yytext)+1);
-						   strcpy(yylval.str, yytext);
+						   yylval.s_const = (char*)malloc(strlen(yytext)+1);
+						   strcpy(yylval.s_const, yytext);
 						   return ID;
 						 }
 
