@@ -441,23 +441,20 @@ Exception                {
 						 
 vbCrLf                   {
                            fprintf(file,"\nSymbol \"\\n\" has found");
-						   yylval.str = (char*)malloc(2);
-						   strcpy(yylval.str, "\n");
-						   return STRING_CONST;
+						   yylval.c_const = '\n';
+						   return CHAR_CONST;
 						 }
 						 
 vbTab                    {
                            fprintf(file,"\nSymbol \"\\t\" has found");
-						   yylval.str = (char*)malloc(2);
-						   strcpy(yylval.str, "\t");
-						   return STRING_CONST;
+						   yylval.c_const = '\t';
+						   return CHAR_CONST;
 						 }
 						 
 NullChar                 {
                            fprintf(file,"\nSynbol \"\\0\" has found");
-						   yylval.str = (char*)malloc(1);
-						   strcpy(yylval.str, "\0");
-						   return STRING_CONST;
+						   yylval.c_const = '\0';
+						   return CHAR_CONST;
 						 }
 
 [a-zA-Z_][_a-zA-Z0-9]*   {
