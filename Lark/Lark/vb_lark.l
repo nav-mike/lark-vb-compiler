@@ -21,6 +21,11 @@ LETTER [A-Za-z]
 
 [à-ÿÀ-ß]+                { fprintf(file, "\nIncorrect characters\n"); getchar(); exit(1);               }
 
+\n                       {
+                           fprintf(file, "\nEnd line has found\n");
+						   return ENDL;
+						 }
+
 Dim                      {
                            fprintf(file,"\nKeyword \"Dim\" has found\n");
 						   return DIM;
