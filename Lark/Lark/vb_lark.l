@@ -31,6 +31,16 @@ As                       {
 						   return AS;
 						 }
 						 
+True                     {
+                           fprintf(file,"\nKeyword \"True\" has found\n");
+						   return TRUE;
+						 }
+						 
+False                    {
+                           fprintf(file,"\nKeyword \"False\" has found\n");
+						   return FALSE;
+						 }
+						 
 If                       {
                            fprintf(file,"\nKeyword \"If\" has found\n");
 						   return IF;
