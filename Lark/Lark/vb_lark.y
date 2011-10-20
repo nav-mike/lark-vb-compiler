@@ -1,8 +1,52 @@
 %{
 	#include "tree_nodes.h"
+	#include <stdio.h>
 	
+	extern int yylex(void);
 %}
-%start stmt_module			// ѕереопредел€ем им€ стартового нетерминала
+
+%start stmt_module
+
+%union
+{
+	bool	b_const;
+	int		i_const;
+	char	c_const;
+	char*	s_const;
+	
+	struct VB_Stmt_module*	module_str;
+	struct VB_Stmt_list*	list_str;
+	struct VB_Stmt*			stmt_str;
+	struct VB_Expr*			expr_str;
+	struct VB_If_stmt*		if_str;
+	struct VB_End_if_stmt*	end_if_str;
+	struct VB_Dim_stmt*		dim_str;
+	struct VB_As_Stmt_list*	as_list_str;
+	struct VB_As_stmt*		as_str;
+	struct VB_Id_list*		id_list_str;
+	struct VB_Id*			id_str;
+}
+
+%type <module_str>	stmt_module
+%type <list_str>	stmt_list
+%type <stmt_str>	stmt
+%type <expr_str>	expr
+%type <if_str>		if_stmt	
+%type <end_if_str>	end_if_stmt
+%type <dim_str>		dim_stmt
+%type <as_list_str> as_stmt_list
+%type <as_str>		as_stmt
+%type <id_list_str> id_list
+
+
+%token <id_str>		ID
+
+
+%token <b_const> BOOLEAN_CONST
+%token <i_const> INT_CONST
+%token <s_const> STRING_CONST
+%token <c_const> CHAR_CONST
+
 
 %token ENDL
 %token DIM
@@ -22,13 +66,10 @@
 %token CATCH
 %token END_TRY
 %token THROW
-%token BOOLEAN
-%token INTEGER
 %token NEW
 %token BYREF
 %token CALL
 %token CASE
-%token CHAR
 %token CONST
 %token SELECT
 %token DO_WHILE
@@ -46,8 +87,8 @@
 %token TO
 %token NEXT
 %token IN
-%token STRING
 %token MOD
+
 
 %right '=' ASSIGN_PLUS ASSIGN_MINUS ASSIGN_MUL ASSIGN_DIV ASSIGN_INT_DIV
 %left '+' '-' '>' '<' MORE_OR_EQUAL LESS_OR_EQUAL NONEQUAL
@@ -57,10 +98,19 @@
 %nonassoc ')'
 
 %%
-	expr_list: expr
-			 | expr_list',' expr
+
+	stmt_module: stmt_list
+			   ;
+		
+	stmt_list: stmt
+			 | stmt_list stmt
 			 ;
-			  
+			 	   
+	stmt: expr ENDL
+		| if_stmt
+		| dim_stmt
+		;
+					  
 	expr:
 		| ID
 		| INT_CONST
@@ -88,18 +138,7 @@
 		| '-' expr %prec UMINUS
 		| '+' expr %prec UPLUS
 		;
-		
-	stmt_module: stmt_list
-			   ;
-
-	stmt_list: stmt
-			 | stmt_list stmt
-			 ;		
-		
-	stmt: expr ENDL
-		| if_stmt
-		;		
-		
+				
 	if_stmt: IF expr THEN stmt_list end_if_stmt
 		   | IF expr ENDL stmt_list end_if_stmt
 		   ;
@@ -131,6 +170,17 @@
 		   ;		
 		
 		
+
+
+
+
+
+
+
+
+
+
+
 
 
 
