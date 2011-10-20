@@ -60,6 +60,9 @@ enum VB_End_if_stmt_type
 };
 
 
+/*! \enum VB_Id_type
+    Перечисление типов идентификаторов. 
+ */
 enum VB_Id_type
 {
 	INTEGER,
