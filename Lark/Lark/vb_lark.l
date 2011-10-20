@@ -434,8 +434,8 @@ Exception                {
 <STRING>\"               {
                            fprintf(file,"\nString literal \"%s\"",literal);
 						   BEGIN(INITIAL);
-						   yylval.str = (char*)malloc(strlen(literal)+1);
-						   strcpy(yylval.str, literal);
+						   yylval.s_const = (char*)malloc(strlen(literal)+1);
+						   strcpy(yylval.s_const, literal);
 						   return STRING_CONST;
 						 }
 						 
