@@ -414,6 +414,11 @@ Exception                {
                            fprintf(file,"\nOperator \".\" has found\n");
 						   return ".";
 						 }
+						 
+\:						 {
+                           fprintf(file,"\nOperator \":\" has found\n");
+						   return ':';
+						 }
 
 "\'"                     { BEGIN(COMMENT);                                                              }
 <COMMENT>\n              { fprintf(file,"\nComment\n"); BEGIN(INITIAL);                                 }
