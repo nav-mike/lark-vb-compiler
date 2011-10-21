@@ -71,8 +71,8 @@
 %token CASE
 %token CONST
 %token SELECT
-%token DO_WHILE
-%token DO_UNTIL
+%token WHILE
+%token UNTIL
 %token MODULE
 %token DO
 %token ENUM
@@ -107,13 +107,13 @@
 			 | stmt_list stmt
 			 ;
 			 	   
-	stmt: expr ENDL
+	stmt: ENDL
+		| expr ENDL
 		| if_stmt
 		| dim_stmt
 		;
 					  
-	expr:
-		| ID
+	expr: ID
 		| INT_CONST
 		| CHAR_CONST
 		| STRING_CONST
@@ -135,14 +135,21 @@
 		| expr ASSIGN_DIV 		expr
 		| expr ASSIGN_INT_DIV 	expr
 		| expr NONEQUAL			expr
+		| expr EQUAL			expr
 		| '(' expr ')'
 		| '-' expr %prec UMINUS
 		| '+' expr %prec UPLUS
 		;
 				
-	if_stmt: IF expr THEN stmt_list end_if_stmt
+	if_stmt: IF expr THEN ENDL stmt_list end_if_stmt
 		   | IF expr ENDL stmt_list end_if_stmt
+		   | IF expr THEN stmt_list_inline ENDIF
+		   | IF expr THEN stmt_list_inline ELSE stmt_list_inline ENDIF
 		   ;
+		   
+	stmt_list_inline: stmt
+					| stmt_list_inline ':' stmt
+					;
 					
 	end_if_stmt: END_IF
 			   | ELSE stmt_list END_IF
@@ -157,63 +164,65 @@
 				| as_stmt_list',' as_stmt
 				;			
 		
-	as_stmt: AS	id_list INTEGER
-		   | AS	id_list BOOLEAN
-		   | AS	id_list CHAR
-		   | AS	id_list STRING
-		   | AS	ID INTEGER = expr
-		   | AS	ID BOOLEAN = expr
-		   | AS	ID CHAR = expr
-		   | AS	ID STRING = expr		
-		
+	as_stmt: id_list as_stmt_type
+		   | ID as_stmt_type
+		   | ID as_stmt_type = expr
+		   ;	
+			  
+	as_stmt_type: AS INTEGER
+			    | AS BOOLEAN
+			    | AS CHAR 
+			    | AS STRING
+			    ;
+
 	id_list: ID
 		   | id_list',' ID
 		   ;		
 		
-	for_stmt: FOR ID '=' INT_CONST TO ID stmt_list NEXT
-			| FOR ID '=' INT_CONST TO ID stmt_list STEP INT_CONST NEXT
-			| FOR ID as_stmt '=' INT_CONST TO ID stmt_list NEXT
-			| FOR ID as_stmt '=' INT_CONST TO ID stmt_list STEP INT_CONST NEXT
+	for_stmt: FOR ID '=' INT_CONST TO INT_CONST stmt_list NEXT
+			| FOR ID '=' INT_CONST TO INT_CONST stmt_list STEP INT_CONST NEXT
+			| FOR ID as_stmt_type '=' INT_CONST TO INT_CONST stmt_list NEXT
+			| FOR ID as_stmt_type '=' INT_CONST TO INT_CONST stmt_list STEP INT_CONST NEXT
 			;	
 			
 	while_stmt: WHILE expr stmt_list END_WHILE
 			  ;	
 
-	do_loop_while: 
+	do_loop_stmt: DO WHILE expr stmt_list LOOP
+				| DO UNTIL expr stmt_list LOOP
+				| DO stmt_list LOOP WHILE expr
+				| DO stmt_list LOOP UNTIL expr
+				;
 
+	enum_stmt: ENUM ID enum_member_list END ENUM
+			 ;
 
+	enum_member_list: enum_expr
+					| enum_member_list enum_expr
+					;
 
-
-
-
-
-
-
-
-
-		   
-	sub_stmt_list: stmt_list
-				 ;
-				 
-	parametr: BYREF as_expr
-			| BYVAL as_expr
-			| PARAM_ARRAY as_expr
-			;
-				 
-	parametrs_list: parametr
-				  | parametr_list',' parametr
-				  ;
-	
-	sub_proc: SUB ID '('')' sub_stmt_list END_SUB
-			| SUB ID '('parametrs_list')' sub_stmt_list END_SUB
+	enum_expr: ID
+			 | ID '=' INT_CONST
+			 ;
+			 
+	sub_stmt: SUB ID '('')' stmt_list END_SUB
+			| SUB ID '('sub_stmt_param_list')' stmt_list END_SUB
 			;
 			
-	func_stmt_list: sub_stmt_list RETURN expr
-	
-	func_proc: FUNCTION '('')' AS type_vb func_stmt_list END_FUNCTION
-			 | FUNCTION '('parametrs_list')' func_stmt_list END_FUNCTION
-			 ;
-			   
+	param_list: param
+		      | param_stmt_list',' param
+			  ;
+
+	param: BYREF ID as_stmt_type
+	     | BYVAL ID as_stmt_type
+		 ; 
+
+	func_stmt: FUNCTION ID '('')' as_stmt_type func_stmt_list END_FUNCTION
+			 | FUNCTION ID '('param_list')' as_stmt_type func_stmt_list END_FUNCTION
+			 ;					 
+				
+	func_stmt_list: stmt_list RETURN expr
+				  ;   
 
 	catch_stmt: CATCH as_expr
 			  ;
@@ -225,34 +234,20 @@
 			;
 			
 	throw_stmt: THROW NEW SYSTEM '.' EXCEPTION '(' STRING ')'
-			  ;
-			  
+			  ;			  
 
-				 			
-
-			  
-	do_loop_until_stmt: DO stmt_list LOOP UNTIL expr
-					  ;
-					  
-	enum_expr: ID
-			 | ID '=' INT_CONST
-			 ;
-			 
-	enum_expr_list: enum_expr
-				  | eunum_expr_list enum_expr
-				  ;
-				  
-	enum_stmt: ENUM ID enum_expr_list END_ENUM
-			 ;
-			
 	console_print: CONSOLE '.' WRITE '(' STRING ')'
 				 ;
+				 
 	console_println: CONSOLE '.' WRITELINE '(' STRING ')'
 				   ;
+				   
 	console_read: CONSOLE '.' READ '('')'
 				;
+				
 	console_readln: CONSOLE '.' READLINE '('')'
 				  ;
+				  
 	console_read_key: CONSOLE '.' READKEY '('')'
 					;
 					
