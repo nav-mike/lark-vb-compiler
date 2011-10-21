@@ -307,37 +307,37 @@ Exception                {
 
 \=                       {
                            fprintf(file,"\nOperator \"=\" has found\n");
-						   return "=";
+						   return '=';
 						 }
 						 
 \+                       {
                            fprintf(file,"\nOperator \"+\" has found\n");
-						   return "+";
+						   return '+';
 						 }
 						 
 \-                       {
                            fprintf(file,"\nOperator \"-\" has found\n");
-						   return "-";
+						   return '-';
 						 }
 						 
 \*                       {
                            fprintf(file,"\nOperator \"*\" has found\n");
-						   return "*";
+						   return '*';
 						 }
 						 
 \\                       {
                            fprintf(file,"\nOperator \"\\\" has found\n");
-						   return "\\";
+						   return '\\';
 						 }
 						 
 \/                       {
                            fprintf(file,"\nOperator \"/\" has found\n");
-						   return "/";
+						   return '/';
 						 }
 						 
 \^                       {
                            fprintf(file,"\nOperator \"^\" has found\n");
-						   return "^";
+						   return "^';
 						 }
 						 
 \+\=                     {
@@ -367,12 +367,12 @@ Exception                {
 						 
 \>                       {
                            fprintf(file,"\nOperator \">\" has found\n");
-						   return ">";
+						   return '>';
 						 }
 						 
 \<                       {
                            fprintf(file,"\nOperator \"<\" has found\n");
-						   return "<";
+						   return '<';
 						 }
 						 
 \>\=                     {
@@ -387,32 +387,32 @@ Exception                {
 
 \(                       {
                            fprintf(file,"\nOperator \"(\" has found\n");
-						   return "(";
+						   return '(';
 						 }
 						 
 \)                       {
                            fprintf(file,"\nOperator \")\" has found\n");
-						   return ")";
+						   return ')';
 						 }
 						 
 \{                       {
                            fprintf(file,"\nOperator \"{\" has found\n");
-						   return "{";
+						   return '{';
 						 }
 						 
 \}                       {
                            fprintf(file,"\nOperator \"}\" has found\n");
-						   return "}";
+						   return '}';
 						 }
 
 \,                       {
                            fprintf(file,"\nOperator \",\" has found\n");
-						   return ",";
+						   return ',';
 						 }
 						 
 \.                       {
                            fprintf(file,"\nOperator \".\" has found\n");
-						   return ".";
+						   return '.';
 						 }
 						 
 \:						 {
