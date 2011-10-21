@@ -19,7 +19,12 @@ LETTER [A-Za-z]
 
 %%
 
-[à-ÿÀ-ß]+                { fprintf(file, "\nIncorrect characters\n"); getchar(); exit(1);               }
+[à-ÿÀ-ß]+                {
+                           fprintf(file, "\nIncorrect characters:");
+						   fprintf(file, " %d:%d\n", yylloc.first_line, yylloc.first_column);
+						   getchar();
+						   exit(1);
+						 }
 
 \n                       {
                            fprintf(file, "\nEnd line has found\n");
@@ -213,6 +218,11 @@ Enum                     {
 Loop                     {
                            fprintf(file,"\nKeyword \"End While\" has found\n");
 						   return LOOP;
+						 }
+						 
+Step                     {
+                           fprintf(file,"\nKeyword \"Step\" has found\n");
+						   return STEP;
 						 }
 						 
 (For[[:space:]]Each)     {
@@ -428,7 +438,10 @@ Exception                {
 						 }
 						 
 <STRING>[à-ÿÀ-ß]+        {
-                           fprintf(file, "\nIncorrect characters\n"); getchar(); exit(1);
+                           fprintf(file, "\nIncorrect characters:");
+						   fprintf(file, " %d:%d\n", yylloc.first_line, yylloc.first_column);
+						   getchar();
+						   exit(1);
 						 }
 						 
 <STRING>\"               {
