@@ -88,6 +88,19 @@
 %token IN
 %token MOD
 %token STEP
+%token EXCEPTION
+%token INTEGER
+%token CHAR
+%token STRING
+%token BOOLEAN
+%token CONSOLE
+%token WRITE
+%token WRITELINE
+%token READ
+%token READLINE
+%token READKEY
+%token SYSTEM
+%token EQUAL
 
 
 %right '=' ASSIGN_PLUS ASSIGN_MINUS ASSIGN_MUL ASSIGN_DIV ASSIGN_INT_DIV
@@ -121,7 +134,7 @@
 		| expr '=' expr
 		| expr '+' expr
 		| expr '-' expr
-		| expt '*' expr
+		| expr '*' expr
 		| expr '/' expr
 		| expr '\\' expr
 		| expr '^' expr
@@ -143,8 +156,8 @@
 				
 	if_stmt: IF expr THEN ENDL stmt_list end_if_stmt
 		   | IF expr ENDL stmt_list end_if_stmt
-		   | IF expr THEN stmt_list_inline ENDIF
-		   | IF expr THEN stmt_list_inline ELSE stmt_list_inline ENDIF
+		   | IF expr THEN stmt_list_inline END_IF
+		   | IF expr THEN stmt_list_inline ELSE stmt_list_inline END_IF
 		   ;
 		   
 	stmt_list_inline: stmt
@@ -153,8 +166,8 @@
 					
 	end_if_stmt: END_IF
 			   | ELSE stmt_list END_IF
-		       | ELSE_IF expr THEN stmt_list end_if_stmt
-		       | ELSE_IF expr ENDL stmt_list end_if_stmt
+		       | ELSEIF expr THEN stmt_list end_if_stmt
+		       | ELSEIF expr ENDL stmt_list end_if_stmt
 		       ;		
 		       
 	dim_stmt: DIM as_stmt_list
@@ -166,7 +179,7 @@
 		
 	as_stmt: id_list as_stmt_type
 		   | ID as_stmt_type
-		   | ID as_stmt_type = expr
+		   | ID as_stmt_type '=' expr
 		   ;	
 			  
 	as_stmt_type: AS INTEGER
@@ -194,7 +207,7 @@
 				| DO stmt_list LOOP UNTIL expr
 				;
 
-	enum_stmt: ENUM ID enum_member_list END ENUM
+	enum_stmt: ENUM ID enum_member_list END_ENUM
 			 ;
 
 	enum_member_list: enum_expr
@@ -206,11 +219,11 @@
 			 ;
 			 
 	sub_stmt: SUB ID '('')' stmt_list END_SUB
-			| SUB ID '('sub_stmt_param_list')' stmt_list END_SUB
+			| SUB ID '('param_list')' stmt_list END_SUB
 			;
 			
 	param_list: param
-		      | param_stmt_list',' param
+		      | param_list',' param
 			  ;
 
 	param: BYREF ID as_stmt_type
@@ -224,10 +237,11 @@
 	func_stmt_list: stmt_list RETURN expr
 				  ;   
 
-	catch_stmt: CATCH as_expr
+	catch_stmt: CATCH ID AS EXCEPTION ENDL stmt_list
 			  ;
 	
-	catch_stmt_list: catch_stmt stmt_list
+	catch_stmt_list: catch_stmt
+				   | catch_stmt_list catch_stmt
 				   ;
 			
 	try_stmt: TRY stmt_list catch_stmt_list END_TRY
