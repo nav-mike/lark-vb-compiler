@@ -23,23 +23,18 @@
 	struct VB_Dim_stmt*		dim_str;
 	struct VB_As_Stmt_list*	as_list_str;
 	struct VB_As_stmt*		as_str;
-	struct VB_Id_list*		id_list_str;
+	
 }
 
-%type <module_str>	stmt_module
-%type <list_str>	stmt_list
-%type <stmt_str>	stmt
-%type <expr_str>	expr
-%type <if_str>		if_stmt	
-%type <end_if_str>	end_if_stmt
-%type <dim_str>		dim_stmt
-%type <as_list_str> as_stmt_list
-%type <as_str>		as_stmt
-%type <id_list_str> id_list
 
 
-%token <expr_str>		ID
 
+
+
+
+
+
+%token <expr_str>	ID
 
 %token <b_const> BOOLEAN_CONST
 %token <i_const> INT_CONST
@@ -124,6 +119,21 @@
 		| expr ENDL
 		| if_stmt
 		| dim_stmt
+		| for_stmt
+		| while_stmt
+		| do_loop_stmt
+		| enum_stmt
+		| sub_stmt
+		| func_stmt
+		| catch_stmt
+		| try_stmt
+		| throw_stmt
+		| console_print_stmt
+		| console_println_stmt
+		| console_read_stmt
+		| console_readln_stmt
+		| console_readkey_stmt
+		| module_stmt
 		;
 					  
 	expr: ID
@@ -250,20 +260,20 @@
 	throw_stmt: THROW NEW SYSTEM '.' EXCEPTION '(' STRING ')'
 			  ;			  
 
-	console_print: CONSOLE '.' WRITE '(' STRING ')'
-				 ;
+	console_print_stmt: CONSOLE '.' WRITE '(' STRING ')'
+					  ;
 				 
-	console_println: CONSOLE '.' WRITELINE '(' STRING ')'
-				   ;
+	console_println_stmt: CONSOLE '.' WRITELINE '(' STRING ')'
+						;
 				   
-	console_read: CONSOLE '.' READ '('')'
-				;
+	console_read_stmt: CONSOLE '.' READ '('')'
+					 ;
 				
-	console_readln: CONSOLE '.' READLINE '('')'
-				  ;
+	console_readln_stmt: CONSOLE '.' READLINE '('')'
+					   ;
 				  
-	console_read_key: CONSOLE '.' READKEY '('')'
-					;
+	console_readkey_stmt: CONSOLE '.' READKEY '('')'
+						;
 					
 	module_stmt: MODULE ID stmt_list END_MODULE
 			   ;
