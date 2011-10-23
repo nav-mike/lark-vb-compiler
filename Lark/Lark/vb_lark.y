@@ -5,7 +5,7 @@
 	extern int yylex(void);
 %}
 
-%start stmt_module
+%start stmt_start_module
 
 %union
 {
@@ -14,34 +14,85 @@
 	char	c_const;
 	char*	s_const;
 	
-	struct VB_Stmt_module*	module_str;
-	struct VB_Stmt_list*	list_str;
-	struct VB_Stmt*			stmt_str;
-	struct VB_Expr*			expr_str;
-	struct VB_If_stmt*		if_str;
-	struct VB_End_if_stmt*	end_if_str;
-	struct VB_Dim_stmt*		dim_str;
-	struct VB_As_Stmt_list*	as_list_str;
-	struct VB_As_stmt*		as_str;
+	struct VB_STR_Start_module*		start_module;
+	struct VB_STR_Stmt_list*		list;
+	struct VB_STR_Stmt*				stmt;
+	struct VB_STR_Expr*				expr;
+	struct VB_STR_If_stmt*			if_stmt;
+	struct VB_STR_Stmt_list_inline*	ilist;
+	struct VB_STR_End_if_stmt*		end_if;
+	struct VB_STR_Dim_stmt*			dim;
+	struct VB_STR_As_stmt_list*		as_l;
+	struct VB_STR_As_stmt*			as;
+	struct VB_STR_Id_list_stmt*		id_l;
+	struct VB_STR_For_stmt*			for;
+	struct VB_STR_While_stmt*		while;
+	struct VB_STR_Do_loop_stmt*		do_loop;
+	struct VB_STR_Enum_stmt*		enum;
+	struct VB_STR_Enum_expr_list*	enum_l;
+	struct VB_STR_Enum_expr*		enum_e;
+	struct VB_STR_Sub_stmt*			sub;
+	struct VB_STR_Param_list*		param_l;
+	struct VB_STR_Param_stmt*		param;
+	struct VB_STR_Func_stmt*		func;
+	struct VB_STR_Func_stmt_list*	func_l;
+	struct VB_STR_Catch_stmt*		catch;
+	struct VB_STR_Catch_stmt_list*	catch_l;
+	struct VB_STR_Try_stmt*			try;
+	struct VB_STR-Throw_stmt*		throw;
+	struct VB_STR_Module_stmt*		module;
+	
+	struct VB_STR_Console_print_stmt*	console_print;
+	struct VB_STR_Console_println_stmt*	console_println;
+	struct VB_STR_Console_read_stmt*	console_read;
+	struct VB_STR_Console_readln_stmt*	console_readln;
+	struct VB_STR_Console_readkey_stmt*	console_readkey;
 	
 }
 
+%type <start_module>	stmt_start_module
+%type <list>	stmt_list
+%type <stmt>	stmt
+%type <expr>	expr
+%type <if_stmt>	if_stmt
+%type <ilist>	stmt_list_inline
+%type <end_if>	end_if_stmt
+%type <dim>		dim_stmt
+%type <as_l>	as_stmt_list
+%type <as>		as_stmt
+%type <id_l>	id_list_stmt
+%type <for>		for_stmt 
+%type <while>	while_stmt 
+%type <do_loop> do_loop_stmt
+%type <enum>	enum_stmt
+%type <enum_l>  enum_expr_list 
+%type <enum_e>	enum_expr
+%type <sub>		sub_stmt
+%type <param_l> param_list 
+%type <param>	param_stmt
+%type <func>	func_stmt
+%type <func_l>  func_stmt_list
+%type <catch>	catch_stmt
+%type <catch_l> catch_stmt_list
+%type <try>		try_stmt
+%type <throw>	throw_stmt
+%type <module>	module_stmt
+
+%type <console_print>	console_print_stmt
+%type <console_println> console_println_stmt
+%type <console_read>	console_read_stmt 
+%type <console_readln>	console_readln_stmt
+%type <console_readkey> console_readkey_stmt
 
 
 
-
-
-
-
-
-%token <expr_str>	ID
 
 %token <b_const> BOOLEAN_CONST
 %token <i_const> INT_CONST
 %token <s_const> STRING_CONST
 %token <c_const> CHAR_CONST
 
-
+%token <expr> ID
 %token ENDL
 %token DIM
 %token AS
@@ -108,8 +159,8 @@
 
 %%
 
-	stmt_module: stmt_list
-			   ;
+	stmt_start_module: stmt_list
+					 ;
 		
 	stmt_list: stmt
 			 | stmt_list stmt
@@ -187,7 +238,7 @@
 				| as_stmt_list',' as_stmt
 				;			
 		
-	as_stmt: id_list as_stmt_type
+	as_stmt: id_list_stmt as_stmt_type
 		   | ID as_stmt_type
 		   | ID as_stmt_type '=' expr
 		   ;	
@@ -198,9 +249,9 @@
 			    | AS STRING
 			    ;
 
-	id_list: ID
-		   | id_list',' ID
-		   ;		
+	id_list_stmt: ID
+				| id_list_stmt',' ID
+				;		
 		
 	for_stmt: FOR ID '=' INT_CONST TO INT_CONST stmt_list NEXT
 			| FOR ID '=' INT_CONST TO INT_CONST stmt_list STEP INT_CONST NEXT
@@ -217,11 +268,11 @@
 				| DO stmt_list LOOP UNTIL expr
 				;
 
-	enum_stmt: ENUM ID enum_member_list END_ENUM
+	enum_stmt: ENUM ID enum_expr_list END_ENUM
 			 ;
 
-	enum_member_list: enum_expr
-					| enum_member_list enum_expr
+	enum_expr_list: enum_expr
+					| enum_expr_list enum_expr
 					;
 
 	enum_expr: ID
@@ -232,13 +283,13 @@
 			| SUB ID '('param_list')' stmt_list END_SUB
 			;
 			
-	param_list: param
-		      | param_list',' param
+	param_list: param_stmt
+		      | param_list',' param_stmt
 			  ;
 
-	param: BYREF ID as_stmt_type
-	     | BYVAL ID as_stmt_type
-		 ; 
+	param_stmt: BYREF ID as_stmt_type
+			  | BYVAL ID as_stmt_type
+			  ; 
 
 	func_stmt: FUNCTION ID '('')' as_stmt_type func_stmt_list END_FUNCTION
 			 | FUNCTION ID '('param_list')' as_stmt_type func_stmt_list END_FUNCTION
