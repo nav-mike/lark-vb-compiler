@@ -208,7 +208,7 @@
 		| expr LESS_OR_EQUAL 	expr
 		| expr NONEQUAL			expr
 		| expr EQUAL			expr
-		| '(' expr ')'
+		| expr'('expr_list')'
 		| '-' expr %prec UMINUS
 		| '+' expr %prec UPLUS
 		;
