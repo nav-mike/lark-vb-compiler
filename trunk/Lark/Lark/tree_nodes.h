@@ -27,12 +27,6 @@ enum VB_Expr_type
 	LESS_OR_EQUAL_OPERATOR,		//!< Оператор "меньше или равно"
 	ASSIGN_NONEQUAL_OPERATOR,	//!< Оператор "неравно"
 
-	ASSIGN_PLUS_OPERATOR,		//!< Оператор сложения и присваивания
-	ASSIGN_MINUS_OPERATOR,		//!< Оператор вычитания и присваивания
-	ASSIGN_MUL_OPERATOR,		//!< Оператор умножения и присваивания
-	ASSIGN_DIV_OPERATOR,		//!< Оператор деления и присваивания
-	ASSIGN_INT_DIV_OPERATOR,	//!< Оператор целочисленного деления и присваивания
-
 	UMINUS_OPERATOR				//!< Оператор унарного минуса
 };
 
