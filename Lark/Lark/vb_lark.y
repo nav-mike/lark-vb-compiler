@@ -5,7 +5,7 @@
 	extern int yylex(void);
 %}
 
-%start stmt_start_module
+%start module_stmt
 
 %union
 {
@@ -14,7 +14,9 @@
 	char	c_const;
 	char*	s_const;
 	
-	struct VB_STR_Start_module*		start_module;
+	//struct VB_STR_Start_module*		start_module;
+	
+	struct VB_STR_Module_stmt*		module;
 	struct VB_STR_Stmt_list*		list;
 	struct VB_STR_Stmt*				stmt;
 	struct VB_STR_Expr*				expr;
@@ -22,8 +24,8 @@
 	struct VB_STR_Stmt_list_inline*	ilist;
 	struct VB_STR_End_if_stmt*		end_if;
 	struct VB_STR_Dim_stmt*			dim;
-	struct VB_STR_As_stmt_list*		as_l;
-	struct VB_STR_As_stmt*			as;
+	struct VB_STR_As_expr_list*		as_l;
+	struct VB_STR_As_expr*			as;
 	struct VB_STR_Id_list_stmt*		id_l;
 	struct VB_STR_For_stmt*			for;
 	struct VB_STR_While_stmt*		while;
@@ -40,7 +42,9 @@
 	struct VB_STR_Catch_stmt_list*	catch_l;
 	struct VB_STR_Try_stmt*			try;
 	struct VB_STR-Throw_stmt*		throw;
-	struct VB_STR_Module_stmt*		module;
+	struct VB_STR_array_expr*		array;
+	struct VB_STR_expr_list*		expr_l;
+	struct VB_STR_array_expr_list*	array_l;
 	
 	struct VB_STR_Console_print_stmt*	console_print;
 	struct VB_STR_Console_println_stmt*	console_println;
@@ -50,7 +54,7 @@
 	
 }
 
-%type <start_module>	stmt_start_module
+%type <module>	module_stmt
 %type <list>	stmt_list
 %type <stmt>	stmt
 %type <expr>	expr
@@ -58,8 +62,8 @@
 %type <ilist>	stmt_list_inline
 %type <end_if>	end_if_stmt
 %type <dim>		dim_stmt
-%type <as_l>	as_stmt_list
-%type <as>		as_stmt
+%type <as_l>	as_expr_list
+%type <as>		as_expr
 %type <id_l>	id_list_stmt
 %type <for>		for_stmt 
 %type <while>	while_stmt 
@@ -76,15 +80,15 @@
 %type <catch_l> catch_stmt_list
 %type <try>		try_stmt
 %type <throw>	throw_stmt
-%type <module>	module_stmt
+%type <array>   array_expr
+%type <expr_l>  expr_list
+%type <array_l> array_expr_list
 
 %type <console_print>	console_print_stmt
 %type <console_println> console_println_stmt
 %type <console_read>	console_read_stmt 
 %type <console_readln>	console_readln_stmt
 %type <console_readkey> console_readkey_stmt
-
-
 
 
 %token <b_const> BOOLEAN_CONST
@@ -146,11 +150,10 @@
 %token READLINE
 %token READKEY
 %token SYSTEM
-%token EQUAL
 
 
-%right '=' ASSIGN_PLUS ASSIGN_MINUS ASSIGN_MUL ASSIGN_DIV ASSIGN_INT_DIV
-%left '>' '<' MORE_OR_EQUAL LESS_OR_EQUAL NONEQUAL
+%right '='
+%left '>' '<' MORE_OR_EQUAL LESS_OR_EQUAL NONEQUAL EQUAL
 %left '+' '-'
 %left '*' '/' '\\'
 %left '^'
@@ -159,8 +162,8 @@
 
 %%
 
-	stmt_start_module: stmt_list
-					 ;
+	module_stmt: MODULE ID ENDL stmt_list END_MODULE ENDL
+			   ;
 		
 	stmt_list: stmt
 			 | stmt_list stmt
@@ -184,7 +187,6 @@
 		| console_read_stmt
 		| console_readln_stmt
 		| console_readkey_stmt
-		| module_stmt
 		;
 					  
 	expr: ID
@@ -203,11 +205,6 @@
 		| expr '<' expr
 		| expr MORE_OR_EQUAL 	expr
 		| expr LESS_OR_EQUAL 	expr
-		| expr ASSIGN_PLUS 		expr
-		| expr ASSIGN_MINUS 	expr
-		| expr ASSIGN_MUL 		expr
-		| expr ASSIGN_DIV 		expr
-		| expr ASSIGN_INT_DIV 	expr
 		| expr NONEQUAL			expr
 		| expr EQUAL			expr
 		| '(' expr ')'
@@ -217,33 +214,53 @@
 				
 	if_stmt: IF expr THEN ENDL stmt_list end_if_stmt
 		   | IF expr ENDL stmt_list end_if_stmt
-		   | IF expr THEN stmt_list_inline END_IF
-		   | IF expr THEN stmt_list_inline ELSE stmt_list_inline END_IF
+		   | IF expr THEN stmt_list_inline END_IF ENDL
+		   | IF expr THEN stmt_list_inline ELSE stmt_list_inline END_IF ENDL
 		   ;
 		   
 	stmt_list_inline: stmt
 					| stmt_list_inline ':' stmt
 					;
 					
-	end_if_stmt: END_IF
-			   | ELSE stmt_list END_IF
-		       | ELSEIF expr THEN stmt_list end_if_stmt
+	end_if_stmt: END_IF ENDL
+			   | ELSE ENDL stmt_list END_IF ENDL
+		       | ELSEIF expr THEN ENDL stmt_list end_if_stmt
 		       | ELSEIF expr ENDL stmt_list end_if_stmt
 		       ;		
 		       
-	dim_stmt: DIM as_stmt_list
+	dim_stmt: DIM as_expr_list ENDL
 			;
 			
-	as_stmt_list: as_stmt
-				| as_stmt_list',' as_stmt
-				;			
+	as_expr_list: as_expr
+				| array_expr
+				| as_expr_list',' as_expr
+				| as_expr_list',' array_expr
+				;		
+				
+	array_expr: ID '('int_const_list')' as_expr_type
+			  | ID '('int_const_list')' as_expr_type '=' '{'expr_list'}'
+			  | ID '('int_const_list')' as_expr_type '=' '{'array_expr_list'}'
+			  ;
+			  
+	expr_list: expr
+			 | expr_list',' expr
+			 ;
+			 
+	array_expr_list: '{'expr_list'}'
+				   | array_expr_list',' '{'expr_list'}'
+				   ;
+			 
+	int_const_list: /* empty */
+				  | INT_CONST
+				  | int_const_list',' INT_CONST
+				  ;	
 		
-	as_stmt: id_list_stmt as_stmt_type
-		   | ID as_stmt_type
-		   | ID as_stmt_type '=' expr
+	as_expr: id_list_stmt as_expr_type
+		   | ID as_expr_type
+		   | ID as_expr_type '=' expr
 		   ;	
 			  
-	as_stmt_type: AS INTEGER
+	as_expr_type: AS INTEGER
 			    | AS BOOLEAN
 			    | AS CHAR 
 			    | AS STRING
@@ -253,46 +270,46 @@
 				| id_list_stmt',' ID
 				;		
 		
-	for_stmt: FOR ID '=' INT_CONST TO INT_CONST stmt_list NEXT
-			| FOR ID '=' INT_CONST TO INT_CONST stmt_list STEP INT_CONST NEXT
-			| FOR ID as_stmt_type '=' INT_CONST TO INT_CONST stmt_list NEXT
-			| FOR ID as_stmt_type '=' INT_CONST TO INT_CONST stmt_list STEP INT_CONST NEXT
+	for_stmt: FOR ID '=' INT_CONST TO INT_CONST ENDL stmt_list NEXT ENDL
+			| FOR ID '=' INT_CONST TO INT_CONST STEP INT_CONST ENDL stmt_list NEXT ENDL
+			| FOR ID as_expr_type '=' INT_CONST TO INT_CONST ENDL stmt_list NEXT ENDL
+			| FOR ID as_expr_type '=' INT_CONST TO INT_CONST STEP INT_CONST ENDL stmt_list NEXT ENDL
 			;	
 			
-	while_stmt: WHILE expr stmt_list END_WHILE
+	while_stmt: WHILE expr ENDL stmt_list END_WHILE ENDL
 			  ;	
 
-	do_loop_stmt: DO WHILE expr stmt_list LOOP
-				| DO UNTIL expr stmt_list LOOP
-				| DO stmt_list LOOP WHILE expr
-				| DO stmt_list LOOP UNTIL expr
+	do_loop_stmt: DO WHILE expr ENDL stmt_list LOOP ENDL
+				| DO UNTIL expr ENDL stmt_list LOOP ENDL
+				| DO ENDL stmt_list LOOP WHILE expr ENDL
+				| DO ENDL stmt_list LOOP UNTIL expr ENDL
 				;
 
-	enum_stmt: ENUM ID enum_expr_list END_ENUM
+	enum_stmt: ENUM ID ENDL enum_expr_list END_ENUM ENDL
 			 ;
 
-	enum_expr_list: enum_expr
-					| enum_expr_list enum_expr
+	enum_expr_list: enum_expr ENDL
+					| enum_expr_list enum_expr ENDL
 					;
 
 	enum_expr: ID
 			 | ID '=' INT_CONST
 			 ;
 			 
-	sub_stmt: SUB ID '('')' stmt_list END_SUB
-			| SUB ID '('param_list')' stmt_list END_SUB
+	sub_stmt: SUB ID '('')' ENDL stmt_list END_SUB ENDL
+			| SUB ID '('param_list')' ENDL stmt_list END_SUB ENDL
 			;
 			
 	param_list: param_stmt
 		      | param_list',' param_stmt
 			  ;
 
-	param_stmt: BYREF ID as_stmt_type
-			  | BYVAL ID as_stmt_type
+	param_stmt: BYREF ID as_expr_type
+			  | BYVAL ID as_expr_type
 			  ; 
 
-	func_stmt: FUNCTION ID '('')' as_stmt_type func_stmt_list END_FUNCTION
-			 | FUNCTION ID '('param_list')' as_stmt_type func_stmt_list END_FUNCTION
+	func_stmt: FUNCTION ID '('')' as_expr_type ENDL func_stmt_list END_FUNCTION ENDL
+			 | FUNCTION ID '('param_list')' as_expr_type ENDL func_stmt_list END_FUNCTION ENDL
 			 ;					 
 				
 	func_stmt_list: stmt_list RETURN expr
@@ -311,24 +328,21 @@
 	throw_stmt: THROW NEW SYSTEM '.' EXCEPTION '(' STRING ')'
 			  ;			  
 
-	console_print_stmt: CONSOLE '.' WRITE '(' STRING ')'
+	console_print_stmt: CONSOLE '.' WRITE '(' STRING ')' ENDL
 					  ;
 				 
-	console_println_stmt: CONSOLE '.' WRITELINE '(' STRING ')'
+	console_println_stmt: CONSOLE '.' WRITELINE '(' STRING ')' ENDL
 						;
 				   
-	console_read_stmt: CONSOLE '.' READ '('')'
+	console_read_stmt: CONSOLE '.' READ '('')' ENDL
 					 ;
 				
-	console_readln_stmt: CONSOLE '.' READLINE '('')'
+	console_readln_stmt: CONSOLE '.' READLINE '('')' ENDL
 					   ;
 				  
-	console_readkey_stmt: CONSOLE '.' READKEY '('')'
+	console_readkey_stmt: CONSOLE '.' READKEY '('')' ENDL
 						;
-					
-	module_stmt: MODULE ID stmt_list END_MODULE
-			   ;
-	
+								   	
 %%
 
 int main (int argc, char* argv[])
