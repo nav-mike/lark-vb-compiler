@@ -78,7 +78,7 @@
 %type <func_l>  func_stmt_list
 %type <catch>	catch_stmt
 %type <catch_l> catch_stmt_list
-%type <try>		try_stmt
+%type <try>		try_catch_stmt
 %type <throw>	throw_stmt
 %type <array>   array_expr
 %type <expr_l>  expr_list
@@ -150,6 +150,7 @@
 %token READLINE
 %token READKEY
 %token SYSTEM
+%token FINALLY
 
 
 %right '='
@@ -180,7 +181,7 @@
 		| sub_stmt
 		| func_stmt
 		| catch_stmt
-		| try_stmt
+		| try_catch_stmt
 		| throw_stmt
 		| console_print_stmt
 		| console_println_stmt
@@ -315,19 +316,6 @@
 	func_stmt_list: stmt_list RETURN expr
 				  ;   
 
-	catch_stmt: CATCH ID AS EXCEPTION ENDL stmt_list
-			  ;
-	
-	catch_stmt_list: catch_stmt
-				   | catch_stmt_list catch_stmt
-				   ;
-			
-	try_stmt: TRY stmt_list catch_stmt_list END_TRY
-			;
-			
-	throw_stmt: THROW NEW SYSTEM '.' EXCEPTION '(' STRING ')'
-			  ;			  
-
 	console_print_stmt: CONSOLE '.' WRITE '(' STRING ')' ENDL
 					  ;
 				 
@@ -342,6 +330,19 @@
 				  
 	console_readkey_stmt: CONSOLE '.' READKEY '('')' ENDL
 						;
+						
+	try_catch_stmt: TRY ENDL stmt_list catch_stmt_list FINALLY ENDL stmt_list ENDL TRY ENDL
+				 ;
+	
+	catch_stmt_list: catch_stmt
+				   | catch_stmt_list catch_stmt
+				   ;		
+								
+	catch_stmt: CATCH ID AS EXCEPTION ENDL stmt_list
+			  ;
+	
+	throw_stmt: THROW NEW SYSTEM '.' EXCEPTION '(' STRING_CONST ')' ENDL
+			  ;			  						
 								   	
 %%
 
