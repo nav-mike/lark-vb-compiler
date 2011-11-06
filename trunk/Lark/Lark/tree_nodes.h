@@ -42,6 +42,18 @@ enum VB_Stmt_type
 };
 
 
+/*! \enum VB_If_stmt_type
+    Перечисление типов условного перехода. 
+ */
+enum VB_If_stmt_type
+{
+	IF_THEN,
+	IF_ENDL,
+	IF_INLINE,
+	IF_ELSE_INLINE
+};
+
+
 /*! \enum VB_End_if_stmt_type
     Перечисление типов окончания операции условного перехода. 
  */
@@ -90,10 +102,9 @@ struct VB_Stmt_list
  */
 struct VB_Stmt
 {
-	enum VB_Stmt_type		type;			//!< Тип операции.
-	struct VB_Expr*			expr;			//!< Указатель на содержащееся в операции выражение.
-	struct VB_Stmt_list*	stmt_list;		//!< Указатель на список операций включающихся в данную операцию.
-	struct VB_Stmt*			next;			//!< Указатель на следующий элемент последовательности операторов.
+	enum VB_Stmt_type	type;	//!< Тип операции.
+	struct VB_Expr*		expr;	//!< Указатель на содержащееся в операции выражение.
+	struct VB_Stmt*		next;	//!< Указатель на следующий элемент последовательности операторов.
 };
 
 
@@ -107,6 +118,17 @@ struct VB_Expr
 	int					int_val;		//!< Значение выражения. Используется для bool, int, char.
 	struct VB_Expr*		left_chld;		//!< Указатель на левого сына.
 	struct VB_Expr*		right_chld;		//!< Указатель на правого сына.
+	struct VB_Expr_list* list;			//!< Указаель на список выражений
+};
+
+
+/*! \struct VB_Expr_list
+    Структура, описывающая список выражений.
+ */
+struct VB_Expr_list
+{
+	struct VB_Expr* first;  //!< Указатель на первый элемент списка
+	struct VB_Expr* last;   //!< Указатель на последний элемент списка
 };
 
 
@@ -115,13 +137,13 @@ struct VB_Expr
  */
 struct VB_If_stmt
 {
-	bool					hasThen;	//!< Есть ли "Then" или после условия идет конец строки
+	enum   VB_If_stmt_type  type;		//!< Тип условного оператора
 	struct VB_Expr*			expr;		//!< Условие
 	struct VB_Stmt_list*	stmt_list;	//!< Указатель на список операций при истинном условии.
 	struct VB_End_if_stmt*	end_stmt;	//!< Указатель на список операций при ложном условии условии.
 	struct VB_Stmt*			next;		//!< Указатель на следующий элемент последовательности операторов.
-
 };
+
 
 /*! \struct VB_End_if_stmt
     Структура дерева для хранения действий при ложном условии
@@ -141,38 +163,59 @@ struct VB_End_if_stmt
  */
 struct VB_Dim_stmt
 {
-	struct VB_As_Stmt_list* first;		//!< Указатель на первый элемент списка объявляемых переменных
-	struct VB_As_Stmt_list* last;		//!< Указатель на последний элемент списка объявляемых переменных
+	struct VB_As_Expr_list* first;		//!< Указатель на первый элемент списка объявляемых переменных
+	struct VB_As_Expr_list* last;		//!< Указатель на последний элемент списка объявляемых переменных
+};
+
+
+/*! \enum VB_As_Stmt_list
+    Перечисление, описывющее тип списка последовательности определения переменных
+ */
+enum VB_As_Expr_list_type
+{
+	EXPR,		// Определяется идентификатор
+	ARRAY,		// Определяется массив
+	EXPR_LIST,	// Определяется список идентификаторов
+	EXPR_ARR	// Определяется список массивов
 };
 
 
 /*! \struct VB_As_Stmt_list
     Структура, описывающая связный список переменных, объявляемых одним типом
  */
-struct VB_As_Stmt_list
+struct VB_As_Expr_list
 {
-	struct VB_As_stmt*		as_stmt;	//!< Список переменных, определяемых одним типом
-	struct VB_As_Stmt_list* next;		//!< Указатель на следующий список переменных определяемых одним типом
+	enum   VB_As_Expr_list_type type;		//!< Тип
+	struct VB_As_expr*			as_expr;	//!< Идентификатор
+	struct VB_As_Expr_list*		next;		//!< Список идентификаторов или массивов
+	struct VB_Array_expr*		arr;		//!< Массив
+};
+
+
+enum VB_As_expr_type
+{
+	ID_LIST,	// Список идентификаторов
+	ONE_ID,		// Один идентификаор
+	ID_INIT		// Инициализированный идентификатор
 };
 
 
 /*! \struct VB_As_stmt
     Структура дерева для хранения определения переменных одного типа.
  */
-struct VB_As_stmt
+struct VB_As_expr
 { 
-	bool					isInit;		//!< Инициализируется ли переменная
-	struct VB_Id_list*		idents;		//!< Указатель на идентификаторов
-	struct VB_Expr*			expr;		//!< Выражение, которым переменная инициализируетяс
+	enum	VB_As_expr_type	type;		// Тип 
+	struct	VB_Id_list*		list;		// Список идентификаторов
+	enum	VB_Id_type		id_type;	// Тип определяемого идентификатора или масива
+	struct	VB_Expr*		expr;		// Инициализируемое значение
 };
 
-
 /*! \struct VB_Id_list
-    Структура дерева для хранения списка идентификаторов.
+    Список идентификаторов.
  */
 struct VB_Id_list
 {
-	struct VB_Id*		current_id;		//!< Текущий идентификатор
-	struct VB_Id_list*	next;			//!< Следующий идентификатор
+	char* id;
+	struct VB_Id_list* next;
 };
-
