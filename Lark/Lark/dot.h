@@ -141,10 +141,6 @@ int add_node_expr (struct VB_Expr* node)
 	return 0;
 }
 
-struct VB_Expr Create_VB_Expr(enum VB_Type_of_expr type, 
-								char* expr_string, int val,
-								struct VB_Expr* FirstSon,
-								struct VB_Expr* LastSon);
 
 /*!
     Функция добавляет в файл GraphViz фрагмент дерева для stmt_module.
@@ -743,10 +739,11 @@ int add_node_enum_expr (struct VB_Enum_expr* node)
 int add_node_enum_expr_list (struct VB_Enum_expr_list* node)
 {
 	FILE* file = NULL;
+	int number = Number;
 	int error = fopen_s(&file,"vb_lark.txt", "at");
 	if (error) return 1;
 
-	error = fprintf(file,"\n\t\"node%d\" [", Number);
+	error = fprintf(file,"\n\t\"node%d\" [", number);
 	if (error == -1) return 1;
 
 	error = fprintf(file,"\n\t\tlabel = \"<f0> %s | <f1> %d \"",
@@ -756,7 +753,36 @@ int add_node_enum_expr_list (struct VB_Enum_expr_list* node)
 	error = fprintf(file,"\n\t\tshape = \"record\"\n\t];");
 	if (error == -1) return 1;
 
-	// Запись всех элеметов
+	if (node->first != NULL)
+	{
+		struct VB_Enum_expr* stmt = node->first;
+		fclose(file);
+
+		while (stmt != node->last)
+		{
+			Number++;
+			error = fopen_s(&file,"vb_lark.txt", "at");
+			if (error) return 1;
+			error = fprintf(file, "\n\t\"node%d\":f0 -> \"node%d\":f0;",
+			number, Number);
+			if (error == -1) return 1;
+
+			fclose(file);
+			error = add_node_enum_expr(stmt);
+			if (error) return 1;
+			stmt = stmt->next;
+		}
+
+		Number++;
+		error = fopen_s(&file,"vb_lark.txt", "at");
+		if (error) return 1;
+		error = fprintf(file, "\n\t\"node%d\":f0 -> \"node%d\":f0;",
+			number, Number);
+		if (error == -1) return 1;
+		fclose(file);
+		error = add_node_enum_expr(stmt);
+		if (error) return 1;
+	}
 
 	fclose(file);
 	return 0;
@@ -824,10 +850,11 @@ int add_node_do_loop_stmt (struct VB_Do_loop_stmt* node)
 int add_node_while_stmt (struct VB_While_stmt* node)
 {
 	FILE* file = NULL;
+	int number = Number;
 	int error = fopen_s(&file,"vb_lark.txt", "at");
 	if (error) return 1;
 
-	error = fprintf(file,"\n\t\"node%d\" [", Number);
+	error = fprintf(file,"\n\t\"node%d\" [", number);
 	if (error == -1) return 1;
 
 	error = fprintf(file,"\n\t\tlabel = \"<f0> %s | <f1> %s \"",
@@ -837,9 +864,32 @@ int add_node_while_stmt (struct VB_While_stmt* node)
 	error = fprintf(file,"\n\t\tshape = \"record\"\n\t];");
 	if (error == -1) return 1;
 
-	// Условие, тело
+	if (node->expr != NULL)
+	{
+		Number++;
+		error = fprintf(file, "\n\t\"node%d\":f0 -> \"node%d\":f0;",
+		number, Number);
+		if (error == -1) return 1;
 
-	fclose(file);
+		fclose(file);
+		error = add_node_expr(node->expr);
+		if (error) return 1;
+	}
+
+	if (node->stmt_list != NULL)
+	{
+		Number++;
+		error = fopen_s(&file,"vb_lark.txt", "at");
+		if (error) return 1;
+		error = fprintf(file, "\n\t\"node%d\":f0 -> \"node%d\":f0;",
+		number, Number);
+		if (error == -1) return 1;
+
+		fclose(file);
+		error = add_node_stmt_list(node->stmt_list);
+		if (error) return 1;
+	}
+
 	return 0;
 }
 
