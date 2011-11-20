@@ -1461,10 +1461,11 @@ int add_node_as_Expr_list (struct VB_As_Expr_list* node)
 int add_node_as_expr (struct VB_As_expr* node)
 {
 	FILE* file = NULL;
+	int number = Number;
 	int error = fopen_s(&file,"vb_lark.txt", "at");
 	if (error) return 1;
 
-	error = fprintf(file,"\n\t\"node%d\" [", Number);
+	error = fprintf(file,"\n\t\"node%d\" [", number);
 	if (error == -1) return 1;
 
 	error = fprintf(file,"\n\t\tlabel = \"<f0> %s | <f1> %s | <f2> %s\"",
@@ -1474,7 +1475,40 @@ int add_node_as_expr (struct VB_As_expr* node)
 	error = fprintf(file, "\n\t\tshape = \"record\"\n\t];");
 	if (error == -1) return 1;
 
-	// внутренние указатели
+	if (node->list != NULL)
+	{
+		Number++;
+		if (error == -1) return 1;
+		fclose(file);
+		error = add_node_id_list(node->list);
+		if (error) return 1;
+	}
+
+	if (node->expr != NULL)
+	{
+		Number++;
+		error = fopen_s(&file,"vb_lark.txt", "at");
+		if (error) return 1;
+		error = fprintf(file, "\n\t\"node%d\":f0 -> \"node%d\":f0;",
+			number, Number);
+		if (error == -1) return 1;
+		fclose(file);
+		error = add_node_expr(node->expr);
+		if (error) return 1;
+	}
+
+	if (node->id != NULL)
+	{
+		Number++;
+		error = fopen_s(&file,"vb_lark.txt", "at");
+		if (error) return 1;
+		error = fprintf(file, "\n\t\"node%d\":f0 -> \"node%d\":f0;",
+			number, Number);
+		if (error == -1) return 1;
+		fclose(file);
+		error = add_node_expr(node->id);
+		if (error) return 1;
+	}
 
 	fclose(file);
 	return 0;
