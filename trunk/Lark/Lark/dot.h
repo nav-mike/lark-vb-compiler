@@ -755,3 +755,31 @@ int add_node_while_stmt (VB_While_stmt* node, int number)
 	fclose(file);
 	return 0;
 }
+
+/*!
+    Функция добавляет в файл GraphViz фрагмент дерева для VB_For_stmt.
+  \param module   - узел дерева.
+  \param number   - порядковый номер узла.
+  \return         Если произошла ошибка работы с файлом, то возвращается 1, иначе 0.
+*/
+int add_node_for_stmt (VB_For_stmt* node, int number)
+{
+	FILE* file = NULL;
+	int error = fopen_s(&file,"vb_lark.txt", "at");
+	if (error) return 1;
+
+	error = fprintf(file,"\n\t\"node%d\" [", number);
+	if (error == -1) return 1;
+
+	error = fprintf(file,"\n\t\tlabel = \"<f0> %d | <f1> %d | <f2> %d\"",
+		node->from_val, node->to_val, node->step_val);
+	if (error == -1) return 1;
+
+	error = fprintf(file,"\n\t\tshape = \"record\"\n\t];");
+	if (error == -1) return 1;
+
+	// тело и дентификатор
+
+	fclose(file);
+	return 0;
+}
