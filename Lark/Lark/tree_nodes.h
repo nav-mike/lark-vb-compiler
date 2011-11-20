@@ -816,3 +816,38 @@ struct VB_Stmt* create_VB_Stmt_Func (struct VB_Func_stmt* func_stmt)
 
 	return stmt;
 }
+
+/*!
+	Функция создания операции из исключений.
+  \param try_catch_stmt Исключение.
+  \return Новая операция.
+*/
+struct VB_Stmt* create_VB_Stmt_Try_Cathc (struct VB_Try_Catch_stmt* try_catch_stmt)
+{
+	struct VB_Stmt* stmt = NULL;
+
+	if (try_catch_stmt != NULL)
+	{
+		stmt = (struct VB_Stmt*)malloc(sizeof(struct VB_Stmt));
+		stmt->expr = NULL;
+		stmt->dim_stmt = NULL;
+		stmt->do_loop_stmt = NULL;
+		stmt->enum_stmt = NULL;
+		stmt->for_stmt = NULL;
+		stmt->func_stmt =  NULL;
+		stmt->if_stmt = NULL;
+		stmt->next = NULL;
+		stmt->print_stmt = NULL;
+		stmt->println_stmt = NULL;
+		stmt->read_stmt = NULL;
+		stmt->readkey_stmt = NULL;
+		stmt->readln_stmt = NULL;
+		stmt->sub_stmt = NULL;
+		stmt->throw_stmt = NULL;
+		stmt->try_catch_stmt = try_catch_stmt;
+		stmt->type = TRY_CATCH;
+		stmt->while_stmt = NULL;
+	}
+
+	return stmt;
+}
