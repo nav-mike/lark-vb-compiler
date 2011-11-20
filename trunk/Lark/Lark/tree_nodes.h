@@ -1193,3 +1193,19 @@ struct VB_Print_stmt* create_Print (char* text)
 
 	return print;
 }
+
+/*!
+	Функция создания Console.WriteLine()
+  \param text Текст в функции.
+  \return Узел дерева - вывод в стандратный поток с переносом строки.
+*/
+struct VB_Println_stmt* create_Println (char* text)
+{
+	struct VB_Println_stmt* println = NULL;
+
+	println = (struct VB_Println_stmt*)malloc(sizeof(struct VB_Println_stmt));
+
+	strcpy(println->text,text);
+
+	return println;
+}
