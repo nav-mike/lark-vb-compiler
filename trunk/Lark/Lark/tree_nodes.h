@@ -1254,3 +1254,19 @@ struct VB_Catch_stmt* create_Catch_stmt (char* id, struct VB_Stmt_list* stmt_lis
 
 	return catch_stmt;
 }
+
+/*!
+	Функция создания листа блоков обработки перехваченных сообщений.
+  \param catch_stmt Блок обработки перехваченного исключения.
+  \return Новый лист блоков обработки перехваченных сообщений.
+*/
+struct VB_Catch_stmt_list* create_Catch_stmt_list (struct VB_Catch_stmt* catch_stmt)
+{
+	struct VB_Catch_stmt_list* list = NULL;
+
+	list = (struct VB_Catch_stmt_list*)malloc(sizeof(struct VB_Catch_stmt_list));
+	list->first = catch_stmt;
+	list->last = catch_stmt;
+
+	return list;
+}
