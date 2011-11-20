@@ -924,7 +924,7 @@ struct VB_Stmt* create_VB_Stmt_Println (struct VB_Println_stmt* println_stmt)
 
 /*!
 	Функция создания операции из чтения строки.
-  \param readln_stmt Печать строки.
+  \param readln_stmt Чтение строки.
   \return Новая операция.
 */
 struct VB_Stmt* create_VB_Stmt_Readln (struct VB_Readln_stmt* readln_stmt)
@@ -950,7 +950,42 @@ struct VB_Stmt* create_VB_Stmt_Readln (struct VB_Readln_stmt* readln_stmt)
 		stmt->sub_stmt = NULL;
 		stmt->throw_stmt = NULL;
 		stmt->try_catch_stmt = NULL;
-		stmt->type = PRINTLN;
+		stmt->type = READLN;
+		stmt->while_stmt = NULL;
+	}
+
+	return stmt;
+}
+
+/*!
+	Функция создания операции из чтения символа.
+  \param read_stmt Чтение символа.
+  \return Новая операция.
+*/
+struct VB_Stmt* create_VB_Stmt_Read (struct VB_Read_stmt* read_stmt)
+{
+	struct VB_Stmt* stmt = NULL;
+
+	if (read_stmt != NULL)
+	{
+		stmt = (struct VB_Stmt*)malloc(sizeof(struct VB_Stmt));
+		stmt->expr = NULL;
+		stmt->dim_stmt = NULL;
+		stmt->do_loop_stmt = NULL;
+		stmt->enum_stmt = NULL;
+		stmt->for_stmt = NULL;
+		stmt->func_stmt =  NULL;
+		stmt->if_stmt = NULL;
+		stmt->next = NULL;
+		stmt->print_stmt = NULL;
+		stmt->println_stmt = NULL;
+		stmt->read_stmt = read_stmt;
+		stmt->readkey_stmt = NULL;
+		stmt->readln_stmt = NULL;
+		stmt->sub_stmt = NULL;
+		stmt->throw_stmt = NULL;
+		stmt->try_catch_stmt = NULL;
+		stmt->type = READ;
 		stmt->while_stmt = NULL;
 	}
 
