@@ -44,6 +44,8 @@
 	struct VB_Catch_stmt_list*	Catch_l;
 	struct VB_Catch_stmt*		Catch;
 	struct VB_Throw_stmt*		Throw;
+	
+	enum VB_Id_type				Id_type;
 
 	struct VB_Console_print_stmt*	console_print;
 	struct VB_Console_println_stmt*	console_println;
@@ -78,6 +80,8 @@
 %type <Catch_l>		catch_stmt_list
 %type <Catch>		catch_stmt
 %type <Throw>		throw_stmt
+
+%type <Id_type>		id_type
 
 %type <console_print>	console_print_stmt
 %type <console_println> console_println_stmt
@@ -206,14 +210,14 @@
 		| '+' expr %prec UPLUS		{$$ = create_operator_expr(UPLUS,$2,0);}
 		;
 			
-	if_stmt: IF expr THEN ENDL stmt_list end_if_stmt	{$$ = create_with_Then_expr_stmt_list_end_if_stmt($2,$5,$6);}
-		   | IF expr ENDL stmt_list end_if_stmt
-		   | IF expr THEN stmt_list_inline END_IF ENDL
-		   | IF expr THEN stmt_list_inline ELSE stmt_list_inline END_IF ENDL
+	if_stmt: IF expr THEN ENDL stmt_list end_if_stmt	{$$ = create_with_Then_expr_stmt_list_end_if_stmt(IF_THEN,$2,$5,$6);}
+		   | IF expr ENDL stmt_list end_if_stmt			{$$ = create_with_Then_expr_stmt_list_end_if_stmt(IF_ENDL,$2,$4,$5);}
+		   | IF expr THEN stmt_list_inline END_IF ENDL	{$$ = create_if_inline(IF_INLINE,$2,$4,0);}
+		   | IF expr THEN stmt_list_inline ELSE stmt_list_inline END_IF ENDL	{$$ = create_if_inline(IF_ELSE_INLINE,$2,$4,$6);}
 		   ;
 		   
-		stmt_list_inline: stmt
-						| stmt_list_inline ':' stmt
+		stmt_list_inline: stmt						{$$ = create_VB_Stmt_list($1);}
+						| stmt_list_inline ':' stmt	{$$ = edit_VB_Stmt_list($1,$3);}
 						;
 		   
 		end_if_stmt: END_IF ENDL
@@ -246,12 +250,12 @@
 					| id_list_stmt',' ID
 					;	
 		
-		array_expr: ID '('INT_CONST')' AS id_type
-				  | ID '('')' AS id_type '=' '{'expr_list'}'
+		array_expr: ID '('INT_CONST')' AS id_type				{$$ = create_Array($1,$3,$6);}
+				  | ID '('')' AS id_type '=' '{'expr_list'}'	{$$ = create_Array_with_init($1,$5,$8);}
 				  ;
-		
-		expr_list: expr
-				 | expr_list',' expr
+
+		expr_list: expr					{$$ = create_Expr_list($1);}
+				 | expr_list',' expr	{$$ = add_Expr_to_list($1,$3);}
 				 ;	
 		
 	for_stmt: FOR ID '=' INT_CONST TO INT_CONST ENDL stmt_list NEXT ENDL
@@ -296,29 +300,29 @@
 			 | FUNCTION ID '('param_list')' AS id_type ENDL stmt_list RETURN expr ENDL END_FUNCTION ENDL
 			 ;
 			 
-	try_catch_stmt: TRY ENDL stmt_list catch_stmt_list FINALLY ENDL stmt_list ENDL TRY ENDL
+	try_catch_stmt: TRY ENDL stmt_list catch_stmt_list FINALLY ENDL stmt_list ENDL TRY ENDL {$$ = create_Try_Catch($3,$4,$7);}
 				  ;
 			 
-		catch_stmt_list: catch_stmt
-					   | catch_stmt_list catch_stmt
+		catch_stmt_list: catch_stmt						{$$ = create_Catch_stmt_list($1);}
+					   | catch_stmt_list catch_stmt		{$$ = add_new_Catch_stmt($1,$2);}
 					   ;		
 									
-		catch_stmt: CATCH ID AS EXCEPTION ENDL stmt_list
+		catch_stmt: CATCH ID AS EXCEPTION ENDL stmt_list	{$$ = create_Catch_stmt($2,$6);}
 				  ;
 	
-	throw_stmt: THROW NEW SYSTEM '.' EXCEPTION '(' STRING_CONST ')' ENDL
+	throw_stmt: THROW NEW SYSTEM '.' EXCEPTION '(' STRING_CONST ')' ENDL  {$$ = create_Throw($7);}
 			  ;		
 
-	console_print_stmt: CONSOLE '.' WRITE '(' STRING ')' ENDL
+	console_print_stmt: CONSOLE '.' WRITE '(' STRING_CONST ')' ENDL		  {$$ = create_Print($5);}
 					  ;
 				 
-	console_println_stmt: CONSOLE '.' WRITELINE '(' STRING ')' ENDL
+	console_println_stmt: CONSOLE '.' WRITELINE '(' STRING_CONST ')' ENDL {$$ = create_Println$5);}
 						;
 				   
-	console_read_stmt: CONSOLE '.' READ '('')' ENDL
+	console_read_stmt: CONSOLE '.' READ '('')' ENDL						  {$$ = create_Read();}
 					 ;
 				
-	console_readln_stmt: CONSOLE '.' READLINE '('')' ENDL
+	console_readln_stmt: CONSOLE '.' READLINE '('')' ENDL				  {$$ = create_Readln();}
 					   ;							   	
 %%
 
