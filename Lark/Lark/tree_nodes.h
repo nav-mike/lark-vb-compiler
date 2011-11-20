@@ -88,13 +88,13 @@ struct VB_Expr_list
  */
 struct VB_Expr
 {
-	enum VB_Expr_type	type;			//!< Тип выражения.
-	char*				expr_string;	//!< Имя идентификатора, либо строка.
-	int					int_val;		//!< Значение выражения. Используется для bool, int, char.
-	struct VB_Expr*		left_chld;		//!< Указатель на левого сына.
-	struct VB_Expr*		right_chld;		//!< Указатель на правого сына.
-	struct VB_Expr_list list;			//!< Параметры процедуры или функции
-	struct VB_Expr*     next;           //!< Указатель на следующего, для Expr_list.
+	enum VB_Expr_type	 type;			//!< Тип выражения.
+	char*				 expr_string;	//!< Имя идентификатора, либо строка.
+	int					 int_val;		//!< Значение выражения. Используется для bool, int, char.
+	struct VB_Expr*		 left_chld;		//!< Указатель на левого сына.
+	struct VB_Expr*		 right_chld;		//!< Указатель на правого сына.
+	struct VB_Expr_list* list;			//!< Параметры процедуры или функции
+	struct VB_Expr*      next;           //!< Указатель на следующего, для Expr_list.
 	
 	enum VB_Id_type		id_type;		//!< Тип идентификатора 	????
 };
@@ -105,7 +105,7 @@ struct VB_Expr
 enum VB_Expr_type
 {
 	ID,				//!< Идентификатор
-	EXPR_FUNC,			//!< Процедура или функция
+	EXPR_FUNC,		//!< Процедура или функция
 	CHAR_CONST,		//!< Символьная константа
 	INT_CONST,		//!< Целочисленная константа
 	STRING_CONST,	//!< Строковая константа
@@ -872,6 +872,7 @@ struct VB_Array_expr* create_Array_with_init (char* id, enum VB_Id_type type, st
 
 	result->id_type = type;
 	result->list = list;
+	result->is_init = 1;
 	result->id = (struct VB_Expr*)malloc(sizeof(struct VB_Expr));
 	strcpy(result->id->expr_string, id);
 
@@ -1019,4 +1020,87 @@ struct VB_Try_catch_stmt* create_Try_Catch (struct VB_Stmt_list* stmt_list,
 	t->fin_stmt_list = f_stmt_list;
 
 	return t;
+}
+
+/*!
+	Функция создания выражения идентификатора.
+  \param name Имя идентификатора.
+  \return указатель на объект выражения.
+*/
+struct VB_Expr* create_id_expr(char* name)
+{
+	struct VB_Expr* result = (struct VB_Expr*)malloc(sizeof(struct VB_Expr));
+
+	result->type = ID;
+	result->expr_string = name;
+
+	return result;
+}
+
+/*!
+	Функция создания выражения вызова функции.
+  \param name Имя идентификатора.
+  \param params Параметры.
+  \return указатель на объект выражения.
+*/
+struct VB_Expr* create_func_expr(char* name, struct VB_Expr_list* params)
+{
+	struct VB_Expr* result = (struct VB_Expr*)malloc(sizeof(struct VB_Expr));
+
+	result->type = FUNC;
+	result->expr_string = name;
+	result->list = params;
+
+	return result;
+}
+
+/*!
+	Функция создания выражения константы (int, boolean, char).
+  \param type Тип идентификатора.
+  \param name Имя идентификатора.
+  \return указатель на объект выражения.
+*/
+struct VB_Expr* create_int_boolean_char_const_expr(enum VB_Expr_type type, int value)
+{
+	struct VB_Expr* result = (struct VB_Expr*)malloc(sizeof(struct VB_Expr));
+
+	result->type = type;
+	result->int_val = value;
+
+	return result;
+}
+
+/*!
+	Функция создания выражения текстовой константы.
+  \param string Строка.
+  \return указатель на объект выражения.
+*/
+struct VB_Expr* create_string_const_expr(char* string)
+{
+	struct VB_Expr* result = (struct VB_Expr*)malloc(sizeof(struct VB_Expr));
+
+	result->type = STRING_CONST;
+	strcpy(result->expr_string,string);
+
+	return result;
+}
+
+/*!
+	Функция создания выражения операции.
+  \param type Тип операции.
+  \param left Левый операнд.
+  \param right Правый операнд.
+  \return указатель на объект выражения.
+*/
+struct VB_Expr* create_operator_expr(enum VB_Expr_type type,
+									 struct VB_Expr* left,
+									 struct VB_Expr* right)
+{
+	struct VB_Expr* result = (struct VB_Expr*)malloc(sizeof(struct VB_Expr));
+
+	result->type = type;
+	result->left_chld = left;
+	result->right_chld = right;
+
+	return result;
 }
