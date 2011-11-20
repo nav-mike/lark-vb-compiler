@@ -339,3 +339,29 @@ char* VB_As_expr_type_to_string (enum VB_As_expr_type type)
 
 	return "";
 }
+
+/*!
+	Функция преобразуте тип идентификатора.
+  \param type - Тип идентификатора.
+  \return Строка - тип идентификатора.
+*/
+char* VB_Id_type_to_string (enum VB_Id_type type)
+{
+	switch(type)
+	{
+	case(INTEGER):
+		return "INTEGER";
+		break;
+	case(BOOLEAN):
+		return "BOOLEAN";
+		break;
+	case(CHAR):
+		return "CHAR";
+		break;
+	case(STRING):
+		return "STRING";
+		break;
+	}
+
+	return "";
+}
