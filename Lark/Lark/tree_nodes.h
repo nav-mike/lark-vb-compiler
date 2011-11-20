@@ -641,3 +641,38 @@ struct VB_Stmt* create_VB_Stmt_For (struct VB_For_stmt* for_stmt)
 
 	return stmt;
 }
+
+/*!
+	Функция создания операции из цикла.
+  \param while_stmt Цикл.
+  \return Новая операция.
+*/
+struct VB_Stmt* create_VB_Stmt_While (struct VB_While_stmt* while_stmt)
+{
+	struct VB_Stmt* stmt = NULL;
+
+	if (while_stmt != NULL)
+	{
+		stmt = (struct VB_Stmt*)malloc(sizeof(struct VB_Stmt));
+		stmt->expr = NULL;
+		stmt->dim_stmt = NULL;
+		stmt->do_loop_stmt = NULL;
+		stmt->enum_stmt = NULL;
+		stmt->for_stmt = NULL;
+		stmt->func_stmt = NULL;
+		stmt->if_stmt = NULL;
+		stmt->next = NULL;
+		stmt->print_stmt = NULL;
+		stmt->println_stmt = NULL;
+		stmt->read_stmt = NULL;
+		stmt->readkey_stmt = NULL;
+		stmt->readln_stmt = NULL;
+		stmt->sub_stmt = NULL;
+		stmt->throw_stmt = NULL;
+		stmt->try_catch_stmt = NULL;
+		stmt->type = WHILE;
+		stmt->while_stmt = while_stmt;
+	}
+
+	return stmt;
+}
