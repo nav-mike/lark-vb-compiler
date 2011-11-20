@@ -781,3 +781,38 @@ struct VB_Stmt* create_VB_Stmt_Sub (struct VB_Sub_stmt* sub_stmt)
 
 	return stmt;
 }
+
+/*!
+	Функция создания операции из функции.
+  \param func_stmt Функция.
+  \return Новая операция.
+*/
+struct VB_Stmt* create_VB_Stmt_Func (struct VB_Func_stmt* func_stmt)
+{
+	struct VB_Stmt* stmt = NULL;
+
+	if (func_stmt != NULL)
+	{
+		stmt = (struct VB_Stmt*)malloc(sizeof(struct VB_Stmt));
+		stmt->expr = NULL;
+		stmt->dim_stmt = NULL;
+		stmt->do_loop_stmt = NULL;
+		stmt->enum_stmt = NULL;
+		stmt->for_stmt = NULL;
+		stmt->func_stmt = func_stmt;
+		stmt->if_stmt = NULL;
+		stmt->next = NULL;
+		stmt->print_stmt = NULL;
+		stmt->println_stmt = NULL;
+		stmt->read_stmt = NULL;
+		stmt->readkey_stmt = NULL;
+		stmt->readln_stmt = NULL;
+		stmt->sub_stmt = NULL;
+		stmt->throw_stmt = NULL;
+		stmt->try_catch_stmt = NULL;
+		stmt->type = FUNC;
+		stmt->while_stmt = NULL;
+	}
+
+	return stmt;
+}
