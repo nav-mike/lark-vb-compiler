@@ -199,3 +199,68 @@ char* VB_If_stmt_type_to_string (enum Vb_If_stmt_type type)
 
 	return "";
 }
+
+/*!
+	Функция преобразуте тип Stmt в строку.
+  \param type - Тип Stmt.
+  \return Строка - тип Stmt.
+*/
+char* VB_Stmt_type_to_string (enum VB_Stmt_type type)
+{
+	switch (type)
+	{
+	case(ENDL):
+		return "ENDL";
+		break;
+	case(EXPR):
+		return "EXPR";
+		break;
+	case(IF):
+		return "IF";
+		break;
+	case(DIM):
+		return "DIM";
+		break;
+	case(FOR):
+		return "FOR";
+		break;
+	case(WHILE):
+		return "WHILE";
+		break;
+	case(DO_LOOP):
+		return "DO_LOOP";
+		break;
+	case(ENUM):
+		return "ENUM";
+		break;
+	case(SUB):
+		return "SUB";
+		break;
+	case(FUNC):
+		return "FUNC";
+		break;
+	case(TRY_CATCH):
+		return "TRY_CATCH";
+		break;
+	case(THROW):
+		return "THROW";
+		break;
+	case(PRINT):
+		return "PRINT";
+		break;
+	case(PRINTLN):
+		return "PRINTLN";
+		break;
+	case(READ):
+		return "READ";
+		break;
+	case(READLN):
+		return "READLN";
+		break;
+	case(READKEY):
+		return "READKEY";
+		break;
+	}
+
+	return "";
+}
