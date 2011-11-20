@@ -1243,10 +1243,10 @@ int add_node_stmt (struct VB_Stmt* node)
 		error = add_node_println_stmt(node->println_stmt);
 		break;
 	case(READ):
-		//error = add_node_read_stmt(node->read_stmt);
+		error = add_node_read_stmt(node->read_stmt);
 		break;
 	case(READLN):
-		//error = add_node_readln_stmt(node->readln_stmt);
+		error = add_node_readln_stmt(node->readln_stmt);
 		break;
 	}
 	if (error) return 1;
@@ -1678,6 +1678,34 @@ int add_node_read_stmt (struct VB_Read_stmt* node)
 
 	error = fprintf(file,"\n\t\tlabel = \"<f0> %d | <f1> %s\"",
 		"", "READ");
+	if (error == -1) return 1;
+
+	error = fprintf(file, "\n\t\tshape = \"record\"\n\t];");
+	if (error == -1) return 1;
+
+	fclose(file);
+	return 0;
+}
+
+/*!
+    Функция добавляет в файл GraphViz фрагмент дерева для VB_Readln_stmt.
+  \param module   - узел дерева.
+  \return         Если произошла ошибка работы с файлом, то возвращается 1, иначе 0.
+*/
+int add_node_readln_stmt (struct VB_Readln_stmt* node)
+{
+	FILE* file = NULL;
+	int number = Number;
+	int error = fopen_s(&file,"vb_lark.txt", "at");
+	if (error) return 1;
+	Number++;
+
+	error = fprintf(file,"\n\t\"node%d\" [", number);
+	if (error == -1) return 1;
+	Number++;
+
+	error = fprintf(file,"\n\t\tlabel = \"<f0> %d | <f1> %s\"",
+		"", "READLN");
 	if (error == -1) return 1;
 
 	error = fprintf(file, "\n\t\tshape = \"record\"\n\t];");
