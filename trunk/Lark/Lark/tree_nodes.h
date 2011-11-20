@@ -438,14 +438,14 @@ struct VB_Module_stmt* create_VB_Module_stmt (char* id, struct VB_Stmt_list* lis
 	return module;
 }
 
-/* Инициализация списка выражений:
+/* Инициализация списка операций:
 	stmt_list: stmt
 		 | stmt_list stmt ;
 */
 /*!
-	Функция создания узла дерева: списка выражений.
-  \param stmt Выражение.
-  \return Новый список выражений.
+	Функция создания узла дерева: списка операций.
+  \param stmt Операция.
+  \return Новый список операций.
 */
 struct VB_Stmt_list* create_VB_Stmt_list (struct VB_Stmt* stmt)
 {
@@ -462,10 +462,10 @@ struct VB_Stmt_list* create_VB_Stmt_list (struct VB_Stmt* stmt)
 }
 
 /*!
-	Функция изменения узла дерева: добавление к списку выражений выражения.
-  \param list Список выражений.
-  \param stmt Выражение.
-  \return Новый список выражений.
+	Функция изменения узла дерева: добавление к списку выражений операций.
+  \param list Список операций.
+  \param stmt Операция.
+  \return Новый список операций.
 */
 struct VB_Stmt_list* edit_VB_Stmt_list (struct VB_Stmt_list* list, struct VB_Stmt* stmt)
 {
@@ -502,3 +502,37 @@ struct VB_Stmt_list* edit_VB_Stmt_list (struct VB_Stmt_list* list, struct VB_Stm
 		| console_readkey_stmt
 		;
 */
+/*!
+	Функция создания операции из выражения.
+  \param expr Выражение.
+  \return Новая операция.
+*/
+struct VB_Stmt* create_VB_Stmt_Expr (struct VB_Expr* expr)
+{
+	struct VB_Stmt* stmt = NULL;
+
+	if (expr != NULL)
+	{
+		stmt = (struct VB_Stmt*)malloc(sizeof(struct VB_Stmt));
+		stmt->expr = expr;
+		stmt->dim_stmt = NULL;
+		stmt->do_loop_stmt = NULL;
+		stmt->enum_stmt = NULL;
+		stmt->for_stmt = NULL;
+		stmt->func_stmt = NULL;
+		stmt->if_stmt = NULL;
+		stmt->next = NULL;
+		stmt->print_stmt = NULL;
+		stmt->println_stmt = NULL;
+		stmt->read_stmt = NULL;
+		stmt->readkey_stmt = NULL;
+		stmt->readln_stmt = NULL;
+		stmt->sub_stmt = NULL;
+		stmt->throw_stmt = NULL;
+		stmt->try_catch_stmt = NULL;
+		stmt->type = STMT_EXPR;
+		stmt->while_stmt = NULL;
+	}
+
+	return stmt;
+}
