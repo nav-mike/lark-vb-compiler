@@ -1,11 +1,16 @@
 //
 //
 
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+
 /*! \struct VB_Module_stmt
     Структура дерева для хранения корня дерева.
  */
 struct VB_Module_stmt
 {
+	char* id;                       //!< Идентификатор модуля
 	struct VB_Stmt_list* stmt_list; //!< Список операций модуля
 };
 
@@ -394,14 +399,29 @@ struct VB_Throw_stmt
 	struct VB_Stmt*	next;		//!< Следующий оператор
 };
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+/** Функции инициализации структур. */
+
+/* Инициализация модуля:
+	module_stmt: MODULE ID ENDL stmt_list END_MODULE ENDL ;
+*/
+/*!
+	Функция создания узла дерева: модуля.
+  \param id Имя модуля.
+  \param list Список выражений модуля.
+  \return Новый модуль.
+*/
+struct VB_Module_stmt* create_VB_Module_stmt (char* id, struct VB_Stmt_list* list)
+{
+	struct VB_Module_stmt* module = NULL;
+
+	if (list == NULL) return module;
+
+	module = (struct VB_Module_stmt*)malloc(sizeof(struct VB_Module_stmt));
+
+	if (id == NULL) strcpy(module->id, "Unknown");
+	else strcpy(module->id, id);
+
+	module->stmt_list = list;
+
+	return module;
+}
