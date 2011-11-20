@@ -1056,3 +1056,20 @@ struct VB_If_stmt* create_with_Then_expr_stmt_list_end_if_stmt (struct VB_Expr* 
 
 	return if_stmt;
 }
+
+/*!
+	Функция создания листа выражений.
+  \param expr Выражение.
+  \return Лист выражений.
+*/
+struct VB_Expr_list* create_Expr_list (struct VB_Expr* expr)
+{
+	struct VB_Expr_list* list = NULL;
+
+	list = (struct VB_Expr_list*)malloc(sizeof(struct VB_Expr_list));
+
+	list->first = expr;
+	list->last = expr;
+
+	return list;
+}
