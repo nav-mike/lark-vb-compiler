@@ -199,6 +199,7 @@
 		| expr NONEQUAL	expr
 		| expr EQUAL	expr
 		| expr'('expr')'
+		| '('expr')'
 		| '-' expr %prec UMINUS
 		| '+' expr %prec UPLUS
 		;
