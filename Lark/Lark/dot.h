@@ -1004,3 +1004,31 @@ int add_node_as_expr (struct VB_As_expr* node, int number)
 	fclose(file);
 	return 0;
 }
+
+/*!
+    Функция добавляет в файл GraphViz фрагмент дерева для VB_Id_list.
+  \param module   - узел дерева.
+  \param number   - порядковый номер узла.
+  \return         Если произошла ошибка работы с файлом, то возвращается 1, иначе 0.
+*/
+int add_node_id_list (struct VB_Id_list* node, int number)
+{
+	FILE* file = NULL;
+	int error = fopen_s(&file,"vb_lark.txt", "at");
+	if (error) return 1;
+
+	error = fprintf(file,"\n\t\"node%d\" [", number);
+	if (error == -1) return 1;
+
+	error = fprintf(file,"\n\t\tlabel = \"<f0> %s | <f1> %s\"",
+		"ID_LIST", "");
+	if (error == -1) return 1;
+
+	error = fprintf(file, "\n\t\tshape = \"record\"\n\t];");
+	if (error == -1) return 1;
+
+	// внутренние указатели
+
+	fclose(file);
+	return 0;
+}
