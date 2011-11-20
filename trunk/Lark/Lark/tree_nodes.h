@@ -336,6 +336,14 @@ struct VB_Println_stmt
 	char* text; //!< Текст сообщения.
 };
 
+/*! \struct VB_Read_stmt
+	Считывание символа из стандартного потока.
+*/
+struct VB_Read_stmt
+{
+	char symbol;
+};
+
 /*! \struct VB_Enum_expr
     Элемент перечисления Enum
  */
