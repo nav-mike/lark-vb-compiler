@@ -701,6 +701,12 @@ int add_node_for_stmt (struct VB_For_stmt* node, int number)
 	return 0;
 }
 
+/*!
+    Функция добавляет в файл GraphViz фрагмент дерева для VB_Expr_list.
+  \param module   - узел дерева.
+  \param number   - порядковый номер узла.
+  \return         Если произошла ошибка работы с файлом, то возвращается 1, иначе 0.
+*/
 int add_node_expr_list (struct VB_Expr_list* node, int number)
 {
 	FILE* file = NULL;
@@ -710,7 +716,17 @@ int add_node_expr_list (struct VB_Expr_list* node, int number)
 	error = fprintf(file,"\n\t\"node%d\" [", number);
 	if (error == -1) return 1;
 
-	//error = fprintf(
+	error = fprintf(file,"\n\t\tlabel = \"<f0> %s <f1> %s\"",
+		"EXPR_LIST", "");
+	if (error == -1) return 1;
+
+	error = fprintf(file,"\n\t\tshape = \"record\"\n\t];");
+	if (error == -1) return 1;
+
+	// следующий
+
+	fclose(file);
+	return 0;
 
 	return 0;
 }
