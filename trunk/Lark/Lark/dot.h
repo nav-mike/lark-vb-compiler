@@ -201,7 +201,7 @@ char* VB_If_stmt_type_to_string (enum Vb_If_stmt_type type)
 }
 
 /*!
-	Функция преобразуте тип Stmt в строку.
+	Функция преобразует тип Stmt в строку.
   \param type - Тип Stmt.
   \return Строка - тип Stmt.
 */
@@ -266,7 +266,7 @@ char* VB_Stmt_type_to_string (enum VB_Stmt_type type)
 }
 
 /*!
-	Функция преобразуте тип конца If в строку.
+	Функция преобразует тип конца If в строку.
   \param type - Тип конца If.
   \return Строка - тип конца If.
 */
@@ -292,7 +292,7 @@ char* VB_End_if_stmt_type_to_string (enum VB_End_if_stmt_type type)
 }
 
 /*!
-	Функция преобразуте тип списка последовательности определения переменных в строку.
+	Функция преобразует тип списка последовательности определения переменных в строку.
   \param type - Тип списка последовательности определения переменных.
   \return Строка - тип списка последовательности определения переменных.
 */
@@ -318,7 +318,7 @@ char* VB_As_Expr_list_type_to_string (enum VB_As_Expr_list_type type)
 }
 
 /*!
-	Функция преобразуте тип объявления идентификатора.
+	Функция преобразует тип объявления идентификатора.
   \param type - Тип объявления идентификатора.
   \return Строка - тип объявления идентификатора.
 */
@@ -341,7 +341,7 @@ char* VB_As_expr_type_to_string (enum VB_As_expr_type type)
 }
 
 /*!
-	Функция преобразуте тип идентификатора.
+	Функция преобразует тип идентификатора.
   \param type - Тип идентификатора.
   \return Строка - тип идентификатора.
 */
@@ -360,6 +360,32 @@ char* VB_Id_type_to_string (enum VB_Id_type type)
 		break;
 	case(STRING):
 		return "STRING";
+		break;
+	}
+
+	return "";
+}
+
+/*!
+	Функция преобразует тип цикла Do...Loop.
+  \param type - Тип цикла Do...Loop.
+  \return Строка - тип цикла Do...Loop.
+*/
+char* VB_Do_loop_type_to_string(enum VB_Do_loop_type type)
+{
+	switch(type)
+	{
+	case(DO_WHILE):
+		return "DO_WHILE";
+		break;
+	case(DO_UNTIL):
+		return "DO_UNTIL";
+		break;
+	case(LOOP_WHILE):
+		return "LOOP_WHILE";
+		break;
+	case(LOOP_UNTIL):
+		return "LOOP_UNTIL";
 		break;
 	}
 
