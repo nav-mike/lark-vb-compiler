@@ -173,3 +173,29 @@ int add_node_stmt_module (VB_Stmt_module* module, int number)
 
 	return 0;
 }
+
+/*!
+    Функция преобразует тип IF в строку.
+  \param type - Тип IF.
+  \return Строка - тип IF.
+*/
+char* VB_If_stmt_type_to_string (enum Vb_If_stmt_type type)
+{
+	switch (type)
+	{
+	case(IF_THEN):
+		return "IF_THEN";
+		break;
+	case(IF_ENDL):
+		return "IF_ENDL";
+		break;
+	case(IF_INLINE):
+		return"IF_INLINE";
+		break;
+	case(IF_ELSE_INLINE):
+		return "IF_ELSE_INLINE";
+		break;
+	}
+
+	return "";
+}
