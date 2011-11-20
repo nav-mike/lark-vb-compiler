@@ -151,20 +151,30 @@ struct VB_Expr Create_VB_Expr(enum VB_Type_of_expr type,
   \param module   - узел дерева.
   \return         Если произошла ошибка работы с файлом, то возвращается 1, иначе 0.
 */
-int add_node_stmt_module (struct VB_Stmt_module* module)
+int add_node_stmt_module (struct VB_Module_stmt* module)
 {
 	FILE* file = NULL;
+	int number = Number;
 	int error = fopen_s(&file, "vb_lark.txt", "at");
 	if (error) return 1;
 
-	error = fprintf(file, "\n\t\"node%d\" [", Number);
+	error = fprintf(file, "\n\t\"node%d\" [", number);
 	if (error == -1) return 1;
 	error = fprintf(file, "\n\t\tlabel = \"<f0> module | <f1> \"");
 	if (error == -1) return 1;
 	error = fprintf(file, "\n\t\tshape = \"record\"\n\t];");
 	if (error == -1) return 1;
 
-	// Вызов функции для stmt_list
+	if (module->stmt_list != NULL)
+	{
+		Number++;
+		error = fprintf(file, "\n\t\"node%d\":f0 -> \"node%d\":f0;",
+			number, Number);
+		if (error == -1) return 1;
+		fclose(file);
+		error = add_node_stmt_list(module->stmt_list);
+		if (error) return 1;
+	}
 
 	return 0;
 }
