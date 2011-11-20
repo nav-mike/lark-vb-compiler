@@ -531,3 +531,31 @@ int add_node_func_stmt (VB_Func_stmt* node, int number)
 	fclose(file);
 	return 0;
 }
+
+/*!
+    Функция добавляет в файл GraphViz фрагмент дерева для VB_Param_stmt.
+  \param module   - узел дерева.
+  \param number   - порядковый номер узла.
+  \return         Если произошла ошибка работы с файлом, то возвращается 1, иначе 0.
+*/
+int add_node_param_stmt (VB_Param_stmt* node, int number)
+{
+	FILE* file = NULL;
+	int error = fopen_s(&file,"vb_lark.txt", "at");
+	if (error) return 1;
+
+	error = fprintf(file,"\n\t\"node%d\" [", number);
+	if (error == -1) return 1;
+
+	error = fprintf(file,"\n\t\tlabel = \"<f0> %s | <f1> %s \"",
+		node->id, VB_Id_type_to_string(node->id_type));
+	if (error == -1) return 1;
+
+	error = fprintf(file,"\n\t\tshape = \"record\"\n\t];");
+	if (error == -1) return 1;
+
+	// Следующий параметр
+
+	fclose(file);
+	return 0;
+}
