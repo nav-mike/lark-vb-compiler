@@ -94,6 +94,7 @@ struct VB_Expr
 	struct VB_Expr*		left_chld;		//!< Указатель на левого сына.
 	struct VB_Expr*		right_chld;		//!< Указатель на правого сына.
 	struct VB_Expr_list list;			//!< Параметры процедуры или функции
+	struct VB_Expr*     next;           //!< Указатель на следующего, для Expr_list.
 	
 	enum VB_Id_type		id_type;		//!< Тип идентификатора 	????
 };
@@ -1072,4 +1073,17 @@ struct VB_Expr_list* create_Expr_list (struct VB_Expr* expr)
 	list->last = expr;
 
 	return list;
+}
+
+/*!
+	Функция изменения листа выражений.
+  \param expr_list Лист выражений.
+  \param expr Добавляемое выражение.
+*/
+struct VB_Expr_list* add_Expr_to_list (struct VB_Expr_list* expr_list, struct VB_Expr* expr)
+{
+	expr_list->last->next = expr;
+	expr_list->last = expr;
+
+	return expr_list;
 }
