@@ -132,7 +132,7 @@ int add_node_expr (struct VB_Expr* node, int number)
 	error = fprintf(file, "\n\t\"node%d\" [", number);
 	if (error == -1) return 1;
 	error = fprintf(file, "\n\t\tlabel = \"<f0> %s | <f1> %d | <f2> %s\"",
-		node->expr_string, node->int_val);//
+		node->expr_string, node->int_val, VB_Expr_type_to_string(node->type));
 	if (error == -1) return 1;
 	error = fprintf(file, "\n\t\tshape = \"record\"\n\t];");
 	if (error == -1) return 1;
