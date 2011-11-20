@@ -425,3 +425,26 @@ struct VB_Module_stmt* create_VB_Module_stmt (char* id, struct VB_Stmt_list* lis
 
 	return module;
 }
+
+/* Инициализация списка выражений:
+	stmt_list: stmt
+		 | stmt_list stmt ;
+*/
+/*!
+	Функция создания узла дерева: списка выражений.
+  \param stmt Выражение.
+  \return Новый списко выражений.
+*/
+struct VB_Stmt_list* create_VB_Stmt_list (struct VB_Stmt* stmt)
+{
+	struct VB_Stmt_list* list = NULL;
+
+	if (stmt == NULL) return list;
+
+	list = (struct VB_Stmt_list*)malloc(sizeof(struct VB_Stmt_list));
+
+	list->first = stmt;
+	list->last = stmt;
+
+	return list;
+}
