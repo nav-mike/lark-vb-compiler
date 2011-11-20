@@ -290,3 +290,29 @@ char* VB_End_if_stmt_type_to_string (enum VB_End_if_stmt_type type)
 
 	return "";
 }
+
+/*!
+	Функция преобразуте тип списка последовательности определения переменных в строку.
+  \param type - Тип списка последовательности определения переменных.
+  \return Строка - тип списка последовательности определения переменных.
+*/
+char* VB_As_Expr_list_type_to_string (enum VB_As_Expr_list_type type)
+{
+	switch(type)
+	{
+	case(EXPR):
+		return "EXPR";
+		break;
+	case(ARRAY):
+		return "ARRAY";
+		break;
+	case(EXPR_LIST):
+		return "EXPR_LIST";
+		break;
+	case(EXPR_ARR):
+		return "EXPR_ARR";
+		break;
+	}
+
+	return "";
+}
