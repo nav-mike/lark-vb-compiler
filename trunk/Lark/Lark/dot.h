@@ -459,10 +459,11 @@ int add_node_catch_stmt (struct VB_Catch_stmt* node)
 int add_node_catch_stmt_list (struct VB_Catch_stmt_list* node)
 {
 	FILE* file = NULL;
+	int number = Number;
 	int error = fopen_s(&file,"vb_lark.txt", "at");
 	if (error) return 1;
 
-	error = fprintf(file,"\n\t\"node%d\" [", Number);
+	error = fprintf(file,"\n\t\"node%d\" [", number);
 	if (error == -1) return 1;
 
 	error = fprintf(file,"\n\t\tlabel = \"<f0> %s | <f1>  \"",
@@ -472,7 +473,36 @@ int add_node_catch_stmt_list (struct VB_Catch_stmt_list* node)
 	error = fprintf(file,"\n\t\tshape = \"record\"\n\t];");
 	if (error == -1) return 1;
 
-	// Запись stmt
+	if (node->first != NULL)
+	{
+		struct VB_Catch_stmt* stmt = node->first;
+		fclose(file);
+
+		while (stmt != node->last)
+		{
+			Number++;
+			error = fopen_s(&file,"vb_lark.txt", "at");
+			if (error) return 1;
+			error = fprintf(file, "\n\t\"node%d\":f0 -> \"node%d\":f0;",
+			number, Number);
+			if (error == -1) return 1;
+
+			fclose(file);
+			error = add_node_catch_stmt(stmt);
+			if (error) return 1;
+			stmt = stmt->next;
+		}
+
+		Number++;
+		error = fopen_s(&file,"vb_lark.txt", "at");
+		if (error) return 1;
+		error = fprintf(file, "\n\t\"node%d\":f0 -> \"node%d\":f0;",
+			number, Number);
+		if (error == -1) return 1;
+		fclose(file);
+		error = add_node_catch_stmt(stmt);
+		if (error) return 1;
+	}
 
 	fclose(file);
 	return 0;
@@ -486,10 +516,11 @@ int add_node_catch_stmt_list (struct VB_Catch_stmt_list* node)
 int add_node_try_catch_stmt (struct VB_Try_catch_stmt* node)
 {
 	FILE* file = NULL;
+	int number = Number;
 	int error = fopen_s(&file,"vb_lark.txt", "at");
 	if (error) return 1;
 
-	error = fprintf(file,"\n\t\"node%d\" [", Number);
+	error = fprintf(file,"\n\t\"node%d\" [", number);
 	if (error == -1) return 1;
 
 	error = fprintf(file,"\n\t\tlabel = \"<f0> %s | <f1>  \"",
@@ -499,7 +530,42 @@ int add_node_try_catch_stmt (struct VB_Try_catch_stmt* node)
 	error = fprintf(file,"\n\t\tshape = \"record\"\n\t];");
 	if (error == -1) return 1;
 
-	// Запись stmt и stmt_list
+	if (node->catch_list != NULL)
+	{
+		Number++;
+		error = fprintf(file, "\n\t\"node%d\":f0 -> \"node%d\":f0;",
+			number, Number);
+		if (error == -1) return 1;
+		fclose(file);
+		error = add_node_catch_stmt_list(node->catch_list);
+		if (error) return 1;
+	}
+
+	if (node->fin_stmt_list != NULL)
+	{
+		Number++;
+		error = fopen_s(&file,"vb_lark.txt", "at");
+		if (error) return 1;
+		error = fprintf(file, "\n\t\"node%d\":f0 -> \"node%d\":f0;",
+			number, Number);
+		if (error == -1) return 1;
+		fclose(file);
+		error = add_node_stmt_list(node->fin_stmt_list);
+		if (error) return 1;
+	}
+
+	if (node->stmt_list != NULL)
+	{
+		Number++;
+		error = fopen_s(&file,"vb_lark.txt", "at");
+		if (error) return 1;
+		error = fprintf(file, "\n\t\"node%d\":f0 -> \"node%d\":f0;",
+			number, Number);
+		if (error == -1) return 1;
+		fclose(file);
+		error = add_node_stmt_list(node->stmt_list);
+		if (error) return 1;
+	}
 
 	fclose(file);
 	return 0;
@@ -598,6 +664,7 @@ int add_node_param_list (struct VB_Param_list* node)
 			fclose(file);
 			error = add_node_param_stmt(stmt);
 			if (error) return 1;
+			stmt = stmt->next;
 		}
 
 		Number++;
