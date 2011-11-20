@@ -976,3 +976,31 @@ int add_node_as_Expr_list (struct VB_As_Expr_list* node, int number)
 	fclose(file);
 	return 0;
 }
+
+/*!
+    Функция добавляет в файл GraphViz фрагмент дерева для VB_As_expr.
+  \param module   - узел дерева.
+  \param number   - порядковый номер узла.
+  \return         Если произошла ошибка работы с файлом, то возвращается 1, иначе 0.
+*/
+int add_node_as_expr (struct VB_As_expr* node, int number)
+{
+	FILE* file = NULL;
+	int error = fopen_s(&file,"vb_lark.txt", "at");
+	if (error) return 1;
+
+	error = fprintf(file,"\n\t\"node%d\" [", number);
+	if (error == -1) return 1;
+
+	error = fprintf(file,"\n\t\tlabel = \"<f0> %s | <f1> %s | <f2> %s\"",
+		VB_As_expr_type_to_string(node->type), VB_Id_type_to_string(node->id_type), "AS_EXPR");
+	if (error == -1) return 1;
+
+	error = fprintf(file, "\n\t\tshape = \"record\"\n\t];");
+	if (error == -1) return 1;
+
+	// внутренние указатели
+
+	fclose(file);
+	return 0;
+}
