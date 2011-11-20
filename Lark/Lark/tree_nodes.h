@@ -1209,3 +1209,16 @@ struct VB_Println_stmt* create_Println (char* text)
 
 	return println;
 }
+
+/*!
+	Функция создания Console.Read().
+  \return Узел дерева - считывание с стандартного потока.
+*/
+struct VB_Read_stmt* create_Read ()
+{
+	struct VB_Read_stmt* read = NULL;
+
+	read = (struct VB_Read_stmt*)malloc(sizeof(struct VB_Read_stmt));
+
+	return read;
+}
