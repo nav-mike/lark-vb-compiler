@@ -845,7 +845,7 @@ struct VB_Stmt* create_VB_Stmt_Try_Cathc (struct VB_Try_Catch_stmt* try_catch_st
 		stmt->sub_stmt = NULL;
 		stmt->throw_stmt = NULL;
 		stmt->try_catch_stmt = try_catch_stmt;
-		stmt->type = TRY_CATCH;
+		stmt->type = THROW;
 		stmt->while_stmt = NULL;
 	}
 
@@ -853,15 +853,15 @@ struct VB_Stmt* create_VB_Stmt_Try_Cathc (struct VB_Try_Catch_stmt* try_catch_st
 }
 
 /*!
-	Функция создания операции из выброса исключений.
-  \param throw_stmt Выброшенное исключение.
+	Функция создания операции из печати символа.
+  \param print_stmt Печать символа.
   \return Новая операция.
 */
-struct VB_Stmt* create_VB_Stmt_Throw (struct VB_Throw_stmt* throw_stmt)
+struct VB_Stmt* create_VB_Stmt_Print (struct VB_Print_stmt* print_stmt)
 {
 	struct VB_Stmt* stmt = NULL;
 
-	if (throw_stmt != NULL)
+	if (print_stmt != NULL)
 	{
 		stmt = (struct VB_Stmt*)malloc(sizeof(struct VB_Stmt));
 		stmt->expr = NULL;
@@ -872,15 +872,15 @@ struct VB_Stmt* create_VB_Stmt_Throw (struct VB_Throw_stmt* throw_stmt)
 		stmt->func_stmt =  NULL;
 		stmt->if_stmt = NULL;
 		stmt->next = NULL;
-		stmt->print_stmt = NULL;
+		stmt->print_stmt = print_stmt;
 		stmt->println_stmt = NULL;
 		stmt->read_stmt = NULL;
 		stmt->readkey_stmt = NULL;
 		stmt->readln_stmt = NULL;
 		stmt->sub_stmt = NULL;
-		stmt->throw_stmt = throw_stmt;
+		stmt->throw_stmt = NULL;
 		stmt->try_catch_stmt = NULL;
-		stmt->type = TRY_CATCH;
+		stmt->type = PRINT;
 		stmt->while_stmt = NULL;
 	}
 
