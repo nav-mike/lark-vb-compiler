@@ -47,7 +47,6 @@
 	struct VB_Console_println_stmt*	console_println;
 	struct VB_Console_read_stmt*	console_read;
 	struct VB_Console_readln_stmt*	console_readln;
-	struct VB_Console_readkey_stmt*	console_readkey;
 }
 
 %type <Module>		module_stmt
@@ -82,7 +81,6 @@
 %type <console_println> console_println_stmt
 %type <console_read>	console_read_stmt 
 %type <console_readln>	console_readln_stmt
-%type <console_readkey> console_readkey_stmt
 
 %token <b_const> BOOLEAN_CONST
 %token <i_const> INT_CONST
@@ -179,7 +177,6 @@
 		| console_println_stmt
 		| console_read_stmt
 		| console_readln_stmt
-		| console_readkey_stmt
 		;
 					
 	expr: ID

@@ -538,6 +538,95 @@ struct VB_Stmt_list* edit_VB_Stmt_list (struct VB_Stmt_list* list, struct VB_Stm
 		| console_readkey_stmt
 		;
 */
+
+/*!
+	Функция создания stmt и заполнения его полей.
+  \param type Тип stmt.
+  \param data Данные для заполнения полей.
+  \return stmt.
+*/
+struct VB_Stmt* fill_stmt(enum VB_Stmt_type type, void* data)
+{
+	struct VB_Stmt* stmt = NULL;
+
+	if (data != NULL)
+	{
+		stmt = (struct VB_Stmt*)malloc(sizeof(struct VB_Stmt));
+
+		stmt->expr			 = NULL;
+		stmt->dim_stmt		 = NULL;
+		stmt->do_loop_stmt	 = NULL;
+		stmt->enum_stmt		 = NULL;
+		stmt->for_stmt		 = NULL;
+		stmt->func_stmt		 = NULL;
+		stmt->if_stmt		 = NULL;
+		stmt->next			 = NULL;
+		stmt->print_stmt	 = NULL;
+		stmt->println_stmt	 = NULL;
+		stmt->read_stmt		 = NULL;
+		stmt->readkey_stmt	 = NULL;
+		stmt->readln_stmt	 = NULL;
+		stmt->sub_stmt		 = NULL;
+		stmt->throw_stmt	 = NULL;
+		stmt->try_catch_stmt = NULL;
+		stmt->while_stmt	 = NULL;
+
+		stmt->type = type;
+
+		switch (type)
+		{
+		case(ENDL):
+			break;
+		case(STMT_EXPR):
+			stmt->expr = (struct VB_Expr*)data;
+			break;
+		case(IF):
+			stmt->if_stmt = (struct VB_If_stmt*)data;
+			break;
+		case(DIM):
+			stmt->dim_stmt = (struct VB_Dim_stmt*)data;
+			break;
+		case(FOR):
+			stmt->for_stmt = (struct VB_For_stmt*)data;
+			break;
+		case(WHILE):
+			stmt->while_stmt = (struct VB_While_stmt*)data;
+			break;
+		case(DO_LOOP):
+			stmt->do_loop_stmt = (struct VB_Do_Loop_stmt*)data;
+			break;
+		case(ENUM):
+			stmt->enum_stmt = (struct VB_Enum_stmt*)data;
+			break;
+		case(SUB):
+			stmt->sub_stmt = (struct VB_Sub_stmt*)data;
+			break;
+		case(FUNC):
+			stmt->func_stmt = (struct VB_Func_stmt*)data;
+			break;
+		case(TRY_CATCH):
+			stmt->try_catch_stmt = (struct VB_Try_Catch_stmt*)data;
+			break;
+		case(THROW):
+			stmt->throw_stmt = (struct VB_Throw_stmt*)data;
+			break;
+		case(PRINT):
+			stmt->print_stmt = (struct VB_Print_stmt*)data;
+			break;
+		case(PRINTLN):
+			stmt->println_stmt = (struct VB_Println_stmt*)data;
+			break;
+		case(READ):
+			stmt->read_stmt = (struct VB_Read_stmt*)data;
+			break;
+		case(READLN):
+			stmt->readln_stmt = (struct VB_Readln_stmt*)data;
+			break;
+		}
+	}
+	return stmt;
+}
+
 /*!
 	Функция создания операции из выражения.
   \param expr Выражение.
@@ -545,32 +634,7 @@ struct VB_Stmt_list* edit_VB_Stmt_list (struct VB_Stmt_list* list, struct VB_Stm
 */
 struct VB_Stmt* create_VB_Stmt_Expr (struct VB_Expr* expr)
 {
-	struct VB_Stmt* stmt = NULL;
-
-	if (expr != NULL)
-	{
-		stmt = (struct VB_Stmt*)malloc(sizeof(struct VB_Stmt));
-		stmt->expr = expr;
-		stmt->dim_stmt = NULL;
-		stmt->do_loop_stmt = NULL;
-		stmt->enum_stmt = NULL;
-		stmt->for_stmt = NULL;
-		stmt->func_stmt = NULL;
-		stmt->if_stmt = NULL;
-		stmt->next = NULL;
-		stmt->print_stmt = NULL;
-		stmt->println_stmt = NULL;
-		stmt->read_stmt = NULL;
-		stmt->readkey_stmt = NULL;
-		stmt->readln_stmt = NULL;
-		stmt->sub_stmt = NULL;
-		stmt->throw_stmt = NULL;
-		stmt->try_catch_stmt = NULL;
-		stmt->type = STMT_EXPR;
-		stmt->while_stmt = NULL;
-	}
-
-	return stmt;
+	return fill_stmt(STMT_EXPR,(void*)expr);
 }
 
 /*!
@@ -580,32 +644,7 @@ struct VB_Stmt* create_VB_Stmt_Expr (struct VB_Expr* expr)
 */
 struct VB_Stmt* create_VB_Stmt_If (struct VB_If_stmt* if_stmt)
 {
-	struct VB_Stmt* stmt = NULL;
-
-	if (if_stmt != NULL)
-	{
-		stmt = (struct VB_Stmt*)malloc(sizeof(struct VB_Stmt));
-		stmt->expr = NULL;
-		stmt->dim_stmt = NULL;
-		stmt->do_loop_stmt = NULL;
-		stmt->enum_stmt = NULL;
-		stmt->for_stmt = NULL;
-		stmt->func_stmt = NULL;
-		stmt->if_stmt = if_stmt;
-		stmt->next = NULL;
-		stmt->print_stmt = NULL;
-		stmt->println_stmt = NULL;
-		stmt->read_stmt = NULL;
-		stmt->readkey_stmt = NULL;
-		stmt->readln_stmt = NULL;
-		stmt->sub_stmt = NULL;
-		stmt->throw_stmt = NULL;
-		stmt->try_catch_stmt = NULL;
-		stmt->type = IF;
-		stmt->while_stmt = NULL;
-	}
-
-	return stmt;
+	return fill_stmt(IF,(void*)if_stmt);
 }
 
 /*!
@@ -615,32 +654,7 @@ struct VB_Stmt* create_VB_Stmt_If (struct VB_If_stmt* if_stmt)
 */
 struct VB_Stmt* create_VB_Stmt_Dim (struct VB_Dim_stmt* dim_stmt)
 {
-	struct VB_Stmt* stmt = NULL;
-
-	if (dim_stmt != NULL)
-	{
-		stmt = (struct VB_Stmt*)malloc(sizeof(struct VB_Stmt));
-		stmt->expr = NULL;
-		stmt->dim_stmt = dim_stmt;
-		stmt->do_loop_stmt = NULL;
-		stmt->enum_stmt = NULL;
-		stmt->for_stmt = NULL;
-		stmt->func_stmt = NULL;
-		stmt->if_stmt = NULL;
-		stmt->next = NULL;
-		stmt->print_stmt = NULL;
-		stmt->println_stmt = NULL;
-		stmt->read_stmt = NULL;
-		stmt->readkey_stmt = NULL;
-		stmt->readln_stmt = NULL;
-		stmt->sub_stmt = NULL;
-		stmt->throw_stmt = NULL;
-		stmt->try_catch_stmt = NULL;
-		stmt->type = DIM;
-		stmt->while_stmt = NULL;
-	}
-
-	return stmt;
+	return fill_stmt(DIM,(void*)dim_stmt);
 }
 
 /*!
@@ -650,32 +664,7 @@ struct VB_Stmt* create_VB_Stmt_Dim (struct VB_Dim_stmt* dim_stmt)
 */
 struct VB_Stmt* create_VB_Stmt_For (struct VB_For_stmt* for_stmt)
 {
-	struct VB_Stmt* stmt = NULL;
-
-	if (for_stmt != NULL)
-	{
-		stmt = (struct VB_Stmt*)malloc(sizeof(struct VB_Stmt));
-		stmt->expr = NULL;
-		stmt->dim_stmt = NULL;
-		stmt->do_loop_stmt = NULL;
-		stmt->enum_stmt = NULL;
-		stmt->for_stmt = for_stmt;
-		stmt->func_stmt = NULL;
-		stmt->if_stmt = NULL;
-		stmt->next = NULL;
-		stmt->print_stmt = NULL;
-		stmt->println_stmt = NULL;
-		stmt->read_stmt = NULL;
-		stmt->readkey_stmt = NULL;
-		stmt->readln_stmt = NULL;
-		stmt->sub_stmt = NULL;
-		stmt->throw_stmt = NULL;
-		stmt->try_catch_stmt = NULL;
-		stmt->type = FOR;
-		stmt->while_stmt = NULL;
-	}
-
-	return stmt;
+	return fill_stmt(FOR,(void*)for_stmt);
 }
 
 /*!
@@ -685,32 +674,7 @@ struct VB_Stmt* create_VB_Stmt_For (struct VB_For_stmt* for_stmt)
 */
 struct VB_Stmt* create_VB_Stmt_While (struct VB_While_stmt* while_stmt)
 {
-	struct VB_Stmt* stmt = NULL;
-
-	if (while_stmt != NULL)
-	{
-		stmt = (struct VB_Stmt*)malloc(sizeof(struct VB_Stmt));
-		stmt->expr = NULL;
-		stmt->dim_stmt = NULL;
-		stmt->do_loop_stmt = NULL;
-		stmt->enum_stmt = NULL;
-		stmt->for_stmt = NULL;
-		stmt->func_stmt = NULL;
-		stmt->if_stmt = NULL;
-		stmt->next = NULL;
-		stmt->print_stmt = NULL;
-		stmt->println_stmt = NULL;
-		stmt->read_stmt = NULL;
-		stmt->readkey_stmt = NULL;
-		stmt->readln_stmt = NULL;
-		stmt->sub_stmt = NULL;
-		stmt->throw_stmt = NULL;
-		stmt->try_catch_stmt = NULL;
-		stmt->type = WHILE;
-		stmt->while_stmt = while_stmt;
-	}
-
-	return stmt;
+	return fill_stmt(WHILE,(void*)while_stmt);
 }
 
 /*!
@@ -720,32 +684,7 @@ struct VB_Stmt* create_VB_Stmt_While (struct VB_While_stmt* while_stmt)
 */
 struct VB_Stmt* create_VB_Stmt_Do_Loop (struct VB_Do_Loop_stmt* do_loop_stmt)
 {
-	struct VB_Stmt* stmt = NULL;
-
-	if (do_loop_stmt != NULL)
-	{
-		stmt = (struct VB_Stmt*)malloc(sizeof(struct VB_Stmt));
-		stmt->expr = NULL;
-		stmt->dim_stmt = NULL;
-		stmt->do_loop_stmt = do_loop_stmt;
-		stmt->enum_stmt = NULL;
-		stmt->for_stmt = NULL;
-		stmt->func_stmt = NULL;
-		stmt->if_stmt = NULL;
-		stmt->next = NULL;
-		stmt->print_stmt = NULL;
-		stmt->println_stmt = NULL;
-		stmt->read_stmt = NULL;
-		stmt->readkey_stmt = NULL;
-		stmt->readln_stmt = NULL;
-		stmt->sub_stmt = NULL;
-		stmt->throw_stmt = NULL;
-		stmt->try_catch_stmt = NULL;
-		stmt->type = DO_LOOP;
-		stmt->while_stmt = NULL;
-	}
-
-	return stmt;
+	return fill_stmt(DO_LOOP,(void*)do_loop_stmt);
 }
 
 /*!
@@ -755,32 +694,7 @@ struct VB_Stmt* create_VB_Stmt_Do_Loop (struct VB_Do_Loop_stmt* do_loop_stmt)
 */
 struct VB_Stmt* create_VB_Stmt_Enum (struct VB_Enum_stmt* enum_stmt)
 {
-	struct VB_Stmt* stmt = NULL;
-
-	if (enum_stmt != NULL)
-	{
-		stmt = (struct VB_Stmt*)malloc(sizeof(struct VB_Stmt));
-		stmt->expr = NULL;
-		stmt->dim_stmt = NULL;
-		stmt->do_loop_stmt = NULL;
-		stmt->enum_stmt = enum_stmt;
-		stmt->for_stmt = NULL;
-		stmt->func_stmt = NULL;
-		stmt->if_stmt = NULL;
-		stmt->next = NULL;
-		stmt->print_stmt = NULL;
-		stmt->println_stmt = NULL;
-		stmt->read_stmt = NULL;
-		stmt->readkey_stmt = NULL;
-		stmt->readln_stmt = NULL;
-		stmt->sub_stmt = NULL;
-		stmt->throw_stmt = NULL;
-		stmt->try_catch_stmt = NULL;
-		stmt->type = ENUM;
-		stmt->while_stmt = NULL;
-	}
-
-	return stmt;
+	return fill_stmt(ENUM,(void*)enum_stmt);
 }
 
 /*!
@@ -790,32 +704,7 @@ struct VB_Stmt* create_VB_Stmt_Enum (struct VB_Enum_stmt* enum_stmt)
 */
 struct VB_Stmt* create_VB_Stmt_Sub (struct VB_Sub_stmt* sub_stmt)
 {
-	struct VB_Stmt* stmt = NULL;
-
-	if (sub_stmt != NULL)
-	{
-		stmt = (struct VB_Stmt*)malloc(sizeof(struct VB_Stmt));
-		stmt->expr = NULL;
-		stmt->dim_stmt = NULL;
-		stmt->do_loop_stmt = NULL;
-		stmt->enum_stmt = NULL;
-		stmt->for_stmt = NULL;
-		stmt->func_stmt = NULL;
-		stmt->if_stmt = NULL;
-		stmt->next = NULL;
-		stmt->print_stmt = NULL;
-		stmt->println_stmt = NULL;
-		stmt->read_stmt = NULL;
-		stmt->readkey_stmt = NULL;
-		stmt->readln_stmt = NULL;
-		stmt->sub_stmt = sub_stmt;
-		stmt->throw_stmt = NULL;
-		stmt->try_catch_stmt = NULL;
-		stmt->type = SUB;
-		stmt->while_stmt = NULL;
-	}
-
-	return stmt;
+	return fill_stmt(SUB,(void*)sub_stmt);
 }
 
 /*!
@@ -825,32 +714,7 @@ struct VB_Stmt* create_VB_Stmt_Sub (struct VB_Sub_stmt* sub_stmt)
 */
 struct VB_Stmt* create_VB_Stmt_Func (struct VB_Func_stmt* func_stmt)
 {
-	struct VB_Stmt* stmt = NULL;
-
-	if (func_stmt != NULL)
-	{
-		stmt = (struct VB_Stmt*)malloc(sizeof(struct VB_Stmt));
-		stmt->expr = NULL;
-		stmt->dim_stmt = NULL;
-		stmt->do_loop_stmt = NULL;
-		stmt->enum_stmt = NULL;
-		stmt->for_stmt = NULL;
-		stmt->func_stmt = func_stmt;
-		stmt->if_stmt = NULL;
-		stmt->next = NULL;
-		stmt->print_stmt = NULL;
-		stmt->println_stmt = NULL;
-		stmt->read_stmt = NULL;
-		stmt->readkey_stmt = NULL;
-		stmt->readln_stmt = NULL;
-		stmt->sub_stmt = NULL;
-		stmt->throw_stmt = NULL;
-		stmt->try_catch_stmt = NULL;
-		stmt->type = FUNC;
-		stmt->while_stmt = NULL;
-	}
-
-	return stmt;
+	return fill_stmt(FUNC,(void*)func_stmt);
 }
 
 /*!
@@ -858,34 +722,19 @@ struct VB_Stmt* create_VB_Stmt_Func (struct VB_Func_stmt* func_stmt)
   \param try_catch_stmt Исключение.
   \return Новая операция.
 */
-struct VB_Stmt* create_VB_Stmt_Try_Cathc (struct VB_Try_Catch_stmt* try_catch_stmt)
+struct VB_Stmt* create_VB_Stmt_Try_Catch (struct VB_Try_Catch_stmt* try_catch_stmt)
 {
-	struct VB_Stmt* stmt = NULL;
+	return fill_stmt(TRY_CATCH,(void*)try_catch_stmt);
+}
 
-	if (try_catch_stmt != NULL)
-	{
-		stmt = (struct VB_Stmt*)malloc(sizeof(struct VB_Stmt));
-		stmt->expr = NULL;
-		stmt->dim_stmt = NULL;
-		stmt->do_loop_stmt = NULL;
-		stmt->enum_stmt = NULL;
-		stmt->for_stmt = NULL;
-		stmt->func_stmt =  NULL;
-		stmt->if_stmt = NULL;
-		stmt->next = NULL;
-		stmt->print_stmt = NULL;
-		stmt->println_stmt = NULL;
-		stmt->read_stmt = NULL;
-		stmt->readkey_stmt = NULL;
-		stmt->readln_stmt = NULL;
-		stmt->sub_stmt = NULL;
-		stmt->throw_stmt = NULL;
-		stmt->try_catch_stmt = try_catch_stmt;
-		stmt->type = THROW;
-		stmt->while_stmt = NULL;
-	}
-
-	return stmt;
+/*!
+	Функция создания выброса исключения.
+  \param throw_stmt Исключение.
+  \return Новая операция.
+*/
+struct VB_Stmt* create_VB_Stmt_Throw(struct VB_Throw_stmt* throw_stmt)
+{
+	return fill_stmt(THROW,(void*)throw_stmt);
 }
 
 /*!
@@ -895,32 +744,7 @@ struct VB_Stmt* create_VB_Stmt_Try_Cathc (struct VB_Try_Catch_stmt* try_catch_st
 */
 struct VB_Stmt* create_VB_Stmt_Print (struct VB_Print_stmt* print_stmt)
 {
-	struct VB_Stmt* stmt = NULL;
-
-	if (print_stmt != NULL)
-	{
-		stmt = (struct VB_Stmt*)malloc(sizeof(struct VB_Stmt));
-		stmt->expr = NULL;
-		stmt->dim_stmt = NULL;
-		stmt->do_loop_stmt = NULL;
-		stmt->enum_stmt = NULL;
-		stmt->for_stmt = NULL;
-		stmt->func_stmt =  NULL;
-		stmt->if_stmt = NULL;
-		stmt->next = NULL;
-		stmt->print_stmt = print_stmt;
-		stmt->println_stmt = NULL;
-		stmt->read_stmt = NULL;
-		stmt->readkey_stmt = NULL;
-		stmt->readln_stmt = NULL;
-		stmt->sub_stmt = NULL;
-		stmt->throw_stmt = NULL;
-		stmt->try_catch_stmt = NULL;
-		stmt->type = PRINT;
-		stmt->while_stmt = NULL;
-	}
-
-	return stmt;
+	return fill_stmt(PRINT,(void*)print_stmt);
 }
 
 /*!
@@ -930,32 +754,7 @@ struct VB_Stmt* create_VB_Stmt_Print (struct VB_Print_stmt* print_stmt)
 */
 struct VB_Stmt* create_VB_Stmt_Println (struct VB_Println_stmt* println_stmt)
 {
-	struct VB_Stmt* stmt = NULL;
-
-	if (println_stmt != NULL)
-	{
-		stmt = (struct VB_Stmt*)malloc(sizeof(struct VB_Stmt));
-		stmt->expr = NULL;
-		stmt->dim_stmt = NULL;
-		stmt->do_loop_stmt = NULL;
-		stmt->enum_stmt = NULL;
-		stmt->for_stmt = NULL;
-		stmt->func_stmt =  NULL;
-		stmt->if_stmt = NULL;
-		stmt->next = NULL;
-		stmt->print_stmt = NULL;
-		stmt->println_stmt = println_stmt;
-		stmt->read_stmt = NULL;
-		stmt->readkey_stmt = NULL;
-		stmt->readln_stmt = NULL;
-		stmt->sub_stmt = NULL;
-		stmt->throw_stmt = NULL;
-		stmt->try_catch_stmt = NULL;
-		stmt->type = PRINTLN;
-		stmt->while_stmt = NULL;
-	}
-
-	return stmt;
+	return fill_stmt(PRINTLN,(void*)println_stmt);
 }
 
 /*!
@@ -965,32 +764,7 @@ struct VB_Stmt* create_VB_Stmt_Println (struct VB_Println_stmt* println_stmt)
 */
 struct VB_Stmt* create_VB_Stmt_Readln (struct VB_Readln_stmt* readln_stmt)
 {
-	struct VB_Stmt* stmt = NULL;
-
-	if (readln_stmt != NULL)
-	{
-		stmt = (struct VB_Stmt*)malloc(sizeof(struct VB_Stmt));
-		stmt->expr = NULL;
-		stmt->dim_stmt = NULL;
-		stmt->do_loop_stmt = NULL;
-		stmt->enum_stmt = NULL;
-		stmt->for_stmt = NULL;
-		stmt->func_stmt =  NULL;
-		stmt->if_stmt = NULL;
-		stmt->next = NULL;
-		stmt->print_stmt = NULL;
-		stmt->println_stmt = NULL;
-		stmt->read_stmt = NULL;
-		stmt->readkey_stmt = NULL;
-		stmt->readln_stmt = readln_stmt;
-		stmt->sub_stmt = NULL;
-		stmt->throw_stmt = NULL;
-		stmt->try_catch_stmt = NULL;
-		stmt->type = READLN;
-		stmt->while_stmt = NULL;
-	}
-
-	return stmt;
+	return fill_stmt(READLN,(void*)readln_stmt);
 }
 
 /*!
@@ -1000,67 +774,7 @@ struct VB_Stmt* create_VB_Stmt_Readln (struct VB_Readln_stmt* readln_stmt)
 */
 struct VB_Stmt* create_VB_Stmt_Read (struct VB_Read_stmt* read_stmt)
 {
-	struct VB_Stmt* stmt = NULL;
-
-	if (read_stmt != NULL)
-	{
-		stmt = (struct VB_Stmt*)malloc(sizeof(struct VB_Stmt));
-		stmt->expr = NULL;
-		stmt->dim_stmt = NULL;
-		stmt->do_loop_stmt = NULL;
-		stmt->enum_stmt = NULL;
-		stmt->for_stmt = NULL;
-		stmt->func_stmt =  NULL;
-		stmt->if_stmt = NULL;
-		stmt->next = NULL;
-		stmt->print_stmt = NULL;
-		stmt->println_stmt = NULL;
-		stmt->read_stmt = read_stmt;
-		stmt->readkey_stmt = NULL;
-		stmt->readln_stmt = NULL;
-		stmt->sub_stmt = NULL;
-		stmt->throw_stmt = NULL;
-		stmt->try_catch_stmt = NULL;
-		stmt->type = READ;
-		stmt->while_stmt = NULL;
-	}
-
-	return stmt;
-}
-
-/*!
-	Функция создания операции из чтения клавиши.
-  \param readkey_stmt Чтение клавиши.
-  \return Новая операция.
-*/
-struct VB_Stmt* create_VB_Stmt_Readkey (struct VB_Readkey_stmt* readkey_stmt)
-{
-	struct VB_Stmt* stmt = NULL;
-
-	if (readkey_stmt != NULL)
-	{
-		stmt = (struct VB_Stmt*)malloc(sizeof(struct VB_Stmt));
-		stmt->expr = NULL;
-		stmt->dim_stmt = NULL;
-		stmt->do_loop_stmt = NULL;
-		stmt->enum_stmt = NULL;
-		stmt->for_stmt = NULL;
-		stmt->func_stmt =  NULL;
-		stmt->if_stmt = NULL;
-		stmt->next = NULL;
-		stmt->print_stmt = NULL;
-		stmt->println_stmt = NULL;
-		stmt->read_stmt = NULL;
-		stmt->readkey_stmt = readkey_stmt;
-		stmt->readln_stmt = NULL;
-		stmt->sub_stmt = NULL;
-		stmt->throw_stmt = NULL;
-		stmt->try_catch_stmt = NULL;
-		stmt->type = READKEY;
-		stmt->while_stmt = NULL;
-	}
-
-	return stmt;
+	return fill_stmt(READ,(void*)read_stmt);
 }
 
 /* Инициализация условного выражения:
