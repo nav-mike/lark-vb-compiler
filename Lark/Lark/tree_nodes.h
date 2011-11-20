@@ -433,7 +433,7 @@ struct VB_Module_stmt* create_VB_Module_stmt (char* id, struct VB_Stmt_list* lis
 /*!
 	Функция создания узла дерева: списка выражений.
   \param stmt Выражение.
-  \return Новый списко выражений.
+  \return Новый список выражений.
 */
 struct VB_Stmt_list* create_VB_Stmt_list (struct VB_Stmt* stmt)
 {
@@ -445,6 +445,27 @@ struct VB_Stmt_list* create_VB_Stmt_list (struct VB_Stmt* stmt)
 
 	list->first = stmt;
 	list->last = stmt;
+
+	return list;
+}
+
+/*!
+	Функция изменения узла дерева: добавление к списку выражений выражения.
+  \param list Список выражений.
+  \param stmt Выражение.
+  \return Новый список выражений.
+*/
+struct VB_Stmt_list* edit_VB_Stmt_list (struct VB_Stmt_list* list, struct VB_Stmt* stmt)
+{
+	if (stmt != NULL)
+	{
+		if (list != NULL)
+		{
+			list->last->next = stmt;
+			list->last = stmt;
+		}
+		else list = create_VB_Stmt_list(stmt);
+	}
 
 	return list;
 }
