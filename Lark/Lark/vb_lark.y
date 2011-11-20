@@ -319,10 +319,7 @@
 					 ;
 				
 	console_readln_stmt: CONSOLE '.' READLINE '('')' ENDL
-					   ;
-				  
-	console_readkey_stmt: CONSOLE '.' READKEY '('')' ENDL
-						;								   	
+					   ;							   	
 %%
 
 int main (int argc, char* argv[])
