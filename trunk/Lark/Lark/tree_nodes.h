@@ -1236,3 +1236,21 @@ struct VB_Readln_stmt* create_Readln ()
 
 	return readln;
 }
+
+/*!
+	Функция создания блока обработки перехваченного исключения.
+  \param id Имя исключения.
+  \param stmt_list Блок операторов обработки исключения.
+  \return Новый узел дерева - блок обработки исключения.
+*/
+struct VB_Catch_stmt* create_Catch_stmt (char* id, struct VB_Stmt_list* stmt_list)
+{
+	struct VB_Catch_stmt* catch_stmt = NULL;
+
+	catch_stmt = (struct VB_Catch_stmt*)malloc(sizeof(struct VB_Catch_stmt));
+
+	strcpy(catch_stmt->id,id);
+	catch_stmt->stmt_list = stmt_list;
+
+	return catch_stmt;
+}
