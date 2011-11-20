@@ -439,8 +439,6 @@ int add_node_throw_stmt (struct VB_Throw_stmt* node)
 	error = fprintf(file,"\n\t\tshape = \"record\"\n\t];");
 	if (error == -1) return 1;
 
-	// Запись stmt
-
 	fclose(file);
 	return 0;
 }
@@ -465,8 +463,6 @@ int add_node_catch_stmt (struct VB_Catch_stmt* node)
 
 	error = fprintf(file,"\n\t\tshape = \"record\"\n\t];");
 	if (error == -1) return 1;
-
-	// Запись stmt
 
 	fclose(file);
 	return 0;
@@ -600,10 +596,11 @@ int add_node_try_catch_stmt (struct VB_Try_catch_stmt* node)
 int add_node_func_stmt (struct VB_Func_stmt* node)
 {
 	FILE* file = NULL;
+	int number = Number;
 	int error = fopen_s(&file,"vb_lark.txt", "at");
 	if (error) return 1;
 
-	error = fprintf(file,"\n\t\"node%d\" [", Number);
+	error = fprintf(file,"\n\t\"node%d\" [", number);
 	if (error == -1) return 1;
 
 	error = fprintf(file,"\n\t\tlabel = \"<f0> %s | <f1> %s \"",
@@ -613,7 +610,45 @@ int add_node_func_stmt (struct VB_Func_stmt* node)
 	error = fprintf(file,"\n\t\tshape = \"record\"\n\t];");
 	if (error == -1) return 1;
 
-	// Запись паратров и тела
+	if (node->stmt_list != NULL)
+	{
+		Number++;
+		error = fprintf(file, "\n\t\"node%d\":f0 -> \"node%d\":f0;",
+		number, Number);
+		if (error == -1) return 1;
+
+		fclose(file);
+		error = add_node_stmt_list(node->stmt_list);
+		if (error) return 1;
+	}
+
+	if (node->expr != NULL)
+	{
+		Number++;
+		error = fopen_s(&file,"vb_lark.txt", "at");
+		if (error) return 1;
+		error = fprintf(file, "\n\t\"node%d\":f0 -> \"node%d\":f0;",
+		number, Number);
+		if (error == -1) return 1;
+
+		fclose(file);
+		error = add_node_expr(node->expr);
+		if (error) return 1;
+	}
+
+	if (node->param_list != NULL)
+	{
+		Number++;
+		error = fopen_s(&file,"vb_lark.txt", "at");
+		if (error) return 1;
+		error = fprintf(file, "\n\t\"node%d\":f0 -> \"node%d\":f0;",
+		number, Number);
+		if (error == -1) return 1;
+
+		fclose(file);
+		error = add_node_param_list(node->param_list);
+		if (error) return 1;
+	}
 
 	fclose(file);
 	return 0;
