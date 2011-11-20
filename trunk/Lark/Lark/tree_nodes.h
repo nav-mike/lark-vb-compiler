@@ -328,6 +328,14 @@ struct VB_Print_stmt
 	char* text; //!< “екст сообщени€.
 };
 
+/*! \struct VB_Println_stmt
+	—ообщение с переводом строки в стандартный поток вывода.
+*/
+struct VB_Println_stmt
+{
+	char* text; //!< “екст сообщени€.
+};
+
 /*! \struct VB_Enum_expr
     Ёлемент перечислени€ Enum
  */
