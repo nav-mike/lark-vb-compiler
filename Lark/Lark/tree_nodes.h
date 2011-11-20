@@ -344,6 +344,14 @@ struct VB_Read_stmt
 	char symbol;
 };
 
+/*! \struct VB_Readln_stmt
+	—читывание строки из стандартного потока.
+*/
+struct VB_Readln_stmt
+{
+	char* text;
+};
+
 /*! \struct VB_Enum_expr
     Ёлемент перечислени€ Enum
  */
