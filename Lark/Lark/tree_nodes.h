@@ -5,6 +5,8 @@
 #include <stdio.h>
 #include <string.h>
 
+long int Number = 0;
+
 /*! \struct VB_Module_stmt
     Структура дерева для хранения корня дерева.
  */
@@ -249,7 +251,7 @@ struct VB_Array_expr
 	int is_init;				//!< Инициализируется ли массив.
 	int size;					//!< Размер массива
 	enum VB_Id_type	id_type;	//!< Тип определяемого идентификатора или масива
-	struct VB_Expr_list list;	//!< Данные, которыми заполняется массив
+	struct VB_Expr_list* list;	//!< Данные, которыми заполняется массив
 	struct VB_Expr*	id;			//!< Идентификатор		???	
 };
 
