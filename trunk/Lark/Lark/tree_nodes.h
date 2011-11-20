@@ -1087,3 +1087,25 @@ struct VB_Expr_list* add_Expr_to_list (struct VB_Expr_list* expr_list, struct VB
 
 	return expr_list;
 }
+
+/*!
+	Функция создания массива без его инициализации.
+  \param id Имя массива.
+  \param int_const Размер массива.
+  \param type Тип массива.
+  \return Новый узел массива.
+*/
+struct VB_Array_expr* create_Array (char* id, int int_const, enum VB_Id_type type)
+{
+	struct VB_Array_expr* arr = NULL;
+
+	arr = (struct VB_Array_expr*)malloc(sizeof(struct VB_Array_expr));
+
+	arr->id_type = type;
+	arr->is_init = 0;
+	arr->size = int_const;
+	arr->id = (struct VB_Expr*)malloc(sizeof(struct VB_Expr));
+	strcpy(arr->id->expr_string,id);
+
+	return arr;
+}
