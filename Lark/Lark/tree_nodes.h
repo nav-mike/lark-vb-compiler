@@ -1153,3 +1153,19 @@ struct VB_Throw_stmt* create_Throw (char* string)
 
 	return th;
 }
+
+/*!
+	Функция создания Console.Write()
+  \param text Текст в функции.
+  \return Узел дерева - вывод в стандартный поток.
+*/
+struct VB_Print_stmt* create_Print (char* text)
+{
+	struct VB_Print_stmt* print = NULL;
+
+	print = (struct VB_Print_stmt*)malloc(sizeof(struct VB_Print_stmt));
+
+	strcpy(print->text,text);
+
+	return print;
+}
