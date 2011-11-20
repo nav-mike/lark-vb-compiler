@@ -1,5 +1,5 @@
 #include <stdio.h>
-
+#include "tree_nodes.h"
 
 
 /*!
@@ -150,3 +150,26 @@ struct VB_Expr Create_VB_Expr(enum VB_Type_of_expr type,
 								struct VB_Expr* FirstSon,
 								struct VB_Expr* LastSon);
 
+/*!
+    Функция добавляет в файл GraphViz фрагмент дерева для stmt_module.
+  \param module   - узел дерева.
+  \param number   - порядковый номер узла.
+  \return         Если произошла ошибка работы с файлом, то возвращается 1, иначе 0.
+*/
+int add_node_stmt_module (VB_Stmt_module* module, int number)
+{
+	FILE* file = NULL;
+	int error = fopen_s(&file, "vb_lark.txt", "at");
+	if (error) return 1;
+
+	error = fprintf(file, "\n\t\"node%d\" [", number);
+	if (error == -1) return 1;
+	error = fprintf(file, "\n\t\tlabel = \"<f0> module | <f1> \"");
+	if (error == -1) return 1;
+	error = fprintf(file, "\n\t\tshape = \"record\"\n\t];");
+	if (error == -1) return 1;
+
+	// Вызов функции для stmt_list
+
+	return 0;
+}
