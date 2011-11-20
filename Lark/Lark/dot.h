@@ -675,8 +675,6 @@ int add_node_param_stmt (struct VB_Param_stmt* node)
 	error = fprintf(file,"\n\t\tshape = \"record\"\n\t];");
 	if (error == -1) return 1;
 
-	// —ледующий параметр
-
 	fclose(file);
 	return 0;
 }
@@ -745,10 +743,11 @@ int add_node_param_list (struct VB_Param_list* node)
 int add_node_sub_stmt (struct VB_Sub_stmt* node)
 {
 	FILE* file = NULL;
+	int number = Number;
 	int error = fopen_s(&file,"vb_lark.txt","at");
 	if (error) return 1;
 
-	error = fprintf(file,"\n\t\"node%d\" [", Number);
+	error = fprintf(file,"\n\t\"node%d\" [", number);
 	if (error == -1) return 1;
 
 	error = fprintf(file,"\n\t\tlabel = \"<f0> %s | <f1> %d \"",
@@ -758,7 +757,29 @@ int add_node_sub_stmt (struct VB_Sub_stmt* node)
 	error = fprintf(file,"\n\t\tshape = \"record\"\n\t];");
 	if (error == -1) return 1;
 
-	// ¬ввод параметров и тела процедуры.
+	if (node->stmt_list != NULL)
+	{
+		Number++;
+		error = fprintf(file, "\n\t\"node%d\":f0 -> \"node%d\":f0;",
+			number, Number);
+		if (error == -1) return 1;
+		fclose(file);
+		error = add_node_stmt_list(node->stmt_list);
+		if (error) return 1;
+	}
+
+	if (node->param_list != NULL)
+	{
+		Number++;
+		error = fopen_s(&file,"vb_lark.txt", "at");
+		if (error) return 1;
+		error = fprintf(file, "\n\t\"node%d\":f0 -> \"node%d\":f0;",
+			number, Number);
+		if (error == -1) return 1;
+		fclose(file);
+		error = add_node_param_list(node->param_list);
+		if (error) return 1;
+	}
 
 	fclose(file);
 	return 0;
