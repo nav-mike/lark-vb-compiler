@@ -671,3 +671,31 @@ int add_node_enum_expr_list (VB_Enum_expr_list* node, int number)
 	fclose(file);
 	return 0;
 }
+
+/*!
+    Функция добавляет в файл GraphViz фрагмент дерева для VB_Enum_stmt.
+  \param module   - узел дерева.
+  \param number   - порядковый номер узла.
+  \return         Если произошла ошибка работы с файлом, то возвращается 1, иначе 0.
+*/
+int add_node_enum_stmt (VB_Enum_stmt* node, int number)
+{
+	FILE* file = NULL;
+	int error = fopen_s(&file,"vb_lark.txt", "at");
+	if (error) return 1;
+
+	error = fprintf(file,"\n\t\"node%d\" [", number);
+	if (error == -1) return 1;
+
+	error = fprintf(file,"\n\t\tlabel - \"<f0> %s | <f1> %d \"",
+		node->id, "ENUM_STMT");
+	if (error == -1) return 1;
+
+	error = fprintf(file, "\n\t\tshape = \"record\"\n\t];");
+	if (error == -1) return 1;
+
+	// Запись полей
+
+	fclose(file);
+	return 0;
+}
