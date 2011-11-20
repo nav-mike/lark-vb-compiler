@@ -3,6 +3,8 @@
 	#include <stdio.h>
 	
 	extern int yylex(void);
+	
+	struct VB_Module_stmt* root;
 %}
 
 %start module_stmt
@@ -53,7 +55,7 @@
 %type <List>		stmt_list
 %type <Stmt>		stmt
 %type <Expr>		expr
-%type <Expr_l>  expr_list
+%type <Expr_l>		expr_list
 %type <If_stmt>		if_stmt
 %type <List>		stmt_list_inline
 %type <End_if>		end_if_stmt
@@ -154,57 +156,57 @@
 
 %%
 
-	module_stmt: MODULE ID ENDL stmt_list END_MODULE ENDL
+	module_stmt: MODULE ID ENDL stmt_list END_MODULE ENDL {root = $$;$$ = create_VB_Module_stmt($2,$4);}
 			   ;
 		
-	stmt_list: stmt
-		 | stmt_list stmt
+	stmt_list: stmt			{$$ = create_VB_Stmt_list($1);}
+		 | stmt_list stmt	{$$ = edit_VB_Stmt_list($1,$2);}
 		 ;
 			 	     
 	stmt: ENDL
-		| expr ENDL
-		| if_stmt
-		| dim_stmt
-		| for_stmt
-		| while_stmt
-		| do_loop_stmt
-		| enum_stmt
-		| sub_stmt
-		| func_stmt
-		| try_catch_stmt
-		| throw_stmt
-		| console_print_stmt
-		| console_println_stmt
-		| console_read_stmt
-		| console_readln_stmt
+		| expr ENDL				{$$ = create_VB_Stmt_Expr($1);}
+		| if_stmt				{$$ = create_VB_Stmt_If($1);}
+		| dim_stmt				{$$ = create_VB_Stmt_Dim($1);}
+		| for_stmt				{$$ = create_VB_Stmt_For($1);}
+		| while_stmt			{$$ = create_VB_Stmt_While($1);}
+		| do_loop_stmt			{$$ = create_VB_Stmt_Do_Loop($1);}
+		| enum_stmt				{$$ = create_VB_Stmt_Enum($1);}
+		| sub_stmt				{$$ = create_VB_Stmt_Sub($1);}
+		| func_stmt				{$$ = create_VB_Stmt_Func($1);}
+		| try_catch_stmt		{$$ = create_VB_Stmt_Try_Catch($1);}
+		| throw_stmt			{$$ = create_VB_Stmt_Throw($1);}
+		| console_print_stmt	{$$ = create_VB_Stmt_Print($1);}
+		| console_println_stmt	{$$ = create_VB_Stmt_Println($1);}
+		| console_read_stmt		{$$ = create_VB_Stmt_Read($1);}
+		| console_readln_stmt	{$$ = create_VB_Stmt_Readln($1);}
 		;
 					
-	expr: ID
-		| ID'('expr_list')'
-		| INT_CONST
-		| CHAR_CONST
-		| STRING_CONST
-		| BOOLEAN_CONST
-		| expr '=' expr
-		| expr '+' expr
-		| expr '-' expr
-		| expr '*' expr
-		| expr '/' expr
-		| expr '\\' expr
-		| expr '^' expr
-		| expr '>' expr
-		| expr '<' expr
-		| expr MORE_OR_EQUAL expr
-		| expr LESS_OR_EQUAL expr
-		| expr NONEQUAL	expr
-		| expr EQUAL	expr
-		| expr'('expr')'
-		| '('expr')'
-		| '-' expr %prec UMINUS
-		| '+' expr %prec UPLUS
+	expr: ID						{$$ = create_id_expr($1);}
+		| ID'('expr_list')'			{$$ = create_func_expr($1,$3);}
+		| INT_CONST					{$$ = create_int_boolean_char_const_expr(INT_CONST,$1);}
+		| CHAR_CONST				{$$ = create_int_boolean_char_const_expr(CHAR_CONST,$1);}
+		| STRING_CONST				{$$ = create_string_const_expr($1);}
+		| BOOLEAN_CONST				{$$ = create_int_boolean_char_const_expr(BOOLEAN_CONST,$1);}
+		| expr '=' expr				{$$ = create_operator_expr(ASSIGN,$1,$3);}
+		| expr '+' expr				{$$ = create_operator_expr(PLUS,$1,$3);}
+		| expr '-' expr				{$$ = create_operator_expr(MINUS,$1,$3);}
+		| expr '*' expr				{$$ = create_operator_expr(MUL,$1,$3);}
+		| expr '/' expr				{$$ = create_operator_expr(DIV,$1,$3);}
+		| expr '\\' expr			{$$ = create_operator_expr(INT_DIV,$1,$3);}
+		| expr '^' expr				{$$ = create_operator_expr(POWER,$1,$3);}
+		| expr '>' expr				{$$ = create_operator_expr(MORE,$1,$3);}
+		| expr '<' expr				{$$ = create_operator_expr(LESS,$1,$3);}
+		| expr MORE_OR_EQUAL expr	{$$ = create_operator_expr(MORE_OR_EQUAL,$1,$3);}
+		| expr LESS_OR_EQUAL expr	{$$ = create_operator_expr(LESS_OR_EQUAL,$1,$3);}
+		| expr NONEQUAL	expr		{$$ = create_operator_expr(NONEQUAL,$1,$3);}
+		| expr EQUAL	expr		{$$ = create_operator_expr(EQUAL,$1,$3);}
+		| expr'('expr')'			{$$ = create_operator_expr(GET_ITEM,$1,$3);}
+		| '('expr')'				{$$ = $2;}
+		| '-' expr %prec UMINUS		{$$ = create_operator_expr(UMINUS,$2,0);}
+		| '+' expr %prec UPLUS		{$$ = create_operator_expr(UPLUS,$2,0);}
 		;
 			
-	if_stmt: IF expr THEN ENDL stmt_list end_if_stmt
+	if_stmt: IF expr THEN ENDL stmt_list end_if_stmt	{$$ = create_with_Then_expr_stmt_list_end_if_stmt($2,$5,$6);}
 		   | IF expr ENDL stmt_list end_if_stmt
 		   | IF expr THEN stmt_list_inline END_IF ENDL
 		   | IF expr THEN stmt_list_inline ELSE stmt_list_inline END_IF ENDL
