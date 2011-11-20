@@ -806,8 +806,6 @@ int add_node_enum_expr (struct VB_Enum_expr* node)
 	error = fprintf(file,"\n\t\tshape = \"record\"\n\t];");
 	if (error == -1) return 1;
 
-	// Следующий элемент enum
-
 	fclose(file);
 	return 0;
 }
@@ -877,10 +875,11 @@ int add_node_enum_expr_list (struct VB_Enum_expr_list* node)
 int add_node_enum_stmt (struct VB_Enum_stmt* node)
 {
 	FILE* file = NULL;
+	int number = Number;
 	int error = fopen_s(&file,"vb_lark.txt", "at");
 	if (error) return 1;
 
-	error = fprintf(file,"\n\t\"node%d\" [", Number);
+	error = fprintf(file,"\n\t\"node%d\" [", number);
 	if (error == -1) return 1;
 
 	error = fprintf(file,"\n\t\tlabel = \"<f0> %s | <f1> %d \"",
@@ -890,7 +889,17 @@ int add_node_enum_stmt (struct VB_Enum_stmt* node)
 	error = fprintf(file, "\n\t\tshape = \"record\"\n\t];");
 	if (error == -1) return 1;
 
-	// Запись полей
+	if (node->list != NULL)
+	{
+		Number++;
+		error = fprintf(file, "\n\t\"node%d\":f0 -> \"node%d\":f0;",
+		number, Number);
+		if (error == -1) return 1;
+
+		fclose(file);
+		error = add_node_enum_expr_list(node->list);
+		if (error) return 1;
+	}
 
 	fclose(file);
 	return 0;
