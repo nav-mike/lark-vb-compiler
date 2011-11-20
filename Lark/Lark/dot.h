@@ -2,6 +2,86 @@
 #include "tree_nodes.h"
 
 /*!
+	Функция преобразует тип выражения в строку.
+  \param type - Тип выражения.
+  \return Строка - тип выражения.
+*/
+char* VB_Expr_type_to_string (enum VB_Expr_type type)
+{
+	switch (type)
+	{
+	case(ID):
+		return "ID";
+		break;
+	case(EXPR_FUNC):
+		return "EXPR_FUNC";
+		break;
+	case(CHAR_CONST):
+		return "CHAR_CONST";
+		break;
+	case(INT_CONST):
+		return "INT_CONST";
+		break;
+	case(STRING_CONST):
+		return "STRING_CONST";
+		break;
+	case(BOOLEAN_CONST):
+		return "BOOLEAN_CONST";
+		break;
+	case(ASSIGN):
+		return "ASSIGN";
+		break;
+	case(PLUS):
+		return "PLUS";
+		break;
+	case(MINUS):
+		return "MINUS";
+		break;
+	case(MUL):
+		return "MUL";
+		break;
+	case(INT_DIV):
+		return "INT_DIV";
+		break;
+	case(DIV):
+		return "DIV";
+		break;
+	case(POWER):
+		return "POWER";
+		break;
+	case(MORE):
+		return "MORE";
+		break;
+	case(LESS):
+		return "LESS";
+		break;
+	case(MORE_OR_EQUAL):
+		return "MORE_OR_EQUAL";
+		break;
+	case(LESS_OR_EQUAL):
+		return "LESS_OR_EQUAL";
+		break;
+	case(NONEQUAL):
+		return "NONEQUAL";
+		break;
+	case(EQUAL):
+		return "EQUAL";
+		break;
+	case(UMINUS):
+		return "UMINUS";
+		break;
+	case(UPLUS):
+		return "UPLUS";
+		break;
+	case(GET_ITEM):
+		return "GET_ITEM";
+		break;
+	}
+
+	return "";
+}
+
+/*!
     Функция открывает файл для GrphViz и записывает в него верхнюю шапку.
   \return Если произошла ошибка работы с файлом, то возвращается 1, иначе 0.
 */
@@ -51,8 +131,8 @@ int add_node_expr (struct VB_Expr* node, int number)
 
 	error = fprintf(file, "\n\t\"node%d\" [", number);
 	if (error == -1) return 1;
-	error = fprintf(file, "\n\t\tlabel = \"<f0> %s | <f1> %d\"",
-		                          node->expr_string, node->int_val);
+	error = fprintf(file, "\n\t\tlabel = \"<f0> %s | <f1> %d | <f2> %s\"",
+		node->expr_string, node->int_val);//
 	if (error == -1) return 1;
 	error = fprintf(file, "\n\t\tshape = \"record\"\n\t];");
 	if (error == -1) return 1;
