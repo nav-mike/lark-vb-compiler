@@ -136,7 +136,8 @@ struct VB_If_stmt
 	enum   VB_If_stmt_type  type;		//!< Тип условного оператора
 	struct VB_Expr*			expr;		//!< Условие
 	struct VB_Stmt_list*	stmt_list;	//!< Указатель на список операций при истинном условии.
-	struct VB_End_if_stmt*	end_stmt;	//!< Указатель на список операций при ложном условии условии.
+	struct VB_Stmt_list*	else_list;	//!< Указатель на список операций при ложном условии (только если в 1 строку).
+	struct VB_End_if_stmt*	end_stmt;	//!< Указатель на список операций при ложном условии.
 	struct VB_Stmt*			next;		//!< Указатель на следующий элемент последовательности операторов.
 };
 
@@ -159,7 +160,7 @@ struct VB_End_if_stmt
 	enum VB_End_if_stmt_type 	type;		//!< Тип условного оператора
 	struct VB_Stmt_list*		stmt_list;	//!< Указатель на список операций при истинном условии.
 	struct VB_Expr*				expr;		//!< Условие
-	struct VB_End_if_stmt*		end_stmt;	//!< Указатель на список операций при ложном условии условии.
+	struct VB_End_if_stmt*		end_stmt;	//!< Указатель на список операций при ложном условии.
 	struct VB_Stmt*				next;		//!< Указатель на следующий элемент последовательности операторов.
 };
 
@@ -791,16 +792,39 @@ struct VB_Stmt* create_VB_Stmt_Read (struct VB_Read_stmt* read_stmt)
   \param end_if_stmt Действия при ложном условии.
   \return Новое условное выражение.
 */
-struct VB_If_stmt* create_with_Then_expr_stmt_list_end_if_stmt (struct VB_Expr* expr,
+struct VB_If_stmt* create_with_Then_expr_stmt_list_end_if_stmt (enum VB_If_stmt_type type, struct VB_Expr* expr,
 	struct VB_Stmt_list* stmt_list, struct VB_End_if_stmt* end_if_stmt)
 {
 	struct VB_If_stmt* if_stmt = NULL;
 
 	if_stmt = (struct VB_If_stmt*)malloc(sizeof(struct VB_If_stmt));
 
+	if_stmt->type = type;
 	if_stmt->expr = expr;
 	if_stmt->end_stmt = end_if_stmt;
 	if_stmt->stmt_list = stmt_list;
+
+	return if_stmt;
+}
+
+/*!
+	Функция создает условное выражение по первой строчке грамматики.
+  \param expr Условие.
+  \param stmt_list Действия при положительном условии.
+  \param end_if_stmt Действия при ложном условии.
+  \return Новое условное выражение.
+*/
+struct VB_If_stmt* create_if_inline(enum VB_If_stmt_type type, struct VB_Expr* expr, 
+									struct VB_Stmt_list* if_list, struct VB_Stmt_list* else_list)
+{
+	struct VB_If_stmt* if_stmt = NULL;
+
+	if_stmt = (struct VB_If_stmt*)malloc(sizeof(struct VB_If_stmt));
+
+	if_stmt->type = type;
+	if_stmt->expr = expr;
+	if_stmt->stmt_list = if_list;
+	if_stmt->else_list = else_list;
 
 	return if_stmt;
 }
