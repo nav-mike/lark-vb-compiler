@@ -320,6 +320,14 @@ struct VB_Enum_expr_list
 	struct VB_Enum_expr*	last;	//!< Указатель на последний элемент списка
 };
 
+/*! \struct VB_Print_stmt
+	Сообщение в стандратный поток вывода.
+*/
+struct VB_Print_stmt
+{
+	char* text; //!< Текст сообщения.
+};
+
 /*! \struct VB_Enum_expr
     Элемент перечисления Enum
  */
