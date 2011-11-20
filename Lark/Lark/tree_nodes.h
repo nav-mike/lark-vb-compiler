@@ -1270,3 +1270,18 @@ struct VB_Catch_stmt_list* create_Catch_stmt_list (struct VB_Catch_stmt* catch_s
 
 	return list;
 }
+
+/*!
+	Функция добавления нового блока обработки перехваченного исключения.
+  \param catch_stmt_list Изменяемый лист блоков обработки перехваченных исключений.
+  \param catch_stmt Блок обработки перехваченного исключения.
+  \return Новый лист блоков обработки перехваченных сообщений.
+*/
+struct VB_Catch_stmt_list* add_new_Catch_stmt (struct VB_Catch_stmt_list* catch_stmt_list,
+	struct VB_Catch_stmt* catch_stmt)
+{
+	catch_stmt_list->last->next = catch_stmt;
+	catch_stmt_list->last = catch_stmt;
+
+	return catch_stmt_list;
+}
