@@ -1123,10 +1123,11 @@ int add_node_end_if_stmt (struct VB_End_if_stmt* node)
 int add_node_dim_stmt (struct VB_Dim_stmt* node)
 {
 	FILE* file = NULL;
+	int number = Number;
 	int error = fopen_s(&file, "vb_lark.txt", "at");
 	if (error) return 1;
 
-	error = fprintf(file,"\n\t\"node%d\" [", Number);
+	error = fprintf(file,"\n\t\"node%d\" [", number);
 	if (error == -1) return 1;
 
 	error = fprintf(file,"\n\t\tlabel = \"<f0> %s | <f1> %s \"",
@@ -1136,7 +1137,16 @@ int add_node_dim_stmt (struct VB_Dim_stmt* node)
 	error = fprintf(file,"\n\t\tshape = \"record\"\n\t];");
 	if (error == -1) return 1;
 
-	// внутренние указатели
+	if (node->list != NULL)
+	{
+		Number++;
+		error = fprintf(file, "\n\t\"node%d\":f0 -> \"node%d\":f0;",
+			number, Number);
+		if (error == -1) return 1;
+		fclose(file);
+		error = add_node_as_Expr_list(node->list);
+		if (error) return 1;
+	}
 
 	fclose(file);
 	return 0;
