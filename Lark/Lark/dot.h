@@ -316,3 +316,26 @@ char* VB_As_Expr_list_type_to_string (enum VB_As_Expr_list_type type)
 
 	return "";
 }
+
+/*!
+	Функция преобразуте тип объявления идентификатора.
+  \param type - Тип объявления идентификатора.
+  \return Строка - тип объявления идентификатора.
+*/
+char* VB_As_expr_type_to_string (enum VB_As_expr_type type)
+{
+	switch(type)
+	{
+	case(ID_LIST):
+		return "ID_LIST";
+		break;
+	case(ONE_ID):
+		return "ONE_ID";
+		break;
+	case(ID_INIT):
+		return "ID_INIT";
+		break;
+	}
+
+	return "";
+}
