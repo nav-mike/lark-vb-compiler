@@ -1182,10 +1182,11 @@ int add_node_stmt_list (struct VB_Stmt_list* node)
 int add_node_stmt (struct VB_Stmt* node)
 {
 	FILE* file = NULL;
+	int number = Number;
 	int error = fopen_s(&file,"vb_lark.txt", "at");
 	if (error) return 1;
 
-	error = fprintf(file,"\n\t\"node%d\" [", Number);
+	error = fprintf(file,"\n\t\"node%d\" [", number);
 	if (error == -1) return 1;
 
 	error = fprintf(file,"\n\t\tlabel = \"<f0> %s | <f1> %s\"",
@@ -1195,7 +1196,60 @@ int add_node_stmt (struct VB_Stmt* node)
 	error = fprintf(file,"\n\t\tshape = \"record\"\n\t];");
 	if (error == -1) return 1;
 
-	// Ёлементы
+	Number++;
+	error = fprintf(file, "\n\t\"node%d\":f0 -> \"node%d\":f0;",
+		number, Number);
+	if (error == -1) return 1;
+	fclose(file);
+	switch (node->type)
+	{
+	case(STMT_EXPR):
+		error = add_node_expr(node->expr);
+		break;
+	case(IF):
+		error = add_node_if_stmt(node->if_stmt);
+		break;
+	case(DIM):
+		error = add_node_dim_stmt(node->dim_stmt);
+		break;
+	case(FOR):
+		error = add_node_for_stmt(node->for_stmt);
+		break;
+	case(WHILE):
+		error = add_node_while_stmt(node->while_stmt);
+		break;
+	case(DO_LOOP):
+		error = add_node_do_loop_stmt(node->do_loop_stmt);
+		break;
+	case(ENUM):
+		error = add_node_enum_stmt(node->enum_stmt);
+		break;
+	case(SUB):
+		error = add_node_sub_stmt(node->sub_stmt);
+		break;
+	case(FUNC):
+		error = add_node_func_stmt(node->func_stmt);
+		break;
+	case(TRY_CATCH):
+		error = add_node_try_catch_stmt(node->try_catch_stmt);
+		break;
+	case(THROW):
+		error = add_node_throw_stmt(node->throw_stmt);
+		break;
+	case(PRINT):
+		//error = add_node_print_stmt(node->print_stmt);
+		break;
+	case(PRINTLN):
+		//error = add_node_println_stmt(node->println_stmt);
+		break;
+	case(READ):
+		//error = add_node_read_stmt(node->read_stmt);
+		break;
+	case(READLN):
+		//error = add_node_readln_stmt(node->readln_stmt);
+		break;
+	}
+	if (error) return 1;
 
 	fclose(file);
 	return 0;
