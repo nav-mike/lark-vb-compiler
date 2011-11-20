@@ -1522,10 +1522,11 @@ int add_node_as_expr (struct VB_As_expr* node)
 int add_node_id_list (struct VB_Id_list* node)
 {
 	FILE* file = NULL;
+	int number = Number;
 	int error = fopen_s(&file,"vb_lark.txt", "at");
 	if (error) return 1;
 
-	error = fprintf(file,"\n\t\"node%d\" [", Number);
+	error = fprintf(file,"\n\t\"node%d\" [", number);
 	if (error == -1) return 1;
 
 	error = fprintf(file,"\n\t\tlabel = \"<f0> %s | <f1> %s\"",
@@ -1535,7 +1536,16 @@ int add_node_id_list (struct VB_Id_list* node)
 	error = fprintf(file, "\n\t\tshape = \"record\"\n\t];");
 	if (error == -1) return 1;
 
-	// внутренние указатели
+	if (node->id != NULL)
+	{
+		Number++;
+		error = fprintf(file, "\n\t\"node%d\":f0 -> \"node%d\":f0;",
+			number, Number);
+		if (error == -1) return 1;
+		fclose(file);
+		error = add_node_expr(node->id);
+		if (error) return 1;
+	}
 
 	fclose(file);
 	return 0;
