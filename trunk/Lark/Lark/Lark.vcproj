@@ -46,7 +46,7 @@
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
 				UsePrecompiledHeader="2"
-				GenerateXMLDocumentationFiles="true"
+				GenerateXMLDocumentationFiles="false"
 				WarningLevel="4"
 				DebugInformationFormat="4"
 				CompileAs="1"
