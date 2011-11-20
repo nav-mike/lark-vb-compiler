@@ -120,16 +120,15 @@ int close_dot_file ()
 /*!
     Функция добавляет в файл GraphViz фрагмент дерева для Expr.
   \param node   - корневой узел дерева.
-  \param number - порядковый номер узла.
   \return         Если произошла ошибка работы с файлом, то возвращается 1, иначе 0.
 */
-int add_node_expr (struct VB_Expr* node, int number)
+int add_node_expr (struct VB_Expr* node)
 {
 	FILE* file = NULL;
 	int error = fopen_s(&file, "vb_lark.txt", "at");
 	if (error) return 1;
 
-	error = fprintf(file, "\n\t\"node%d\" [", number);
+	error = fprintf(file, "\n\t\"node%d\" [", Number);
 	if (error == -1) return 1;
 	error = fprintf(file, "\n\t\tlabel = \"<f0> %s | <f1> %d | <f2> %s\"",
 		node->expr_string, node->int_val, VB_Expr_type_to_string(node->type));
@@ -150,16 +149,15 @@ struct VB_Expr Create_VB_Expr(enum VB_Type_of_expr type,
 /*!
     Функция добавляет в файл GraphViz фрагмент дерева для stmt_module.
   \param module   - узел дерева.
-  \param number   - порядковый номер узла.
   \return         Если произошла ошибка работы с файлом, то возвращается 1, иначе 0.
 */
-int add_node_stmt_module (struct VB_Stmt_module* module, int number)
+int add_node_stmt_module (struct VB_Stmt_module* module)
 {
 	FILE* file = NULL;
 	int error = fopen_s(&file, "vb_lark.txt", "at");
 	if (error) return 1;
 
-	error = fprintf(file, "\n\t\"node%d\" [", number);
+	error = fprintf(file, "\n\t\"node%d\" [", Number);
 	if (error == -1) return 1;
 	error = fprintf(file, "\n\t\tlabel = \"<f0> module | <f1> \"");
 	if (error == -1) return 1;
@@ -392,16 +390,15 @@ char* VB_Do_loop_type_to_string(enum VB_Do_loop_type type)
 /*!
     Функция добавляет в файл GraphViz фрагмент дерева для VB_Throw_stmt.
   \param module   - узел дерева.
-  \param number   - порядковый номер узла.
   \return         Если произошла ошибка работы с файлом, то возвращается 1, иначе 0.
 */
-int add_node_throw_stmt (struct VB_Throw_stmt* node, int number)
+int add_node_throw_stmt (struct VB_Throw_stmt* node)
 {
 	FILE* file = NULL;
 	int error = fopen_s(&file,"vb_lark.txt", "at");
 	if (error) return 1;
 
-	error = fprintf(file,"\n\t\"node%d\" [", number);
+	error = fprintf(file,"\n\t\"node%d\" [", Number);
 	if (error == -1) return 1;
 
 	error = fprintf(file,"\n\t\tlabel = \"<f0> %s | <f1> %s\"",
@@ -420,16 +417,15 @@ int add_node_throw_stmt (struct VB_Throw_stmt* node, int number)
 /*!
     Функция добавляет в файл GraphViz фрагмент дерева для VB_Catch_stmt.
   \param module   - узел дерева.
-  \param number   - порядковый номер узла.
   \return         Если произошла ошибка работы с файлом, то возвращается 1, иначе 0.
 */
-int add_node_catch_stmt (struct VB_Catch_stmt* node, int number)
+int add_node_catch_stmt (struct VB_Catch_stmt* node)
 {
 	FILE* file = NULL;
 	int error = fopen_s(&file,"vb_lark.txt", "at");
 	if (error) return 1;
 
-	error = fprintf(file,"\n\t\"node%d\" [", number);
+	error = fprintf(file,"\n\t\"node%d\" [", Number);
 	if (error == -1) return 1;
 
 	error = fprintf(file,"\n\t\tlabel = \"<f0> %s | <f1> %s\"",
@@ -448,16 +444,15 @@ int add_node_catch_stmt (struct VB_Catch_stmt* node, int number)
 /*!
     Функция добавляет в файл GraphViz фрагмент дерева для VB_Catch_stmt_list.
   \param module   - узел дерева.
-  \param number   - порядковый номер узла.
   \return         Если произошла ошибка работы с файлом, то возвращается 1, иначе 0.
 */
-int add_node_catch_stmt_list (struct VB_Catch_stmt_list* node, int number)
+int add_node_catch_stmt_list (struct VB_Catch_stmt_list* node)
 {
 	FILE* file = NULL;
 	int error = fopen_s(&file,"vb_lark.txt", "at");
 	if (error) return 1;
 
-	error = fprintf(file,"\n\t\"node%d\" [", number);
+	error = fprintf(file,"\n\t\"node%d\" [", Number);
 	if (error == -1) return 1;
 
 	error = fprintf(file,"\n\t\tlabel = \"<f0> %s | <f1>  \"",
@@ -476,16 +471,15 @@ int add_node_catch_stmt_list (struct VB_Catch_stmt_list* node, int number)
 /*!
     Функция добавляет в файл GraphViz фрагмент дерева для VB_Try_catch_stmt.
   \param module   - узел дерева.
-  \param number   - порядковый номер узла.
   \return         Если произошла ошибка работы с файлом, то возвращается 1, иначе 0.
 */
-int add_node_try_catch_stmt (struct VB_Try_catch_stmt* node, int number)
+int add_node_try_catch_stmt (struct VB_Try_catch_stmt* node)
 {
 	FILE* file = NULL;
 	int error = fopen_s(&file,"vb_lark.txt", "at");
 	if (error) return 1;
 
-	error = fprintf(file,"\n\t\"node%d\" [", number);
+	error = fprintf(file,"\n\t\"node%d\" [", Number);
 	if (error == -1) return 1;
 
 	error = fprintf(file,"\n\t\tlabel = \"<f0> %s | <f1>  \"",
@@ -504,16 +498,15 @@ int add_node_try_catch_stmt (struct VB_Try_catch_stmt* node, int number)
 /*!
     Функция добавляет в файл GraphViz фрагмент дерева для VB_Func_stmt.
   \param module   - узел дерева.
-  \param number   - порядковый номер узла.
   \return         Если произошла ошибка работы с файлом, то возвращается 1, иначе 0.
 */
-int add_node_func_stmt (struct VB_Func_stmt* node, int number)
+int add_node_func_stmt (struct VB_Func_stmt* node)
 {
 	FILE* file = NULL;
 	int error = fopen_s(&file,"vb_lark.txt", "at");
 	if (error) return 1;
 
-	error = fprintf(file,"\n\t\"node%d\" [", number);
+	error = fprintf(file,"\n\t\"node%d\" [", Number);
 	if (error == -1) return 1;
 
 	error = fprintf(file,"\n\t\tlabel = \"<f0> %s | <f1> %s \"",
@@ -532,16 +525,15 @@ int add_node_func_stmt (struct VB_Func_stmt* node, int number)
 /*!
     Функция добавляет в файл GraphViz фрагмент дерева для VB_Param_stmt.
   \param module   - узел дерева.
-  \param number   - порядковый номер узла.
   \return         Если произошла ошибка работы с файлом, то возвращается 1, иначе 0.
 */
-int add_node_param_stmt (struct VB_Param_stmt* node, int number)
+int add_node_param_stmt (struct VB_Param_stmt* node)
 {
 	FILE* file = NULL;
 	int error = fopen_s(&file,"vb_lark.txt", "at");
 	if (error) return 1;
 
-	error = fprintf(file,"\n\t\"node%d\" [", number);
+	error = fprintf(file,"\n\t\"node%d\" [", Number);
 	if (error == -1) return 1;
 
 	error = fprintf(file,"\n\t\tlabel = \"<f0> %s | <f1> %s \"",
@@ -560,16 +552,15 @@ int add_node_param_stmt (struct VB_Param_stmt* node, int number)
 /*!
     Функция добавляет в файл GraphViz фрагмент дерева для VB_Param_list.
   \param module   - узел дерева.
-  \param number   - порядковый номер узла.
   \return         Если произошла ошибка работы с файлом, то возвращается 1, иначе 0.
 */
-int add_node_param_list (struct VB_Param_list* node, int number)
+int add_node_param_list (struct VB_Param_list* node)
 {
 	FILE* file = NULL;
 	int error = fopen_s(&file,"vb_lark.txt", "at");
 	if (error) return 1;
 
-	error = fprintf(file,"\n\t\"node%d\" [", number);
+	error = fprintf(file,"\n\t\"node%d\" [", Number);
 	if (error == -1) return 1;
 
 	error = fprintf(file,"\n\t\tlabel = \"<f0> %s | <f1> %s \"",
@@ -588,16 +579,15 @@ int add_node_param_list (struct VB_Param_list* node, int number)
 /*!
     Функция добавляет в файл GraphViz фрагмент дерева для VB_Sub_stmt.
   \param module   - узел дерева.
-  \param number   - порядковый номер узла.
   \return         Если произошла ошибка работы с файлом, то возвращается 1, иначе 0.
 */
-int add_node_sub_stmt (struct VB_Sub_stmt* node, int number)
+int add_node_sub_stmt (struct VB_Sub_stmt* node)
 {
 	FILE* file = NULL;
 	int error = fopen_s(&file,"vb_lark.txt","at");
 	if (error) return 1;
 
-	error = fprintf(file,"\n\t\"node%d\" [", number);
+	error = fprintf(file,"\n\t\"node%d\" [", Number);
 	if (error == -1) return 1;
 
 	error = fprintf(file,"\n\t\tlabel = \"<f0> %s | <f1> %d \"",
@@ -616,16 +606,15 @@ int add_node_sub_stmt (struct VB_Sub_stmt* node, int number)
 /*!
     Функция добавляет в файл GraphViz фрагмент дерева для VB_Enum_expr.
   \param module   - узел дерева.
-  \param number   - порядковый номер узла.
   \return         Если произошла ошибка работы с файлом, то возвращается 1, иначе 0.
 */
-int add_node_enum_expr (struct VB_Enum_expr* node, int number)
+int add_node_enum_expr (struct VB_Enum_expr* node)
 {
 	FILE* file = NULL;
 	int error = fopen_s(&file,"vb_lark.txt", "at");
 	if (error) return 1;
 
-	error = fprintf(file,"\n\t\"node%d\" [", number);
+	error = fprintf(file,"\n\t\"node%d\" [", Number);
 	if (error == -1) return 1;
 
 	error = fprintf(file,"\n\t\tlable = \"<f0> %s | <f1> %d \"",
@@ -644,16 +633,15 @@ int add_node_enum_expr (struct VB_Enum_expr* node, int number)
 /*!
     Функция добавляет в файл GraphViz фрагмент дерева для VB_Enum_expr_list.
   \param module   - узел дерева.
-  \param number   - порядковый номер узла.
   \return         Если произошла ошибка работы с файлом, то возвращается 1, иначе 0.
 */
-int add_node_enum_expr_list (struct VB_Enum_expr_list* node, int number)
+int add_node_enum_expr_list (struct VB_Enum_expr_list* node)
 {
 	FILE* file = NULL;
 	int error = fopen_s(&file,"vb_lark.txt", "at");
 	if (error) return 1;
 
-	error = fprintf(file,"\n\t\"node%d\" [", number);
+	error = fprintf(file,"\n\t\"node%d\" [", Number);
 	if (error == -1) return 1;
 
 	error = fprintf(file,"\n\t\tlabel = \"<f0> %s | <f1> %d \"",
@@ -672,16 +660,15 @@ int add_node_enum_expr_list (struct VB_Enum_expr_list* node, int number)
 /*!
     Функция добавляет в файл GraphViz фрагмент дерева для VB_Enum_stmt.
   \param module   - узел дерева.
-  \param number   - порядковый номер узла.
   \return         Если произошла ошибка работы с файлом, то возвращается 1, иначе 0.
 */
-int add_node_enum_stmt (struct VB_Enum_stmt* node, int number)
+int add_node_enum_stmt (struct VB_Enum_stmt* node)
 {
 	FILE* file = NULL;
 	int error = fopen_s(&file,"vb_lark.txt", "at");
 	if (error) return 1;
 
-	error = fprintf(file,"\n\t\"node%d\" [", number);
+	error = fprintf(file,"\n\t\"node%d\" [", Number);
 	if (error == -1) return 1;
 
 	error = fprintf(file,"\n\t\tlabel = \"<f0> %s | <f1> %d \"",
@@ -700,16 +687,15 @@ int add_node_enum_stmt (struct VB_Enum_stmt* node, int number)
 /*!
     Функция добавляет в файл GraphViz фрагмент дерева для VB_Do_loop_stmt.
   \param module   - узел дерева.
-  \param number   - порядковый номер узла.
   \return         Если произошла ошибка работы с файлом, то возвращается 1, иначе 0.
 */
-int add_node_do_loop_stmt (struct VB_Do_loop_stmt* node, int number)
+int add_node_do_loop_stmt (struct VB_Do_loop_stmt* node)
 {
 	FILE* file = NULL;
 	int error = fopen_s(&file,"vb_lark.txt","at");
 	if (error) return 1;
 
-	error = fprintf(file,"\n\t\"node%d\" [", number);
+	error = fprintf(file,"\n\t\"node%d\" [", Number);
 	if (error == -1) return 1;
 
 	error = fprintf(file,"\n\t\tlabel = \"<f0> %s | <f1> %s \"",
@@ -728,16 +714,15 @@ int add_node_do_loop_stmt (struct VB_Do_loop_stmt* node, int number)
 /*!
     Функция добавляет в файл GraphViz фрагмент дерева для VB_While_stmt.
   \param module   - узел дерева.
-  \param number   - порядковый номер узла.
   \return         Если произошла ошибка работы с файлом, то возвращается 1, иначе 0.
 */
-int add_node_while_stmt (struct VB_While_stmt* node, int number)
+int add_node_while_stmt (struct VB_While_stmt* node)
 {
 	FILE* file = NULL;
 	int error = fopen_s(&file,"vb_lark.txt", "at");
 	if (error) return 1;
 
-	error = fprintf(file,"\n\t\"node%d\" [", number);
+	error = fprintf(file,"\n\t\"node%d\" [", Number);
 	if (error == -1) return 1;
 
 	error = fprintf(file,"\n\t\tlabel = \"<f0> %s | <f1> %s \"",
@@ -756,16 +741,15 @@ int add_node_while_stmt (struct VB_While_stmt* node, int number)
 /*!
     Функция добавляет в файл GraphViz фрагмент дерева для VB_For_stmt.
   \param module   - узел дерева.
-  \param number   - порядковый номер узла.
   \return         Если произошла ошибка работы с файлом, то возвращается 1, иначе 0.
 */
-int add_node_for_stmt (struct VB_For_stmt* node, int number)
+int add_node_for_stmt (struct VB_For_stmt* node)
 {
 	FILE* file = NULL;
 	int error = fopen_s(&file,"vb_lark.txt", "at");
 	if (error) return 1;
 
-	error = fprintf(file,"\n\t\"node%d\" [", number);
+	error = fprintf(file,"\n\t\"node%d\" [", Number);
 	if (error == -1) return 1;
 
 	error = fprintf(file,"\n\t\tlabel = \"<f0> %d | <f1> %d | <f2> %d\"",
@@ -784,16 +768,15 @@ int add_node_for_stmt (struct VB_For_stmt* node, int number)
 /*!
     Функция добавляет в файл GraphViz фрагмент дерева для VB_Expr_list.
   \param module   - узел дерева.
-  \param number   - порядковый номер узла.
   \return         Если произошла ошибка работы с файлом, то возвращается 1, иначе 0.
 */
-int add_node_expr_list (struct VB_Expr_list* node, int number)
+int add_node_expr_list (struct VB_Expr_list* node)
 {
 	FILE* file = NULL;
 	int error = fopen_s(&file,"vb_lark.txt", "at");
 	if (error) return 1;
 
-	error = fprintf(file,"\n\t\"node%d\" [", number);
+	error = fprintf(file,"\n\t\"node%d\" [", Number);
 	if (error == -1) return 1;
 
 	error = fprintf(file,"\n\t\tlabel = \"<f0> %s | <f1> %s\"",
@@ -812,16 +795,15 @@ int add_node_expr_list (struct VB_Expr_list* node, int number)
 /*!
     Функция добавляет в файл GraphViz фрагмент дерева для VB_Stmt_list.
   \param module   - узел дерева.
-  \param number   - порядковый номер узла.
   \return         Если произошла ошибка работы с файлом, то возвращается 1, иначе 0.
 */
-int add_node_stmt_list (struct VB_Stmt_list* node, int number)
+int add_node_stmt_list (struct VB_Stmt_list* node)
 {
 	FILE* file = NULL;
 	int error = fopen_s(&file,"vb_lark.txt","at");
 	if (error) return 1;
 
-	error = fprintf(file,"\n\t\"node%d\" [", number);
+	error = fprintf(file,"\n\t\"node%d\" [", Number);
 	if (error == -1) return 1;
 
 	error = fprintf(file,"\n\t\tlabel = \"<f0> %s | <f1> %s\"",
@@ -840,16 +822,15 @@ int add_node_stmt_list (struct VB_Stmt_list* node, int number)
 /*!
     Функция добавляет в файл GraphViz фрагмент дерева для VB_Stmt.
   \param module   - узел дерева.
-  \param number   - порядковый номер узла.
   \return         Если произошла ошибка работы с файлом, то возвращается 1, иначе 0.
 */
-int add_node_stmt (struct VB_Stmt* node, int number)
+int add_node_stmt (struct VB_Stmt* node)
 {
 	FILE* file = NULL;
 	int error = fopen_s(&file,"vb_lark.txt", "at");
 	if (error) return 1;
 
-	error = fprintf(file,"\n\t\"node%d\" [", number);
+	error = fprintf(file,"\n\t\"node%d\" [", Number);
 	if (error == -1) return 1;
 
 	error = fprintf(file,"\n\t\tlabel = \"<f0> %s | <f1> %s\"",
@@ -868,16 +849,15 @@ int add_node_stmt (struct VB_Stmt* node, int number)
 /*!
     Функция добавляет в файл GraphViz фрагмент дерева для VB_If_stmt.
   \param module   - узел дерева.
-  \param number   - порядковый номер узла.
   \return         Если произошла ошибка работы с файлом, то возвращается 1, иначе 0.
 */
-int add_node_if_stmt (struct VB_If_stmt* node, int number)
+int add_node_if_stmt (struct VB_If_stmt* node)
 {
 	FILE* file = NULL;
 	int error = fopen_s(&file,"vb_lark.txt", "at");
 	if (error) return 1;
 
-	error = fprintf(file,"\n\t\"node%d\" [", number);
+	error = fprintf(file,"\n\t\"node%d\" [", Number);
 	if (error == -1) return 1;
 
 	error = fprintf(file,"\n\t\tlabel = \"<f0> %s | <f1> %s \"",
@@ -896,16 +876,15 @@ int add_node_if_stmt (struct VB_If_stmt* node, int number)
 /*!
     Функция добавляет в файл GraphViz фрагмент дерева для VB_End_if_stmt.
   \param module   - узел дерева.
-  \param number   - порядковый номер узла.
   \return         Если произошла ошибка работы с файлом, то возвращается 1, иначе 0.
 */
-int add_node_end_if_stmt (struct VB_End_if_stmt* node, int number)
+int add_node_end_if_stmt (struct VB_End_if_stmt* node)
 {
 	FILE* file = NULL;
 	int error = fopen_s(&file,"vb_lark.txt", "at");
 	if (error) return 1;
 
-	error = fprintf(file,"\n\t\"node%d\" [", number);
+	error = fprintf(file,"\n\t\"node%d\" [", Number);
 	if (error == -1) return 1;
 
 	error = fprintf(file,"\n\t\tlabel = \"<f0> %s | <f1> %s \"",
@@ -924,16 +903,15 @@ int add_node_end_if_stmt (struct VB_End_if_stmt* node, int number)
 /*!
     Функция добавляет в файл GraphViz фрагмент дерева для VB_Dim_stmt.
   \param module   - узел дерева.
-  \param number   - порядковый номер узла.
   \return         Если произошла ошибка работы с файлом, то возвращается 1, иначе 0.
 */
-int add_node_dim_stmt (struct VB_Dim_stmt* node, int number)
+int add_node_dim_stmt (struct VB_Dim_stmt* node)
 {
 	FILE* file = NULL;
 	int error = fopen_s(&file, "vb_lark.txt", "at");
 	if (error) return 1;
 
-	error = fprintf(file,"\n\t\"node%d\" [", number);
+	error = fprintf(file,"\n\t\"node%d\" [", Number);
 	if (error == -1) return 1;
 
 	error = fprintf(file,"\n\t\tlabel = \"<f0> %s | <f1> %s \"",
@@ -952,16 +930,15 @@ int add_node_dim_stmt (struct VB_Dim_stmt* node, int number)
 /*!
     Функция добавляет в файл GraphViz фрагмент дерева для VB_As_Expr_list.
   \param module   - узел дерева.
-  \param number   - порядковый номер узла.
   \return         Если произошла ошибка работы с файлом, то возвращается 1, иначе 0.
 */
-int add_node_as_Expr_list (struct VB_As_Expr_list* node, int number)
+int add_node_as_Expr_list (struct VB_As_Expr_list* node)
 {
 	FILE* file = NULL;
 	int error = fopen_s(&file, "vb_lark.txt", "at");
 	if (error) return 1;
 
-	error = fprintf(file,"\n\t\"node%d\" [", number);
+	error = fprintf(file,"\n\t\"node%d\" [", Number);
 	if (error == -1) return 1;
 
 	error = fprintf(file,"\n\t\tlabel = \"<f0> %s | <f1> %s\"",
@@ -980,16 +957,15 @@ int add_node_as_Expr_list (struct VB_As_Expr_list* node, int number)
 /*!
     Функция добавляет в файл GraphViz фрагмент дерева для VB_As_expr.
   \param module   - узел дерева.
-  \param number   - порядковый номер узла.
   \return         Если произошла ошибка работы с файлом, то возвращается 1, иначе 0.
 */
-int add_node_as_expr (struct VB_As_expr* node, int number)
+int add_node_as_expr (struct VB_As_expr* node)
 {
 	FILE* file = NULL;
 	int error = fopen_s(&file,"vb_lark.txt", "at");
 	if (error) return 1;
 
-	error = fprintf(file,"\n\t\"node%d\" [", number);
+	error = fprintf(file,"\n\t\"node%d\" [", Number);
 	if (error == -1) return 1;
 
 	error = fprintf(file,"\n\t\tlabel = \"<f0> %s | <f1> %s | <f2> %s\"",
@@ -1008,16 +984,15 @@ int add_node_as_expr (struct VB_As_expr* node, int number)
 /*!
     Функция добавляет в файл GraphViz фрагмент дерева для VB_Id_list.
   \param module   - узел дерева.
-  \param number   - порядковый номер узла.
   \return         Если произошла ошибка работы с файлом, то возвращается 1, иначе 0.
 */
-int add_node_id_list (struct VB_Id_list* node, int number)
+int add_node_id_list (struct VB_Id_list* node)
 {
 	FILE* file = NULL;
 	int error = fopen_s(&file,"vb_lark.txt", "at");
 	if (error) return 1;
 
-	error = fprintf(file,"\n\t\"node%d\" [", number);
+	error = fprintf(file,"\n\t\"node%d\" [", Number);
 	if (error == -1) return 1;
 
 	error = fprintf(file,"\n\t\tlabel = \"<f0> %s | <f1> %s\"",
@@ -1036,17 +1011,19 @@ int add_node_id_list (struct VB_Id_list* node, int number)
 /*!
     Функция добавляет в файл GraphViz фрагмент дерева для VB_Array_expr.
   \param module   - узел дерева.
-  \param number   - порядковый номер узла.
   \return         Если произошла ошибка работы с файлом, то возвращается 1, иначе 0.
 */
-int add_node_array_expr (struct VB_Array_expr* node, int number)
+int add_node_array_expr (struct VB_Array_expr* node)
 {
 	FILE* file = NULL;
+	int number = Number;
 	int error = fopen_s(&file,"vb_lark.txt", "at");
 	if (error) return 1;
+	Number++;
 
 	error = fprintf(file,"\n\t\"node%d\" [", number);
 	if (error == -1) return 1;
+	Number++;
 
 	error = fprintf(file,"\n\t\tlabel = \"<f0> %d | <f1> %s\"",
 		node->size, VB_Id_type_to_string(node->id_type));
@@ -1055,7 +1032,29 @@ int add_node_array_expr (struct VB_Array_expr* node, int number)
 	error = fprintf(file, "\n\t\tshape = \"record\"\n\t];");
 	if (error == -1) return 1;
 
-	// внутренние указатели
+	if (node->id != NULL)
+	{
+		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0;",
+			number, Number);
+		if (error == -1) return 1;
+		fclose(file);
+		error = add_node_expr(node->id);
+		if (error == -1) return 1;
+	}
+
+	if (node->list != NULL)
+	{
+		error = fopen_s(&file,"vb_lark.txt","at");
+		if (error) return 1;
+		error = fprintf(file, "\n\t\"node%d\":f0 -> \"node%d\":f0;",
+			number, Number);
+		if (error == -1) return 1;
+		fclose(file);
+		error = add_node_expr_list(node->list);
+		if (error == -1) return 1;
+		error = fopen_s(&file, "vb_lark.txt", "at");
+		if (error) return 1;
+	}
 
 	fclose(file);
 	return 0;
