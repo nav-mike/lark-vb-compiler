@@ -1109,3 +1109,24 @@ struct VB_Array_expr* create_Array (char* id, int int_const, enum VB_Id_type typ
 
 	return arr;
 }
+
+/*!
+	Функция создания массива с его инициализацией.
+  \param id Имя массива.
+  \param type Тип массива.
+  \param list Инициализация.
+  \return Новый узел массива.
+*/
+struct VB_Array_expr* create_Array_with_init (char* id, enum VB_Id_type type, struct VB_Expr_list* list)
+{
+	struct VB_Array_expr* result = NULL;
+
+	result = (struct VB_Array_expr*)malloc(sizeof(struct VB_Array_expr));
+
+	result->id_type = type;
+	result->list = list;
+	result->id = (struct VB_Expr*)malloc(sizeof(struct VB_Expr));
+	strcpy(result->id->expr_string, id);
+
+	return result;
+}
