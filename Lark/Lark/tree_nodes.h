@@ -1045,14 +1045,14 @@ struct VB_Stmt* create_VB_Stmt_Readkey (struct VB_Readkey_stmt* readkey_stmt)
 */
 struct VB_If_stmt* create_with_Then_expr_stmt_list_end_if_stmt (struct VB_Expr* expr,
 	struct VB_Stmt_list* stmt_list, struct VB_End_if_stmt* end_if_stmt)
-	{
-		struct VB_If_stmt* if_stmt = NULL;
+{
+	struct VB_If_stmt* if_stmt = NULL;
 
-		if_stmt = (struct VB_If_stmt*)malloc(sizeof(struct VB_If_stmt));
+	if_stmt = (struct VB_If_stmt*)malloc(sizeof(struct VB_If_stmt));
 
-		if_stmt->expr = expr;
-		if_stmt->end_stmt = end_if_stmt;
-		if_stmt->stmt_list = stmt_list;
+	if_stmt->expr = expr;
+	if_stmt->end_stmt = end_if_stmt;
+	if_stmt->stmt_list = stmt_list;
 
-		return if_stmt;
-	}
+	return if_stmt;
+}
