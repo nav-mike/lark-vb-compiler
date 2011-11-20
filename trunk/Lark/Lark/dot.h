@@ -1,67 +1,6 @@
 #include <stdio.h>
 #include "tree_nodes.h"
 
-
-/*!
-    Функция преобразует тип в его строковое представление.
-  \param type - тип выражения.
-  \return       строковое представление типа.
-*/
-char* VB_Type_of_expr_to_string (enum VB_Type_of_expr type)
-{
-	switch(type)
-	{
-	case(_ID_vb):
-		return "id";
-	case(_CHAR_CONST_vb):
-		return "char";
-	case(_INT_CONST_vb):
-		return "int";
-	case(_STRING_CONST_vb):
-		return "string";
-	case(_BOOLEAN_CONST_vb):
-		return "bool";
-	case(_ASSIGN_OPERATOR_vb):
-		return "=";
-	case(_PLUS_OPERATOR_vb):
-		return "+";
-	case(_MINUS_OPERATOR_vb):
-		return "-";
-	case(_MUL_OPERATOR_vb):
-		return "*";
-	case(_INT_DIV_OPERATOR_vb):
-		return "\\";
-	case(_DIV_OPERATOR_vb):
-		return "/";
-	case(_POWER_OPERATOR_vb):
-		return "^";
-	case(_MORE_OPERATOR_vb):
-		return ">";
-	case(_LESS_OPERATOR_vb):
-		return "<";
-	case(_MORE_OR_EQUAL_OPERATOR_vb):
-		return ">=";
-	case(_LESS_OR_EQUAL_OPERATOR_vb):
-		return "<=";
-	case(_ASSIGN_PLUS_OPERATOR_vb):
-		return "+=";
-	case(_ASSIGN_MINUS_OPERATOR_vb):
-		return "-=";
-	case(_ASSIGN_MUL_OPERATOR_vb):
-		return "*=";
-	case(_ASSIGN_DIV_OPERATOR_vb):
-		return "/=";
-	case(_ASSIGN_INT_DIV_OPERATOR_vb):
-		return "\\=";
-	case(_ASSIGN_NONEQUAL_OPERATOR_vb):
-		return "<>";
-	case(_UMINUS_OPERATOR_vb):
-		return "-";
-	}
-
-	return "";
-}
-
 /*!
     Функция открывает файл для GrphViz и записывает в него верхнюю шапку.
   \return Если произошла ошибка работы с файлом, то возвращается 1, иначе 0.
@@ -118,28 +57,6 @@ int add_node_expr (struct VB_Expr* node, int number)
 	error = fprintf(file, "\n\t\tshape = \"record\"\n\t];");
 	if (error == -1) return 1;
 
-	if (node->FirstSon != NULL)
-	{
-		error = fprintf(file, "\n\t\"node%d\":f0 -> \"node%d\":f0;", number, number+1);
-		if (error == -1) return 1;
-		fclose(file);
-		error = add_node_expr(node->FirstSon, number+1);
-		if (error == -1) return 1;
-	}
-
-	if (node->LastSon != NULL)
-	{
-		error = fopen_s(&file, "vb_lark.txt", "at");
-		if (error) return 1;
-		error = fprintf(file, "\n\t\"node%d\":f0 -> \"node%d\":f0;", number, number+2);
-		if (error == -1) return 1;
-		fclose(file);
-		error = add_node_expr(node->LastSon, number+2);
-		if (error == -1) return 1;
-		error = fopen_s(&file, "vb_lark.txt", "at");
-		if (error) return 1;
-	}
-
 	fclose(file);
 
 	return 0;
@@ -156,7 +73,7 @@ struct VB_Expr Create_VB_Expr(enum VB_Type_of_expr type,
   \param number   - порядковый номер узла.
   \return         Если произошла ошибка работы с файлом, то возвращается 1, иначе 0.
 */
-int add_node_stmt_module (VB_Stmt_module* module, int number)
+int add_node_stmt_module (struct VB_Stmt_module* module, int number)
 {
 	FILE* file = NULL;
 	int error = fopen_s(&file, "vb_lark.txt", "at");
@@ -209,10 +126,10 @@ char* VB_Stmt_type_to_string (enum VB_Stmt_type type)
 {
 	switch (type)
 	{
-	case(ENDL):
+	case(0):
 		return "ENDL";
 		break;
-	case(EXPR):
+	case(STMT_EXPR):
 		return "EXPR";
 		break;
 	case(IF):
@@ -398,7 +315,7 @@ char* VB_Do_loop_type_to_string(enum VB_Do_loop_type type)
   \param number   - порядковый номер узла.
   \return         Если произошла ошибка работы с файлом, то возвращается 1, иначе 0.
 */
-int add_node_throw_stmt (VB_Throw_stmt* node, int number)
+int add_node_throw_stmt (struct VB_Throw_stmt* node, int number)
 {
 	FILE* file = NULL;
 	int error = fopen_s(&file,"vb_lark.txt", "at");
@@ -426,7 +343,7 @@ int add_node_throw_stmt (VB_Throw_stmt* node, int number)
   \param number   - порядковый номер узла.
   \return         Если произошла ошибка работы с файлом, то возвращается 1, иначе 0.
 */
-int add_node_catch_stmt (VB_Catch_stmt* node, int number)
+int add_node_catch_stmt (struct VB_Catch_stmt* node, int number)
 {
 	FILE* file = NULL;
 	int error = fopen_s(&file,"vb_lark.txt", "at");
@@ -454,7 +371,7 @@ int add_node_catch_stmt (VB_Catch_stmt* node, int number)
   \param number   - порядковый номер узла.
   \return         Если произошла ошибка работы с файлом, то возвращается 1, иначе 0.
 */
-int add_node_catch_stmt_list (VB_Catch_stmt_list* node, int node)
+int add_node_catch_stmt_list (struct VB_Catch_stmt_list* node, int number)
 {
 	FILE* file = NULL;
 	int error = fopen_s(&file,"vb_lark.txt", "at");
@@ -482,7 +399,7 @@ int add_node_catch_stmt_list (VB_Catch_stmt_list* node, int node)
   \param number   - порядковый номер узла.
   \return         Если произошла ошибка работы с файлом, то возвращается 1, иначе 0.
 */
-int add_node_try_catch_stmt (VB_Try_catch_stmt* node, int number)
+int add_node_try_catch_stmt (struct VB_Try_catch_stmt* node, int number)
 {
 	FILE* file = NULL;
 	int error = fopen_s(&file,"vb_lark.txt", "at");
@@ -510,7 +427,7 @@ int add_node_try_catch_stmt (VB_Try_catch_stmt* node, int number)
   \param number   - порядковый номер узла.
   \return         Если произошла ошибка работы с файлом, то возвращается 1, иначе 0.
 */
-int add_node_func_stmt (VB_Func_stmt* node, int number)
+int add_node_func_stmt (struct VB_Func_stmt* node, int number)
 {
 	FILE* file = NULL;
 	int error = fopen_s(&file,"vb_lark.txt", "at");
@@ -538,7 +455,7 @@ int add_node_func_stmt (VB_Func_stmt* node, int number)
   \param number   - порядковый номер узла.
   \return         Если произошла ошибка работы с файлом, то возвращается 1, иначе 0.
 */
-int add_node_param_stmt (VB_Param_stmt* node, int number)
+int add_node_param_stmt (struct VB_Param_stmt* node, int number)
 {
 	FILE* file = NULL;
 	int error = fopen_s(&file,"vb_lark.txt", "at");
@@ -566,7 +483,7 @@ int add_node_param_stmt (VB_Param_stmt* node, int number)
   \param number   - порядковый номер узла.
   \return         Если произошла ошибка работы с файлом, то возвращается 1, иначе 0.
 */
-int add_node_param_list (VB_Param_list* node, int number)
+int add_node_param_list (struct VB_Param_list* node, int number)
 {
 	FILE* file = NULL;
 	int error = fopen_s(&file,"vb_lark.txt", "at");
@@ -594,7 +511,7 @@ int add_node_param_list (VB_Param_list* node, int number)
   \param number   - порядковый номер узла.
   \return         Если произошла ошибка работы с файлом, то возвращается 1, иначе 0.
 */
-int add_node_sub_stmt (VB_Sub_stmt* node, int number)
+int add_node_sub_stmt (struct VB_Sub_stmt* node, int number)
 {
 	FILE* file = NULL;
 	int error = fopen_s(&file,"vb_lark.txt","at");
@@ -622,7 +539,7 @@ int add_node_sub_stmt (VB_Sub_stmt* node, int number)
   \param number   - порядковый номер узла.
   \return         Если произошла ошибка работы с файлом, то возвращается 1, иначе 0.
 */
-int add_node_enum_expr (VB_Enum_expr* node, int number)
+int add_node_enum_expr (struct VB_Enum_expr* node, int number)
 {
 	FILE* file = NULL;
 	int error = fopen_s(&file,"vb_lark.txt", "at");
@@ -650,7 +567,7 @@ int add_node_enum_expr (VB_Enum_expr* node, int number)
   \param number   - порядковый номер узла.
   \return         Если произошла ошибка работы с файлом, то возвращается 1, иначе 0.
 */
-int add_node_enum_expr_list (VB_Enum_expr_list* node, int number)
+int add_node_enum_expr_list (struct VB_Enum_expr_list* node, int number)
 {
 	FILE* file = NULL;
 	int error = fopen_s(&file,"vb_lark.txt", "at");
@@ -678,7 +595,7 @@ int add_node_enum_expr_list (VB_Enum_expr_list* node, int number)
   \param number   - порядковый номер узла.
   \return         Если произошла ошибка работы с файлом, то возвращается 1, иначе 0.
 */
-int add_node_enum_stmt (VB_Enum_stmt* node, int number)
+int add_node_enum_stmt (struct VB_Enum_stmt* node, int number)
 {
 	FILE* file = NULL;
 	int error = fopen_s(&file,"vb_lark.txt", "at");
@@ -706,7 +623,7 @@ int add_node_enum_stmt (VB_Enum_stmt* node, int number)
   \param number   - порядковый номер узла.
   \return         Если произошла ошибка работы с файлом, то возвращается 1, иначе 0.
 */
-int add_node_do_loop_stmt (VB_Do_loop_stmt* node, int number)
+int add_node_do_loop_stmt (struct VB_Do_loop_stmt* node, int number)
 {
 	FILE* file = NULL;
 	int error = fopen_s(&file,"vb_lark.txt","at");
@@ -734,7 +651,7 @@ int add_node_do_loop_stmt (VB_Do_loop_stmt* node, int number)
   \param number   - порядковый номер узла.
   \return         Если произошла ошибка работы с файлом, то возвращается 1, иначе 0.
 */
-int add_node_while_stmt (VB_While_stmt* node, int number)
+int add_node_while_stmt (struct VB_While_stmt* node, int number)
 {
 	FILE* file = NULL;
 	int error = fopen_s(&file,"vb_lark.txt", "at");
@@ -762,7 +679,7 @@ int add_node_while_stmt (VB_While_stmt* node, int number)
   \param number   - порядковый номер узла.
   \return         Если произошла ошибка работы с файлом, то возвращается 1, иначе 0.
 */
-int add_node_for_stmt (VB_For_stmt* node, int number)
+int add_node_for_stmt (struct VB_For_stmt* node, int number)
 {
 	FILE* file = NULL;
 	int error = fopen_s(&file,"vb_lark.txt", "at");
@@ -781,5 +698,19 @@ int add_node_for_stmt (VB_For_stmt* node, int number)
 	// тело и дентификатор
 
 	fclose(file);
+	return 0;
+}
+
+int add_node_expr_list (struct VB_Expr_list* node, int number)
+{
+	FILE* file = NULL;
+	int error = fopen_s(&file,"vb_lark.txt", "at");
+	if (error) return 1;
+
+	error = fprintf(file,"\n\t\"node%d\" [", number);
+	if (error == -1) return 1;
+
+	//error = fprintf(
+
 	return 0;
 }

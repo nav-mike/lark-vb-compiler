@@ -37,7 +37,7 @@ struct VB_Stmt
 enum VB_Stmt_type
 {
 	ENDL,
-	EXPR,
+	STMT_EXPR,
 	IF,
 	DIM,
 	FOR,
@@ -47,12 +47,21 @@ enum VB_Stmt_type
 	SUB,
 	FUNC,
 	TRY_CATCH,
-	THROW
+	THROW,
 	PRINT,
 	PRINTLN,
 	READ,
 	READLN,
 	READKEY
+};
+
+/*! \struct VB_Expr_list
+    Структура, описывающая список выражений.
+ */
+struct VB_Expr_list
+{
+	struct VB_Expr* first;  //!< Указатель на первый элемент списка
+	struct VB_Expr* last;   //!< Указатель на последний элемент списка
 };
 
 /*! \struct VB_Expr
@@ -76,7 +85,7 @@ struct VB_Expr
 enum VB_Expr_type
 {
 	ID,				//!< Идентификатор
-	FUNC,			//!< Процедура или функция
+	EXPR_FUNC,			//!< Процедура или функция
 	CHAR_CONST,		//!< Символьная константа
 	INT_CONST,		//!< Целочисленная константа
 	STRING_CONST,	//!< Строковая константа
@@ -220,20 +229,11 @@ struct VB_Id_list
  */
 struct VB_Array_expr
 {
-	bool is_init;				//!< Инициализируется ли массив.
+	int is_init;				//!< Инициализируется ли массив.
 	int size;					//!< Размер массива
 	enum VB_Id_type	id_type;	//!< Тип определяемого идентификатора или масива
 	struct VB_Expr_list list;	//!< Данные, которыми заполняется массив
 	struct VB_Expr*	id;			//!< Идентификатор		???	
-};
-
-/*! \struct VB_Expr_list
-    Структура, описывающая список выражений.
- */
-struct VB_Expr_list
-{
-	struct VB_Expr* first;  //!< Указатель на первый элемент списка
-	struct VB_Expr* last;   //!< Указатель на последний элемент списка
 };
 
 /*! \struct VB_For_stmt
@@ -305,7 +305,7 @@ struct VB_Enum_expr_list
  */
 struct VB_Enum_expr
 {
-	bool 				 is_init;	//!< Инициализируется ли				
+	int 				 is_init;	//!< Инициализируется ли				
 	char*				 id;		//!< Имя
 	int					 value;		//!< Значение
 	struct VB_Enum_expr* next;		//!< Следующий элемент
@@ -316,7 +316,7 @@ struct VB_Enum_expr
  */
 struct VB_Sub_stmt
 {
-	bool 					has_params;	//!< Есть ли параметры
+	int 					has_params;	//!< Есть ли параметры
 	char*		 			id;			//!< Имя поля
 	struct VB_Param_list*	param_list;	//!< Список параметров
 	struct VB_Stmt_list* 	stmt_list;	//!< Тело процедуры
@@ -337,7 +337,7 @@ struct VB_Param_list
  */
 struct VB_Param_stmt
 {
-	bool  is_by_ref;			//!< Передача по ссылке
+	int  is_by_ref;			//!< Передача по ссылке
 	char* id;					//!< Имя парметра
 	enum VB_Id_type	id_type;	//!< Тип параметра
 	struct VB_Param_stmt* next;	//!< Следующий 
