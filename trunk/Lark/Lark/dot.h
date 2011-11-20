@@ -264,3 +264,29 @@ char* VB_Stmt_type_to_string (enum VB_Stmt_type type)
 
 	return "";
 }
+
+/*!
+	Функция преобразуте тип конца If в строку.
+  \param type - Тип конца If.
+  \return Строка - тип конца If.
+*/
+char* VB_End_if_stmt_type_to_string (enum VB_End_if_stmt_type type)
+{
+	switch(type)
+	{
+	case(ENDIF):
+		return "ENDIF";
+		break;
+	case(ELSE):
+		return "ELSE";
+		break;
+	case(ELSE_IF_THEN):
+		return "ELSE_IF_THEN";
+		break;
+	case(ELSE_IF_ENDL):
+		return "ELSE_IF_ENDL";
+		break;
+	}
+
+	return "";
+}
