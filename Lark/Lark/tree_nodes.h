@@ -28,12 +28,24 @@ struct VB_Stmt_list
  */
 struct VB_Stmt
 {
-	enum VB_Stmt_type	type;	//!< “ип операции.
-	struct VB_Expr*		expr;	//!< ”казатель на содержащеес€ в операции выражение.
-	
-	// ƒќЅј¬»“№ ¬—≈ ќ—“јЋ№Ќџ≈ —“≈…“ћ≈Ќ“џ
-	
-	struct VB_Stmt*		next;	//!< ”казатель на следующий элемент последовательности операторов.
+	enum VB_Stmt_type	      type;	          //!< “ип операции.
+	struct VB_Expr*		      expr;	          //!< ”казатель на содержащеес€ в операции выражение.
+	struct VB_If_stmt*        if_stmt;        //!< ”казатель на содержащеес€ в операции условие.
+	struct VB_Dim_stmt*       dim_stmt;       //!< ”казатель на содержащуюс€ в операции инициализацию.
+	struct VB_For_stmt*       for_stmt;       //!< ”казатель на содержащийс€ в операции цикл.
+	struct VB_While_stmt*     while_stmt;     //!< ”казатель на содержащийс€ в операции цикл.
+	struct VB_Do_Loop_stmt*   do_loop_stmt;   //!< ”казатель на содержащийс€ в операции цикл.
+	struct VB_Enum_stmt*      enum_stmt;      //!< ”казатель на содержащеес€ в операции перечисление.
+	struct VB_Sub_stmt*       sub_stmt;       //!< ”казатель на содержащуюс€ в операции процедуру.
+	struct VB_Func_stmt*      func_stmt;      //!< ”казатель на содержащуюс€ в операции функцию.
+	struct VB_Try_Catch_stmt* try_catch_stmt; //!< ”казатель на содержащеес€ в операции отлов и обработка исключений.
+	struct VB_Throw_stmt*     throw_stmt;     //!< ”казатель на содержащийс€ в операции выброс исключени€.
+	struct VB_Print_stmt*     print_stmt;     //!< ”казатель на содержащуюс€ в операции печать символа.
+	struct VB_Println_stmt*   println_stmt;   //!< ”казатель на содержащуюс€ в операции печать строки.
+	struct VB_Read_stmt*      read_stmt;      //!< ”казатель на содержащеес€ в операции считывание символа.
+	struct VB_Readln_stmt*    readln_stmt;    //!< ”казатель на содержащеес€ в операции считывание строки.
+	struct VB_Readkey_stmt*   readkey_stmt;   //!< ”казатель на содержащеес€ в операции считывание нажатой клавиши.
+	struct VB_Stmt*		      next;	          //!< ”казатель на следующий элемент последовательности операторов.
 };
 
 /*! \enum VB_Type_of_expr
@@ -469,3 +481,24 @@ struct VB_Stmt_list* edit_VB_Stmt_list (struct VB_Stmt_list* list, struct VB_Stm
 
 	return list;
 }
+
+/* »нициализаци€ выражени€:
+	stmt: ENDL
+		| expr ENDL
+		| if_stmt
+		| dim_stmt
+		| for_stmt
+		| while_stmt
+		| do_loop_stmt
+		| enum_stmt
+		| sub_stmt
+		| func_stmt
+		| try_catch_stmt
+		| throw_stmt
+		| console_print_stmt
+		| console_println_stmt
+		| console_read_stmt
+		| console_readln_stmt
+		| console_readkey_stmt
+		;
+*/
