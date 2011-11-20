@@ -125,16 +125,41 @@ int close_dot_file ()
 int add_node_expr (struct VB_Expr* node)
 {
 	FILE* file = NULL;
+	int number = Number;
 	int error = fopen_s(&file, "vb_lark.txt", "at");
 	if (error) return 1;
 
-	error = fprintf(file, "\n\t\"node%d\" [", Number);
+	error = fprintf(file, "\n\t\"node%d\" [", number);
 	if (error == -1) return 1;
 	error = fprintf(file, "\n\t\tlabel = \"<f0> %s | <f1> %d | <f2> %s\"",
 		node->expr_string, node->int_val, VB_Expr_type_to_string(node->type));
 	if (error == -1) return 1;
 	error = fprintf(file, "\n\t\tshape = \"record\"\n\t];");
 	if (error == -1) return 1;
+
+	if (node->left_chld != NULL)
+	{
+		Number++;
+		error = fprintf(file, "\n\t\"node%d\":f0 -> \"node%d\":f0;",
+			number, Number);
+		if (error == -1) return 1;
+		fclose(file);
+		error = add_node_expr(node->left_chld);
+		if (error) return 1;
+	}
+
+	if (node->right_chld != NULL)
+	{
+		Number++;
+		error = fopen_s(&file,"vb_lark.txt", "at");
+		if (error) return 1;
+		error = fprintf(file, "\n\t\"node%d\":f0 -> \"node%d\":f0;",
+			number, Number);
+		if (error == -1) return 1;
+		fclose(file);
+		error = add_node_expr(node->right_chld);
+		if (error) return 1;
+	}
 
 	fclose(file);
 
