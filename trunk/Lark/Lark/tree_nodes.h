@@ -1285,3 +1285,24 @@ struct VB_Catch_stmt_list* add_new_Catch_stmt (struct VB_Catch_stmt_list* catch_
 
 	return catch_stmt_list;
 }
+
+/*!
+	Функция создания всего блока отлова - обработки исключения.
+  \param stmt_list Отлавливаемый код.
+  \param catch_stmt_list Обработка исключений.
+  \param f_stmt_list Действия после исключения.
+  \return Блок отлова - обработки исключений.
+*/
+struct VB_Try_catch_stmt* create_Try_Catch (struct VB_Stmt_list* stmt_list,
+											struct VB_Catch_stmt_list* catch_stmt_list,
+											struct VB_Stmt_list* f_stmt_list)
+{
+	struct VB_Try_catch_stmt* t = NULL;
+
+	t = (struct VB_Try_catch_stmt*)malloc(sizeof(struct VB_Try_catch_stmt));
+	t->catch_list = catch_stmt_list;
+	t->stmt_list = stmt_list;
+	t->fin_stmt_list = f_stmt_list;
+
+	return t;
+}
