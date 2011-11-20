@@ -1212,7 +1212,7 @@ struct VB_Println_stmt* create_Println (char* text)
 
 /*!
 	Функция создания Console.Read().
-  \return Узел дерева - считывание с стандартного потока.
+  \return Узел дерева - считывание символа с стандартного потока.
 */
 struct VB_Read_stmt* create_Read ()
 {
@@ -1221,4 +1221,17 @@ struct VB_Read_stmt* create_Read ()
 	read = (struct VB_Read_stmt*)malloc(sizeof(struct VB_Read_stmt));
 
 	return read;
+}
+
+/*!
+	Функция создания Console.ReadLine().
+  \return Узед дерева - считывание строки с стандартного потока.
+*/
+struct VB_Readln_stmt* create_Readln ()
+{
+	struct VB_Readln_stmt* readln = NULL;
+
+	readln = (struct VB_Readln_stmt*)malloc(sizeof(struct VB_Readln_stmt));
+
+	return readln;
 }
