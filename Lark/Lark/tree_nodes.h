@@ -1130,3 +1130,18 @@ struct VB_Array_expr* create_Array_with_init (char* id, enum VB_Id_type type, st
 
 	return result;
 }
+
+/*!
+	Функция создания узла дерева: выброс исключения.
+  \param string Текст исключения.
+  \return Узел дерева - выброс исключения.
+*/
+struct VB_Throw_stmt* create_Throw (char* string)
+{
+	struct VB_Throw_stmt* th = NULL;
+
+	th = (struct VB_Throw_stmt*)malloc(sizeof(struct VB_Throw_stmt));
+	strcpy(th->string, string);
+
+	return th;
+}
