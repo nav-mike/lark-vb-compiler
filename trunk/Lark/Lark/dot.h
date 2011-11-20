@@ -928,10 +928,11 @@ int add_node_for_stmt (struct VB_For_stmt* node)
 int add_node_expr_list (struct VB_Expr_list* node)
 {
 	FILE* file = NULL;
+	int number = Number;
 	int error = fopen_s(&file,"vb_lark.txt", "at");
 	if (error) return 1;
 
-	error = fprintf(file,"\n\t\"node%d\" [", Number);
+	error = fprintf(file,"\n\t\"node%d\" [", number);
 	if (error == -1) return 1;
 
 	error = fprintf(file,"\n\t\tlabel = \"<f0> %s | <f1> %s\"",
@@ -941,7 +942,36 @@ int add_node_expr_list (struct VB_Expr_list* node)
 	error = fprintf(file,"\n\t\tshape = \"record\"\n\t];");
 	if (error == -1) return 1;
 
-	// следующий
+	if (node->first != NULL)
+	{
+		struct VB_Expr* stmt = node->first;
+		fclose(file);
+
+		while (stmt != node->last)
+		{
+			Number++;
+			error = fopen_s(&file,"vb_lark.txt", "at");
+			if (error) return 1;
+			error = fprintf(file, "\n\t\"node%d\":f0 -> \"node%d\":f0;",
+			number, Number);
+			if (error == -1) return 1;
+
+			fclose(file);
+			error = add_node_expr(stmt);
+			if (error) return 1;
+			stmt = stmt->next;
+		}
+
+		Number++;
+		error = fopen_s(&file,"vb_lark.txt", "at");
+		if (error) return 1;
+		error = fprintf(file, "\n\t\"node%d\":f0 -> \"node%d\":f0;",
+			number, Number);
+		if (error == -1) return 1;
+		fclose(file);
+		error = add_node_expr(stmt);
+		if (error) return 1;
+	}
 
 	fclose(file);
 	return 0;
