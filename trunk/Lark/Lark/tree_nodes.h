@@ -886,3 +886,38 @@ struct VB_Stmt* create_VB_Stmt_Print (struct VB_Print_stmt* print_stmt)
 
 	return stmt;
 }
+
+/*!
+	Функция создания операции из печати строки.
+  \param println_stmt Печать строки.
+  \return Новая операция.
+*/
+struct VB_Stmt* create_VB_Stmt_Println (struct VB_Println_stmt* println_stmt)
+{
+	struct VB_Stmt* stmt = NULL;
+
+	if (println_stmt != NULL)
+	{
+		stmt = (struct VB_Stmt*)malloc(sizeof(struct VB_Stmt));
+		stmt->expr = NULL;
+		stmt->dim_stmt = NULL;
+		stmt->do_loop_stmt = NULL;
+		stmt->enum_stmt = NULL;
+		stmt->for_stmt = NULL;
+		stmt->func_stmt =  NULL;
+		stmt->if_stmt = NULL;
+		stmt->next = NULL;
+		stmt->print_stmt = NULL;
+		stmt->println_stmt = println_stmt;
+		stmt->read_stmt = NULL;
+		stmt->readkey_stmt = NULL;
+		stmt->readln_stmt = NULL;
+		stmt->sub_stmt = NULL;
+		stmt->throw_stmt = NULL;
+		stmt->try_catch_stmt = NULL;
+		stmt->type = PRINTLN;
+		stmt->while_stmt = NULL;
+	}
+
+	return stmt;
+}
