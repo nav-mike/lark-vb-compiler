@@ -413,9 +413,10 @@ struct VB_Func_stmt
  */
 struct VB_Try_catch_stmt
 {
-	struct VB_Stmt_list* stmt_list;		//!< Отлавливаемый код
-	struct VB_Stmt_list* fin_stmt_list;	//!< 
-	struct VB_Stmt*		 next;			//!< Следующий оператор
+	struct VB_Stmt_list*       stmt_list;		//!< Отлавливаемый код
+	struct VB_Stmt_list*       fin_stmt_list;	//!< 
+	struct VB_Stmt*		       next;			//!< Следующий оператор
+	struct VB_Catch_stmt_list* catch_list;      //!< Блок всех обработчиков исключения.
 };
 
 /*! \struct VB_Catch_stmt_list
