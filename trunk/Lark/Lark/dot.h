@@ -557,10 +557,11 @@ int add_node_param_stmt (struct VB_Param_stmt* node)
 int add_node_param_list (struct VB_Param_list* node)
 {
 	FILE* file = NULL;
+	int number = Number;
 	int error = fopen_s(&file,"vb_lark.txt", "at");
 	if (error) return 1;
 
-	error = fprintf(file,"\n\t\"node%d\" [", Number);
+	error = fprintf(file,"\n\t\"node%d\" [", number);
 	if (error == -1) return 1;
 
 	error = fprintf(file,"\n\t\tlabel = \"<f0> %s | <f1> %s \"",
@@ -570,9 +571,36 @@ int add_node_param_list (struct VB_Param_list* node)
 	error = fprintf(file,"\n\t\tshape = \"record\"\n\t];");
 	if (error == -1) return 1;
 
-	// ¬вод параметров.
+	if (node->first != NULL)
+	{
+		struct VB_Param_stmt* stmt = node->first;
+		fclose(file);
 
-	fclose(file);
+		while (stmt != node->last)
+		{
+			Number++;
+			error = fopen_s(&file,"vb_lark.txt", "at");
+			if (error) return 1;
+			error = fprintf(file, "\n\t\"node%d\":f0 -> \"node%d\":f0;",
+			number, Number);
+			if (error == -1) return 1;
+
+			fclose(file);
+			error = add_node_param_stmt(stmt);
+			if (error) return 1;
+		}
+
+		Number++;
+		error = fopen_s(&file,"vb_lark.txt", "at");
+		if (error) return 1;
+		error = fprintf(file, "\n\t\"node%d\":f0 -> \"node%d\":f0;",
+			number, Number);
+		if (error == -1) return 1;
+		fclose(file);
+		error = add_node_param_stmt(stmt);
+		if (error) return 1;
+	}
+
 	return 0;
 }
 
