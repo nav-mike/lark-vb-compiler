@@ -167,8 +167,7 @@
 		 | stmt_list stmt	{$$ = edit_VB_Stmt_list($1,$2);}
 		 ;
 			 	     
-	stmt: ENDL
-		| expr ENDL				{$$ = create_VB_Stmt_Expr($1);}
+        stmt: expr ENDL				{$$ = create_VB_Stmt_Expr($1);}
 		| if_stmt				{$$ = create_VB_Stmt_If($1);}
 		| dim_stmt				{$$ = create_VB_Stmt_Dim($1);}
 		| for_stmt				{$$ = create_VB_Stmt_For($1);}
@@ -240,11 +239,11 @@
 			   | ID AS id_type '=' expr		{$$ = create_as_expr(ID_INIT,NULL,$1,$3,$5);}	
 			   ;				
 	
-		id_type: INTEGER
-			   | BOOLEAN
-			   | CHAR 
-			   | STRING
-			   ;
+                id_type: INTEGER        {$$ = INTEGER;}
+                           | BOOLEAN    {$$ = BOOLEAN;}
+                           | CHAR       {$$ = CHAR;}
+                           | STRING     {$$ = STRING;}
+                           ;
 	       
 		id_list_stmt: ID					{$$ = create_id_list($1);}
 					| id_list_stmt',' ID	{$$ = add_to_id_list($1,$3);}
