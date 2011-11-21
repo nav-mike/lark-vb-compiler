@@ -1,6 +1,21 @@
 #include <stdio.h>
 #include "tree_nodes.h"
 
+int add_node_stmt_list (struct VB_Stmt_list* node);
+int add_node_param_list (struct VB_Param_list* node);
+int add_node_if_stmt (struct VB_If_stmt* node);
+int add_node_stmt (struct VB_Stmt* node);
+int add_node_dim_stmt (struct VB_Dim_stmt* node);
+int add_node_array_expr (struct VB_Array_expr* node);
+int add_node_end_if_stmt (struct VB_End_if_stmt* node);
+int add_node_as_expr (struct VB_As_expr* node);
+int add_node_id_list (struct VB_Id_list* node);
+int add_node_print_stmt (struct VB_Print_stmt* node);
+int add_node_println_stmt (struct VB_Println_stmt* node);
+int add_node_as_Expr_list (struct VB_As_Expr_list* node);
+int add_node_readln_stmt (struct VB_Readln_stmt* node);
+int add_node_read_stmt (struct VB_Read_stmt* node);
+
 /*!
 	Функция преобразует тип выражения в строку.
   \param type - Тип выражения.
@@ -205,7 +220,7 @@ int add_node_stmt_module (struct VB_Module_stmt* module)
   \param type - Тип IF.
   \return Строка - тип IF.
 */
-char* VB_If_stmt_type_to_string (enum Vb_If_stmt_type type)
+char* VB_If_stmt_type_to_string (enum VB_If_stmt_type type)
 {
 	switch (type)
 	{
