@@ -27,7 +27,7 @@
 	struct VB_End_if_stmt*		End_if;
 	struct VB_Dim_stmt*			Dim;
 	struct VB_As_expr_list*		As_l;
-	struct VB_As_expr*			As;
+        struct VB_As_expr*		As_expr;
 	struct VB_Id_list_stmt*		Id_l;
 	struct VB_Array_expr*		Arr;
 	struct VB_For_stmt*			For;
@@ -63,7 +63,7 @@
 %type <End_if>		end_if_stmt
 %type <Dim>			dim_stmt
 %type <As_l>		as_expr_list
-%type <As>			as_expr
+%type <As_expr>			as_expr
 %type <Id_l>		id_list_stmt
 %type <Arr>			array_expr
 %type <For>			for_stmt 
@@ -190,7 +190,7 @@
 		| CHAR_CONST				{$$ = create_int_boolean_char_const_expr(CHAR_CONST,$1);}
 		| STRING_CONST				{$$ = create_string_const_expr($1);}
 		| BOOLEAN_CONST				{$$ = create_int_boolean_char_const_expr(BOOLEAN_CONST,$1);}
-		| expr '=' expr				{$$ = create_operator_expr(ASSIGN,$1,$3);}
+                | expr '=' expr				{$$ = create_operator_expr(ASSIGN,$1,$3);}
 		| expr '+' expr				{$$ = create_operator_expr(PLUS,$1,$3);}
 		| expr '-' expr				{$$ = create_operator_expr(MINUS,$1,$3);}
 		| expr '*' expr				{$$ = create_operator_expr(MUL,$1,$3);}
