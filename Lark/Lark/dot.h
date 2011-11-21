@@ -335,7 +335,7 @@ char* VB_As_Expr_list_type_to_string (enum VB_As_Expr_list_type type)
 	case(EXPR_LIST):
 		return "EXPR_LIST";
 		break;
-	case(EXPR_ARR):
+	case(ARR_LIST):
 		return "EXPR_ARR";
 		break;
 	}

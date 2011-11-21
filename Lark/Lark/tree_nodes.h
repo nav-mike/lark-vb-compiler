@@ -203,7 +203,7 @@ enum VB_As_Expr_list_type
 	EXPR,		//!< Определяется идентификатор
 	ARRAY,		//!< Определяется массив
 	EXPR_LIST,	//!< Определяется список идентификаторов
-	EXPR_ARR	//!< Определяется список массивов
+	ARR_LIST	//!< Определяется список массивов
 };
 
 /*! \struct VB_As_stmt
@@ -807,6 +807,20 @@ struct VB_If_stmt* create_with_Then_expr_stmt_list_end_if_stmt (enum VB_If_stmt_
 	return if_stmt;
 }
 
+struct VB_End_if_stmt* create_end_if_stmt(enum VB_End_if_stmt_type type, struct VB_Expr* expr,
+	struct VB_Stmt_list* stmt_list, struct VB_End_if_stmt* end_if_stmt)
+{
+	struct VB_End_if_stmt* end_if = NULL;
+
+	end_if = (struct VB_End_if_stmt*)malloc(sizeof(struct VB_End_if_stmt));
+	end_if->type = type;
+	end_if->expr = expr;
+	end_if->stmt_list = stmt_list;
+	end_if->end_stmt = end_if_stmt;
+
+	return end_if_stmt;
+}
+
 /*!
 	Функция создает условное выражение по первой строчке грамматики.
   \param expr Условие.
@@ -1127,4 +1141,50 @@ struct VB_Expr* create_operator_expr(enum VB_Expr_type type,
 	result->right_chld = right;
 
 	return result;
+}
+
+/*!
+	Функция создания выражения объявления переменных.
+  \param list Определяемые переменные.
+  \return указатель на объект выражения.
+*/
+struct VB_Dim_stmt* create_dim_stmt(struct VB_As_Expr_list* list)
+{
+	struct VB_Dim_stmt* dim_stmt = (struct VB_Dim_stmt*)malloc(sizeof(struct VB_Dim_stmt));
+	
+	dim_stmt->list = list;
+	dim_stmt->next = NULL;
+
+	return dim_stmt;
+}
+
+/*!
+	Функция создания списка последовательности определения переменныхх.
+  \param expr Создается определение переменной.
+  \param arr Создается определение массива.
+  \return указатель на объект выражения.
+*/
+struct VB_As_Expr_list* create_as_expr_list(struct VB_As_expr* expr, struct VB_Array_expr* arr)
+{
+	struct VB_As_Expr_list* as_list = (struct VB_As_Expr_list*)malloc(sizeof(struct VB_As_Expr_list));
+
+	as_list->as_expr = expr;
+	as_list->arr = arr;
+	as_list->next = NULL;
+
+	return as_list;
+}
+
+struct VB_As_Expr_list* add_to_as_expr_list(struct VB_As_Expr_list* list, struct VB_As_expr* expr, 
+											struct VB_Array_expr* arr)
+{
+	struct VB_As_Expr_list* new_item = (struct VB_As_Expr_list*)malloc(sizeof(struct VB_As_Expr_list));
+
+	new_item->as_expr = expr;
+	new_item->arr = arr;
+	new_item->next = NULL;
+
+	list->next = new_item;
+
+	return list;
 }
