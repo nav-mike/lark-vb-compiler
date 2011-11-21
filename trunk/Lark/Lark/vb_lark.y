@@ -235,9 +235,9 @@
 					| as_expr_list',' array_expr {$$ = add_to_as_expr_list($1,NULL,$3);}
 					;	   
 
-		as_expr: id_list_stmt AS id_type
-			   | ID AS id_type
-			   | ID AS id_type '=' expr
+		as_expr: id_list_stmt AS id_type	{$$ = create_as_expr(ID_LIST,$1,NULL,$3,NULL);}		 
+			   | ID AS id_type				{$$ = create_as_expr(ONE_ID,NULL,$1,$3,NULL);}	
+			   | ID AS id_type '=' expr		{$$ = create_as_expr(ID_INIT,NULL,$1,$3,$5);}	
 			   ;				
 	
 		id_type: INTEGER
@@ -246,8 +246,8 @@
 			   | STRING
 			   ;
 	       
-		id_list_stmt: ID
-					| id_list_stmt',' ID
+		id_list_stmt: ID					{$$ = create_id_list($1);}
+					| id_list_stmt',' ID	{$$ = add_to_id_list($1,$3);}
 					;	
 		
 		array_expr: ID '('INT_CONST')' AS id_type				{$$ = create_Array($1,$3,$6);}

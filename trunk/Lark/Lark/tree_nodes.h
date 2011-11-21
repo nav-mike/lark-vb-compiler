@@ -210,7 +210,7 @@ enum VB_As_Expr_list_type
     Структура дерева для хранения определения переменных одного типа.
  */
 struct VB_As_expr
-{ 
+{
 	enum	VB_As_expr_type	type;		//!< Тип 
 	struct	VB_Id_list*		list;		//!< Список идентификаторов
 	enum	VB_Id_type		id_type;	//!< Тип определяемого идентификатора
@@ -218,7 +218,7 @@ struct VB_As_expr
 	struct 	VB_Expr*		id;			//!< Идентификатор
 };
 
-enum VB_As_expr_type
+enum VB_As_expr_type 
 {
 	ID_LIST,	//!< Список идентификаторов
 	ONE_ID,		//!< Один идентификаор
@@ -1175,6 +1175,13 @@ struct VB_As_Expr_list* create_as_expr_list(struct VB_As_expr* expr, struct VB_A
 	return as_list;
 }
 
+/*!
+	Функция добавление переменной в список последовательности определения переменныхх.
+  \param list Текущий список
+  \param expr Доавляемое выражение 
+  \param arr Добавляемый массив
+  \return указатель на объект выражения.
+*/
 struct VB_As_Expr_list* add_to_as_expr_list(struct VB_As_Expr_list* list, struct VB_As_expr* expr, 
 											struct VB_Array_expr* arr)
 {
@@ -1185,6 +1192,58 @@ struct VB_As_Expr_list* add_to_as_expr_list(struct VB_As_Expr_list* list, struct
 	new_item->next = NULL;
 
 	list->next = new_item;
+
+	return list;
+}
+
+struct VB_As_expr* create_as_expr(enum VB_As_expr_type type, struct VB_Id_list* list, char* id, enum VB_Id_type id_type, struct VB_Expr* expr)
+{
+	struct VB_As_expr* as_expr = (struct VB_As_expr*)malloc(sizeof(struct VB_As_expr));
+
+	as_expr->type = type;
+	as_expr->id_type = id_type;
+
+	if (type == ID_LIST)
+	{
+		as_expr->list = list;
+		as_expr->expr = NULL;
+		as_expr->id = NULL;	
+	}
+	else
+	{
+		as_expr->expr = expr;
+		strcpy(as_expr->id,id);	
+	}
+}
+
+/*!
+	Создание списка идентификаторов.
+  \param id Идентификатор
+  \return указатель на объект выражения.
+*/
+struct VB_Id_list* create_id_list(char* id)
+{
+	struct VB_Id_list* list = (struct VB_Id_list*)malloc(sizeof(struct VB_Id_list));
+
+	strcpy(list->id->expr_string,id);
+	list->next = NULL;
+
+	return list;
+}
+
+/*!
+	Добавить элемент в список идентификаторов.
+  \param id Идентификатор
+  \return указатель на объект выражения.
+*/
+struct VB_Id_list* add_to_id_list(struct VB_Id_list* list,char* id)
+{
+	struct VB_Id_list* new_list = (struct VB_Id_list*)malloc(sizeof(struct VB_Id_list));
+
+	strcpy(new_list->id,id);
+	new_list->next = NULL;
+
+	list->next = new_list;
 
 	return list;
 }
