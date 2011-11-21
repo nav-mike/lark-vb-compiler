@@ -1254,6 +1254,21 @@ struct VB_Sub_stmt * create_sub_stmt(char * id, struct VB_Stmt_list * list, stru
     return NULL;
 }
 
+struct VB_Param_list * create_param_list()
+{
+    return NULL;
+}
+
+struct VB_Param_list *add_to_param_list()
+{
+    return NULL;
+}
+
+struct VB_Param_stmt* create_param_stmt()
+{
+    return NULL;
+}
+
 struct VB_For_stmt * create_for_stmt()
 {
     return NULL;
@@ -1275,6 +1290,11 @@ struct VB_Enum_stmt * create_enum_stmt()
 }
 
 struct VB_Enum_expr_list * create_enum_list()
+{
+    return NULL;
+}
+
+struct VB_Enum_expr_list * add_to_enum_list()
 {
     return NULL;
 }
