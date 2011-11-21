@@ -1247,3 +1247,44 @@ struct VB_Id_list* add_to_id_list(struct VB_Id_list* list,char* id)
 
 	return list;
 }
+
+
+struct VB_Sub_stmt * create_sub_stmt(char * id, struct VB_Stmt_list * list, struct VB_Id_list * params)
+{
+    return NULL;
+}
+
+struct VB_For_stmt * create_for_stmt()
+{
+    return NULL;
+}
+
+struct VB_While_stmt * create_while_stmt()
+{
+    return NULL;
+}
+
+struct VB_Do_loop_stmt * create_do_loop_stmt()
+{
+    return NULL;
+}
+
+struct VB_Enum_stmt * create_enum_stmt()
+{
+    return NULL;
+}
+
+struct VB_Enum_expr_list * create_enum_list()
+{
+    return NULL;
+}
+
+struct VB_Enum_expr * create_enum_expr()
+{
+    return NULL;
+}
+
+struct VB_For_stmt * create_func_stmt()
+{
+    return NULL;
+}
