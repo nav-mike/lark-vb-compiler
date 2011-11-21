@@ -220,19 +220,19 @@
 						| stmt_list_inline ':' stmt	{$$ = edit_VB_Stmt_list($1,$3);}
 						;
 		   
-		end_if_stmt: END_IF ENDL
-				   | ELSE ENDL stmt_list END_IF ENDL
-				   | ELSEIF expr THEN ENDL stmt_list end_if_stmt
-				   | ELSEIF expr ENDL stmt_list end_if_stmt
-				   ;			   
-		   
-	dim_stmt: DIM as_expr_list ENDL
+		end_if_stmt: END_IF ENDL								 {$$ = create_end_if_stmt(ENDIF,NULL,NULL,NULL);}
+				   | ELSE ENDL stmt_list END_IF ENDL			 {$$ = create_end_if_stmt(ELSE,NULL,$3,NULL);}
+				   | ELSEIF expr THEN ENDL stmt_list end_if_stmt {$$ = create_end_if_stmt(ELSE_IF_THEN,$2,$5,$6);}
+				   | ELSEIF expr ENDL stmt_list end_if_stmt		 {$$ = create_end_if_stmt(ELSE_IF_ENDL,$2,$4,$5);}
+				   ;			   		
+
+	dim_stmt: DIM as_expr_list ENDL			{$$ = create_dim_stmt($2);}
 			;
 		   
-		as_expr_list: as_expr
-					| array_expr
-					| as_expr_list',' as_expr
-					| as_expr_list',' array_expr
+		as_expr_list: as_expr					 {$$ = create_as_expr_list($1,NULL);}
+					| array_expr				 {$$ = create_as_expr_list(NULL,$1);}
+					| as_expr_list',' as_expr	 {$$ = add_to_as_expr_list($1,$3,NULL);}
+					| as_expr_list',' array_expr {$$ = add_to_as_expr_list($1,NULL,$3);}
 					;	   
 
 		as_expr: id_list_stmt AS id_type
