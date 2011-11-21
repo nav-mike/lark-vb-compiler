@@ -65,13 +65,13 @@
 %type <As_l>		as_expr_list
 %type <As_expr_str>			as_expr
 %type <Id_l>		id_list_stmt
-%type <Arr>			array_expr
+/*%type <Arr>			array_expr*/
 %type <For>			for_stmt 
 %type <While>		while_stmt 
 %type <Do_loop> 	do_loop_stmt
 %type <Enum>		enum_stmt
 %type <Enum_l>  	enum_expr_list 
-%type <Enum_e>		enum_expr
+/*%type <Enum_e>		enum_expr*/
 %type <Sub>			sub_stmt
 %type <Param_l> 	param_list 
 %type <Param>		param_stmt
@@ -82,6 +82,7 @@
 %type <Throw>		throw_stmt
 
 %type <Id_type>		id_type
+%type <i_const>		int_expr
 
 %type <console_print>	console_print_stmt
 %type <console_println> console_println_stmt
@@ -92,6 +93,7 @@
 %token <i_const> INT_CONST
 %token <s_const> STRING_CONST
 %token <c_const> CHAR_CONST
+
 
 %token <Id> 	ID
 
@@ -185,7 +187,7 @@
 		;
 					
 	expr: ID						{$$ = create_id_expr($1);}
-		| ID'('expr_list')'			{$$ = create_func_expr($1,$3);}
+		/*| ID'('expr_list')'			{$$ = create_func_expr($1,$3);}*/
 		| INT_CONST					{$$ = create_int_boolean_char_const_expr(INT_CONST,$1);}
 		| CHAR_CONST				{$$ = create_int_boolean_char_const_expr(CHAR_CONST,$1);}
 		| STRING_CONST				{$$ = create_string_const_expr($1);}
@@ -203,10 +205,9 @@
 		| expr LESS_OR_EQUAL expr	{$$ = create_operator_expr(LESS_OR_EQUAL,$1,$3);}
 		| expr NONEQUAL	expr		{$$ = create_operator_expr(NONEQUAL,$1,$3);}
 		| expr EQUAL	expr		{$$ = create_operator_expr(EQUAL,$1,$3);}
-		| expr'('expr')'			{$$ = create_operator_expr(GET_ITEM,$1,$3);}
+		/*| expr'('expr')'			{$$ = create_operator_expr(GET_ITEM,$1,$3);}*/
 		| '('expr')'				{$$ = $2;}
 		| '-' expr %prec UMINUS		{$$ = create_operator_expr(UMINUS,$2,0);}
-		| '+' expr %prec UPLUS		{$$ = create_operator_expr(UPLUS,$2,0);}
 		;
 			
 	if_stmt: IF expr THEN ENDL stmt_list end_if_stmt	{$$ = create_with_Then_expr_stmt_list_end_if_stmt(IF_THEN,$2,$5,$6);}
@@ -229,29 +230,31 @@
 			;
 		   
 		as_expr_list: as_expr					 {$$ = create_as_expr_list($1,NULL);}
-					| array_expr				 {$$ = create_as_expr_list(NULL,$1);}
+					/*| array_expr				 {$$ = create_as_expr_list(NULL,$1);}*/
 					| as_expr_list',' as_expr	 {$$ = add_to_as_expr_list($1,$3,NULL);}
-					| as_expr_list',' array_expr {$$ = add_to_as_expr_list($1,NULL,$3);}
+					/*| as_expr_list',' array_expr {$$ = add_to_as_expr_list($1,NULL,$3);}*/
 					;	   
 
-		as_expr: id_list_stmt AS id_type	{$$ = create_as_expr(ID_LIST,$1,NULL,$3,NULL);}		 
-			   | ID AS id_type				{$$ = create_as_expr(ONE_ID,NULL,$1,$3,NULL);}	
-			   | ID AS id_type '=' expr		{$$ = create_as_expr(ID_INIT,NULL,$1,$3,$5);}	
+		as_expr: id_list_stmt id_type	{$$ = create_as_expr(ID_LIST,$1,NULL,$2,NULL);}		 
+			   /*| ID id_type '=' expr		{$$ = create_as_expr(ID_INIT,NULL,$1,$2,$4);}*/	
 			   ;				
 	
-                id_type: INTEGER        {$$ = INTEGER;}
-                           | BOOLEAN    {$$ = BOOLEAN;}
-                           | CHAR       {$$ = CHAR;}
-                           | STRING     {$$ = STRING;}
+                id_type: AS INTEGER        {$$ = INTEGER;}
+                           | AS BOOLEAN    {$$ = BOOLEAN;}
+                           | AS CHAR       {$$ = CHAR;}
+                           | AS STRING     {$$ = STRING;}
                            ;
 	       
 		id_list_stmt: ID					{$$ = create_id_list($1);}
 					| id_list_stmt',' ID	{$$ = add_to_id_list($1,$3);}
 					;	
 		
-		array_expr: ID '('INT_CONST')' AS id_type				{$$ = create_Array($1,$3,$6);}
-				  | ID '('')' AS id_type '=' '{'expr_list'}'	{$$ = create_Array_with_init($1,$5,$8);}
-				  ;
+		/*array_expr: ID int_expr id_type				{$$ = create_Array($1,$2,$3);}
+				  | ID '('')' id_type '=' '{'expr_list'}'	{$$ = create_Array_with_init($1,$4,$7);}
+				  ;*/
+				  
+		int_expr: '('INT_CONST')' {$$ = $2;}
+				;
 
 		expr_list: expr					{$$ = create_Expr_list($1);}
 				 | expr_list',' expr	{$$ = add_Expr_to_list($1,$3);}
@@ -259,8 +262,8 @@
 		
         for_stmt: FOR ID '=' INT_CONST TO INT_CONST ENDL stmt_list NEXT ENDL            {$$ = create_for_stmt();}
                         | FOR ID '=' INT_CONST TO INT_CONST STEP INT_CONST ENDL stmt_list NEXT ENDL {$$ = create_for_stmt();}
-                        | FOR ID AS id_type '=' INT_CONST TO INT_CONST ENDL stmt_list NEXT ENDL {$$ = create_for_stmt();}
-                        | FOR ID AS id_type '=' INT_CONST TO INT_CONST STEP INT_CONST ENDL stmt_list NEXT ENDL {$$ = create_for_stmt();}
+                        | FOR ID id_type '=' INT_CONST TO INT_CONST ENDL stmt_list NEXT ENDL {$$ = create_for_stmt();}
+                        | FOR ID id_type '=' INT_CONST TO INT_CONST STEP INT_CONST ENDL stmt_list NEXT ENDL {$$ = create_for_stmt();}
 			;				
 
         while_stmt: WHILE expr ENDL stmt_list END_WHILE ENDL {$$ = create_while_stmt();}
@@ -275,13 +278,13 @@
         enum_stmt: ENUM ID ENDL enum_expr_list END_ENUM ENDL    {$$ = create_enum_stmt();}
 			 ;			  
 
-                enum_expr_list: enum_expr ENDL                              {$$ = create_enum_list();}
-                                          | enum_expr_list enum_expr ENDL   {$$ = add_to_enum_list();}
+                enum_expr_list: ID ENDL                              {$$ = create_enum_list();}
+                                          | enum_expr_list ID ENDL   {$$ = add_to_enum_list();}
 					  ;
 	
-                enum_expr: ID                           {$$ = create_enum_expr();}
+                /*enum_expr: ID                           {$$ = create_enum_expr();}
                                  | ID '=' INT_CONST     {$$ = create_enum_expr();}
-				 ;
+				 ;*/
 	
         sub_stmt: SUB ID '('')' ENDL stmt_list END_SUB ENDL                     {$$ = create_sub_stmt(NULL,NULL,NULL);}
                         | SUB ID '('param_list')' ENDL stmt_list END_SUB ENDL   {$$ = create_sub_stmt(NULL,NULL,NULL);}
@@ -291,12 +294,12 @@
                                   | param_list',' param_stmt    {$$ = add_to_param_list():}
 				  ;
 
-                param_stmt: BYREF ID AS id_type                 {$$ = create_param_stmt():}
-                                  | BYVAL ID AS id_type         {$$ = create_param_stmt():}
+                param_stmt: BYREF ID id_type                 {$$ = create_param_stmt():}
+                                  | BYVAL ID id_type         {$$ = create_param_stmt():}
 				  ; 
 
-        func_stmt: FUNCTION ID '('')' AS id_type ENDL stmt_list RETURN expr ENDL END_FUNCTION ENDL                   {$$ = create_func_stmt();}
-                         | FUNCTION ID '('param_list')' AS id_type ENDL stmt_list RETURN expr ENDL END_FUNCTION ENDL {$$ = create_func_stmt();}
+        func_stmt: FUNCTION ID '('')' id_type ENDL stmt_list RETURN expr ENDL END_FUNCTION ENDL                   {$$ = create_func_stmt();}
+                         | FUNCTION ID '('param_list')' id_type ENDL stmt_list RETURN expr ENDL END_FUNCTION ENDL {$$ = create_func_stmt();}
 			 ;
 			 
 	try_catch_stmt: TRY ENDL stmt_list catch_stmt_list FINALLY ENDL stmt_list ENDL TRY ENDL {$$ = create_Try_Catch($3,$4,$7);}
