@@ -36,11 +36,11 @@ struct VB_Stmt
 	struct VB_Dim_stmt*       dim_stmt;       //!< Указатель на содержащуюся в операции инициализацию.
 	struct VB_For_stmt*       for_stmt;       //!< Указатель на содержащийся в операции цикл.
 	struct VB_While_stmt*     while_stmt;     //!< Указатель на содержащийся в операции цикл.
-	struct VB_Do_Loop_stmt*   do_loop_stmt;   //!< Указатель на содержащийся в операции цикл.
+	struct VB_Do_loop_stmt*   do_loop_stmt;   //!< Указатель на содержащийся в операции цикл.
 	struct VB_Enum_stmt*      enum_stmt;      //!< Указатель на содержащееся в операции перечисление.
 	struct VB_Sub_stmt*       sub_stmt;       //!< Указатель на содержащуюся в операции процедуру.
 	struct VB_Func_stmt*      func_stmt;      //!< Указатель на содержащуюся в операции функцию.
-	struct VB_Try_Catch_stmt* try_catch_stmt; //!< Указатель на содержащееся в операции отлов и обработка исключений.
+	struct VB_Try_catch_stmt* try_catch_stmt; //!< Указатель на содержащееся в операции отлов и обработка исключений.
 	struct VB_Throw_stmt*     throw_stmt;     //!< Указатель на содержащийся в операции выброс исключения.
 	struct VB_Print_stmt*     print_stmt;     //!< Указатель на содержащуюся в операции печать символа.
 	struct VB_Println_stmt*   println_stmt;   //!< Указатель на содержащуюся в операции печать строки.
@@ -594,7 +594,7 @@ struct VB_Stmt* fill_stmt(enum VB_Stmt_type type, void* data)
 			stmt->while_stmt = (struct VB_While_stmt*)data;
 			break;
 		case(DO_LOOP):
-			stmt->do_loop_stmt = (struct VB_Do_Loop_stmt*)data;
+			stmt->do_loop_stmt = (struct VB_Do_loop_stmt*)data;
 			break;
 		case(ENUM):
 			stmt->enum_stmt = (struct VB_Enum_stmt*)data;
@@ -606,7 +606,7 @@ struct VB_Stmt* fill_stmt(enum VB_Stmt_type type, void* data)
 			stmt->func_stmt = (struct VB_Func_stmt*)data;
 			break;
 		case(TRY_CATCH):
-			stmt->try_catch_stmt = (struct VB_Try_Catch_stmt*)data;
+			stmt->try_catch_stmt = (struct VB_Try_catch_stmt*)data;
 			break;
 		case(THROW):
 			stmt->throw_stmt = (struct VB_Throw_stmt*)data;
@@ -683,7 +683,7 @@ struct VB_Stmt* create_VB_Stmt_While (struct VB_While_stmt* while_stmt)
   \param do_loop_stmt Цикл.
   \return Новая операция.
 */
-struct VB_Stmt* create_VB_Stmt_Do_Loop (struct VB_Do_Loop_stmt* do_loop_stmt)
+struct VB_Stmt* create_VB_Stmt_Do_Loop (struct VB_Do_loop_stmt* do_loop_stmt)
 {
 	return fill_stmt(DO_LOOP,(void*)do_loop_stmt);
 }
@@ -723,7 +723,7 @@ struct VB_Stmt* create_VB_Stmt_Func (struct VB_Func_stmt* func_stmt)
   \param try_catch_stmt Исключение.
   \return Новая операция.
 */
-struct VB_Stmt* create_VB_Stmt_Try_Catch (struct VB_Try_Catch_stmt* try_catch_stmt)
+struct VB_Stmt* create_VB_Stmt_Try_Catch (struct VB_Try_catch_stmt* try_catch_stmt)
 {
 	return fill_stmt(TRY_CATCH,(void*)try_catch_stmt);
 }
