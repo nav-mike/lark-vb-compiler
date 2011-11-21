@@ -258,46 +258,46 @@
 				 | expr_list',' expr	{$$ = add_Expr_to_list($1,$3);}
 				 ;	
 		
-	for_stmt: FOR ID '=' INT_CONST TO INT_CONST ENDL stmt_list NEXT ENDL
-			| FOR ID '=' INT_CONST TO INT_CONST STEP INT_CONST ENDL stmt_list NEXT ENDL
-			| FOR ID AS id_type '=' INT_CONST TO INT_CONST ENDL stmt_list NEXT ENDL
-			| FOR ID AS id_type '=' INT_CONST TO INT_CONST STEP INT_CONST ENDL stmt_list NEXT ENDL
+        for_stmt: FOR ID '=' INT_CONST TO INT_CONST ENDL stmt_list NEXT ENDL            {$$ = create_for_stmt();}
+                        | FOR ID '=' INT_CONST TO INT_CONST STEP INT_CONST ENDL stmt_list NEXT ENDL {$$ = create_for_stmt();}
+                        | FOR ID AS id_type '=' INT_CONST TO INT_CONST ENDL stmt_list NEXT ENDL {$$ = create_for_stmt();}
+                        | FOR ID AS id_type '=' INT_CONST TO INT_CONST STEP INT_CONST ENDL stmt_list NEXT ENDL {$$ = create_for_stmt();}
 			;				
 
-	while_stmt: WHILE expr ENDL stmt_list END_WHILE ENDL
+        while_stmt: WHILE expr ENDL stmt_list END_WHILE ENDL {$$ = create_while_stmt();}
 			  ;			  
 
-	do_loop_stmt: DO WHILE expr ENDL stmt_list LOOP ENDL
-				| DO UNTIL expr ENDL stmt_list LOOP ENDL
-				| DO ENDL stmt_list LOOP WHILE expr ENDL
-				| DO ENDL stmt_list LOOP UNTIL expr ENDL
-				;			 			 		
+        do_loop_stmt: DO WHILE expr ENDL stmt_list LOOP ENDL                {$$ = create_do_loop_stmt();}
+                                | DO UNTIL expr ENDL stmt_list LOOP ENDL     {$$ = create_do_loop_stmt();}
+                                | DO ENDL stmt_list LOOP WHILE expr ENDL     {$$ = create_do_loop_stmt();}
+                                | DO ENDL stmt_list LOOP UNTIL expr ENDL     {$$ = create_do_loop_stmt();}
+                                ;
 	
-	enum_stmt: ENUM ID ENDL enum_expr_list END_ENUM ENDL
+        enum_stmt: ENUM ID ENDL enum_expr_list END_ENUM ENDL    {$$ = create_enum_stmt();}
 			 ;			  
 
-		enum_expr_list: enum_expr ENDL
-					  | enum_expr_list enum_expr ENDL
+                enum_expr_list: enum_expr ENDL                              {$$ = create_enum_list();}
+                                          | enum_expr_list enum_expr ENDL   {$$ = add_to_enum_list();}
 					  ;
 	
-		enum_expr: ID
-			 	 | ID '=' INT_CONST
+                enum_expr: ID                           {$$ = create_enum_expr();}
+                                 | ID '=' INT_CONST     {$$ = create_enum_expr();}
 				 ;
 	
-	sub_stmt: SUB ID '('')' ENDL stmt_list END_SUB ENDL
-			| SUB ID '('param_list')' ENDL stmt_list END_SUB ENDL
+        sub_stmt: SUB ID '('')' ENDL stmt_list END_SUB ENDL                     {$$ = create_sub_stmt(NULL,NULL,NULL);}
+                        | SUB ID '('param_list')' ENDL stmt_list END_SUB ENDL   {$$ = create_sub_stmt(NULL,NULL,NULL);}
 			;		
 
-		param_list: param_stmt
-				  | param_list',' param_stmt
+                param_list: param_stmt                          {$$ = create_param_list():}
+                                  | param_list',' param_stmt    {$$ = add_to_param_list():}
 				  ;
 
-		param_stmt: BYREF ID AS id_type
-				  | BYVAL ID AS id_type
+                param_stmt: BYREF ID AS id_type                 {$$ = create_param_stmt():}
+                                  | BYVAL ID AS id_type         {$$ = create_param_stmt():}
 				  ; 
 
-	func_stmt: FUNCTION ID '('')' AS id_type ENDL stmt_list RETURN expr ENDL END_FUNCTION ENDL
-			 | FUNCTION ID '('param_list')' AS id_type ENDL stmt_list RETURN expr ENDL END_FUNCTION ENDL
+        func_stmt: FUNCTION ID '('')' AS id_type ENDL stmt_list RETURN expr ENDL END_FUNCTION ENDL                   {$$ = create_func_stmt();}
+                         | FUNCTION ID '('param_list')' AS id_type ENDL stmt_list RETURN expr ENDL END_FUNCTION ENDL {$$ = create_func_stmt();}
 			 ;
 			 
 	try_catch_stmt: TRY ENDL stmt_list catch_stmt_list FINALLY ENDL stmt_list ENDL TRY ENDL {$$ = create_Try_Catch($3,$4,$7);}
