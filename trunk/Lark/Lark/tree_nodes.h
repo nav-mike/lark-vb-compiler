@@ -1093,6 +1093,16 @@ struct VB_Expr* create_func_expr(char* name, struct VB_Expr_list* params)
 }
 
 /*!
+	Функция создания выражения со скобками.
+*/
+struct VB_Expr* create_brackets_actions(char* name, struct VB_Expr_list* params)
+{
+	struct VB_Expr* result = (struct VB_Expr*)malloc(sizeof(struct VB_Expr));
+	
+	return result;
+}
+
+/*!
 	Функция создания выражения константы (int, boolean, char).
   \param type Тип идентификатора.
   \param name Имя идентификатора.
