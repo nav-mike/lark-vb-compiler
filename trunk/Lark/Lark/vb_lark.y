@@ -261,7 +261,7 @@
 				| FOR ID AS CHAR '=' INT_CONST TO INT_CONST STEP INT_CONST ENDL stmt_list NEXT ENDL 	{$$ = create_for_with_decl_with_step_stmt($2,STRING,$6,$8,$10,$12);}
 				;				
 
-        while_stmt: WHILE expr ENDL stmt_list END_WHILE ENDL 	 {$$ = create_while_stmt();}
+        while_stmt: WHILE expr ENDL stmt_list END_WHILE ENDL 	 {$$ = create_while_stmt($2,$4);}
 				  ;			  
 
         do_loop_stmt: DO WHILE expr ENDL stmt_list LOOP ENDL     {$$ = create_do_loop_stmt();}
