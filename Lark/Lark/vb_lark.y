@@ -262,12 +262,12 @@
 				;				
 
         while_stmt: WHILE expr ENDL stmt_list END_WHILE ENDL 	 {$$ = create_while_stmt($2,$4);}
-				  ;			  
+				  ;
 
-        do_loop_stmt: DO WHILE expr ENDL stmt_list LOOP ENDL     {$$ = create_do_loop_stmt();}
-                    | DO UNTIL expr ENDL stmt_list LOOP ENDL     {$$ = create_do_loop_stmt();}
-                    | DO ENDL stmt_list LOOP WHILE expr ENDL     {$$ = create_do_loop_stmt();}
-                    | DO ENDL stmt_list LOOP UNTIL expr ENDL     {$$ = create_do_loop_stmt();}
+        do_loop_stmt: DO WHILE expr ENDL stmt_list LOOP ENDL     {$$ = create_do_loop_stmt(DO_WHILE,$3,$5);}
+                    | DO UNTIL expr ENDL stmt_list LOOP ENDL     {$$ = create_do_loop_stmt(DO_UNTIL,$3,$5);}
+                    | DO ENDL stmt_list LOOP WHILE expr ENDL     {$$ = create_do_loop_stmt(LOOP_WHILE,$6,$3);}
+                    | DO ENDL stmt_list LOOP UNTIL expr ENDL     {$$ = create_do_loop_stmt(LOOP_UNTIL,$6,$3);}
                     ;
 	
         enum_stmt: ENUM ID ENDL enum_expr_list END_ENUM ENDL    {$$ = create_enum_stmt();}
