@@ -281,7 +281,7 @@ struct VB_For_stmt
 	int 				 step_val;		//!< Шаг
 	struct VB_Stmt_list* stmt_list;		//!< Тело цикла
 	struct VB_Stmt*		 next;			//!< Следующий оператор
-	struct VB_Expr*		 new_id;
+	struct VB_Expr*		 new_id;		//!< Если переменная создается для цикла
 };
 
 /*! \struct VB_While_stmt
@@ -1303,6 +1303,10 @@ struct VB_Param_stmt* create_param_stmt()
 		действия
 	  Next"
 
+  \param id Итератор
+  \param start Начальное значение
+  \param end Конечное значение
+  \param body Тело цикла
   \return указатель на объект For.
 */
 struct VB_For_stmt * create_for_stmt(char* id, int start, int end, struct VB_Stmt_list* body)
@@ -1315,6 +1319,7 @@ struct VB_For_stmt * create_for_stmt(char* id, int start, int end, struct VB_Stm
 	result->to_val = end;
 	result->step_val = 1;
 	result->stmt_list = body;
+	result->next = NULL;
 
     return result;
 }
@@ -1325,6 +1330,11 @@ struct VB_For_stmt * create_for_stmt(char* id, int start, int end, struct VB_Stm
 		действия
 	  Next"
 
+  \param id Итератор
+  \param start Начальное значение
+  \param end Конечное значение
+  \param step Шаг итератора
+  \param body Тело цикла
   \return указатель на объект For.
 */
 struct VB_For_stmt * create_for_with_step_stmt(char* id, int start, int end, int step, struct VB_Stmt_list* body)
@@ -1337,6 +1347,7 @@ struct VB_For_stmt * create_for_with_step_stmt(char* id, int start, int end, int
 	result->to_val = end;
 	result->step_val = step;
 	result->stmt_list = body;
+	result->next = NULL;
 
     return result;
 }
@@ -1347,6 +1358,11 @@ struct VB_For_stmt * create_for_with_step_stmt(char* id, int start, int end, int
 		действия
 	  Next"
 
+  \param id Итератор
+  \param Тип итератора
+  \param start Начальное значение
+  \param end Конечное значение
+  \param body Тело цикла
   \return указатель на объект For.
 */
 struct VB_For_stmt * create_for_with_decl_stmt(char* id, enum VB_Id_type type, int start, int end, struct VB_Stmt_list* body)
@@ -1361,6 +1377,7 @@ struct VB_For_stmt * create_for_with_decl_stmt(char* id, enum VB_Id_type type, i
 	result->to_val = end;
 	result->step_val = 1;
 	result->stmt_list = body;
+	result->next = NULL;
 
     return result;
 }
@@ -1371,6 +1388,12 @@ struct VB_For_stmt * create_for_with_decl_stmt(char* id, enum VB_Id_type type, i
 		действия
 	  Next"
 
+  \param id Итератор
+  \param Тип итератора
+  \param start Начальное значение
+  \param end Конечное значение
+  \param step Шаг итератора
+  \param body Тело цикла
   \return указатель на объект For.
 */
 struct VB_For_stmt * create_for_with_decl_with_step_stmt(char* id, enum VB_Id_type type, int start, int end, int step, struct VB_Stmt_list* body)
@@ -1385,12 +1408,28 @@ struct VB_For_stmt * create_for_with_decl_with_step_stmt(char* id, enum VB_Id_ty
 	result->to_val = end;
 	result->step_val = step;
 	result->stmt_list = body;
+	result->next = NULL;
 
     return result;
 }
 
-struct VB_While_stmt * create_while_stmt()
+/*!
+	Создать выражение For:
+	" While counter < 20
+		counter += 1
+	  End While
+  \param expr Условие
+  \param body Тело цикла
+  \return указатель на объект For.
+*/
+
+struct VB_While_stmt * create_while_stmt(struct VB_Expr* expr, struct VB_Stmt_list* body)
 {
+	struct VB_While_stmt* result = (struct VB_While_stmt*)malloc(sizeof(struct VB_While_stmt));
+
+	result->expr = expr;
+	result->stmt_list = body;
+	result->next = NULL;
     return NULL;
 }
 
