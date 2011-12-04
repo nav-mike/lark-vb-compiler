@@ -1240,8 +1240,10 @@ struct VB_As_expr* create_as_expr(enum VB_As_expr_type type, struct VB_Id_list* 
 	else
 	{
 		as_expr->expr = expr;
-		strcpy(as_expr->id,id);	
+		strcpy(as_expr->id->expr_string,id);	
 	}
+
+	return as_expr;
 }
 
 /*!
@@ -1268,7 +1270,7 @@ struct VB_Id_list* add_to_id_list(struct VB_Id_list* list,char* id)
 {
 	struct VB_Id_list* new_list = (struct VB_Id_list*)malloc(sizeof(struct VB_Id_list));
 
-	strcpy(new_list->id,id);
+	strcpy(new_list->id->expr_string,id);
 	new_list->next = NULL;
 
 	list->next = new_list;
@@ -1420,7 +1422,7 @@ struct VB_For_stmt * create_for_with_decl_with_step_stmt(char* id, enum VB_Id_ty
 	  End While"
   \param expr Условие
   \param body Тело цикла
-  \return указатель на объект For.
+  \return указатель на объект While.
 */
 struct VB_While_stmt * create_while_stmt(struct VB_Expr* expr, struct VB_Stmt_list* body)
 {
@@ -1441,7 +1443,7 @@ struct VB_While_stmt * create_while_stmt(struct VB_Expr* expr, struct VB_Stmt_li
 
   \param expr Условие
   \param body Тело цикла
-  \return указатель на объект For.
+  \return указатель на объект Do..Loop..Until.
 */
 struct VB_Do_loop_stmt * create_do_loop_stmt(enum VB_Do_loop_type type, struct VB_Expr* expr, struct VB_Stmt_list* body)
 {
@@ -1455,24 +1457,77 @@ struct VB_Do_loop_stmt * create_do_loop_stmt(enum VB_Do_loop_type type, struct V
     return result;
 }
 
-struct VB_Enum_stmt * create_enum_stmt()
+/*!
+	Создать выражение Enum:
+	"Enum filePermissions
+		create = 1
+		read = 2
+		write = 4
+		delete = 8
+	End Enum"
+
+  \param id имя перечисления 
+  \param list Список элементов
+  \return указатель на объект Enum.
+*/
+struct VB_Enum_stmt * create_enum_stmt(char* id, struct VB_Enum_expr_list* list)
 {
-    return NULL;
+	struct VB_Enum_stmt* result = (struct VB_Enum_stmt*)malloc(sizeof(struct VB_Enum_stmt));
+
+	result->id = id;
+	result->list = list;
+	result->next = NULL;
+
+    return result;
 }
 
-struct VB_Enum_expr_list * create_enum_list()
+/*!
+	Создать список элементов перечисления
+  \param first_expr Первый элемент списка
+  \return указатель на объект списка.
+*/
+struct VB_Enum_expr_list * create_enum_list(struct VB_Enum_expr* first_expr)
 {
-    return NULL;
+	struct VB_Enum_expr_list* result = (struct VB_Enum_expr_list*)malloc(sizeof(struct VB_Enum_expr_list));
+
+	result->first = first_expr;
+	result->last = first_expr;
+
+    return result;
 }
 
-struct VB_Enum_expr_list * add_to_enum_list()
+/*!
+	Добавить элемент перечисления в список
+  \param first_expr Первый элемент списка
+  \return указатель на объект списка.
+*/
+struct VB_Enum_expr_list * add_to_enum_list(struct VB_Enum_expr_list* list, struct VB_Enum_expr* new_expr)
 {
-    return NULL;
+	list->last->next = new_expr;
+	list->last = new_expr;
+
+    return list;
 }
 
-struct VB_Enum_expr * create_enum_expr()
+/*!
+	Создать элемент перечисления number>0 && number<MAX_INT (в Java) && number_N != number_M
+  \param first_expr Первый элемент списка
+  \return указатель на элемент Enum.
+*/
+struct VB_Enum_expr * create_enum_expr(char* id, int number)
 {
-    return NULL;
+	struct VB_Enum_expr* result = (struct VB_Enum_expr*)malloc(sizeof(struct VB_Enum_expr));
+
+	result->id = id;
+	result->next = NULL;
+
+	if (number >= 0)
+	{
+		result->is_init = 1;
+		result->value = number;
+	}
+
+    return result;
 }
 
 struct VB_For_stmt * create_func_stmt()
