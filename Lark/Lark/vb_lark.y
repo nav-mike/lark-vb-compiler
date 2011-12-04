@@ -295,14 +295,14 @@
 						  | BYVAL ID AS STRING          {$$ = create_param_stmt($2,STRING):}
 						  ; 
 
-        func_stmt: FUNCTION ID '('')' AS INTEGER ENDL stmt_list RETURN expr ENDL END_FUNCTION ENDL                  {$$ = create_func_stmt();}
-				 | FUNCTION ID '('')' AS BOOLEAN ENDL stmt_list RETURN expr ENDL END_FUNCTION ENDL                  {$$ = create_func_stmt();}
-				 | FUNCTION ID '('')' AS CHAR ENDL stmt_list RETURN expr ENDL END_FUNCTION ENDL                   	{$$ = create_func_stmt();}
-				 | FUNCTION ID '('')' AS STRING ENDL stmt_list RETURN expr ENDL END_FUNCTION ENDL                   {$$ = create_func_stmt();}
-                 | FUNCTION ID '('param_list')' AS INTEGER ENDL stmt_list RETURN expr ENDL END_FUNCTION ENDL 		{$$ = create_func_stmt();}
-				 | FUNCTION ID '('param_list')' AS BOOLEAN ENDL stmt_list RETURN expr ENDL END_FUNCTION ENDL 		{$$ = create_func_stmt();}
-				 | FUNCTION ID '('param_list')' AS CHAR ENDL stmt_list RETURN expr ENDL END_FUNCTION ENDL 			{$$ = create_func_stmt();}
-				 | FUNCTION ID '('param_list')' AS STRING ENDL stmt_list RETURN expr ENDL END_FUNCTION ENDL 		{$$ = create_func_stmt();}
+        func_stmt: FUNCTION ID '('')' AS INTEGER ENDL stmt_list RETURN expr ENDL END_FUNCTION ENDL           {$$ = create_func_stmt($2,NULL,INTEGER,$8,$10);}
+				 | FUNCTION ID '('')' AS BOOLEAN ENDL stmt_list RETURN expr ENDL END_FUNCTION ENDL           {$$ = create_func_stmt($2,NULL,BOOLEAN,$8,$10);}
+				 | FUNCTION ID '('')' AS CHAR ENDL stmt_list RETURN expr ENDL END_FUNCTION ENDL              {$$ = create_func_stmt($2,NULL,CHAR,$8,$10);}
+				 | FUNCTION ID '('')' AS STRING ENDL stmt_list RETURN expr ENDL END_FUNCTION ENDL            {$$ = create_func_stmt($2,NULL,STRING,$8,$10);}
+                 | FUNCTION ID '('param_list')' AS INTEGER ENDL stmt_list RETURN expr ENDL END_FUNCTION ENDL {$$ = create_func_stmt($2,$4,INTEGER,$9,$11);}
+				 | FUNCTION ID '('param_list')' AS BOOLEAN ENDL stmt_list RETURN expr ENDL END_FUNCTION ENDL {$$ = create_func_stmt($2,$4,BOOLEAN,$9,$11);}
+				 | FUNCTION ID '('param_list')' AS CHAR ENDL stmt_list RETURN expr ENDL END_FUNCTION ENDL 	 {$$ = create_func_stmt($2,$4,CHAR,$9,$11);}
+				 | FUNCTION ID '('param_list')' AS STRING ENDL stmt_list RETURN expr ENDL END_FUNCTION ENDL  {$$ = create_func_stmt($2,$4,STRING,$9,$11);}
 				 ;
 			 
 	try_catch_stmt: TRY ENDL stmt_list catch_stmt_list FINALLY ENDL stmt_list ENDL END_TRY ENDL {$$ = create_Try_Catch($3,$4,$7);}
