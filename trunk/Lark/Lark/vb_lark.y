@@ -270,15 +270,15 @@
                     | DO ENDL stmt_list LOOP UNTIL expr ENDL     {$$ = create_do_loop_stmt(LOOP_UNTIL,$6,$3);}
                     ;
 	
-        enum_stmt: ENUM ID ENDL enum_expr_list END_ENUM ENDL    {$$ = create_enum_stmt();}
+        enum_stmt: ENUM ID ENDL enum_expr_list END_ENUM ENDL    {$$ = create_enum_stmt($2,$4);}
 				 ;			  
 
-                enum_expr_list: enum_expr ENDL                  {$$ = create_enum_list();}
-                              | enum_expr_list enum_expr ENDL   {$$ = add_to_enum_list();}
+                enum_expr_list: enum_expr ENDL                  {$$ = create_enum_list($1);}
+                              | enum_expr_list enum_expr ENDL   {$$ = add_to_enum_list($1,$2);}
 							  ;
 	
-                enum_expr: ID                          			 {$$ = create_enum_expr();}
-                         | ID '=' INT_CONST     				 {$$ = create_enum_expr();}
+                enum_expr: ID                          			{$$ = create_enum_expr($1,-1);}
+                         | ID '=' INT_CONST     				{$$ = create_enum_expr($1,$3);}
 						 ;
 	
         sub_stmt: SUB ID '('')' ENDL stmt_list END_SUB ENDL                     {$$ = create_sub_stmt(NULL,NULL,NULL);}
