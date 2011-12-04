@@ -766,7 +766,7 @@ int add_node_sub_stmt (struct VB_Sub_stmt* node)
 	if (error == -1) return 1;
 
 	error = fprintf(file,"\n\t\tlabel = \"<f0> %s | <f1> %d \"",
-		node->id, node->has_params);
+		node->id, node->param_list != NULL ? 1 : 0 );
 	if (error == -1) return 1;
 
 	error = fprintf(file,"\n\t\tshape = \"record\"\n\t];");

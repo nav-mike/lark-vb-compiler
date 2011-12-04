@@ -383,7 +383,6 @@ struct VB_Enum_expr
  */
 struct VB_Sub_stmt
 {
-	int 					has_params;	//!< Есть ли параметры
 	char*		 			id;			//!< Имя поля
 	struct VB_Param_list*	param_list;	//!< Список параметров
 	struct VB_Stmt_list* 	stmt_list;	//!< Тело процедуры
@@ -1278,25 +1277,68 @@ struct VB_Id_list* add_to_id_list(struct VB_Id_list* list,char* id)
 	return list;
 }
 
-
-struct VB_Sub_stmt * create_sub_stmt(char * id, struct VB_Stmt_list * list, struct VB_Id_list * params)
+/*!
+	Создать процедуру (Sub)
+  \param id Идентификатор
+  \param params Список параметров
+  \param body Тело процедуры
+  \return указатель на объект процедуры.
+*/
+struct VB_Sub_stmt * create_sub_stmt(char * id, struct VB_Param_list * params, struct VB_Stmt_list * body)
 {
-    return NULL;
+	struct VB_Sub_stmt* result = (struct VB_Sub_stmt*)malloc(sizeof(struct VB_Sub_stmt));
+
+	result->id = id;
+	result->next = NULL;
+	result->param_list = params;
+	result->stmt_list = body;
+
+    return result;
 }
 
-struct VB_Param_list * create_param_list()
+/*!
+	Создать список параметров процедуры
+  \param id Идентификатор
+  \return указатель на объект списка параметров.
+*/
+struct VB_Param_list * create_param_list(struct VB_Param_stmt* first_param)
 {
-    return NULL;
+	struct VB_Param_list* result = (struct VB_Param_list*)malloc(sizeof(struct VB_Param_list));
+
+	result->first = first_param;
+	result->last = first_param;
+
+    return result;
 }
 
-struct VB_Param_list *add_to_param_list()
+/*!
+	Добавить список параметров процедуры
+  \param id Идентификатор
+  \return указатель на объект списка параметров.
+*/
+struct VB_Param_list *add_to_param_list(struct VB_Param_list* list, struct VB_Param_stmt* new_param )
 {
-    return NULL;
+	list->last->next = new_param;
+	list->last = new_param;
+
+    return list;
 }
 
-struct VB_Param_stmt* create_param_stmt()
+/*!
+	Создать объект параметра
+  \param id Идентификатор
+  \param type Тип параметра
+  \return указатель на объект параметра.
+*/
+struct VB_Param_stmt* create_param_stmt(char* id, enum VB_Id_type type)
 {
-    return NULL;
+	struct VB_Param_stmt* result = (struct VB_Param_stmt*)malloc(sizeof(struct VB_Param_stmt));
+
+	result->id = id;
+	result->id_type = type;
+	result->next = NULL;
+
+    return result;
 }
 
 /*!

@@ -281,18 +281,18 @@
                          | ID '=' INT_CONST     				{$$ = create_enum_expr($1,$3);}
 						 ;
 	
-        sub_stmt: SUB ID '('')' ENDL stmt_list END_SUB ENDL                     {$$ = create_sub_stmt(NULL,NULL,NULL);}
-                        | SUB ID '('param_list')' ENDL stmt_list END_SUB ENDL   {$$ = create_sub_stmt(NULL,NULL,NULL);}
-						;		
+        sub_stmt: SUB ID '('')' ENDL stmt_list END_SUB ENDL             {$$ = create_sub_stmt($2,NULL,$6);}
+                | SUB ID '('param_list')' ENDL stmt_list END_SUB ENDL   {$$ = create_sub_stmt($2,$4,$7);}
+				;		
 
-                param_list: param_stmt                          {$$ = create_param_list():}
-                                  | param_list',' param_stmt    {$$ = add_to_param_list():}
-								  ;
+                param_list: param_stmt                  {$$ = create_param_list($1):}
+                          | param_list',' param_stmt    {$$ = add_to_param_list($1,$3):}
+						  ;
 
-                param_stmt: BYVAL ID AS INTEGER           		{$$ = create_param_stmt():}
-						  | BYVAL ID AS BOOLEAN           		{$$ = create_param_stmt():}
-						  | BYVAL ID AS CHAR           			{$$ = create_param_stmt():}
-						  | BYVAL ID AS STRING          		{$$ = create_param_stmt():}
+                param_stmt: BYVAL ID AS INTEGER         {$$ = create_param_stmt($2,INTEGER):}
+						  | BYVAL ID AS BOOLEAN         {$$ = create_param_stmt($2,BOOLEAN):}
+						  | BYVAL ID AS CHAR            {$$ = create_param_stmt($2,CHAR):}
+						  | BYVAL ID AS STRING          {$$ = create_param_stmt($2,STRING):}
 						  ; 
 
         func_stmt: FUNCTION ID '('')' AS INTEGER ENDL stmt_list RETURN expr ENDL END_FUNCTION ENDL                  {$$ = create_func_stmt();}
