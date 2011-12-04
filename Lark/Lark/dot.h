@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include "tree_nodes.h"
 
+extern struct VB_Module_stmt* root;
+
 int add_node_stmt_list (struct VB_Stmt_list* node);
 int add_node_param_list (struct VB_Param_list* node);
 int add_node_if_stmt (struct VB_If_stmt* node);
@@ -15,6 +17,13 @@ int add_node_println_stmt (struct VB_Println_stmt* node);
 int add_node_as_Expr_list (struct VB_As_Expr_list* node);
 int add_node_readln_stmt (struct VB_Readln_stmt* node);
 int add_node_read_stmt (struct VB_Read_stmt* node);
+
+
+void print_tree()
+{
+	root;
+}
+
 
 /*!
 	Функция преобразует тип выражения в строку.

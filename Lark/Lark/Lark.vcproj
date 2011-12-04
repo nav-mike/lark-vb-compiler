@@ -200,6 +200,10 @@
 					/>
 				</FileConfiguration>
 			</File>
+			<File
+				RelativePath=".\vb_lark.tab.c"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Заголовочные файлы"
@@ -224,6 +228,10 @@
 			</File>
 			<File
 				RelativePath=".\unistd.h"
+				>
+			</File>
+			<File
+				RelativePath=".\vb_lark.tab.h"
 				>
 			</File>
 			<File
