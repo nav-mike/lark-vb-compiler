@@ -112,8 +112,6 @@
 %token END_TRY
 %token THROW
 %token NEW
-%token BYREF
-%token CALL
 %token CASE
 %token CONST
 %token SELECT
@@ -144,7 +142,6 @@
 %token WRITELINE
 %token READ
 %token READLINE
-%token READKEY
 %token SYSTEM
 %token FINALLY
 
@@ -254,29 +251,27 @@
 				 | expr_list',' expr	{$$ = add_Expr_to_list($1,$3);}
 				 ;
 		
-        for_stmt: FOR ID '=' INT_CONST TO INT_CONST ENDL stmt_list NEXT ENDL            						{$$ = create_for_stmt();}
-                        | FOR ID '=' INT_CONST TO INT_CONST STEP INT_CONST ENDL stmt_list NEXT ENDL 			{$$ = create_for_stmt();}
-                        | FOR ID AS INTEGER '=' INT_CONST TO INT_CONST ENDL stmt_list NEXT ENDL 				{$$ = create_for_stmt();}
-						| FOR ID AS BOOLEAN '=' INT_CONST TO INT_CONST ENDL stmt_list NEXT ENDL 				{$$ = create_for_stmt();}
-						| FOR ID AS CHAR '=' INT_CONST TO INT_CONST ENDL stmt_list NEXT ENDL 					{$$ = create_for_stmt();}
-						| FOR ID AS STRING '=' INT_CONST TO INT_CONST ENDL stmt_list NEXT ENDL 					{$$ = create_for_stmt();}
-                        | FOR ID AS INTEGER '=' INT_CONST TO INT_CONST STEP INT_CONST ENDL stmt_list NEXT ENDL 	{$$ = create_for_stmt();}
-						| FOR ID AS BOOLEAN '=' INT_CONST TO INT_CONST STEP INT_CONST ENDL stmt_list NEXT ENDL 	{$$ = create_for_stmt();}
-						| FOR ID AS CHAR '=' INT_CONST TO INT_CONST STEP INT_CONST ENDL stmt_list NEXT ENDL 	{$$ = create_for_stmt();}
-						| FOR ID AS STRING '=' INT_CONST TO INT_CONST STEP INT_CONST ENDL stmt_list NEXT ENDL 	{$$ = create_for_stmt();}
-						;				
+        for_stmt: FOR ID '=' INT_CONST TO INT_CONST ENDL stmt_list NEXT ENDL            				{$$ = create_for_stmt($2,$4,$6,$8);}
+                | FOR ID '=' INT_CONST TO INT_CONST STEP INT_CONST ENDL stmt_list NEXT ENDL 			{$$ = create_for_with_step_stmt($2,$4,$6,$8,$10);}
+                | FOR ID AS INTEGER '=' INT_CONST TO INT_CONST ENDL stmt_list NEXT ENDL 				{$$ = create_for_with_decl_stmt($2,INTEGER,$6,$8,$10);}
+				| FOR ID AS BOOLEAN '=' INT_CONST TO INT_CONST ENDL stmt_list NEXT ENDL 				{$$ = create_for_with_decl_stmt($2,BOOLEAN,$6,$8,$10);}
+				| FOR ID AS CHAR '=' INT_CONST TO INT_CONST ENDL stmt_list NEXT ENDL 					{$$ = create_for_with_decl_stmt($2,CHAR,$6,$8,$10);}
+                | FOR ID AS INTEGER '=' INT_CONST TO INT_CONST STEP INT_CONST ENDL stmt_list NEXT ENDL 	{$$ = create_for_with_decl_with_step_stmt($2,STRING,$6,$8,$10,$12);}
+				| FOR ID AS BOOLEAN '=' INT_CONST TO INT_CONST STEP INT_CONST ENDL stmt_list NEXT ENDL 	{$$ = create_for_with_decl_with_step_stmt($2,STRING,$6,$8,$10,$12);}
+				| FOR ID AS CHAR '=' INT_CONST TO INT_CONST STEP INT_CONST ENDL stmt_list NEXT ENDL 	{$$ = create_for_with_decl_with_step_stmt($2,STRING,$6,$8,$10,$12);}
+				;				
 
-        while_stmt: WHILE expr ENDL stmt_list END_WHILE ENDL 				{$$ = create_while_stmt();}
-			  ;			  
+        while_stmt: WHILE expr ENDL stmt_list END_WHILE ENDL 	 {$$ = create_while_stmt();}
+				  ;			  
 
-        do_loop_stmt: DO WHILE expr ENDL stmt_list LOOP ENDL                 {$$ = create_do_loop_stmt();}
-                                | DO UNTIL expr ENDL stmt_list LOOP ENDL     {$$ = create_do_loop_stmt();}
-                                | DO ENDL stmt_list LOOP WHILE expr ENDL     {$$ = create_do_loop_stmt();}
-                                | DO ENDL stmt_list LOOP UNTIL expr ENDL     {$$ = create_do_loop_stmt();}
-                                ;
+        do_loop_stmt: DO WHILE expr ENDL stmt_list LOOP ENDL     {$$ = create_do_loop_stmt();}
+                    | DO UNTIL expr ENDL stmt_list LOOP ENDL     {$$ = create_do_loop_stmt();}
+                    | DO ENDL stmt_list LOOP WHILE expr ENDL     {$$ = create_do_loop_stmt();}
+                    | DO ENDL stmt_list LOOP UNTIL expr ENDL     {$$ = create_do_loop_stmt();}
+                    ;
 	
         enum_stmt: ENUM ID ENDL enum_expr_list END_ENUM ENDL    {$$ = create_enum_stmt();}
-			 ;			  
+				 ;			  
 
                 enum_expr_list: enum_expr ENDL                  {$$ = create_enum_list();}
                               | enum_expr_list enum_expr ENDL   {$$ = add_to_enum_list();}
@@ -284,21 +279,21 @@
 	
                 enum_expr: ID                          			 {$$ = create_enum_expr();}
                          | ID '=' INT_CONST     				 {$$ = create_enum_expr();}
-				 ;
+						 ;
 	
         sub_stmt: SUB ID '('')' ENDL stmt_list END_SUB ENDL                     {$$ = create_sub_stmt(NULL,NULL,NULL);}
                         | SUB ID '('param_list')' ENDL stmt_list END_SUB ENDL   {$$ = create_sub_stmt(NULL,NULL,NULL);}
-			;		
+						;		
 
                 param_list: param_stmt                          {$$ = create_param_list():}
                                   | param_list',' param_stmt    {$$ = add_to_param_list():}
-				  ;
+								  ;
 
                 param_stmt: BYVAL ID AS INTEGER           		{$$ = create_param_stmt():}
 						  | BYVAL ID AS BOOLEAN           		{$$ = create_param_stmt():}
 						  | BYVAL ID AS CHAR           			{$$ = create_param_stmt():}
 						  | BYVAL ID AS STRING          		{$$ = create_param_stmt():}
-				  ; 
+						  ; 
 
         func_stmt: FUNCTION ID '('')' AS INTEGER ENDL stmt_list RETURN expr ENDL END_FUNCTION ENDL                  {$$ = create_func_stmt();}
 				 | FUNCTION ID '('')' AS BOOLEAN ENDL stmt_list RETURN expr ENDL END_FUNCTION ENDL                  {$$ = create_func_stmt();}
@@ -308,9 +303,9 @@
 				 | FUNCTION ID '('param_list')' AS BOOLEAN ENDL stmt_list RETURN expr ENDL END_FUNCTION ENDL 		{$$ = create_func_stmt();}
 				 | FUNCTION ID '('param_list')' AS CHAR ENDL stmt_list RETURN expr ENDL END_FUNCTION ENDL 			{$$ = create_func_stmt();}
 				 | FUNCTION ID '('param_list')' AS STRING ENDL stmt_list RETURN expr ENDL END_FUNCTION ENDL 		{$$ = create_func_stmt();}
-			 ;
+				 ;
 			 
-	try_catch_stmt: TRY ENDL stmt_list catch_stmt_list FINALLY ENDL stmt_list ENDL TRY ENDL {$$ = create_Try_Catch($3,$4,$7);}
+	try_catch_stmt: TRY ENDL stmt_list catch_stmt_list FINALLY ENDL stmt_list ENDL END_TRY ENDL {$$ = create_Try_Catch($3,$4,$7);}
 				  ;
 			 
 		catch_stmt_list: catch_stmt						{$$ = create_Catch_stmt_list($1);}

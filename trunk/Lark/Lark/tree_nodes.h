@@ -106,10 +106,10 @@ enum VB_Expr_type
 {
 	ID,				//!< Идентификатор
 	EXPR_FUNC,		//!< Процедура или функция
-	CHAR_CONST,			//!< Символьная константа
-	INT_CONST,			//!< Целочисленная константа
-	STRING_CONST,		//!< Строковая константа
-	BOOLEAN_CONST,		//!< Булевая константа
+	CHAR_CONST,		//!< Символьная константа
+	INT_CONST,		//!< Целочисленная константа
+	STRING_CONST,	//!< Строковая константа
+	BOOLEAN_CONST,	//!< Булевая константа
 	ASSIGN,			//!< Оператор присваивания
 	PLUS,			//!< Оператор сложения
 	MINUS,			//!< Оператор вычитания
@@ -125,7 +125,8 @@ enum VB_Expr_type
 	EQUAL,			//!< Оператор "равно"
 	UMINUS,			//!< Оператор унарного минуса
 	UPLUS,			//!< Оператор унарного плюса
-	GET_ITEM		//!< Получение элемента массива
+	GET_ITEM,		//!< Получение элемента массива
+	BRK_EXPR		//!< Выражение со скобками
 };
 
 /*! \struct VB_If_stmt
@@ -257,17 +258,30 @@ struct VB_Array_expr
 	struct VB_Expr*	id;			//!< Идентификатор		???	
 };
 
+/*! \struct VB_For_stmt_type
+    Тип цикла For.
+ */
+enum VB_For_stmt_type
+{
+	SIMPLE,
+	WITH_DECL,
+	WITH_STEP,
+	WITH_DECL_AND_STEP
+};
+
 /*! \struct VB_For_stmt
     Структура, описывающая оператор цикла For.
  */
 struct VB_For_stmt
 {
-	struct VB_Expr*		 id;			//!< Идентификатор
+	enum VB_For_stmt_type type;			//!< Тип операции For
+	char*				 id;			//!< Идентификатор
 	int 				 from_val;		//!< Начало отсчета		
 	int 				 to_val;		//!< Конец отчета
 	int 				 step_val;		//!< Шаг
 	struct VB_Stmt_list* stmt_list;		//!< Тело цикла
 	struct VB_Stmt*		 next;			//!< Следующий оператор
+	struct VB_Expr*		 new_id;
 };
 
 /*! \struct VB_While_stmt
@@ -1099,6 +1113,10 @@ struct VB_Expr* create_brackets_actions(char* name, struct VB_Expr_list* params)
 {
 	struct VB_Expr* result = (struct VB_Expr*)malloc(sizeof(struct VB_Expr));
 	
+	result->type = BRK_EXPR;
+	result->expr_string = name;
+	result->list = params;
+
 	return result;
 }
 
@@ -1279,9 +1297,96 @@ struct VB_Param_stmt* create_param_stmt()
     return NULL;
 }
 
-struct VB_For_stmt * create_for_stmt()
+/*!
+	Создать выражение For:
+	" For i = 0 To 10
+		действия
+	  Next"
+
+  \return указатель на объект For.
+*/
+struct VB_For_stmt * create_for_stmt(char* id, int start, int end, struct VB_Stmt_list* body)
 {
-    return NULL;
+	struct VB_For_stmt* result = (struct VB_For_stmt*)malloc(sizeof(struct VB_For_stmt));
+
+	result->type = SIMPLE;
+	result->id = id;
+	result->from_val = start;
+	result->to_val = end;
+	result->step_val = 1;
+	result->stmt_list = body;
+
+    return result;
+}
+
+/*!
+	Создать выражение For:
+	" For i = 0 To 10 Step 2
+		действия
+	  Next"
+
+  \return указатель на объект For.
+*/
+struct VB_For_stmt * create_for_with_step_stmt(char* id, int start, int end, int step, struct VB_Stmt_list* body)
+{
+	struct VB_For_stmt* result = (struct VB_For_stmt*)malloc(sizeof(struct VB_For_stmt));
+
+	result->type = WITH_STEP;
+	result->id = id;
+	result->from_val = start;
+	result->to_val = end;
+	result->step_val = step;
+	result->stmt_list = body;
+
+    return result;
+}
+
+/*!
+	Создать выражение For:
+	" For i As Integer = 0 To 10
+		действия
+	  Next"
+
+  \return указатель на объект For.
+*/
+struct VB_For_stmt * create_for_with_decl_stmt(char* id, enum VB_Id_type type, int start, int end, struct VB_Stmt_list* body)
+{
+	struct VB_For_stmt* result = (struct VB_For_stmt*)malloc(sizeof(struct VB_For_stmt));
+
+	result->type = WITH_DECL;
+	result->new_id = (struct VB_Expr*)malloc(sizeof(struct VB_Expr));
+	result->new_id->expr_string = id;
+	result->new_id->type = type;
+	result->from_val = start;
+	result->to_val = end;
+	result->step_val = 1;
+	result->stmt_list = body;
+
+    return result;
+}
+
+/*!
+	Создать выражение For:
+	" For i As Integer = 0 To 10 Step 2
+		действия
+	  Next"
+
+  \return указатель на объект For.
+*/
+struct VB_For_stmt * create_for_with_decl_with_step_stmt(char* id, enum VB_Id_type type, int start, int end, int step, struct VB_Stmt_list* body)
+{
+	struct VB_For_stmt* result = (struct VB_For_stmt*)malloc(sizeof(struct VB_For_stmt));
+
+	result->type = WITH_DECL_AND_STEP;
+	result->new_id = (struct VB_Expr*)malloc(sizeof(struct VB_Expr));
+	result->new_id->expr_string = id;
+	result->new_id->type = type;
+	result->from_val = start;
+	result->to_val = end;
+	result->step_val = step;
+	result->stmt_list = body;
+
+    return result;
 }
 
 struct VB_While_stmt * create_while_stmt()
