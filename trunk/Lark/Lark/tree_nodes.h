@@ -1414,15 +1414,14 @@ struct VB_For_stmt * create_for_with_decl_with_step_stmt(char* id, enum VB_Id_ty
 }
 
 /*!
-	Создать выражение For:
+	Создать выражение While:
 	" While counter < 20
 		counter += 1
-	  End While
+	  End While"
   \param expr Условие
   \param body Тело цикла
   \return указатель на объект For.
 */
-
 struct VB_While_stmt * create_while_stmt(struct VB_Expr* expr, struct VB_Stmt_list* body)
 {
 	struct VB_While_stmt* result = (struct VB_While_stmt*)malloc(sizeof(struct VB_While_stmt));
@@ -1430,12 +1429,30 @@ struct VB_While_stmt * create_while_stmt(struct VB_Expr* expr, struct VB_Stmt_li
 	result->expr = expr;
 	result->stmt_list = body;
 	result->next = NULL;
-    return NULL;
+
+    return result;
 }
 
-struct VB_Do_loop_stmt * create_do_loop_stmt()
+/*!
+	Создать выражение Do..Loop..Until:
+	"Do Until number = 10
+        number += 1
+    Loop"
+
+  \param expr Условие
+  \param body Тело цикла
+  \return указатель на объект For.
+*/
+struct VB_Do_loop_stmt * create_do_loop_stmt(enum VB_Do_loop_type type, struct VB_Expr* expr, struct VB_Stmt_list* body)
 {
-    return NULL;
+	struct VB_Do_loop_stmt* result = (struct VB_Do_loop_stmt*)malloc(sizeof(struct VB_Do_loop_stmt));
+
+	result->type = type;
+	result->expr = expr;
+	result->stmt_list = body;
+	result->next = NULL;
+
+    return result;
 }
 
 struct VB_Enum_stmt * create_enum_stmt()
