@@ -5,6 +5,9 @@
   #include <stdlib.h>
   #include <stdio.h>
   #include <string.h>
+  #include "vb_lark.tab.h"
+  
+  extern int yyparse(void);
   
   FILE* file;
   char literal[100];
@@ -289,12 +292,7 @@ ReadLine                 {
                            fprintf(file,"\nKeyword \"ReadLine\" has found\n");
 						   return READ_LINE;
 						 }
-						 
-ReadKey                  {
-                           fprintf(file,"\nKeyword \"ReadKey\" has found\n");
-						   return READ_KEY;
-						 }
-						 
+						 						 
 System                   {
                            fprintf(file,"\nKeyword \"System\" has found\n");
 						   return SYSTEM;
@@ -337,7 +335,7 @@ Exception                {
 						 
 \^                       {
                            fprintf(file,"\nOperator \"^\" has found\n");
-						   return "^';
+						   return '^';
 						 }
 						 
 \+\=                     {
@@ -504,12 +502,18 @@ NullChar                 {
 
 
 %%
-int main(int argc, char* argv[])
-{
-  file = fopen("result.txt", "wt");
-  yyin = fopen(argv[1], "r");
-  yylex();
-  fclose(file);
-  getchar();
-  return 0;
-}
+
+
+
+// оепемеяемн б ахгнмнбяйхи с-тюик!!!
+
+//int main(int argc, char* argv[])
+//{
+//  file = fopen("result.txt", "wt");
+//  yyin = fopen(argv[1], "r");
+//  yylex();
+//  //yyparse();
+//  fclose(file);
+//  getchar();
+//  return 0;
+//}

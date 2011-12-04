@@ -69,9 +69,11 @@
 
 /* Line 189 of yacc.c  */
 #line 1 "vb_lark.y"
-
+	
 	#include "tree_nodes.h"
 	#include <stdio.h>
+	#include "dot.h"
+	#include "stdafx.h"
 	
 	extern int yylex(void);
 	
@@ -79,7 +81,7 @@
 
 
 /* Line 189 of yacc.c  */
-#line 83 "vb_lark.tab.c"
+#line 84 "vb_lark.tab.c"
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -177,7 +179,7 @@ typedef union YYSTYPE
 {
 
 /* Line 214 of yacc.c  */
-#line 13 "vb_lark.y"
+#line 14 "vb_lark.y"
 
 	bool	b_const;
 	int		i_const;
@@ -223,7 +225,7 @@ typedef union YYSTYPE
 
 
 /* Line 214 of yacc.c  */
-#line 227 "vb_lark.tab.c"
+#line 228 "vb_lark.tab.c"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
@@ -235,7 +237,7 @@ typedef union YYSTYPE
 
 
 /* Line 264 of yacc.c  */
-#line 239 "vb_lark.tab.c"
+#line 240 "vb_lark.tab.c"
 
 #ifdef short
 # undef short
@@ -599,18 +601,18 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   158,   158,   161,   162,   165,   166,   167,   168,   169,
-     170,   171,   172,   173,   174,   175,   176,   177,   178,   179,
-     182,   183,   184,   185,   186,   187,   188,   189,   190,   191,
-     192,   193,   194,   195,   196,   197,   198,   199,   200,   201,
-     202,   205,   206,   207,   208,   211,   212,   215,   216,   217,
-     218,   221,   224,   225,   226,   227,   230,   231,   232,   233,
-     234,   235,   236,   237,   240,   241,   244,   245,   246,   247,
-     250,   251,   254,   255,   256,   257,   258,   259,   260,   261,
-     264,   267,   268,   269,   270,   273,   276,   277,   280,   281,
-     284,   285,   288,   289,   292,   293,   294,   295,   298,   299,
-     300,   301,   302,   303,   304,   305,   308,   311,   312,   315,
-     318,   321,   324,   327,   330
+       0,   159,   159,   162,   163,   166,   167,   168,   169,   170,
+     171,   172,   173,   174,   175,   176,   177,   178,   179,   180,
+     183,   184,   185,   186,   187,   188,   189,   190,   191,   192,
+     193,   194,   195,   196,   197,   198,   199,   200,   201,   202,
+     203,   206,   207,   208,   209,   212,   213,   216,   217,   218,
+     219,   222,   225,   226,   227,   228,   231,   232,   233,   234,
+     235,   236,   237,   238,   241,   242,   245,   246,   247,   248,
+     251,   252,   255,   256,   257,   258,   259,   260,   261,   262,
+     265,   268,   269,   270,   271,   274,   277,   278,   281,   282,
+     285,   286,   289,   290,   293,   294,   295,   296,   299,   300,
+     301,   302,   303,   304,   305,   306,   309,   312,   313,   316,
+     319,   322,   325,   328,   331
 };
 #endif
 
@@ -2051,798 +2053,798 @@ yyreduce:
         case 2:
 
 /* Line 1455 of yacc.c  */
-#line 158 "vb_lark.y"
+#line 159 "vb_lark.y"
     {root = (yyval.Module);(yyval.Module) = create_VB_Module_stmt((yyvsp[(2) - (6)].Id),(yyvsp[(4) - (6)].List));;}
     break;
 
   case 3:
 
 /* Line 1455 of yacc.c  */
-#line 161 "vb_lark.y"
+#line 162 "vb_lark.y"
     {(yyval.List) = create_VB_Stmt_list((yyvsp[(1) - (1)].Stmt));;}
     break;
 
   case 4:
 
 /* Line 1455 of yacc.c  */
-#line 162 "vb_lark.y"
+#line 163 "vb_lark.y"
     {(yyval.List) = edit_VB_Stmt_list((yyvsp[(1) - (2)].List),(yyvsp[(2) - (2)].Stmt));;}
     break;
 
   case 5:
 
 /* Line 1455 of yacc.c  */
-#line 165 "vb_lark.y"
+#line 166 "vb_lark.y"
     {(yyval.Stmt) = create_VB_Stmt_Expr((yyvsp[(1) - (2)].Expr));;}
     break;
 
   case 6:
 
 /* Line 1455 of yacc.c  */
-#line 166 "vb_lark.y"
+#line 167 "vb_lark.y"
     {(yyval.Stmt) = create_VB_Stmt_If((yyvsp[(1) - (1)].If_stmt));;}
     break;
 
   case 7:
 
 /* Line 1455 of yacc.c  */
-#line 167 "vb_lark.y"
+#line 168 "vb_lark.y"
     {(yyval.Stmt) = create_VB_Stmt_Dim((yyvsp[(1) - (1)].Dim));;}
     break;
 
   case 8:
 
 /* Line 1455 of yacc.c  */
-#line 168 "vb_lark.y"
+#line 169 "vb_lark.y"
     {(yyval.Stmt) = create_VB_Stmt_For((yyvsp[(1) - (1)].For));;}
     break;
 
   case 9:
 
 /* Line 1455 of yacc.c  */
-#line 169 "vb_lark.y"
+#line 170 "vb_lark.y"
     {(yyval.Stmt) = create_VB_Stmt_While((yyvsp[(1) - (1)].While));;}
     break;
 
   case 10:
 
 /* Line 1455 of yacc.c  */
-#line 170 "vb_lark.y"
+#line 171 "vb_lark.y"
     {(yyval.Stmt) = create_VB_Stmt_Do_Loop((yyvsp[(1) - (1)].Do_loop));;}
     break;
 
   case 11:
 
 /* Line 1455 of yacc.c  */
-#line 171 "vb_lark.y"
+#line 172 "vb_lark.y"
     {(yyval.Stmt) = create_VB_Stmt_Enum((yyvsp[(1) - (1)].Enum));;}
     break;
 
   case 12:
 
 /* Line 1455 of yacc.c  */
-#line 172 "vb_lark.y"
+#line 173 "vb_lark.y"
     {(yyval.Stmt) = create_VB_Stmt_Sub((yyvsp[(1) - (1)].Sub));;}
     break;
 
   case 13:
 
 /* Line 1455 of yacc.c  */
-#line 173 "vb_lark.y"
+#line 174 "vb_lark.y"
     {(yyval.Stmt) = create_VB_Stmt_Func((yyvsp[(1) - (1)].Func));;}
     break;
 
   case 14:
 
 /* Line 1455 of yacc.c  */
-#line 174 "vb_lark.y"
+#line 175 "vb_lark.y"
     {(yyval.Stmt) = create_VB_Stmt_Try_Catch((yyvsp[(1) - (1)].Try_catch));;}
     break;
 
   case 15:
 
 /* Line 1455 of yacc.c  */
-#line 175 "vb_lark.y"
+#line 176 "vb_lark.y"
     {(yyval.Stmt) = create_VB_Stmt_Throw((yyvsp[(1) - (1)].Throw));;}
     break;
 
   case 16:
 
 /* Line 1455 of yacc.c  */
-#line 176 "vb_lark.y"
+#line 177 "vb_lark.y"
     {(yyval.Stmt) = create_VB_Stmt_Print((yyvsp[(1) - (1)].console_print));;}
     break;
 
   case 17:
 
 /* Line 1455 of yacc.c  */
-#line 177 "vb_lark.y"
+#line 178 "vb_lark.y"
     {(yyval.Stmt) = create_VB_Stmt_Println((yyvsp[(1) - (1)].console_println));;}
     break;
 
   case 18:
 
 /* Line 1455 of yacc.c  */
-#line 178 "vb_lark.y"
+#line 179 "vb_lark.y"
     {(yyval.Stmt) = create_VB_Stmt_Read((yyvsp[(1) - (1)].console_read));;}
     break;
 
   case 19:
 
 /* Line 1455 of yacc.c  */
-#line 179 "vb_lark.y"
+#line 180 "vb_lark.y"
     {(yyval.Stmt) = create_VB_Stmt_Readln((yyvsp[(1) - (1)].console_readln));;}
     break;
 
   case 20:
 
 /* Line 1455 of yacc.c  */
-#line 182 "vb_lark.y"
+#line 183 "vb_lark.y"
     {(yyval.Expr) = create_id_expr((yyvsp[(1) - (1)].Id));;}
     break;
 
   case 21:
 
 /* Line 1455 of yacc.c  */
-#line 183 "vb_lark.y"
+#line 184 "vb_lark.y"
     {(yyval.Expr) = create_brackets_actions((yyvsp[(1) - (4)].Id),(yyvsp[(3) - (4)].Expr_l));;}
     break;
 
   case 22:
 
 /* Line 1455 of yacc.c  */
-#line 184 "vb_lark.y"
+#line 185 "vb_lark.y"
     {(yyval.Expr) = create_int_boolean_char_const_expr(INT_CONST,(yyvsp[(1) - (1)].i_const));;}
     break;
 
   case 23:
 
 /* Line 1455 of yacc.c  */
-#line 185 "vb_lark.y"
+#line 186 "vb_lark.y"
     {(yyval.Expr) = create_int_boolean_char_const_expr(CHAR_CONST,(yyvsp[(1) - (1)].c_const));;}
     break;
 
   case 24:
 
 /* Line 1455 of yacc.c  */
-#line 186 "vb_lark.y"
+#line 187 "vb_lark.y"
     {(yyval.Expr) = create_string_const_expr((yyvsp[(1) - (1)].s_const));;}
     break;
 
   case 25:
 
 /* Line 1455 of yacc.c  */
-#line 187 "vb_lark.y"
+#line 188 "vb_lark.y"
     {(yyval.Expr) = create_int_boolean_char_const_expr(BOOLEAN_CONST,(yyvsp[(1) - (1)].b_const));;}
     break;
 
   case 26:
 
 /* Line 1455 of yacc.c  */
-#line 188 "vb_lark.y"
+#line 189 "vb_lark.y"
     {(yyval.Expr) = create_operator_expr(ASSIGN,(yyvsp[(1) - (3)].Expr),(yyvsp[(3) - (3)].Expr));;}
     break;
 
   case 27:
 
 /* Line 1455 of yacc.c  */
-#line 189 "vb_lark.y"
+#line 190 "vb_lark.y"
     {(yyval.Expr) = create_operator_expr(PLUS,(yyvsp[(1) - (3)].Expr),(yyvsp[(3) - (3)].Expr));;}
     break;
 
   case 28:
 
 /* Line 1455 of yacc.c  */
-#line 190 "vb_lark.y"
+#line 191 "vb_lark.y"
     {(yyval.Expr) = create_operator_expr(MINUS,(yyvsp[(1) - (3)].Expr),(yyvsp[(3) - (3)].Expr));;}
     break;
 
   case 29:
 
 /* Line 1455 of yacc.c  */
-#line 191 "vb_lark.y"
+#line 192 "vb_lark.y"
     {(yyval.Expr) = create_operator_expr(MUL,(yyvsp[(1) - (3)].Expr),(yyvsp[(3) - (3)].Expr));;}
     break;
 
   case 30:
 
 /* Line 1455 of yacc.c  */
-#line 192 "vb_lark.y"
+#line 193 "vb_lark.y"
     {(yyval.Expr) = create_operator_expr(DIV,(yyvsp[(1) - (3)].Expr),(yyvsp[(3) - (3)].Expr));;}
     break;
 
   case 31:
 
 /* Line 1455 of yacc.c  */
-#line 193 "vb_lark.y"
+#line 194 "vb_lark.y"
     {(yyval.Expr) = create_operator_expr(INT_DIV,(yyvsp[(1) - (3)].Expr),(yyvsp[(3) - (3)].Expr));;}
     break;
 
   case 32:
 
 /* Line 1455 of yacc.c  */
-#line 194 "vb_lark.y"
+#line 195 "vb_lark.y"
     {(yyval.Expr) = create_operator_expr(POWER,(yyvsp[(1) - (3)].Expr),(yyvsp[(3) - (3)].Expr));;}
     break;
 
   case 33:
 
 /* Line 1455 of yacc.c  */
-#line 195 "vb_lark.y"
+#line 196 "vb_lark.y"
     {(yyval.Expr) = create_operator_expr(MORE,(yyvsp[(1) - (3)].Expr),(yyvsp[(3) - (3)].Expr));;}
     break;
 
   case 34:
 
 /* Line 1455 of yacc.c  */
-#line 196 "vb_lark.y"
+#line 197 "vb_lark.y"
     {(yyval.Expr) = create_operator_expr(LESS,(yyvsp[(1) - (3)].Expr),(yyvsp[(3) - (3)].Expr));;}
     break;
 
   case 35:
 
 /* Line 1455 of yacc.c  */
-#line 197 "vb_lark.y"
+#line 198 "vb_lark.y"
     {(yyval.Expr) = create_operator_expr(MORE_OR_EQUAL,(yyvsp[(1) - (3)].Expr),(yyvsp[(3) - (3)].Expr));;}
     break;
 
   case 36:
 
 /* Line 1455 of yacc.c  */
-#line 198 "vb_lark.y"
+#line 199 "vb_lark.y"
     {(yyval.Expr) = create_operator_expr(LESS_OR_EQUAL,(yyvsp[(1) - (3)].Expr),(yyvsp[(3) - (3)].Expr));;}
     break;
 
   case 37:
 
 /* Line 1455 of yacc.c  */
-#line 199 "vb_lark.y"
+#line 200 "vb_lark.y"
     {(yyval.Expr) = create_operator_expr(NONEQUAL,(yyvsp[(1) - (3)].Expr),(yyvsp[(3) - (3)].Expr));;}
     break;
 
   case 38:
 
 /* Line 1455 of yacc.c  */
-#line 200 "vb_lark.y"
+#line 201 "vb_lark.y"
     {(yyval.Expr) = create_operator_expr(EQUAL,(yyvsp[(1) - (3)].Expr),(yyvsp[(3) - (3)].Expr));;}
     break;
 
   case 39:
 
 /* Line 1455 of yacc.c  */
-#line 201 "vb_lark.y"
+#line 202 "vb_lark.y"
     {(yyval.Expr) = (yyvsp[(2) - (3)].Expr);;}
     break;
 
   case 40:
 
 /* Line 1455 of yacc.c  */
-#line 202 "vb_lark.y"
+#line 203 "vb_lark.y"
     {(yyval.Expr) = create_operator_expr(UMINUS,(yyvsp[(2) - (2)].Expr),0);;}
     break;
 
   case 41:
 
 /* Line 1455 of yacc.c  */
-#line 205 "vb_lark.y"
+#line 206 "vb_lark.y"
     {(yyval.If_stmt) = create_with_Then_expr_stmt_list_end_if_stmt(IF_THEN,(yyvsp[(2) - (6)].Expr),(yyvsp[(5) - (6)].List),(yyvsp[(6) - (6)].End_if));;}
     break;
 
   case 42:
 
 /* Line 1455 of yacc.c  */
-#line 206 "vb_lark.y"
+#line 207 "vb_lark.y"
     {(yyval.If_stmt) = create_with_Then_expr_stmt_list_end_if_stmt(IF_ENDL,(yyvsp[(2) - (5)].Expr),(yyvsp[(4) - (5)].List),(yyvsp[(5) - (5)].End_if));;}
     break;
 
   case 43:
 
 /* Line 1455 of yacc.c  */
-#line 207 "vb_lark.y"
+#line 208 "vb_lark.y"
     {(yyval.If_stmt) = create_if_inline(IF_INLINE,(yyvsp[(2) - (6)].Expr),(yyvsp[(4) - (6)].List),0);;}
     break;
 
   case 44:
 
 /* Line 1455 of yacc.c  */
-#line 208 "vb_lark.y"
+#line 209 "vb_lark.y"
     {(yyval.If_stmt) = create_if_inline(IF_ELSE_INLINE,(yyvsp[(2) - (8)].Expr),(yyvsp[(4) - (8)].List),(yyvsp[(6) - (8)].List));;}
     break;
 
   case 45:
 
 /* Line 1455 of yacc.c  */
-#line 211 "vb_lark.y"
+#line 212 "vb_lark.y"
     {(yyval.List) = create_VB_Stmt_list((yyvsp[(1) - (1)].Stmt));;}
     break;
 
   case 46:
 
 /* Line 1455 of yacc.c  */
-#line 212 "vb_lark.y"
+#line 213 "vb_lark.y"
     {(yyval.List) = edit_VB_Stmt_list((yyvsp[(1) - (3)].List),(yyvsp[(3) - (3)].Stmt));;}
     break;
 
   case 47:
 
 /* Line 1455 of yacc.c  */
-#line 215 "vb_lark.y"
+#line 216 "vb_lark.y"
     {(yyval.End_if) = create_end_if_stmt(ENDIF,NULL,NULL,NULL);;}
     break;
 
   case 48:
 
 /* Line 1455 of yacc.c  */
-#line 216 "vb_lark.y"
+#line 217 "vb_lark.y"
     {(yyval.End_if) = create_end_if_stmt(ELSE,NULL,(yyvsp[(3) - (5)].List),NULL);;}
     break;
 
   case 49:
 
 /* Line 1455 of yacc.c  */
-#line 217 "vb_lark.y"
+#line 218 "vb_lark.y"
     {(yyval.End_if) = create_end_if_stmt(ELSE_IF_THEN,(yyvsp[(2) - (6)].Expr),(yyvsp[(5) - (6)].List),(yyvsp[(6) - (6)].End_if));;}
     break;
 
   case 50:
 
 /* Line 1455 of yacc.c  */
-#line 218 "vb_lark.y"
+#line 219 "vb_lark.y"
     {(yyval.End_if) = create_end_if_stmt(ELSE_IF_ENDL,(yyvsp[(2) - (5)].Expr),(yyvsp[(4) - (5)].List),(yyvsp[(5) - (5)].End_if));;}
     break;
 
   case 51:
 
 /* Line 1455 of yacc.c  */
-#line 221 "vb_lark.y"
+#line 222 "vb_lark.y"
     {(yyval.Dim) = create_dim_stmt((yyvsp[(2) - (3)].As_l));;}
     break;
 
   case 52:
 
 /* Line 1455 of yacc.c  */
-#line 224 "vb_lark.y"
+#line 225 "vb_lark.y"
     {(yyval.As_l) = create_as_expr_list((yyvsp[(1) - (1)].As_expr_str),NULL);;}
     break;
 
   case 53:
 
 /* Line 1455 of yacc.c  */
-#line 225 "vb_lark.y"
+#line 226 "vb_lark.y"
     {(yyval.As_l) = create_as_expr_list(NULL,(yyvsp[(1) - (1)].Arr));;}
     break;
 
   case 54:
 
 /* Line 1455 of yacc.c  */
-#line 226 "vb_lark.y"
+#line 227 "vb_lark.y"
     {(yyval.As_l) = add_to_as_expr_list((yyvsp[(1) - (3)].As_l),(yyvsp[(3) - (3)].As_expr_str),NULL);;}
     break;
 
   case 55:
 
 /* Line 1455 of yacc.c  */
-#line 227 "vb_lark.y"
+#line 228 "vb_lark.y"
     {(yyval.As_l) = add_to_as_expr_list((yyvsp[(1) - (3)].As_l),NULL,(yyvsp[(3) - (3)].Arr));;}
     break;
 
   case 56:
 
 /* Line 1455 of yacc.c  */
-#line 230 "vb_lark.y"
+#line 231 "vb_lark.y"
     {(yyval.As_expr_str) = create_as_expr(ID_LIST,(yyvsp[(1) - (3)].Id_l),NULL,INTEGER,NULL);;}
     break;
 
   case 57:
 
 /* Line 1455 of yacc.c  */
-#line 231 "vb_lark.y"
+#line 232 "vb_lark.y"
     {(yyval.As_expr_str) = create_as_expr(ID_LIST,(yyvsp[(1) - (3)].Id_l),NULL,BOOLEAN,NULL);;}
     break;
 
   case 58:
 
 /* Line 1455 of yacc.c  */
-#line 232 "vb_lark.y"
+#line 233 "vb_lark.y"
     {(yyval.As_expr_str) = create_as_expr(ID_LIST,(yyvsp[(1) - (3)].Id_l),NULL,CHAR,NULL);;}
     break;
 
   case 59:
 
 /* Line 1455 of yacc.c  */
-#line 233 "vb_lark.y"
+#line 234 "vb_lark.y"
     {(yyval.As_expr_str) = create_as_expr(ID_LIST,(yyvsp[(1) - (3)].Id_l),NULL,STRING,NULL);;}
     break;
 
   case 60:
 
 /* Line 1455 of yacc.c  */
-#line 234 "vb_lark.y"
+#line 235 "vb_lark.y"
     {(yyval.As_expr_str) = create_as_expr(ID_INIT,NULL,(yyvsp[(1) - (5)].Id_l),INTEGER,(yyvsp[(5) - (5)].Expr));;}
     break;
 
   case 61:
 
 /* Line 1455 of yacc.c  */
-#line 235 "vb_lark.y"
+#line 236 "vb_lark.y"
     {(yyval.As_expr_str) = create_as_expr(ID_INIT,NULL,(yyvsp[(1) - (5)].Id_l),BOOLEAN,(yyvsp[(5) - (5)].Expr));;}
     break;
 
   case 62:
 
 /* Line 1455 of yacc.c  */
-#line 236 "vb_lark.y"
+#line 237 "vb_lark.y"
     {(yyval.As_expr_str) = create_as_expr(ID_INIT,NULL,(yyvsp[(1) - (5)].Id_l),CHAR,(yyvsp[(5) - (5)].Expr));;}
     break;
 
   case 63:
 
 /* Line 1455 of yacc.c  */
-#line 237 "vb_lark.y"
+#line 238 "vb_lark.y"
     {(yyval.As_expr_str) = create_as_expr(ID_INIT,NULL,(yyvsp[(1) - (5)].Id_l),STRING,(yyvsp[(5) - (5)].Expr));;}
     break;
 
   case 64:
 
 /* Line 1455 of yacc.c  */
-#line 240 "vb_lark.y"
+#line 241 "vb_lark.y"
     {(yyval.Id_l) = create_id_list((yyvsp[(1) - (1)].Id));;}
     break;
 
   case 65:
 
 /* Line 1455 of yacc.c  */
-#line 241 "vb_lark.y"
+#line 242 "vb_lark.y"
     {(yyval.Id_l) = add_to_id_list((yyvsp[(1) - (3)].Id_l),(yyvsp[(3) - (3)].Id));;}
     break;
 
   case 66:
 
 /* Line 1455 of yacc.c  */
-#line 244 "vb_lark.y"
+#line 245 "vb_lark.y"
     {(yyval.Arr) = create_Array((yyvsp[(1) - (6)].Id),(yyvsp[(3) - (6)].i_const),INTEGER);;}
     break;
 
   case 67:
 
 /* Line 1455 of yacc.c  */
-#line 245 "vb_lark.y"
+#line 246 "vb_lark.y"
     {(yyval.Arr) = create_Array((yyvsp[(1) - (6)].Id),(yyvsp[(3) - (6)].i_const),BOOLEAN);;}
     break;
 
   case 68:
 
 /* Line 1455 of yacc.c  */
-#line 246 "vb_lark.y"
+#line 247 "vb_lark.y"
     {(yyval.Arr) = create_Array((yyvsp[(1) - (6)].Id),(yyvsp[(3) - (6)].i_const),CHAR);;}
     break;
 
   case 69:
 
 /* Line 1455 of yacc.c  */
-#line 247 "vb_lark.y"
+#line 248 "vb_lark.y"
     {(yyval.Arr) = create_Array((yyvsp[(1) - (6)].Id),(yyvsp[(3) - (6)].i_const),STRING);;}
     break;
 
   case 70:
 
 /* Line 1455 of yacc.c  */
-#line 250 "vb_lark.y"
+#line 251 "vb_lark.y"
     {(yyval.Expr_l) = create_Expr_list((yyvsp[(1) - (1)].Expr));;}
     break;
 
   case 71:
 
 /* Line 1455 of yacc.c  */
-#line 251 "vb_lark.y"
+#line 252 "vb_lark.y"
     {(yyval.Expr_l) = add_Expr_to_list((yyvsp[(1) - (3)].Expr_l),(yyvsp[(3) - (3)].Expr));;}
     break;
 
   case 72:
 
 /* Line 1455 of yacc.c  */
-#line 254 "vb_lark.y"
+#line 255 "vb_lark.y"
     {(yyval.For) = create_for_stmt((yyvsp[(2) - (10)].Id),(yyvsp[(4) - (10)].i_const),(yyvsp[(6) - (10)].i_const),(yyvsp[(8) - (10)].List));;}
     break;
 
   case 73:
 
 /* Line 1455 of yacc.c  */
-#line 255 "vb_lark.y"
+#line 256 "vb_lark.y"
     {(yyval.For) = create_for_with_step_stmt((yyvsp[(2) - (12)].Id),(yyvsp[(4) - (12)].i_const),(yyvsp[(6) - (12)].i_const),(yyvsp[(8) - (12)].i_const),(yyvsp[(10) - (12)].List));;}
     break;
 
   case 74:
 
 /* Line 1455 of yacc.c  */
-#line 256 "vb_lark.y"
+#line 257 "vb_lark.y"
     {(yyval.For) = create_for_with_decl_stmt((yyvsp[(2) - (12)].Id),INTEGER,(yyvsp[(6) - (12)].i_const),(yyvsp[(8) - (12)].i_const),(yyvsp[(10) - (12)].List));;}
     break;
 
   case 75:
 
 /* Line 1455 of yacc.c  */
-#line 257 "vb_lark.y"
+#line 258 "vb_lark.y"
     {(yyval.For) = create_for_with_decl_stmt((yyvsp[(2) - (12)].Id),BOOLEAN,(yyvsp[(6) - (12)].i_const),(yyvsp[(8) - (12)].i_const),(yyvsp[(10) - (12)].List));;}
     break;
 
   case 76:
 
 /* Line 1455 of yacc.c  */
-#line 258 "vb_lark.y"
+#line 259 "vb_lark.y"
     {(yyval.For) = create_for_with_decl_stmt((yyvsp[(2) - (12)].Id),CHAR,(yyvsp[(6) - (12)].i_const),(yyvsp[(8) - (12)].i_const),(yyvsp[(10) - (12)].List));;}
     break;
 
   case 77:
 
 /* Line 1455 of yacc.c  */
-#line 259 "vb_lark.y"
+#line 260 "vb_lark.y"
     {(yyval.For) = create_for_with_decl_with_step_stmt((yyvsp[(2) - (14)].Id),STRING,(yyvsp[(6) - (14)].i_const),(yyvsp[(8) - (14)].i_const),(yyvsp[(10) - (14)].i_const),(yyvsp[(12) - (14)].List));;}
     break;
 
   case 78:
 
 /* Line 1455 of yacc.c  */
-#line 260 "vb_lark.y"
+#line 261 "vb_lark.y"
     {(yyval.For) = create_for_with_decl_with_step_stmt((yyvsp[(2) - (14)].Id),STRING,(yyvsp[(6) - (14)].i_const),(yyvsp[(8) - (14)].i_const),(yyvsp[(10) - (14)].i_const),(yyvsp[(12) - (14)].List));;}
     break;
 
   case 79:
 
 /* Line 1455 of yacc.c  */
-#line 261 "vb_lark.y"
+#line 262 "vb_lark.y"
     {(yyval.For) = create_for_with_decl_with_step_stmt((yyvsp[(2) - (14)].Id),STRING,(yyvsp[(6) - (14)].i_const),(yyvsp[(8) - (14)].i_const),(yyvsp[(10) - (14)].i_const),(yyvsp[(12) - (14)].List));;}
     break;
 
   case 80:
 
 /* Line 1455 of yacc.c  */
-#line 264 "vb_lark.y"
+#line 265 "vb_lark.y"
     {(yyval.While) = create_while_stmt((yyvsp[(2) - (6)].Expr),(yyvsp[(4) - (6)].List));;}
     break;
 
   case 81:
 
 /* Line 1455 of yacc.c  */
-#line 267 "vb_lark.y"
+#line 268 "vb_lark.y"
     {(yyval.Do_loop) = create_do_loop_stmt(DO_WHILE,(yyvsp[(3) - (7)].Expr),(yyvsp[(5) - (7)].List));;}
     break;
 
   case 82:
 
 /* Line 1455 of yacc.c  */
-#line 268 "vb_lark.y"
+#line 269 "vb_lark.y"
     {(yyval.Do_loop) = create_do_loop_stmt(DO_UNTIL,(yyvsp[(3) - (7)].Expr),(yyvsp[(5) - (7)].List));;}
     break;
 
   case 83:
 
 /* Line 1455 of yacc.c  */
-#line 269 "vb_lark.y"
+#line 270 "vb_lark.y"
     {(yyval.Do_loop) = create_do_loop_stmt(LOOP_WHILE,(yyvsp[(6) - (7)].Expr),(yyvsp[(3) - (7)].List));;}
     break;
 
   case 84:
 
 /* Line 1455 of yacc.c  */
-#line 270 "vb_lark.y"
+#line 271 "vb_lark.y"
     {(yyval.Do_loop) = create_do_loop_stmt(LOOP_UNTIL,(yyvsp[(6) - (7)].Expr),(yyvsp[(3) - (7)].List));;}
     break;
 
   case 85:
 
 /* Line 1455 of yacc.c  */
-#line 273 "vb_lark.y"
+#line 274 "vb_lark.y"
     {(yyval.Enum) = create_enum_stmt((yyvsp[(2) - (6)].Id),(yyvsp[(4) - (6)].Enum_l));;}
     break;
 
   case 86:
 
 /* Line 1455 of yacc.c  */
-#line 276 "vb_lark.y"
+#line 277 "vb_lark.y"
     {(yyval.Enum_l) = create_enum_list((yyvsp[(1) - (2)].Enum_e));;}
     break;
 
   case 87:
 
 /* Line 1455 of yacc.c  */
-#line 277 "vb_lark.y"
+#line 278 "vb_lark.y"
     {(yyval.Enum_l) = add_to_enum_list((yyvsp[(1) - (3)].Enum_l),(yyvsp[(2) - (3)].Enum_e));;}
     break;
 
   case 88:
 
 /* Line 1455 of yacc.c  */
-#line 280 "vb_lark.y"
+#line 281 "vb_lark.y"
     {(yyval.Enum_e) = create_enum_expr((yyvsp[(1) - (1)].Id),-1);;}
     break;
 
   case 89:
 
 /* Line 1455 of yacc.c  */
-#line 281 "vb_lark.y"
+#line 282 "vb_lark.y"
     {(yyval.Enum_e) = create_enum_expr((yyvsp[(1) - (3)].Id),(yyvsp[(3) - (3)].i_const));;}
     break;
 
   case 90:
 
 /* Line 1455 of yacc.c  */
-#line 284 "vb_lark.y"
+#line 285 "vb_lark.y"
     {(yyval.Sub) = create_sub_stmt((yyvsp[(2) - (8)].Id),NULL,(yyvsp[(6) - (8)].List));;}
     break;
 
   case 91:
 
 /* Line 1455 of yacc.c  */
-#line 285 "vb_lark.y"
+#line 286 "vb_lark.y"
     {(yyval.Sub) = create_sub_stmt((yyvsp[(2) - (9)].Id),(yyvsp[(4) - (9)].Param_l),(yyvsp[(7) - (9)].List));;}
     break;
 
   case 92:
 
 /* Line 1455 of yacc.c  */
-#line 288 "vb_lark.y"
+#line 289 "vb_lark.y"
     {(yyval.Param_l) = create_param_list((yyvsp[(1) - (1)].Param)):;}
     break;
 
   case 93:
 
 /* Line 1455 of yacc.c  */
-#line 289 "vb_lark.y"
+#line 290 "vb_lark.y"
     {(yyval.Param_l) = add_to_param_list((yyvsp[(1) - (3)].Param_l),(yyvsp[(3) - (3)].Param)):;}
     break;
 
   case 94:
 
 /* Line 1455 of yacc.c  */
-#line 292 "vb_lark.y"
+#line 293 "vb_lark.y"
     {(yyval.Param) = create_param_stmt((yyvsp[(2) - (4)].Id),INTEGER):;}
     break;
 
   case 95:
 
 /* Line 1455 of yacc.c  */
-#line 293 "vb_lark.y"
+#line 294 "vb_lark.y"
     {(yyval.Param) = create_param_stmt((yyvsp[(2) - (4)].Id),BOOLEAN):;}
     break;
 
   case 96:
 
 /* Line 1455 of yacc.c  */
-#line 294 "vb_lark.y"
+#line 295 "vb_lark.y"
     {(yyval.Param) = create_param_stmt((yyvsp[(2) - (4)].Id),CHAR):;}
     break;
 
   case 97:
 
 /* Line 1455 of yacc.c  */
-#line 295 "vb_lark.y"
+#line 296 "vb_lark.y"
     {(yyval.Param) = create_param_stmt((yyvsp[(2) - (4)].Id),STRING):;}
     break;
 
   case 98:
 
 /* Line 1455 of yacc.c  */
-#line 298 "vb_lark.y"
+#line 299 "vb_lark.y"
     {(yyval.Func) = create_func_stmt((yyvsp[(2) - (13)].Id),NULL,INTEGER,(yyvsp[(8) - (13)].List),(yyvsp[(10) - (13)].Expr));;}
     break;
 
   case 99:
 
 /* Line 1455 of yacc.c  */
-#line 299 "vb_lark.y"
+#line 300 "vb_lark.y"
     {(yyval.Func) = create_func_stmt((yyvsp[(2) - (13)].Id),NULL,BOOLEAN,(yyvsp[(8) - (13)].List),(yyvsp[(10) - (13)].Expr));;}
     break;
 
   case 100:
 
 /* Line 1455 of yacc.c  */
-#line 300 "vb_lark.y"
+#line 301 "vb_lark.y"
     {(yyval.Func) = create_func_stmt((yyvsp[(2) - (13)].Id),NULL,CHAR,(yyvsp[(8) - (13)].List),(yyvsp[(10) - (13)].Expr));;}
     break;
 
   case 101:
 
 /* Line 1455 of yacc.c  */
-#line 301 "vb_lark.y"
+#line 302 "vb_lark.y"
     {(yyval.Func) = create_func_stmt((yyvsp[(2) - (13)].Id),NULL,STRING,(yyvsp[(8) - (13)].List),(yyvsp[(10) - (13)].Expr));;}
     break;
 
   case 102:
 
 /* Line 1455 of yacc.c  */
-#line 302 "vb_lark.y"
+#line 303 "vb_lark.y"
     {(yyval.Func) = create_func_stmt((yyvsp[(2) - (14)].Id),(yyvsp[(4) - (14)].Param_l),INTEGER,(yyvsp[(9) - (14)].List),(yyvsp[(11) - (14)].Expr));;}
     break;
 
   case 103:
 
 /* Line 1455 of yacc.c  */
-#line 303 "vb_lark.y"
+#line 304 "vb_lark.y"
     {(yyval.Func) = create_func_stmt((yyvsp[(2) - (14)].Id),(yyvsp[(4) - (14)].Param_l),BOOLEAN,(yyvsp[(9) - (14)].List),(yyvsp[(11) - (14)].Expr));;}
     break;
 
   case 104:
 
 /* Line 1455 of yacc.c  */
-#line 304 "vb_lark.y"
+#line 305 "vb_lark.y"
     {(yyval.Func) = create_func_stmt((yyvsp[(2) - (14)].Id),(yyvsp[(4) - (14)].Param_l),CHAR,(yyvsp[(9) - (14)].List),(yyvsp[(11) - (14)].Expr));;}
     break;
 
   case 105:
 
 /* Line 1455 of yacc.c  */
-#line 305 "vb_lark.y"
+#line 306 "vb_lark.y"
     {(yyval.Func) = create_func_stmt((yyvsp[(2) - (14)].Id),(yyvsp[(4) - (14)].Param_l),STRING,(yyvsp[(9) - (14)].List),(yyvsp[(11) - (14)].Expr));;}
     break;
 
   case 106:
 
 /* Line 1455 of yacc.c  */
-#line 308 "vb_lark.y"
+#line 309 "vb_lark.y"
     {(yyval.Try_catch) = create_Try_Catch((yyvsp[(3) - (10)].List),(yyvsp[(4) - (10)].Catch_l),(yyvsp[(7) - (10)].List));;}
     break;
 
   case 107:
 
 /* Line 1455 of yacc.c  */
-#line 311 "vb_lark.y"
+#line 312 "vb_lark.y"
     {(yyval.Catch_l) = create_Catch_stmt_list((yyvsp[(1) - (1)].Catch));;}
     break;
 
   case 108:
 
 /* Line 1455 of yacc.c  */
-#line 312 "vb_lark.y"
+#line 313 "vb_lark.y"
     {(yyval.Catch_l) = add_new_Catch_stmt((yyvsp[(1) - (2)].Catch_l),(yyvsp[(2) - (2)].Catch));;}
     break;
 
   case 109:
 
 /* Line 1455 of yacc.c  */
-#line 315 "vb_lark.y"
+#line 316 "vb_lark.y"
     {(yyval.Catch) = create_Catch_stmt((yyvsp[(2) - (6)].Id),(yyvsp[(6) - (6)].List));;}
     break;
 
   case 110:
 
 /* Line 1455 of yacc.c  */
-#line 318 "vb_lark.y"
+#line 319 "vb_lark.y"
     {(yyval.Throw) = create_Throw((yyvsp[(7) - (9)].s_const));;}
     break;
 
   case 111:
 
 /* Line 1455 of yacc.c  */
-#line 321 "vb_lark.y"
+#line 322 "vb_lark.y"
     {(yyval.console_print) = create_Print((yyvsp[(5) - (7)].s_const));;}
     break;
 
   case 112:
 
 /* Line 1455 of yacc.c  */
-#line 324 "vb_lark.y"
+#line 325 "vb_lark.y"
     {(yyval.console_println) = create_Println(yyvsp[(5) - (7)].s_const));;}
     break;
 
   case 113:
 
 /* Line 1455 of yacc.c  */
-#line 327 "vb_lark.y"
+#line 328 "vb_lark.y"
     {(yyval.console_read) = create_Read();;}
     break;
 
   case 114:
 
 /* Line 1455 of yacc.c  */
-#line 330 "vb_lark.y"
+#line 331 "vb_lark.y"
     {(yyval.console_readln) = create_Readln();;}
     break;
 
 
 
 /* Line 1455 of yacc.c  */
-#line 2846 "vb_lark.tab.c"
+#line 2847 "vb_lark.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -3054,11 +3056,22 @@ yyreturn:
 
 
 /* Line 1675 of yacc.c  */
-#line 332 "vb_lark.y"
+#line 333 "vb_lark.y"
 
 
 int main (int argc, char* argv[])
 {
+	file = fopen("result.txt", "wt");
+	yyin = fopen(argv[1], "r");
+	
+	//yylex();	// ÇÀÌÅÍÅÍÅÍÎ
+	
+	yyparse();
+	
+	print_tree();		// Âûגמה הונוגא
+	
+	fclose(file);
+	getchar();
 	return 0;
 }
 

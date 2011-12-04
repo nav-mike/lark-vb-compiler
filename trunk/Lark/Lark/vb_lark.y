@@ -1,6 +1,7 @@
 %{
 	#include "tree_nodes.h"
 	#include <stdio.h>
+	#include "dot.h"
 	
 	extern int yylex(void);
 	
@@ -333,5 +334,16 @@
 
 int main (int argc, char* argv[])
 {
+	file = fopen("result.txt", "wt");
+	yyin = fopen(argv[1], "r");
+	
+	//yylex();	// ÇÀÌÅÍÅÍÅÍÎ
+	
+	yyparse();
+	
+	print_tree();		// Âûגמה הונוגא
+	
+	fclose(file);
+	getchar();
 	return 0;
 }
