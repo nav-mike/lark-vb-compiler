@@ -1288,7 +1288,7 @@ struct VB_Sub_stmt * create_sub_stmt(char * id, struct VB_Param_list * params, s
 {
 	struct VB_Sub_stmt* result = (struct VB_Sub_stmt*)malloc(sizeof(struct VB_Sub_stmt));
 
-	result->id = id;
+	strcpy(result->id,id);
 	result->next = NULL;
 	result->param_list = params;
 	result->stmt_list = body;
@@ -1334,7 +1334,7 @@ struct VB_Param_stmt* create_param_stmt(char* id, enum VB_Id_type type)
 {
 	struct VB_Param_stmt* result = (struct VB_Param_stmt*)malloc(sizeof(struct VB_Param_stmt));
 
-	result->id = id;
+	strcpy(result->id,id);
 	result->id_type = type;
 	result->next = NULL;
 
@@ -1358,7 +1358,7 @@ struct VB_For_stmt * create_for_stmt(char* id, int start, int end, struct VB_Stm
 	struct VB_For_stmt* result = (struct VB_For_stmt*)malloc(sizeof(struct VB_For_stmt));
 
 	result->type = SIMPLE;
-	result->id = id;
+	strcpy(result->id,id);
 	result->from_val = start;
 	result->to_val = end;
 	result->step_val = 1;
@@ -1386,7 +1386,7 @@ struct VB_For_stmt * create_for_with_step_stmt(char* id, int start, int end, int
 	struct VB_For_stmt* result = (struct VB_For_stmt*)malloc(sizeof(struct VB_For_stmt));
 
 	result->type = WITH_STEP;
-	result->id = id;
+	strcpy(result->id,id);
 	result->from_val = start;
 	result->to_val = end;
 	result->step_val = step;
@@ -1415,7 +1415,7 @@ struct VB_For_stmt * create_for_with_decl_stmt(char* id, enum VB_Id_type type, i
 
 	result->type = WITH_DECL;
 	result->new_id = (struct VB_Expr*)malloc(sizeof(struct VB_Expr));
-	result->new_id->expr_string = id;
+	strcpy(result->new_id->expr_string,id);
 	result->new_id->type = type;
 	result->from_val = start;
 	result->to_val = end;
@@ -1446,7 +1446,7 @@ struct VB_For_stmt * create_for_with_decl_with_step_stmt(char* id, enum VB_Id_ty
 
 	result->type = WITH_DECL_AND_STEP;
 	result->new_id = (struct VB_Expr*)malloc(sizeof(struct VB_Expr));
-	result->new_id->expr_string = id;
+	strcpy(result->new_id->expr_string,id);
 	result->new_id->type = type;
 	result->from_val = start;
 	result->to_val = end;
@@ -1516,7 +1516,7 @@ struct VB_Enum_stmt * create_enum_stmt(char* id, struct VB_Enum_expr_list* list)
 {
 	struct VB_Enum_stmt* result = (struct VB_Enum_stmt*)malloc(sizeof(struct VB_Enum_stmt));
 
-	result->id = id;
+	strcpy(result->id,id);
 	result->list = list;
 	result->next = NULL;
 
@@ -1560,7 +1560,7 @@ struct VB_Enum_expr * create_enum_expr(char* id, int number)
 {
 	struct VB_Enum_expr* result = (struct VB_Enum_expr*)malloc(sizeof(struct VB_Enum_expr));
 
-	result->id = id;
+	strcpy(result->id,id);
 	result->next = NULL;
 
 	if (number >= 0)
@@ -1572,7 +1572,17 @@ struct VB_Enum_expr * create_enum_expr(char* id, int number)
     return result;
 }
 
-struct VB_For_stmt * create_func_stmt()
+struct VB_Func_stmt * create_func_stmt(char* id, struct VB_Param_list* params, enum VB_Id_type type,
+									   struct VB_Stmt_list* body, struct VB_Expr* ret_val)
 {
-    return NULL;
+	struct VB_Func_stmt* result = (struct VB_Func_stmt*)malloc(sizeof(struct VB_Func_stmt));
+
+	strcpy(result->id,id);
+	result->id_type = type;
+	result->param_list = params;
+	result->stmt_list = body;
+	result->expr = ret_val;
+	result->next = NULL;
+
+    return result;
 }
