@@ -1248,15 +1248,15 @@ int add_node_stmt (struct VB_Stmt* node)
 	case(6):
 		error = add_node_do_loop_stmt(node->do_loop_stmt);
 		break;
-	case(7):
-		error = add_node_enum_stmt(node->enum_stmt);
-		break;
-	case(8):
-		error = add_node_sub_stmt(node->sub_stmt);
-		break;
-	case(9):
-		error = add_node_func_stmt(node->func_stmt);
-		break;
+	//case(7):
+	//	error = add_node_enum_stmt(node->enum_stmt);
+	//	break;
+	//case(8):
+	//	error = add_node_sub_stmt(node->sub_stmt);
+	//	break;
+	//case(9):
+	//	error = add_node_func_stmt(node->func_stmt);
+	//	break;
 	case(10):
 		error = add_node_try_catch_stmt(node->try_catch_stmt);
 		break;

@@ -14,6 +14,7 @@ struct VB_Module_stmt
 {
 	char* id;                       //!< »дентификатор модул€
 	struct VB_Stmt_list* stmt_list; //!< —писок операций модул€
+	struct VB_Decl_stmt_list* decl_list;
 };
 
 struct VB_Decl_stmt_list
@@ -24,7 +25,11 @@ struct VB_Decl_stmt_list
 
 struct VB_Decl_stmt
 {
-	struct VB_Decl_stmt* next;
+	enum VB_Stmt_type	      type;	          //!< “ип операции.
+	struct VB_Enum_stmt*      enum_stmt;      //!< ”казатель на содержащеес€ в операции перечисление.
+	struct VB_Sub_stmt*       sub_stmt;       //!< ”казатель на содержащуюс€ в операции процедуру.
+	struct VB_Func_stmt*      func_stmt;      //!< ”казатель на содержащуюс€ в операции функцию.
+	struct VB_Decl_stmt*	  next;
 };
 
 /*! \struct VB_Stmt_list
@@ -48,9 +53,6 @@ struct VB_Stmt
 	struct VB_For_stmt*       for_stmt;       //!< ”казатель на содержащийс€ в операции цикл.
 	struct VB_While_stmt*     while_stmt;     //!< ”казатель на содержащийс€ в операции цикл.
 	struct VB_Do_loop_stmt*   do_loop_stmt;   //!< ”казатель на содержащийс€ в операции цикл.
-	struct VB_Enum_stmt*      enum_stmt;      //!< ”казатель на содержащеес€ в операции перечисление.
-	struct VB_Sub_stmt*       sub_stmt;       //!< ”казатель на содержащуюс€ в операции процедуру.
-	struct VB_Func_stmt*      func_stmt;      //!< ”казатель на содержащуюс€ в операции функцию.
 	struct VB_Try_catch_stmt* try_catch_stmt; //!< ”казатель на содержащеес€ в операции отлов и обработка исключений.
 	struct VB_Throw_stmt*     throw_stmt;     //!< ”казатель на содержащийс€ в операции выброс исключени€.
 	struct VB_Print_stmt*     print_stmt;     //!< ”казатель на содержащуюс€ в операции печать символа.
@@ -73,9 +75,9 @@ enum VB_Stmt_type
 	FOR_E,
 	WHILE_E,
 	DO_LOOP_E,
-	ENUM_E,
-	SUB_E,
-	FUNC_E,
+	ENUM_D,
+	SUB_D,
+	FUNC_D,
 	TRY_CATCH_E,
 	THROW_E,
 	PRINT_E,
@@ -492,6 +494,7 @@ struct VB_Module_stmt* create_VB_Module_stmt (char* id, struct VB_Stmt_list* lis
 	if (list == NULL) return module;
 
 	module = (struct VB_Module_stmt*)malloc(sizeof(struct VB_Module_stmt));
+	module->decl_list = NULL;
 
 	if (id == NULL)
 	{
@@ -502,17 +505,46 @@ struct VB_Module_stmt* create_VB_Module_stmt (char* id, struct VB_Stmt_list* lis
 
 	module->stmt_list = list;
 
+	if (prev_decl != NULL)
+		module->decl_list = prev_decl;
+
+	if (post_decl != NULL)
+	{
+		module->decl_list->last->next = post_decl->first;
+		module->decl_list->last = post_decl->last;
+	}
+
 	return module;
 }
 
 struct VB_Decl_stmt_list* create_VB_Decl_stmt_list(struct VB_Decl_stmt* decl_stmt)
 {
-	return NULL;
+	struct VB_Decl_stmt_list* list = NULL;
+
+	if (decl_stmt == NULL) return list;
+
+	list = (struct VB_Decl_stmt_list*)malloc(sizeof(struct VB_Decl_stmt_list));
+
+	list->first = decl_stmt;
+	list->last = decl_stmt;
+
+	return list;
 }
 
 struct VB_Decl_stmt_list* edit_VB_Decl_stmt_list(struct VB_Decl_stmt_list* decl_list, struct VB_Decl_stmt* decl_stmt)
 {
-	return NULL;
+	if (decl_stmt != NULL)
+	{
+		if (decl_list != NULL)
+		{
+			decl_list->last->next = decl_stmt;
+			decl_list->last = decl_stmt;
+		}
+		else
+			decl_list = create_VB_Decl_stmt_list(decl_stmt);
+	}
+
+	return decl_list;
 }
 
 /* »нициализаци€ списка операций:
@@ -597,9 +629,9 @@ struct VB_Stmt* fill_stmt(enum VB_Stmt_type type, void* data)
 		stmt->expr			 = NULL;
 		stmt->dim_stmt		 = NULL;
 		stmt->do_loop_stmt	 = NULL;
-		stmt->enum_stmt		 = NULL;
+//		stmt->enum_stmt		 = NULL;
 		stmt->for_stmt		 = NULL;
-		stmt->func_stmt		 = NULL;
+//		stmt->func_stmt		 = NULL;
 		stmt->if_stmt		 = NULL;
 		stmt->next			 = NULL;
 		stmt->print_stmt	 = NULL;
@@ -607,7 +639,7 @@ struct VB_Stmt* fill_stmt(enum VB_Stmt_type type, void* data)
 		stmt->read_stmt		 = NULL;
 		stmt->readkey_stmt	 = NULL;
 		stmt->readln_stmt	 = NULL;
-		stmt->sub_stmt		 = NULL;
+//		stmt->sub_stmt		 = NULL;
 		stmt->throw_stmt	 = NULL;
 		stmt->try_catch_stmt = NULL;
 		stmt->while_stmt	 = NULL;
@@ -636,15 +668,15 @@ struct VB_Stmt* fill_stmt(enum VB_Stmt_type type, void* data)
 		case(6):
 			stmt->do_loop_stmt = (struct VB_Do_loop_stmt*)data;
 			break;
-		case(7):
-			stmt->enum_stmt = (struct VB_Enum_stmt*)data;
-			break;
-		case(8):
-			stmt->sub_stmt = (struct VB_Sub_stmt*)data;
-			break;
-		case(9):
-			stmt->func_stmt = (struct VB_Func_stmt*)data;
-			break;
+		//case(7):
+		//	stmt->enum_stmt = (struct VB_Enum_stmt*)data;
+		//	break;
+		//case(8):
+		//	stmt->sub_stmt = (struct VB_Sub_stmt*)data;
+		//	break;
+		//case(9):
+		//	stmt->func_stmt = (struct VB_Func_stmt*)data;
+		//	break;
 		case(10):
 			stmt->try_catch_stmt = (struct VB_Try_catch_stmt*)data;
 			break;
@@ -663,6 +695,37 @@ struct VB_Stmt* fill_stmt(enum VB_Stmt_type type, void* data)
 		case(15):
 			stmt->readln_stmt = (struct VB_Readln_stmt*)data;
 			break;
+		}
+	}
+	return stmt;
+}
+
+struct VB_Decl_stmt* fill_decl_stmt(enum VB_Stmt_type type, void* data)
+{
+	struct VB_Decl_stmt* stmt = NULL;
+
+	if (data != NULL)
+	{
+		stmt = (struct VB_Decl_stmt*)malloc(sizeof(struct VB_Decl_stmt));
+
+		stmt->enum_stmt = NULL;
+		stmt->func_stmt = NULL;
+		stmt->next = NULL;
+		stmt->sub_stmt = NULL;
+
+		stmt->type = type;
+
+		switch(type)
+		{
+			case(7):
+				stmt->enum_stmt = (struct VB_Enum_stmt*)data;
+				break;
+			case(8):
+				stmt->sub_stmt = (struct VB_Sub_stmt*)data;
+				break;
+			case(9):
+				stmt->func_stmt = (struct VB_Func_stmt*)data;
+				break;
 		}
 	}
 	return stmt;
@@ -735,8 +798,7 @@ struct VB_Stmt* create_VB_Stmt_Do_Loop (struct VB_Do_loop_stmt* do_loop_stmt)
 */
 struct VB_Decl_stmt* create_VB_Decl_Enum (struct VB_Enum_stmt* enum_stmt)
 {
-	//return fill_stmt(7,(void*)enum_stmt);
-	return NULL;
+	return fill_decl_stmt(7,(void*)enum_stmt);
 }
 
 /*!
@@ -746,8 +808,7 @@ struct VB_Decl_stmt* create_VB_Decl_Enum (struct VB_Enum_stmt* enum_stmt)
 */
 struct VB_Decl_stmt* create_VB_Decl_Sub (struct VB_Sub_stmt* sub_stmt)
 {
-	//return fill_stmt(8,(void*)sub_stmt);
-	return NULL;
+	return fill_decl_stmt(8,(void*)sub_stmt);
 }
 
 /*!
@@ -757,8 +818,7 @@ struct VB_Decl_stmt* create_VB_Decl_Sub (struct VB_Sub_stmt* sub_stmt)
 */
 struct VB_Decl_stmt* create_VB_Decl_Func (struct VB_Func_stmt* func_stmt)
 {
-	//return fill_stmt(9,(void*)func_stmt);
-	return NULL;
+	return fill_decl_stmt(9,(void*)func_stmt);
 }
 
 /*!
