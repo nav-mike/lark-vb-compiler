@@ -34,6 +34,9 @@ typedef union
 	struct VB_Catch_stmt*		Catch;
 	struct VB_Throw_stmt*		Throw;
 	
+	struct VB_Decl_stmt_list*	Decl_l;
+	struct VB_Decl_stmt*		Decl;
+	
 	enum VB_Id_type				Id_type;
 
 	struct VB_Print_stmt*			console_print;
@@ -99,11 +102,12 @@ typedef union
 #define	FINALLY	313
 #define	TRUE	314
 #define	FALSE	315
-#define	MORE_OR_EQUAL	316
-#define	LESS_OR_EQUAL	317
-#define	NONEQUAL	318
-#define	EQUAL	319
-#define	UMINUS	320
+#define	SUB_MAIN_ENDL	316
+#define	MORE_OR_EQUAL	317
+#define	LESS_OR_EQUAL	318
+#define	NONEQUAL	319
+#define	EQUAL	320
+#define	UMINUS	321
 
 
 extern YYSTYPE yylval;

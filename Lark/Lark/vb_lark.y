@@ -51,6 +51,9 @@
 	struct VB_Catch_stmt*		Catch;
 	struct VB_Throw_stmt*		Throw;
 	
+	struct VB_Decl_stmt_list*	Decl_l;
+	struct VB_Decl_stmt*		Decl;
+	
 	enum VB_Id_type				Id_type;
 
 	struct VB_Print_stmt*			console_print;
@@ -86,6 +89,10 @@
 %type <Catch_l>		catch_stmt_list
 %type <Catch>		catch_stmt
 %type <Throw>		throw_stmt
+
+%type <Decl_l>		decl_stmt_listE
+%type <Decl_l>		decl_stmt_list
+%type <Decl>		decl_stmt
 
 %type <console_print>	console_print_stmt
 %type <console_println> console_println_stmt
@@ -152,6 +159,7 @@
 %token FINALLY
 %token TRUE
 %token FALSE
+%token SUB_MAIN_ENDL
 
 %right '='
 %left '>' '<' MORE_OR_EQUAL LESS_OR_EQUAL NONEQUAL EQUAL
@@ -163,7 +171,7 @@
 
 %%
 
-	module_stmt: MODULE ID ENDL stmt_list END_MODULE ENDL {$$ = root = create_VB_Module_stmt($2,$4);}
+	module_stmt: MODULE ID ENDL decl_stmt_list SUB_MAIN_ENDL stmt_list END_SUB ENDL decl_stmt_list END_MODULE {$$ = root = create_VB_Module_stmt($2,$6,$4,$9);}
 			   ;
 		
 	stmt_list: stmt					{$$ = create_VB_Stmt_list($1);}
@@ -176,9 +184,6 @@
 		    | for_stmt				{$$ = create_VB_Stmt_For($1);}
 		    | while_stmt			{$$ = create_VB_Stmt_While($1);}
 		    | do_loop_stmt			{$$ = create_VB_Stmt_Do_Loop($1);}
-		    | enum_stmt				{$$ = create_VB_Stmt_Enum($1);}
-		    | sub_stmt				{$$ = create_VB_Stmt_Sub($1);}
-		    | func_stmt				{$$ = create_VB_Stmt_Func($1);}
 		    | try_catch_stmt		{$$ = create_VB_Stmt_Try_Catch($1);}
 		    | throw_stmt			{$$ = create_VB_Stmt_Throw($1);}
 		    | console_print_stmt	{$$ = create_VB_Stmt_Print($1);}
@@ -186,7 +191,20 @@
 		    | console_read_stmt		{$$ = create_VB_Stmt_Read($1);}
 		    | console_readln_stmt	{$$ = create_VB_Stmt_Readln($1);}
 		    ;
-				
+		  
+	decl_stmt_list: 
+				  | decl_stmt_listE
+				  ;
+				  	    
+	decl_stmt_listE: decl_stmt					{$$ = create_VB_Decl_stmt_list($1);}
+				   | decl_stmt_listE decl_stmt	{$$ = edit_VB_Decl_stmt_list($1,$2);}
+				   ;
+				  
+			decl_stmt: enum_stmt				{$$ = create_VB_Decl_Enum($1);}
+					 | sub_stmt					{$$ = create_VB_Decl_Sub($1);}
+					 | func_stmt				{$$ = create_VB_Decl_Func($1);}
+					 ;
+
 	expr: ID						{$$ = create_id_expr($1);}
 		| ID'('expr_list')'			{$$ = create_brackets_actions($1,$3);}
 		| INT_CONST					{$$ = create_int_boolean_char_const_expr(3,$1);}
