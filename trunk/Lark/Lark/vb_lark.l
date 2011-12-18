@@ -30,7 +30,7 @@ LETTER [A-Za-z]
 						   exit(1);
 						 }
 
-\n                       {
+\n+                      {
                           //fprintf(file, "\nEnd line has found\n");
 						   return ENDL;
 						 }
@@ -42,7 +42,7 @@ Dim                      {
 						 
 (Sub[[:space:]]Main\(\)) {
                           //fprintf(file,"\nKeyword \"Dim\" has found\n");
-						   return SUB_MAIN_ENDL;
+						   return SUB_MAIN;
 						 }
 						 
 As                       {
