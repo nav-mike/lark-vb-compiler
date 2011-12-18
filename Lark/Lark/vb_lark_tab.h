@@ -102,7 +102,7 @@ typedef union
 #define	FINALLY	313
 #define	TRUE	314
 #define	FALSE	315
-#define	SUB_MAIN_ENDL	316
+#define	SUB_MAIN	316
 #define	MORE_OR_EQUAL	317
 #define	LESS_OR_EQUAL	318
 #define	NONEQUAL	319

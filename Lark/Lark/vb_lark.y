@@ -160,7 +160,7 @@
 %token FINALLY
 %token TRUE
 %token FALSE
-%token SUB_MAIN_ENDL
+%token SUB_MAIN
 
 %right '='
 %left '>' '<' MORE_OR_EQUAL LESS_OR_EQUAL NONEQUAL EQUAL
@@ -172,10 +172,10 @@
 
 %%
 
-	module_stmt: MODULE ID ENDL decl_stmt_list SUB_MAIN_ENDL stmt_list END_SUB decl_stmt_list END_MODULE {$$ = root = create_VB_Module_stmt($2,$6,$4,$8);}
+	module_stmt: MODULE ID ENDL decl_stmt_list SUB_MAIN ENDL stmt_list END_SUB ENDL decl_stmt_list END_MODULE {$$ = root = create_VB_Module_stmt($2,$7,$4,$10);}
 			   ;
-		
-	stmt_list: ENDL					{$$ = create_VB_Stmt_list(0);}
+			   		
+	stmt_list:						{$$ = create_VB_Stmt_list(0);}
 			 | stmt_listE
 		     ;
 		     	
@@ -198,7 +198,6 @@
 		    ;
 		  
 	decl_stmt_list:								{$$ = create_VB_Decl_stmt_list(0);}
-				  | ENDL						{$$ = create_VB_Decl_stmt_list(0);}
 				  | decl_stmt_listE
 				  ;
 				  	    
