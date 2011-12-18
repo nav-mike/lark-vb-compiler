@@ -19,9 +19,12 @@ int add_node_readln_stmt (struct VB_Readln_stmt* node);
 int add_node_read_stmt (struct VB_Read_stmt* node);
 
 
-void print_tree()
+int print_tree()
 {
-	root;
+	open_dot_file();
+	add_node_stmt_module(root);
+	close_dot_file();
+	return 0;
 }
 
 
@@ -34,70 +37,70 @@ char* VB_Expr_type_to_string (enum VB_Expr_type type)
 {
 	switch (type)
 	{
-	case(ID):
+	case(0):
 		return "ID";
 		break;
-	case(EXPR_FUNC):
+	case(1):
 		return "EXPR_FUNC";
 		break;
-	case(CHAR_CONST):
+	case(2):
 		return "CHAR_CONST";
 		break;
-	case(INT_CONST):
+	case(3):
 		return "INT_CONST";
 		break;
-	case(STRING_CONST):
+	case(4):
 		return "STRING_CONST";
 		break;
-	case(BOOLEAN_CONST):
+	case(5):
 		return "BOOLEAN_CONST";
 		break;
-	case(ASSIGN):
+	case(6):
 		return "ASSIGN";
 		break;
-	case(PLUS):
+	case(7):
 		return "PLUS";
 		break;
-	case(MINUS):
+	case(8):
 		return "MINUS";
 		break;
-	case(MUL):
+	case(9):
 		return "MUL";
 		break;
-	case(INT_DIV):
+	case(10):
 		return "INT_DIV";
 		break;
-	case(DIV):
+	case(11):
 		return "DIV";
 		break;
-	case(POWER):
+	case(12):
 		return "POWER";
 		break;
-	case(MORE):
+	case(13):
 		return "MORE";
 		break;
-	case(LESS):
+	case(14):
 		return "LESS";
 		break;
-	case(MORE_OR_EQUAL):
+	case(15):
 		return "MORE_OR_EQUAL";
 		break;
-	case(LESS_OR_EQUAL):
+	case(16):
 		return "LESS_OR_EQUAL";
 		break;
-	case(NONEQUAL):
+	case(17):
 		return "NONEQUAL";
 		break;
-	case(EQUAL):
+	case(18):
 		return "EQUAL";
 		break;
-	case(UMINUS):
+	case(19):
 		return "UMINUS";
 		break;
-	case(UPLUS):
+	case(20):
 		return "UPLUS";
 		break;
-	case(GET_ITEM):
+	case(21):
 		return "GET_ITEM";
 		break;
 	}
@@ -262,52 +265,52 @@ char* VB_Stmt_type_to_string (enum VB_Stmt_type type)
 	case(0):
 		return "ENDL";
 		break;
-	case(STMT_EXPR):
+	case(1):
 		return "EXPR";
 		break;
-	case(IF):
+	case(2):
 		return "IF";
 		break;
-	case(DIM):
+	case(3):
 		return "DIM";
 		break;
-	case(FOR):
+	case(4):
 		return "FOR";
 		break;
-	case(WHILE):
+	case(5):
 		return "WHILE";
 		break;
-	case(DO_LOOP):
+	case(6):
 		return "DO_LOOP";
 		break;
-	case(ENUM):
+	case(7):
 		return "ENUM";
 		break;
-	case(SUB):
+	case(8):
 		return "SUB";
 		break;
-	case(FUNC):
+	case(9):
 		return "FUNC";
 		break;
-	case(TRY_CATCH):
+	case(10):
 		return "TRY_CATCH";
 		break;
-	case(THROW):
+	case(11):
 		return "THROW";
 		break;
-	case(PRINT):
+	case(12):
 		return "PRINT";
 		break;
-	case(PRINTLN):
+	case(13):
 		return "PRINTLN";
 		break;
-	case(READ):
+	case(14):
 		return "READ";
 		break;
-	case(READLN):
+	case(15):
 		return "READLN";
 		break;
-	case(READKEY):
+	case(16):
 		return "READKEY";
 		break;
 	}
@@ -324,16 +327,16 @@ char* VB_End_if_stmt_type_to_string (enum VB_End_if_stmt_type type)
 {
 	switch(type)
 	{
-	case(ENDIF):
+	case(0):
 		return "ENDIF";
 		break;
-	case(ELSE):
+	case(1):
 		return "ELSE";
 		break;
-	case(ELSE_IF_THEN):
+	case(2):
 		return "ELSE_IF_THEN";
 		break;
-	case(ELSE_IF_ENDL):
+	case(3):
 		return "ELSE_IF_ENDL";
 		break;
 	}
@@ -399,16 +402,16 @@ char* VB_Id_type_to_string (enum VB_Id_type type)
 {
 	switch(type)
 	{
-	case(INTEGER):
+	case(0):
 		return "INTEGER";
 		break;
-	case(BOOLEAN):
+	case(1):
 		return "BOOLEAN";
 		break;
-	case(CHAR):
+	case(2):
 		return "CHAR";
 		break;
-	case(STRING):
+	case(3):
 		return "STRING";
 		break;
 	}
@@ -849,7 +852,7 @@ int add_node_enum_expr_list (struct VB_Enum_expr_list* node)
 	error = fprintf(file,"\n\t\"node%d\" [", number);
 	if (error == -1) return 1;
 
-	error = fprintf(file,"\n\t\tlabel = \"<f0> %s | <f1> %d \"",
+	error = fprintf(file,"\n\t\tlabel = \"<f0> %s | <f1> %s \"",
 		"ENUM_EXPR_LIST", "");
 	if (error == -1) return 1;
 
@@ -906,7 +909,7 @@ int add_node_enum_stmt (struct VB_Enum_stmt* node)
 	error = fprintf(file,"\n\t\"node%d\" [", number);
 	if (error == -1) return 1;
 
-	error = fprintf(file,"\n\t\tlabel = \"<f0> %s | <f1> %d \"",
+	error = fprintf(file,"\n\t\tlabel = \"<f0> %s | <f1> %s \"",
 		node->id, "ENUM_STMT");
 	if (error == -1) return 1;
 
@@ -1054,17 +1057,17 @@ int add_node_for_stmt (struct VB_For_stmt* node)
 	error = fprintf(file,"\n\t\tshape = \"record\"\n\t];");
 	if (error == -1) return 1;
 
-	if (node->id != NULL)
-	{
-		Number++;
-		error = fprintf(file, "\n\t\"node%d\":f0 -> \"node%d\":f0;",
-		number, Number);
-		if (error == -1) return 1;
+	//if (node->id != NULL) !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	//{
+	//	Number++;
+	//	error = fprintf(file, "\n\t\"node%d\":f0 -> \"node%d\":f0;",
+	//	number, Number);
+	//	if (error == -1) return 1;
 
-		fclose(file);
-		error = add_node_expr(node->id);
-		if (error) return 1;
-	}
+	//	fclose(file);
+	//	error = add_node_expr(node->id);
+	//	if (error) return 1;
+	//}
 
 	if (node->stmt_list != NULL)
 	{
@@ -1227,49 +1230,49 @@ int add_node_stmt (struct VB_Stmt* node)
 	fclose(file);
 	switch (node->type)
 	{
-	case(STMT_EXPR):
+	case(1):
 		error = add_node_expr(node->expr);
 		break;
-	case(IF):
+	case(2):
 		error = add_node_if_stmt(node->if_stmt);
 		break;
-	case(DIM):
+	case(3):
 		error = add_node_dim_stmt(node->dim_stmt);
 		break;
-	case(FOR):
+	case(4):
 		error = add_node_for_stmt(node->for_stmt);
 		break;
-	case(WHILE):
+	case(5):
 		error = add_node_while_stmt(node->while_stmt);
 		break;
-	case(DO_LOOP):
+	case(6):
 		error = add_node_do_loop_stmt(node->do_loop_stmt);
 		break;
-	case(ENUM):
+	case(7):
 		error = add_node_enum_stmt(node->enum_stmt);
 		break;
-	case(SUB):
+	case(8):
 		error = add_node_sub_stmt(node->sub_stmt);
 		break;
-	case(FUNC):
+	case(9):
 		error = add_node_func_stmt(node->func_stmt);
 		break;
-	case(TRY_CATCH):
+	case(10):
 		error = add_node_try_catch_stmt(node->try_catch_stmt);
 		break;
-	case(THROW):
+	case(11):
 		error = add_node_throw_stmt(node->throw_stmt);
 		break;
-	case(PRINT):
+	case(12):
 		error = add_node_print_stmt(node->print_stmt);
 		break;
-	case(PRINTLN):
+	case(13):
 		error = add_node_println_stmt(node->println_stmt);
 		break;
-	case(READ):
+	case(14):
 		error = add_node_read_stmt(node->read_stmt);
 		break;
-	case(READLN):
+	case(15):
 		error = add_node_readln_stmt(node->readln_stmt);
 		break;
 	}
@@ -1644,7 +1647,7 @@ int add_node_print_stmt (struct VB_Print_stmt* node)
 	if (error == -1) return 1;
 	Number++;
 
-	error = fprintf(file,"\n\t\tlabel = \"<f0> %d | <f1> %s\"",
+	error = fprintf(file,"\n\t\tlabel = \"<f0> %s | <f1> %s\"",
 		node->text, "PRINT");
 	if (error == -1) return 1;
 
@@ -1672,7 +1675,7 @@ int add_node_println_stmt (struct VB_Println_stmt* node)
 	if (error == -1) return 1;
 	Number++;
 
-	error = fprintf(file,"\n\t\tlabel = \"<f0> %d | <f1> %s\"",
+	error = fprintf(file,"\n\t\tlabel = \"<f0> %s | <f1> %s\"",
 		node->text, "PRINTLN");
 	if (error == -1) return 1;
 
@@ -1700,7 +1703,7 @@ int add_node_read_stmt (struct VB_Read_stmt* node)
 	if (error == -1) return 1;
 	Number++;
 
-	error = fprintf(file,"\n\t\tlabel = \"<f0> %d | <f1> %s\"",
+	error = fprintf(file,"\n\t\tlabel = \"<f0> %s | <f1> %s\"",
 		"", "READ");
 	if (error == -1) return 1;
 
@@ -1728,7 +1731,7 @@ int add_node_readln_stmt (struct VB_Readln_stmt* node)
 	if (error == -1) return 1;
 	Number++;
 
-	error = fprintf(file,"\n\t\tlabel = \"<f0> %d | <f1> %s\"",
+	error = fprintf(file,"\n\t\tlabel = \"<f0> %s | <f1> %s\"",
 		"", "READLN");
 	if (error == -1) return 1;
 

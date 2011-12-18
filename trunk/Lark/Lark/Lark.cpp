@@ -5,7 +5,6 @@
 // На предмете: "Теория языков программирования"
 
 #include "stdafx.h"
-#include "dot.h"
 //
 //
 //int _tmain(int argc, _TCHAR* argv[])

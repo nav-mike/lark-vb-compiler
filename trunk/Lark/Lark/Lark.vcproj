@@ -201,7 +201,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\vb_lark.tab.c"
+				RelativePath=".\vb_lark_tab.c"
 				>
 			</File>
 		</Filter>
@@ -231,7 +231,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\vb_lark.tab.h"
+				RelativePath=".\vb_lark_tab.h"
 				>
 			</File>
 			<File
@@ -247,6 +247,14 @@
 		</Filter>
 		<File
 			RelativePath=".\ReadMe.txt"
+			>
+		</File>
+		<File
+			RelativePath=".\vb_lark.l"
+			>
+		</File>
+		<File
+			RelativePath=".\vb_lark.y"
 			>
 		</File>
 	</Files>
