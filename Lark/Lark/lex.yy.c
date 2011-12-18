@@ -8,8 +8,9 @@
 #define YY_FLEX_MAJOR_VERSION 2
 #define YY_FLEX_MINOR_VERSION 5
 
-#include <stdio.h>
 #include "stdafx.h"
+#include <stdio.h>
+
 
 /* cfront 1.2 defines "c_plusplus" instead of "__cplusplus" */
 #ifdef c_plusplus
@@ -284,41 +285,38 @@ static void yy_fatal_error YY_PROTO(( yyconst char msg[] ));
 	*yy_cp = '\0'; \
 	yy_c_buf_p = yy_cp;
 
-#define YY_NUM_RULES 96
-#define YY_END_OF_BUFFER 97
-static yyconst short int yy_accept[283] =
+#define YY_NUM_RULES 88
+#define YY_END_OF_BUFFER 89
+static yyconst short int yy_accept[261] =
     {   0,
-        0,    0,   82,   82,    0,    0,   97,   96,    2,   83,
-       96,   80,   73,   74,   60,   58,   77,   59,   78,   62,
-       93,   79,   70,   57,   69,   92,   92,   92,   92,   92,
-       92,   92,   92,   92,   92,   92,   92,   92,   92,   92,
-       92,   61,   63,   92,   75,   76,    1,   82,   81,   84,
-       85,   88,   84,    0,    0,   66,   64,   65,   68,   93,
-       72,   71,   92,    4,   92,   92,   92,   92,   92,   92,
-       34,   92,   92,   92,   92,   92,   92,    7,   46,   92,
-       92,   92,   92,   92,   92,   92,   92,   92,   92,   92,
-       44,   92,   92,   67,   92,    1,   82,   84,   86,   84,
+        0,    0,   74,   74,    0,    0,   89,   88,    2,   75,
+       88,   72,   65,   66,   57,   55,   69,   56,   70,   59,
+       85,   71,   62,   54,   61,   84,   84,   84,   84,   84,
+       84,   84,   84,   84,   84,   84,   84,   84,   84,   84,
+       84,   58,   60,   84,   67,   68,    1,   74,   73,   76,
+       77,   80,   76,    0,    0,   85,   64,   63,   84,    4,
+       84,   84,   84,   84,   84,   84,   32,   84,   84,   84,
+       84,   84,   84,    7,   44,   84,   84,   84,   84,   84,
+       84,   84,   84,   84,   84,   42,   84,   84,   84,   84,
+       84,    1,   74,   76,   78,   76,   86,   87,   84,   84,
 
-       94,   95,   92,   92,   92,   92,   92,   92,   92,   92,
-        3,    0,   92,   92,   92,   92,   92,   43,   92,   92,
-       92,   48,   24,   92,   92,   92,   92,   92,   92,   92,
-       92,   16,   92,   92,   92,   92,   18,   92,   92,   92,
-       92,   92,   92,   26,   27,   92,   28,   92,    0,    0,
-       10,    0,   35,   92,   92,    0,   92,   92,   40,   92,
-       45,   92,   92,   53,   92,   92,   41,   92,   92,    8,
-       92,    5,   92,   92,   92,   92,   25,   13,   19,   92,
-       29,    0,    0,   92,    0,    0,    0,    0,    0,    0,
-        0,   92,    6,    0,   92,   92,   92,   92,   92,   92,
+       84,   84,   84,   84,    3,   84,   84,   84,   84,   84,
+       41,   84,   84,   84,   46,   24,   84,   84,   84,   84,
+       84,   84,   84,   16,   84,   84,   84,   84,   18,   84,
+       84,   84,   84,   84,   84,   84,   25,   84,   26,   84,
+       10,    0,   33,   84,   84,    0,   84,   84,   38,   84,
+       43,   84,   50,   84,   84,   39,   84,   84,    8,   84,
+        5,   84,   84,   84,   84,   84,   84,   13,   19,   84,
+       27,   84,    0,    0,    0,    0,    0,    0,    0,   84,
+        6,    0,   84,   84,   84,   84,   84,   84,   84,   84,
+       84,   21,   30,   29,   48,   84,   82,   84,   84,    9,
 
-       92,   92,   92,   92,   21,   51,   92,   90,   92,   92,
-        0,    0,    9,    0,    0,   11,    0,    0,    0,    0,
-        0,   92,    0,   92,   92,   33,   92,   92,   92,   14,
-       30,   47,   55,   92,   89,   22,   50,    0,    0,    0,
-        0,    0,    0,   17,   20,    0,   92,    0,   92,   23,
-       92,   92,   92,   92,   32,   31,   36,    0,    0,    0,
-        0,   92,   42,   12,   91,   92,   54,   92,    0,    0,
-        0,   39,   56,   92,   52,    0,   37,   38,   49,    0,
-       15,    0
+        0,    0,   11,    0,    0,    0,    0,    0,   84,    0,
+       84,   84,   31,   84,   84,   14,   28,   45,   52,   84,
+       81,   22,   47,    0,    0,    0,    0,   17,   20,    0,
+       84,    0,   84,   23,   84,   84,   84,   34,    0,    0,
+        0,    0,   84,   40,   12,   83,   51,   84,    0,    0,
+        0,   37,   53,   49,    0,   35,   36,    0,   15,    0
     } ;
 
 static yyconst int yy_ec[256] =
@@ -330,160 +328,153 @@ static yyconst int yy_ec[256] =
         8,    9,   10,   11,   12,   13,   14,   15,   15,   15,
        15,   15,   15,   15,   15,   16,   16,   17,    1,   18,
        19,   20,    1,    1,   21,   22,   23,   24,   25,   26,
-       27,   28,   29,   27,   27,   30,   31,   32,   33,   34,
-       27,   35,   36,   37,   38,   39,   40,   27,   27,   27,
-        1,   41,    1,   42,   27,    1,   43,   44,   45,   46,
+       27,   28,   29,   27,   27,   30,   31,   32,   33,   27,
+       27,   34,   35,   36,   37,   38,   39,   27,   27,   27,
+        1,   40,    1,   41,   27,    1,   42,   43,   44,   45,
 
-       47,   48,   49,   50,   51,   27,   27,   52,   53,   54,
-       55,   56,   27,   57,   58,   59,   60,   61,   62,   63,
-       64,   27,   65,    1,   66,    1,    1,    1,    1,    1,
+       46,   47,   48,   49,   50,   27,   27,   51,   52,   53,
+       54,   55,   27,   56,   57,   58,   59,   60,   61,   62,
+       63,   27,   64,    1,   65,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,   67,   67,   67,   67,   67,   67,   67,   67,   67,
+        1,   66,   66,   66,   66,   66,   66,   66,   66,   66,
 
-       67,   67,   67,   67,   67,   67,   67,   67,   67,   67,
-       67,   67,   67,   67,   67,   67,   67,   67,   67,   67,
-       67,   67,   67,   67,   67,   67,   67,   67,   67,   67,
-       67,   67,   67,   67,   67,   67,   67,   67,   67,   67,
-       67,   67,   67,   67,   67,   67,   67,   67,   67,   67,
-       67,   67,   67,   67,   67
+       66,   66,   66,   66,   66,   66,   66,   66,   66,   66,
+       66,   66,   66,   66,   66,   66,   66,   66,   66,   66,
+       66,   66,   66,   66,   66,   66,   66,   66,   66,   66,
+       66,   66,   66,   66,   66,   66,   66,   66,   66,   66,
+       66,   66,   66,   66,   66,   66,   66,   66,   66,   66,
+       66,   66,   66,   66,   66
     } ;
 
-static yyconst int yy_meta[68] =
+static yyconst int yy_meta[67] =
     {   0,
         1,    1,    2,    3,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    4,    4,    1,    1,    1,    1,
         4,    4,    4,    4,    4,    4,    4,    4,    4,    4,
+        4,    4,    4,    4,    4,    4,    4,    4,    4,    1,
+        1,    4,    4,    4,    4,    4,    4,    4,    4,    4,
         4,    4,    4,    4,    4,    4,    4,    4,    4,    4,
-        1,    1,    4,    4,    4,    4,    4,    4,    4,    4,
-        4,    4,    4,    4,    4,    4,    4,    4,    4,    4,
-        4,    4,    4,    4,    1,    1,    1
+        4,    4,    4,    1,    1,    1
     } ;
 
-static yyconst short int yy_base[288] =
+static yyconst short int yy_base[266] =
     {   0,
-        0,    0,  336,  335,   65,   67,  337,  340,  340,  340,
-       44,  340,  340,  340,  317,  316,  340,  315,  340,  314,
-       58,  340,  313,  340,  312,  272,   20,   33,   27,   27,
-       37,    0,   37,  274,  273,   39,  284,  279,   42,   43,
-      268,  305,  340,  279,  340,  340,  255,    0,  340,    0,
-      340,  317,  253,   88,  304,  340,  340,  340,  340,   79,
-      340,  340,    0,    0,  263,   80,   64,  274,  262,  262,
-      105,  256,   71,  268,  260,  254,  256,    0,  250,  253,
-      261,   58,  254,  248,   81,  252,   71,  259,  244,   78,
-        0,   66,  250,  340,  104,  233,    0,    0,  340,  232,
+        0,    0,  312,  311,   64,   66,  313,  316,  316,  316,
+       43,  316,  316,  316,  316,  316,  316,  316,  316,  316,
+       57,  316,  293,  316,  292,  253,   20,   33,   27,   27,
+       37,    0,   37,  255,  254,   39,  261,   42,   43,  253,
+       37,  316,  316,  262,  316,  316,  238,    0,  316,    0,
+      316,  299,  236,   87,  286,   79,  316,  316,    0,    0,
+      246,  261,   49,  256,  244,  244,    0,  238,   59,  250,
+      242,  236,  238,    0,  232,  235,  243,   53,  236,   75,
+      235,   70,  242,  227,   73,    0,   61,  225,  232,  231,
+       98,  214,    0,    0,  316,  213,  120,  263,  226,  234,
 
-      121,  283,  245,  249,  252,  242,  246,  247,  234,  232,
-        0,  110,  242,  136,  235,  240,  228,  149,  240,  237,
-      227,  222,    0,  222,  228,  236,  232,  217,  229,  219,
-      223,    0,  214,  218,  216,  223,    0,  210,  211,  224,
-      219,  217,  212,    0,    0,  213,    0,   74,  208,  211,
-      231,  128,    0,  203,  211,  232,  197,  206,    0,  202,
-        0,  230,  199,  221,  193,  204,    0,  194,  200,    0,
-      184,    0,  198,  214,  199,  199,    0,    0,    0,  189,
-        0,  181,  188,  190,  183,  176,  187,  179,  102,  176,
-      182,  172,    0,  187,  178,  181,  180,  176,  204,  173,
+      229,  230,  217,  215,    0,  225,  120,  218,  223,  211,
+      125,  223,  220,  210,  205,    0,  205,  211,  216,  201,
+      213,  203,  207,    0,  198,  202,  200,  207,    0,  202,
+      200,  192,  193,  206,  201,  195,    0,  196,    0,   93,
+      215,  123,    0,  188,  196,  216,  182,  191,    0,  187,
+        0,  214,  206,  179,  190,    0,  180,  186,    0,  170,
+        0,  179,  183,  182,  197,  183,  183,    0,    0,  173,
+        0,  176,  169,  162,  173,  165,   79,  162,  168,  158,
+        0,  173,  164,  167,  166,  162,  160,  156,  150,  159,
+      154,    0,    0,    0,  175,  157,    0,  150,  156,    0,
 
-      169,  163,  172,  167,    0,  189,  170,    0,  163,  169,
-      164,  162,    0,  153,  158,  340,  165,  158,  165,  144,
-      156,  155,  160,  149,  146,    0,  159,  144,  146,    0,
-        0,    0,    0,  148,    0,    0,    0,  146,  150,  143,
-      150,  134,  146,  340,  340,  140,  136,  140,  135,    0,
-      131,  130,  139,  131,  340,  340,  340,  124,  130,  133,
-      120,  112,  340,    0,    0,  120,    0,  114,  109,  111,
-       97,  340,    0,   91,    0,   50,  340,  340,    0,   42,
-      340,  340,  168,  172,   83,  176,  180
+      142,  147,  316,  154,  147,  154,  133,  145,  144,  149,
+      138,  135,    0,  148,  136,    0,    0,    0,    0,  138,
+        0,    0,    0,  135,  142,  126,  138,  316,  316,  132,
+      128,  132,  127,    0,  123,  131,  123,  316,  114,  110,
+      116,  111,  103,  316,    0,    0,    0,  109,  103,  104,
+       82,  316,    0,    0,   85,  316,  316,   84,  316,  316,
+      162,  166,  127,  170,  174
     } ;
 
-static yyconst short int yy_def[288] =
+static yyconst short int yy_def[266] =
     {   0,
-      282,    1,  283,  283,  284,  284,  282,  282,  282,  282,
-      282,  282,  282,  282,  282,  282,  282,  282,  282,  282,
-      282,  282,  282,  282,  282,  285,  285,  285,  285,  285,
-      285,  285,  285,  285,  285,  285,  285,  285,  285,  285,
-      285,  282,  282,  285,  282,  282,  282,  286,  282,  287,
-      282,  282,  287,  282,  282,  282,  282,  282,  282,  282,
-      282,  282,  285,  285,  285,  285,  285,  285,  285,  285,
-      285,  285,  285,  285,  285,  285,  285,  285,  285,  285,
-      285,  285,  285,  285,  285,  285,  285,  285,  285,  285,
-      285,  285,  285,  282,  285,  282,  286,  287,  282,  287,
+      260,    1,  261,  261,  262,  262,  260,  260,  260,  260,
+      260,  260,  260,  260,  260,  260,  260,  260,  260,  260,
+      260,  260,  260,  260,  260,  263,  263,  263,  263,  263,
+      263,  263,  263,  263,  263,  263,  263,  263,  263,  263,
+      263,  260,  260,  263,  260,  260,  260,  264,  260,  265,
+      260,  260,  265,  260,  260,  260,  260,  260,  263,  263,
+      263,  263,  263,  263,  263,  263,  263,  263,  263,  263,
+      263,  263,  263,  263,  263,  263,  263,  263,  263,  263,
+      263,  263,  263,  263,  263,  263,  263,  263,  263,  263,
+      263,  260,  264,  265,  260,  265,  260,  260,  263,  263,
 
-      282,  282,  285,  285,  285,  285,  285,  285,  285,  285,
-      285,  282,  285,  285,  285,  285,  285,  285,  285,  285,
-      285,  285,  285,  285,  285,  285,  285,  285,  285,  285,
-      285,  285,  285,  285,  285,  285,  285,  285,  285,  285,
-      285,  285,  285,  285,  285,  285,  285,  285,  282,  282,
-      285,  282,  285,  285,  285,  282,  285,  285,  285,  285,
-      285,  285,  285,  285,  285,  285,  285,  285,  285,  285,
-      285,  285,  285,  285,  285,  285,  285,  285,  285,  285,
-      285,  282,  282,  285,  282,  282,  282,  282,  282,  282,
-      282,  285,  285,  282,  285,  285,  285,  285,  285,  285,
+      263,  263,  263,  263,  263,  263,  263,  263,  263,  263,
+      263,  263,  263,  263,  263,  263,  263,  263,  263,  263,
+      263,  263,  263,  263,  263,  263,  263,  263,  263,  263,
+      263,  263,  263,  263,  263,  263,  263,  263,  263,  263,
+      263,  260,  263,  263,  263,  260,  263,  263,  263,  263,
+      263,  263,  263,  263,  263,  263,  263,  263,  263,  263,
+      263,  263,  263,  263,  263,  263,  263,  263,  263,  263,
+      263,  263,  260,  260,  260,  260,  260,  260,  260,  263,
+      263,  260,  263,  263,  263,  263,  263,  263,  263,  263,
+      263,  263,  263,  263,  263,  263,  263,  263,  263,  263,
 
-      285,  285,  285,  285,  285,  285,  285,  285,  285,  285,
-      282,  282,  285,  282,  282,  282,  282,  282,  282,  282,
-      282,  285,  282,  285,  285,  285,  285,  285,  285,  285,
-      285,  285,  285,  285,  285,  285,  285,  282,  282,  282,
-      282,  282,  282,  282,  282,  282,  285,  282,  285,  285,
-      285,  285,  285,  285,  282,  282,  282,  282,  282,  282,
-      282,  285,  282,  285,  285,  285,  285,  285,  282,  282,
-      282,  282,  285,  285,  285,  282,  282,  282,  285,  282,
-      282,    0,  282,  282,  282,  282,  282
+      260,  260,  260,  260,  260,  260,  260,  260,  263,  260,
+      263,  263,  263,  263,  263,  263,  263,  263,  263,  263,
+      263,  263,  263,  260,  260,  260,  260,  260,  260,  260,
+      263,  260,  263,  263,  263,  263,  263,  260,  260,  260,
+      260,  260,  263,  260,  263,  263,  263,  263,  260,  260,
+      260,  260,  263,  263,  260,  260,  260,  260,  260,    0,
+      260,  260,  260,  260,  260
     } ;
 
-static yyconst short int yy_nxt[408] =
+static yyconst short int yy_nxt[383] =
     {   0,
         8,    8,    9,   10,   11,   12,   13,   14,   15,   16,
        17,   18,   19,   20,   21,   21,   22,   23,   24,   25,
        26,   27,   28,   29,   30,   31,   32,   32,   33,   34,
-       35,   36,   32,   37,   38,   39,   40,   32,   32,   41,
-       42,   43,   32,   32,   32,   32,   32,   32,   32,   32,
-       32,   32,   32,   32,   32,   32,   32,   32,   32,   32,
-       44,   32,   32,   32,   45,   46,   47,   51,   52,   51,
-       52,   54,   60,   60,   65,   67,   55,   70,   72,   75,
-       73,   71,   68,   66,   78,   82,   63,   69,   86,   74,
-       79,   76,   90,   60,   60,  281,   77,   91,   83,   92,
+       35,   36,   32,   37,   38,   39,   40,   32,   41,   42,
+       43,   32,   32,   32,   32,   32,   32,   32,   32,   32,
+       32,   32,   32,   32,   32,   32,   32,   32,   32,   44,
+       32,   32,   32,   45,   46,   47,   51,   52,   51,   52,
+       54,   56,   56,   61,   63,   55,   66,   68,   71,   69,
+       67,   64,   62,   74,   78,   89,   65,   81,   70,   75,
+       72,   85,   90,   56,   56,   73,   86,   79,   87,   82,
 
-       87,   88,  101,  101,  280,   89,  112,  112,  101,  101,
-      101,  101,  101,  101,  104,  106,  114,  130,  105,  123,
-      124,  107,  108,  127,  134,  136,  139,  131,  180,  137,
-      115,   53,  181,   53,  135,  101,  101,  152,  152,  128,
-      140,  101,  101,  101,  101,  101,  101,  149,  218,  150,
-      156,  156,  185,  186,  279,  278,  187,  277,  188,  276,
-      275,  219,  274,  189,  190,  273,  272,  191,   48,   48,
-       48,   48,   50,   50,   50,   50,   97,  271,   97,   97,
-       98,  270,  269,   98,  268,  267,  266,  265,  264,  263,
-      262,  261,  260,  259,  258,  257,  256,  255,  254,  253,
+       83,   97,   97,  107,   84,  101,  102,   97,   97,   97,
+       97,   97,   97,  116,  117,  122,  119,  108,  126,  128,
+      133,  142,  142,  129,  205,  123,  146,  146,  127,   53,
+       59,   53,  120,  134,   97,   97,  259,  206,  258,  257,
+       97,   97,   97,   97,   97,   97,  170,  173,  174,  256,
+      171,  175,  255,  176,  254,  253,  252,  177,  178,  251,
+      250,  179,   48,   48,   48,   48,   50,   50,   50,   50,
+       93,  249,   93,   93,   94,  248,  247,   94,  246,  245,
+      244,  243,  242,  241,  240,  239,  238,  237,  236,  235,
+      234,  233,  232,  231,  230,  229,  228,  227,  226,  225,
 
-      252,  251,  250,  249,  248,  247,  246,  245,  244,  243,
-      242,  241,  240,  239,  238,  237,  236,  235,  234,  233,
-      232,  231,  230,  229,  228,  227,  226,  225,  224,  223,
-      222,  221,  220,  217,  216,  215,  214,  213,  212,  211,
-      210,  209,  208,  207,  206,  205,  204,  203,  202,  201,
-      200,  199,  198,  197,  196,  195,  194,  193,  192,  184,
-      183,  182,  179,  178,  177,  176,  175,  174,  173,  172,
-      171,  170,  169,  168,  167,  166,  165,  164,  163,  162,
-      161,  160,  159,  158,  157,  155,  154,  153,  151,  148,
-      147,  146,  145,  144,  143,  142,  141,  102,  100,   96,
+      224,  223,  222,  221,  220,  219,  218,  217,  216,  215,
+      214,  213,  212,  211,  210,  209,  208,  207,  204,  203,
+      202,  201,  200,  199,  198,  197,  196,  195,  194,  193,
+      192,  191,  190,  189,  188,  187,  186,  185,  184,  183,
+      182,  181,  180,  172,  169,  168,  167,  166,  165,  164,
+      163,  162,  161,  160,  159,  158,  157,  156,  155,  154,
+      153,  152,  151,  150,  149,  148,  147,  145,  144,  143,
+      141,  140,  139,  138,  137,  136,  135,   98,   96,   92,
+      132,  131,  130,  125,  124,  121,  118,  115,  114,  113,
+      112,  111,  110,  109,  106,  105,  104,  103,  100,   99,
 
-      138,  133,  132,  129,  126,  125,  122,  121,  120,  119,
-      118,  117,  116,  113,  111,  110,  109,  103,  102,  100,
-       99,   96,   95,   94,   93,   85,   84,   81,   80,   64,
-       62,   61,   59,   58,   57,   56,  282,   49,   49,    7,
-      282,  282,  282,  282,  282,  282,  282,  282,  282,  282,
-      282,  282,  282,  282,  282,  282,  282,  282,  282,  282,
-      282,  282,  282,  282,  282,  282,  282,  282,  282,  282,
-      282,  282,  282,  282,  282,  282,  282,  282,  282,  282,
-      282,  282,  282,  282,  282,  282,  282,  282,  282,  282,
-      282,  282,  282,  282,  282,  282,  282,  282,  282,  282,
-
-      282,  282,  282,  282,  282,  282,  282
+       98,   96,   95,   92,   91,   88,   80,   77,   76,   60,
+       58,   57,  260,   49,   49,    7,  260,  260,  260,  260,
+      260,  260,  260,  260,  260,  260,  260,  260,  260,  260,
+      260,  260,  260,  260,  260,  260,  260,  260,  260,  260,
+      260,  260,  260,  260,  260,  260,  260,  260,  260,  260,
+      260,  260,  260,  260,  260,  260,  260,  260,  260,  260,
+      260,  260,  260,  260,  260,  260,  260,  260,  260,  260,
+      260,  260,  260,  260,  260,  260,  260,  260,  260,  260,
+      260,  260
     } ;
 
-static yyconst short int yy_chk[408] =
+static yyconst short int yy_chk[383] =
     {   0,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -491,45 +482,42 @@ static yyconst short int yy_chk[408] =
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    5,    5,    6,
-        6,   11,   21,   21,   27,   28,   11,   29,   30,   31,
-       30,   29,   28,   27,   33,   36,  285,   28,   39,   30,
-       33,   31,   40,   60,   60,  280,   31,   40,   36,   40,
+        1,    1,    1,    1,    1,    1,    5,    5,    6,    6,
+       11,   21,   21,   27,   28,   11,   29,   30,   31,   30,
+       29,   28,   27,   33,   36,   41,   28,   38,   30,   33,
+       31,   39,   41,   56,   56,   31,   39,   36,   39,   38,
 
-       39,   39,   54,   54,  276,   39,   71,   71,   54,   54,
-       54,   54,   54,   54,   66,   67,   73,   87,   66,   82,
-       82,   67,   67,   85,   90,   92,   95,   87,  148,   92,
-       73,    5,  148,    6,   90,  101,  101,  114,  114,   85,
-       95,  101,  101,  101,  101,  101,  101,  112,  189,  112,
-      118,  118,  152,  152,  274,  271,  152,  270,  152,  269,
-      268,  189,  266,  152,  152,  262,  261,  152,  283,  283,
-      283,  283,  284,  284,  284,  284,  286,  260,  286,  286,
-      287,  259,  258,  287,  254,  253,  252,  251,  249,  248,
-      247,  246,  243,  242,  241,  240,  239,  238,  234,  229,
+       38,   54,   54,   69,   38,   63,   63,   54,   54,   54,
+       54,   54,   54,   78,   78,   82,   80,   69,   85,   87,
+       91,  107,  107,   87,  177,   82,  111,  111,   85,    5,
+      263,    6,   80,   91,   97,   97,  258,  177,  255,  251,
+       97,   97,   97,   97,   97,   97,  140,  142,  142,  250,
+      140,  142,  249,  142,  248,  243,  242,  142,  142,  241,
+      240,  142,  261,  261,  261,  261,  262,  262,  262,  262,
+      264,  239,  264,  264,  265,  237,  236,  265,  235,  233,
+      232,  231,  230,  227,  226,  225,  224,  220,  215,  214,
+      212,  211,  210,  209,  208,  207,  206,  205,  204,  202,
 
-      228,  227,  225,  224,  223,  222,  221,  220,  219,  218,
-      217,  215,  214,  212,  211,  210,  209,  207,  206,  204,
-      203,  202,  201,  200,  199,  198,  197,  196,  195,  194,
-      192,  191,  190,  188,  187,  186,  185,  184,  183,  182,
-      180,  176,  175,  174,  173,  171,  169,  168,  166,  165,
-      164,  163,  162,  160,  158,  157,  156,  155,  154,  151,
-      150,  149,  146,  143,  142,  141,  140,  139,  138,  136,
-      135,  134,  133,  131,  130,  129,  128,  127,  126,  125,
-      124,  122,  121,  120,  119,  117,  116,  115,  113,  110,
-      109,  108,  107,  106,  105,  104,  103,  102,  100,   96,
+      201,  199,  198,  196,  195,  191,  190,  189,  188,  187,
+      186,  185,  184,  183,  182,  180,  179,  178,  176,  175,
+      174,  173,  172,  170,  167,  166,  165,  164,  163,  162,
+      160,  158,  157,  155,  154,  153,  152,  150,  148,  147,
+      146,  145,  144,  141,  138,  136,  135,  134,  133,  132,
+      131,  130,  128,  127,  126,  125,  123,  122,  121,  120,
+      119,  118,  117,  115,  114,  113,  112,  110,  109,  108,
+      106,  104,  103,  102,  101,  100,   99,   98,   96,   92,
+       90,   89,   88,   84,   83,   81,   79,   77,   76,   75,
+       73,   72,   71,   70,   68,   66,   65,   64,   62,   61,
 
-       93,   89,   88,   86,   84,   83,   81,   80,   79,   77,
-       76,   75,   74,   72,   70,   69,   68,   65,   55,   53,
-       52,   47,   44,   42,   41,   38,   37,   35,   34,   26,
-       25,   23,   20,   18,   16,   15,    7,    4,    3,  282,
-      282,  282,  282,  282,  282,  282,  282,  282,  282,  282,
-      282,  282,  282,  282,  282,  282,  282,  282,  282,  282,
-      282,  282,  282,  282,  282,  282,  282,  282,  282,  282,
-      282,  282,  282,  282,  282,  282,  282,  282,  282,  282,
-      282,  282,  282,  282,  282,  282,  282,  282,  282,  282,
-      282,  282,  282,  282,  282,  282,  282,  282,  282,  282,
-
-      282,  282,  282,  282,  282,  282,  282
+       55,   53,   52,   47,   44,   40,   37,   35,   34,   26,
+       25,   23,    7,    4,    3,  260,  260,  260,  260,  260,
+      260,  260,  260,  260,  260,  260,  260,  260,  260,  260,
+      260,  260,  260,  260,  260,  260,  260,  260,  260,  260,
+      260,  260,  260,  260,  260,  260,  260,  260,  260,  260,
+      260,  260,  260,  260,  260,  260,  260,  260,  260,  260,
+      260,  260,  260,  260,  260,  260,  260,  260,  260,  260,
+      260,  260,  260,  260,  260,  260,  260,  260,  260,  260,
+      260,  260
     } ;
 
 static yy_state_type yy_last_accepting_state;
@@ -549,18 +537,19 @@ char *yytext;
   #include <stdlib.h>
   #include <stdio.h>
   #include <string.h>
-  #include "vb_lark.tab.h"
+  #include "vb_lark_tab.h"
   
   extern int yyparse(void);
+  extern int print_tree();
   
-  FILE* file;
+  //extern FILE* file;
   char literal[100];
   int num = 0;
 #define COMMENT 1
 
 #define STRING 2
 
-#line 564 "lex.yy.c"
+#line 552 "lex.yy.c"
 
 /* Macros after this point can all be overridden by user definitions in
  * section 1.
@@ -707,10 +696,10 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
 
-#line 23 "vb_lark.l"
+#line 24 "vb_lark.l"
 
 
-#line 714 "lex.yy.c"
+#line 702 "lex.yy.c"
 
 	if ( yy_init )
 		{
@@ -761,13 +750,13 @@ yy_match:
 			while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 				{
 				yy_current_state = (int) yy_def[yy_current_state];
-				if ( yy_current_state >= 283 )
+				if ( yy_current_state >= 261 )
 					yy_c = yy_meta[(unsigned int) yy_c];
 				}
 			yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
 			++yy_cp;
 			}
-		while ( yy_base[yy_current_state] != 340 );
+		while ( yy_base[yy_current_state] != 316 );
 
 yy_find_action:
 		yy_act = yy_accept[yy_current_state];
@@ -795,776 +784,712 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 25 "vb_lark.l"
+#line 26 "vb_lark.l"
 {
-                           fprintf(file, "\nIncorrect characters:");
-						   fprintf(file, " %d:%d\n", yylloc.first_line, yylloc.first_column);
+                          // fprintf(file, "\nIncorrect characters:");
+						   //fprintf(file, " %d:%d\n", yylloc.first_line, yylloc.first_column);
 						   getchar();
 						   exit(1);
 						 }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 32 "vb_lark.l"
+#line 33 "vb_lark.l"
 {
-                           fprintf(file, "\nEnd line has found\n");
+                          //fprintf(file, "\nEnd line has found\n");
 						   return ENDL;
 						 }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 37 "vb_lark.l"
+#line 38 "vb_lark.l"
 {
-                           fprintf(file,"\nKeyword \"Dim\" has found\n");
+                          //fprintf(file,"\nKeyword \"Dim\" has found\n");
 						   return DIM;
 						 }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 42 "vb_lark.l"
+#line 43 "vb_lark.l"
 {
-                           fprintf(file,"\nKeyword \"As\" has found\n");
+                           //fprintf(file,"\nKeyword \"As\" has found\n");
 						   return AS;
 						 }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 47 "vb_lark.l"
+#line 48 "vb_lark.l"
 {
-                           fprintf(file,"\nKeyword \"True\" has found\n");
+                           //fprintf(file,"\nKeyword \"True\" has found\n");
 						   return TRUE;
 						 }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 52 "vb_lark.l"
+#line 53 "vb_lark.l"
 {
-                           fprintf(file,"\nKeyword \"False\" has found\n");
+                           //fprintf(file,"\nKeyword \"False\" has found\n");
 						   return FALSE;
 						 }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 57 "vb_lark.l"
+#line 58 "vb_lark.l"
 {
-                           fprintf(file,"\nKeyword \"If\" has found\n");
+                           //fprintf(file,"\nKeyword \"If\" has found\n");
 						   return IF;
 						 }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 62 "vb_lark.l"
+#line 63 "vb_lark.l"
 {
-                           fprintf(file,"\nKeyword \"Then\" has found\n");
+                           //fprintf(file,"\nKeyword \"Then\" has found\n");
 						   return THEN;
 						 }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 67 "vb_lark.l"
+#line 68 "vb_lark.l"
 {
-                           fprintf(file,"\nKeyword \"ElseIf\" has found\n");
-						   return ELSE_IF;
+                           //printf(file,"\nKeyword \"ElseIf\" has found\n");
+						   return ELSEIF;
 						 }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 72 "vb_lark.l"
+#line 73 "vb_lark.l"
 {
-                           fprintf(file,"\nKeyword \"Else\" has found\n");
+                           //fprintf(file,"\nKeyword \"Else\" has found\n");
 						   return ELSE;
 						 }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 77 "vb_lark.l"
+#line 78 "vb_lark.l"
 {
-                           fprintf(file,"\nKeywords \"End If\" has found\n");
+                          // fprintf(file,"\nKeywords \"End If\" has found\n");
 						   return END_IF;
 						 }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 82 "vb_lark.l"
+#line 83 "vb_lark.l"
 {
-                           fprintf(file,"\nKeyword \"Function\" has found\n");
+                           //fprintf(file,"\nKeyword \"Function\" has found\n");
 						   return FUNCTION;
 						 }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 87 "vb_lark.l"
+#line 88 "vb_lark.l"
 {
-                           fprintf(file,"\nKeyword \"ByVal\" has found\n");
-						   return BY_VAL;
+                           //fprintf(file,"\nKeyword \"ByVal\" has found\n");
+						   return BYVAL;
 						 }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 92 "vb_lark.l"
+#line 93 "vb_lark.l"
 {
-                           fprintf(file,"\nKeyword \"Return\" has found\n");
+                           //fprintf(file,"\nKeyword \"Return\" has found\n");
 						   return RETURN;
 						 }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 97 "vb_lark.l"
+#line 98 "vb_lark.l"
 {
-                           fprintf(file,"\nKeywords \"End Function\" has found\n");
+                           //fprintf(file,"\nKeywords \"End Function\" has found\n");
 						   return END_FUNCTION;
 						 }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 102 "vb_lark.l"
+#line 103 "vb_lark.l"
 {
-                           fprintf(file,"\nKeyword \"Sub\" has found\n");
+                           //fprintf(file,"\nKeyword \"Sub\" has found\n");
 						   return SUB;
 						 }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 107 "vb_lark.l"
+#line 108 "vb_lark.l"
 {
-                           fprintf(file,"\nKeywords \"End Sub\" has found\n");
+                          // fprintf(file,"\nKeywords \"End Sub\" has found\n");
 						   return END_SUB;
 						 }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 112 "vb_lark.l"
+#line 113 "vb_lark.l"
 {
-                           fprintf(file,"\nKeywords \"Try\" has found\n");
+                          // fprintf(file,"\nKeywords \"Try\" has found\n");
 						   return TRY;
 						 }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 117 "vb_lark.l"
+#line 118 "vb_lark.l"
 {
-                           fprintf(file,"\nKeywords \"Catch\" has found\n");
+                           //fprintf(file,"\nKeywords \"Catch\" has found\n");
 						   return CATCH;
 						 }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 122 "vb_lark.l"
+#line 123 "vb_lark.l"
 {
-                           fprintf(file,"\nKeywords \"End Try\" has found\n");
+                           //fprintf(file,"\nKeywords \"End Try\" has found\n");
 						   return END_TRY;
 						 }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 127 "vb_lark.l"
+#line 128 "vb_lark.l"
 {
-                           fprintf(file,"\nKeywords \"Throw\" has found\n");
+                           //fprintf(file,"\nKeywords \"Throw\" has found\n");
 						   return THROW;
 						 }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 132 "vb_lark.l"
+#line 133 "vb_lark.l"
 {
-                           fprintf(file,"\nKeyword \"Boolean\" has found\n");
+                           //fprintf(file,"\nKeyword \"Boolean\" has found\n");
 						   return BOOLEAN;
 						 }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 137 "vb_lark.l"
+#line 138 "vb_lark.l"
 {
-                           fprintf(file,"\nKeyword \"Integer\" has found\n");
+                           //fprintf(file,"\nKeyword \"Integer\" has found\n");
 						   return INTEGER;
 						 }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 142 "vb_lark.l"
+#line 143 "vb_lark.l"
 {
-                           fprintf(file,"\nKeyword \"New\" has found\n");
+                           //fprintf(file,"\nKeyword \"New\" has found\n");
 						   return NEW;
 						 }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 147 "vb_lark.l"
+#line 148 "vb_lark.l"
 {
-                           fprintf(file,"\nKeyword \"ByRef\" has found\n");
-						   return BY_REF;
+                           //fprintf(file,"\nKeyword \"Case\" has found\n");
+						   return CASE;
 						 }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 152 "vb_lark.l"
+#line 153 "vb_lark.l"
 {
-                           fprintf(file,"\nKeyword \"Call\" has found\n");
-						   return CALL;
+                           //fprintf(file,"\nKeyword \"Char\" has found\n");
+						   return CHAR;
 						 }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 157 "vb_lark.l"
+#line 158 "vb_lark.l"
 {
-                           fprintf(file,"\nKeyword \"Case\" has found\n");
-						   return CASE;
+                           //fprintf(file,"\nKeyword \"Const\" has found\n");
+						   return CONST;
 						 }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 162 "vb_lark.l"
+#line 163 "vb_lark.l"
 {
-                           fprintf(file,"\nKeyword \"Char\" has found\n");
-						   return CHAR;
+                           //fprintf(file,"\nKeyword \"Select\" has found\n");
+						   return SELECT;
 						 }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 167 "vb_lark.l"
+#line 168 "vb_lark.l"
 {
-                           fprintf(file,"\nKeyword \"Const\" has found\n");
-						   return CONST;
+                           //fprintf(file,"\nKeywords \"Do While\" has found\n");
+						   return WHILE;
 						 }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 172 "vb_lark.l"
+#line 173 "vb_lark.l"
 {
-                           fprintf(file,"\nKeyword \"Select\" has found\n");
-						   return SELECT;
+                          // fprintf(file,"\nKeywords \"Do Until\" has found\n");
+						   return UNTIL;
 						 }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 177 "vb_lark.l"
+#line 178 "vb_lark.l"
 {
-                           fprintf(file,"\nKeywords \"Do While\" has found\n");
-						   return DO_WHILE;
+                           //fprintf(file,"\nKeyword \"Module\" has found\n");
+						   return MODULE;
 						 }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 182 "vb_lark.l"
+#line 183 "vb_lark.l"
 {
-                           fprintf(file,"\nKeywords \"Do Until\" has found\n");
-						   return DO_UNTIL;
+                           //fprintf(file,"\nKeyword \"Do\" has found\n");
+						   return DO;
 						 }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
 #line 187 "vb_lark.l"
 {
-                           fprintf(file,"\nKeyword \"Module\" has found\n");
-						   return MODULE;
+                          // fprintf(file,"\nKeyword \"Enum\" has found\n");
+						   return ENUM;
 						 }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
 #line 192 "vb_lark.l"
 {
-                           fprintf(file,"\nKeyword \"Do\" has found\n");
-						   return DO;
+                          // fprintf(file,"\nKeywords \"End Enum\" has found\n");
+						   return END_ENUM;
 						 }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 196 "vb_lark.l"
+#line 197 "vb_lark.l"
 {
-                           fprintf(file,"\nKeyword \"Enum\" has found\n");
-						   return ENUM;
+                           //fprintf(file,"\nKeywords \"End Module\" has found\n");
+						   return END_MODULE;
 						 }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 201 "vb_lark.l"
+#line 202 "vb_lark.l"
 {
-                           fprintf(file,"\nKeywords \"End Enum\" has found\n");
-						   return END_ENUM;
+                          // fprintf(file,"\nKeywords \"End Select\" has found\n");
+						   return END_SELECT;
 						 }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 206 "vb_lark.l"
+#line 207 "vb_lark.l"
 {
-                           fprintf(file,"\nKeywords \"End Module\" has found\n");
-						   return END_MODULE;
+                          // fprintf(file,"\nKeywords \"End While\" has found\n");
+						   return END_WHILE;
 						 }
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 211 "vb_lark.l"
+#line 212 "vb_lark.l"
 {
-                           fprintf(file,"\nKeywords \"End Select\" has found\n");
-						   return END_SELECT;
+                          // fprintf(file,"\nKeyword \"End While\" has found\n");
+						   return LOOP;
 						 }
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 216 "vb_lark.l"
+#line 217 "vb_lark.l"
 {
-                           fprintf(file,"\nKeywords \"End While\" has found\n");
-						   return END_WHILE;
+                         //  fprintf(file,"\nKeyword \"Step\" has found\n");
+						   return STEP;
 						 }
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 221 "vb_lark.l"
+#line 222 "vb_lark.l"
 {
-                           fprintf(file,"\nKeyword \"End While\" has found\n");
-						   return LOOP;
+                         //  fprintf(file,"\nKeywords \"For Each\" has found\n");
+						   return FOR_EACH;
 						 }
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 226 "vb_lark.l"
+#line 227 "vb_lark.l"
 {
-                           fprintf(file,"\nKeyword \"Step\" has found\n");
-						   return STEP;
+                        //   fprintf(file,"\nKeyword \"For\" has found\n");
+						   return FOR;
 						 }
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 231 "vb_lark.l"
+#line 232 "vb_lark.l"
 {
-                           fprintf(file,"\nKeywords \"For Each\" has found\n");
-						   return FOR_EACH;
+                       //    fprintf(file,"\nKeyword \"To\" has found\n");
+						   return TO;
 						 }
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 236 "vb_lark.l"
+#line 237 "vb_lark.l"
 {
-                           fprintf(file,"\nKeyword \"For\" has found\n");
-						   return FOR;
+                        //   fprintf(file,"\nKeyword \"Next\" has found\n");
+						   return NEXT;
 						 }
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 241 "vb_lark.l"
+#line 242 "vb_lark.l"
 {
-                           fprintf(file,"\nKeyword \"To\" has found\n");
-						   return TO;
+                          // fprintf(file,"\nKeyword \"In\" has found\n");
+						   return IN;
 						 }
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 246 "vb_lark.l"
+#line 247 "vb_lark.l"
 {
-                           fprintf(file,"\nKeyword \"Next\" has found\n");
-						   return NEXT;
+                          // fprintf(file,"\nKeyword \"String\" has found\n");
+						   return STRING_T;
 						 }
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 251 "vb_lark.l"
+#line 252 "vb_lark.l"
 {
-                           fprintf(file,"\nKeyword \"In\" has found\n");
-						   return IN;
+                          // fprintf(file,"\nKeyword \"Mod\" has found\n");
+						   return MOD;
 						 }
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 256 "vb_lark.l"
+#line 257 "vb_lark.l"
 {
-                           fprintf(file,"\nKeyword \"String\" has found\n");
-						   return STRING;
+                          // fprintf(file,"\nKeyword \"Console\" has found\n");
+						   return CONSOLE;
 						 }
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 261 "vb_lark.l"
+#line 262 "vb_lark.l"
 {
-                           fprintf(file,"\nKeyword \"Mod\" has found\n");
-						   return MOD;
+                           //fprintf(file,"\nKeyword \"Write\" has found\n");
+						   return WRITE;
 						 }
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 266 "vb_lark.l"
+#line 267 "vb_lark.l"
 {
-                           fprintf(file,"\nKeyword \"ParamArray\" has found\n");
-						   return PARAM_ARRAY;
+                          // fprintf(file,"\nKeyword \"WriteLine\" has found\n");
+						   return WRITELINE;
 						 }
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 271 "vb_lark.l"
-{
-                           fprintf(file,"\nKeyword \"Console\" has found\n");
-						   return CONSOLE;
+#line 272 "vb_lark.l"
+{ 
+                          // fprintf(file,"\nKeyword \"Read\" has found\n");
+						   return READ;
 						 }
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 276 "vb_lark.l"
+#line 277 "vb_lark.l"
 {
-                           fprintf(file,"\nKeyword \"Write\" has found\n");
-						   return WRITE;
+                          // fprintf(file,"\nKeyword \"ReadLine\" has found\n");
+						   return READLINE;
 						 }
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 281 "vb_lark.l"
+#line 282 "vb_lark.l"
 {
-                           fprintf(file,"\nKeyword \"WriteLine\" has found\n");
-						   return WRITE_LINE;
+                          // fprintf(file,"\nKeyword \"System\" has found\n");
+						   return SYSTEM;
 						 }
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 286 "vb_lark.l"
-{ 
-                           fprintf(file,"\nKeyword \"Read\" has found\n");
-						   return READ;
+#line 287 "vb_lark.l"
+{
+                          // fprintf(file,"\nKeyword \"Exception\" has found\n");
+						   return EXCEPTION;
 						 }
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 291 "vb_lark.l"
+#line 292 "vb_lark.l"
 {
-                           fprintf(file,"\nKeyword \"ReadLine\" has found\n");
-						   return READ_LINE;
+                          // fprintf(file,"\nOperator \"=\" has found\n");
+						   return '=';
 						 }
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
-#line 296 "vb_lark.l"
+#line 297 "vb_lark.l"
 {
-                           fprintf(file,"\nKeyword \"System\" has found\n");
-						   return SYSTEM;
+                         //  fprintf(file,"\nOperator \"+\" has found\n");
+						   return '+';
 						 }
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
-#line 301 "vb_lark.l"
+#line 302 "vb_lark.l"
 {
-                           fprintf(file,"\nKeyword \"Exception\" has found\n");
-						   return EXCEPTION;
+                          // fprintf(file,"\nOperator \"-\" has found\n");
+						   return '-';
 						 }
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
-#line 306 "vb_lark.l"
+#line 307 "vb_lark.l"
 {
-                           fprintf(file,"\nOperator \"=\" has found\n");
-						   return '=';
+                         //  fprintf(file,"\nOperator \"*\" has found\n");
+						   return '*';
 						 }
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
-#line 311 "vb_lark.l"
+#line 312 "vb_lark.l"
 {
-                           fprintf(file,"\nOperator \"+\" has found\n");
-						   return '+';
+                       //    fprintf(file,"\nOperator \"\\\" has found\n");
+						   return '\\';
 						 }
 	YY_BREAK
 case 59:
 YY_RULE_SETUP
-#line 316 "vb_lark.l"
+#line 317 "vb_lark.l"
 {
-                           fprintf(file,"\nOperator \"-\" has found\n");
-						   return '-';
+                         //  fprintf(file,"\nOperator \"/\" has found\n");
+						   return '/';
 						 }
 	YY_BREAK
 case 60:
 YY_RULE_SETUP
-#line 321 "vb_lark.l"
+#line 322 "vb_lark.l"
 {
-                           fprintf(file,"\nOperator \"*\" has found\n");
-						   return '*';
+                          // fprintf(file,"\nOperator \"^\" has found\n");
+						   return '^';
 						 }
 	YY_BREAK
 case 61:
 YY_RULE_SETUP
-#line 326 "vb_lark.l"
+#line 327 "vb_lark.l"
 {
-                           fprintf(file,"\nOperator \"\\\" has found\n");
-						   return '\\';
+                         //  fprintf(file,"\nOperator \">\" has found\n");
+						   return '>';
 						 }
 	YY_BREAK
 case 62:
 YY_RULE_SETUP
-#line 331 "vb_lark.l"
+#line 332 "vb_lark.l"
 {
-                           fprintf(file,"\nOperator \"/\" has found\n");
-						   return '/';
+                         //  fprintf(file,"\nOperator \"<\" has found\n");
+						   return '<';
 						 }
 	YY_BREAK
 case 63:
 YY_RULE_SETUP
-#line 336 "vb_lark.l"
+#line 337 "vb_lark.l"
 {
-                           fprintf(file,"\nOperator \"^\" has found\n");
-						   return '^';
+                         //  fprintf(file,"\nOperator \">=\" has found\n");
+						   return MORE_OR_EQUAL;
 						 }
 	YY_BREAK
 case 64:
 YY_RULE_SETUP
-#line 341 "vb_lark.l"
+#line 342 "vb_lark.l"
 {
-                           fprintf(file,"\nOperator \"+=\" has found\n");
-						   return "+=";
+                        //   fprintf(file,"\nOperator \"<=\" has found\n");
+						   return LESS_OR_EQUAL;
 						 }
 	YY_BREAK
 case 65:
 YY_RULE_SETUP
-#line 346 "vb_lark.l"
+#line 347 "vb_lark.l"
 {
-                           fprintf(file,"\nOperator \"-=\" has found\n");
-						   return "-=";
+                         //  fprintf(file,"\nOperator \"(\" has found\n");
+						   return '(';
 						 }
 	YY_BREAK
 case 66:
 YY_RULE_SETUP
-#line 351 "vb_lark.l"
+#line 352 "vb_lark.l"
 {
-                           fprintf(file,"\nOperator \"*=\" has found\n");
-						   return "*=";
+                         //  fprintf(file,"\nOperator \")\" has found\n");
+						   return ')';
 						 }
 	YY_BREAK
 case 67:
 YY_RULE_SETUP
-#line 356 "vb_lark.l"
+#line 357 "vb_lark.l"
 {
-                           fprintf(file,"\nOperator \"\\=\" has found\n");
-						   return "\\=";
+                         //  fprintf(file,"\nOperator \"{\" has found\n");
+						   return '{';
 						 }
 	YY_BREAK
 case 68:
 YY_RULE_SETUP
-#line 361 "vb_lark.l"
+#line 362 "vb_lark.l"
 {
-                           fprintf(file,"\nOperator \"/=\" has found\n");
-						   return "/=";
+                          // fprintf(file,"\nOperator \"}\" has found\n");
+						   return '}';
 						 }
 	YY_BREAK
 case 69:
 YY_RULE_SETUP
-#line 366 "vb_lark.l"
+#line 367 "vb_lark.l"
 {
-                           fprintf(file,"\nOperator \">\" has found\n");
-						   return '>';
+                         //  fprintf(file,"\nOperator \",\" has found\n");
+						   return ',';
 						 }
 	YY_BREAK
 case 70:
 YY_RULE_SETUP
-#line 371 "vb_lark.l"
+#line 372 "vb_lark.l"
 {
-                           fprintf(file,"\nOperator \"<\" has found\n");
-						   return '<';
+                         //  fprintf(file,"\nOperator \".\" has found\n");
+						   return '.';
 						 }
 	YY_BREAK
 case 71:
 YY_RULE_SETUP
-#line 376 "vb_lark.l"
+#line 377 "vb_lark.l"
 {
-                           fprintf(file,"\nOperator \">=\" has found\n");
-						   return ">=";
+                          // fprintf(file,"\nOperator \":\" has found\n");
+						   return ':';
 						 }
 	YY_BREAK
 case 72:
 YY_RULE_SETUP
-#line 381 "vb_lark.l"
-{
-                           fprintf(file,"\nOperator \"<=\" has found\n");
-						   return "<=";
-						 }
+#line 382 "vb_lark.l"
+{ BEGIN(COMMENT);                                                              }
 	YY_BREAK
 case 73:
 YY_RULE_SETUP
-#line 386 "vb_lark.l"
-{
-                           fprintf(file,"\nOperator \"(\" has found\n");
-						   return '(';
-						 }
+#line 383 "vb_lark.l"
+{ /*fprintf(file,"\nComment\n"); BEGIN(INITIAL);*/                                 }
 	YY_BREAK
 case 74:
 YY_RULE_SETUP
-#line 391 "vb_lark.l"
-{
-                           fprintf(file,"\nOperator \")\" has found\n");
-						   return ')';
-						 }
+#line 384 "vb_lark.l"
+{                                                                              }
 	YY_BREAK
 case 75:
 YY_RULE_SETUP
-#line 396 "vb_lark.l"
-{
-                           fprintf(file,"\nOperator \"{\" has found\n");
-						   return '{';
-						 }
-	YY_BREAK
-case 76:
-YY_RULE_SETUP
-#line 401 "vb_lark.l"
-{
-                           fprintf(file,"\nOperator \"}\" has found\n");
-						   return '}';
-						 }
-	YY_BREAK
-case 77:
-YY_RULE_SETUP
-#line 406 "vb_lark.l"
-{
-                           fprintf(file,"\nOperator \",\" has found\n");
-						   return ',';
-						 }
-	YY_BREAK
-case 78:
-YY_RULE_SETUP
-#line 411 "vb_lark.l"
-{
-                           fprintf(file,"\nOperator \".\" has found\n");
-						   return '.';
-						 }
-	YY_BREAK
-case 79:
-YY_RULE_SETUP
-#line 416 "vb_lark.l"
-{
-                           fprintf(file,"\nOperator \":\" has found\n");
-						   return ':';
-						 }
-	YY_BREAK
-case 80:
-YY_RULE_SETUP
-#line 421 "vb_lark.l"
-{ BEGIN(COMMENT);                                                              }
-	YY_BREAK
-case 81:
-YY_RULE_SETUP
-#line 422 "vb_lark.l"
-{ fprintf(file,"\nComment\n"); BEGIN(INITIAL);                                 }
-	YY_BREAK
-case 82:
-YY_RULE_SETUP
-#line 423 "vb_lark.l"
-{                                                                              }
-	YY_BREAK
-case 83:
-YY_RULE_SETUP
-#line 425 "vb_lark.l"
+#line 386 "vb_lark.l"
 {
                            strcpy(literal,"");
 						   BEGIN(STRING);
 						 }
 	YY_BREAK
-case 84:
+case 76:
 YY_RULE_SETUP
-#line 430 "vb_lark.l"
+#line 391 "vb_lark.l"
 {
                            strcat(literal,yytext);
 						 }
 	YY_BREAK
-case 85:
+case 77:
 YY_RULE_SETUP
-#line 434 "vb_lark.l"
+#line 395 "vb_lark.l"
 {
-                           fprintf(file,"\nString has ended by \\n \"%s\"\n", literal);
+                           //printf(file,"\nString has ended by \\n \"%s\"\n", literal);
 						   BEGIN(INITIAL);
 						 }
 	YY_BREAK
-case 86:
+case 78:
 YY_RULE_SETUP
-#line 439 "vb_lark.l"
+#line 400 "vb_lark.l"
 {
                            strcat(literal,"\"");
 						 }
 	YY_BREAK
-case 87:
+case 79:
 YY_RULE_SETUP
-#line 443 "vb_lark.l"
+#line 404 "vb_lark.l"
 {
-                           fprintf(file, "\nIncorrect characters:");
-						   fprintf(file, " %d:%d\n", yylloc.first_line, yylloc.first_column);
+                          // fprintf(file, "\nIncorrect characters:");
+						   //fprintf(file, " %d:%d\n", yylloc.first_line, yylloc.first_column);
 						   getchar();
 						   exit(1);
 						 }
 	YY_BREAK
-case 88:
+case 80:
 YY_RULE_SETUP
-#line 450 "vb_lark.l"
+#line 411 "vb_lark.l"
 {
-                           fprintf(file,"\nString literal \"%s\"",literal);
+                          // fprintf(file,"\nString literal \"%s\"",literal);
 						   BEGIN(INITIAL);
 						   yylval.s_const = (char*)malloc(strlen(literal)+1);
 						   strcpy(yylval.s_const, literal);
 						   return STRING_CONST;
 						 }
 	YY_BREAK
-case 89:
+case 81:
 YY_RULE_SETUP
-#line 458 "vb_lark.l"
+#line 419 "vb_lark.l"
 {
-                           fprintf(file,"\nSymbol \"\\n\" has found");
+                           //fprintf(file,"\nSymbol \"\\n\" has found");
 						   yylval.c_const = '\n';
 						   return CHAR_CONST;
 						 }
 	YY_BREAK
-case 90:
+case 82:
 YY_RULE_SETUP
-#line 464 "vb_lark.l"
+#line 425 "vb_lark.l"
 {
-                           fprintf(file,"\nSymbol \"\\t\" has found");
+                          // fprintf(file,"\nSymbol \"\\t\" has found");
 						   yylval.c_const = '\t';
 						   return CHAR_CONST;
 						 }
 	YY_BREAK
-case 91:
+case 83:
 YY_RULE_SETUP
-#line 470 "vb_lark.l"
+#line 431 "vb_lark.l"
 {
-                           fprintf(file,"\nSynbol \"\\0\" has found");
+                          // fprintf(file,"\nSynbol \"\\0\" has found");
 						   yylval.c_const = '\0';
 						   return CHAR_CONST;
 						 }
 	YY_BREAK
-case 92:
+case 84:
 YY_RULE_SETUP
-#line 476 "vb_lark.l"
+#line 437 "vb_lark.l"
 {
-                           fprintf(file,"\nID %s has found\n", yytext);
+                          // fprintf(file,"\nID %s has found\n", yytext);
 						   yylval.s_const = (char*)malloc(strlen(yytext)+1);
 						   strcpy(yylval.s_const, yytext);
 						   return ID;
 						 }
 	YY_BREAK
-case 93:
+case 85:
 YY_RULE_SETUP
-#line 483 "vb_lark.l"
+#line 444 "vb_lark.l"
 {
-                           fprintf(file,"\nNumber %d has found\n", atoi(yytext));
+                         //  fprintf(file,"\nNumber %d has found\n", atoi(yytext));
 						   yylval.i_const = atoi(yytext);
 						   return INT_CONST;
 						 }
 	YY_BREAK
-case 94:
+case 86:
 YY_RULE_SETUP
-#line 489 "vb_lark.l"
+#line 450 "vb_lark.l"
 {
                            sscanf(yytext, "%h", &num);
-						   fprintf(file,"\nNumber %d has found\n", num);
+						  // fprintf(file,"\nNumber %d has found\n", num);
 						   yylval.i_const = num;
 						   return INT_CONST;
 						 }
 	YY_BREAK
-case 95:
+case 87:
 YY_RULE_SETUP
-#line 496 "vb_lark.l"
+#line 457 "vb_lark.l"
 {
                            sscanf(yytext, "%o", &num);
-						   fprintf(file,"\nNumber %d has found\n", num);
+						  // fprintf(file,"\nNumber %d has found\n", num);
 						   yylval.i_const = num;
 						   return INT_CONST;
 						 }
 	YY_BREAK
-case 96:
+case 88:
 YY_RULE_SETUP
-#line 504 "vb_lark.l"
+#line 465 "vb_lark.l"
 ECHO;
 	YY_BREAK
-#line 1568 "lex.yy.c"
+#line 1492 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(COMMENT):
 case YY_STATE_EOF(STRING):
@@ -1855,7 +1780,7 @@ static yy_state_type yy_get_previous_state()
 		while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 			{
 			yy_current_state = (int) yy_def[yy_current_state];
-			if ( yy_current_state >= 283 )
+			if ( yy_current_state >= 261 )
 				yy_c = yy_meta[(unsigned int) yy_c];
 			}
 		yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
@@ -1890,11 +1815,11 @@ yy_state_type yy_current_state;
 	while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 		{
 		yy_current_state = (int) yy_def[yy_current_state];
-		if ( yy_current_state >= 283 )
+		if ( yy_current_state >= 261 )
 			yy_c = yy_meta[(unsigned int) yy_c];
 		}
 	yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
-	yy_is_jam = (yy_current_state == 282);
+	yy_is_jam = (yy_current_state == 260);
 
 	return yy_is_jam ? 0 : yy_current_state;
 	}
@@ -2426,10 +2351,25 @@ int main()
 	return 0;
 	}
 #endif
-#line 504 "vb_lark.l"
+#line 465 "vb_lark.l"
 
 
 
+//int main (int argc, char* argv[])
+//{
+//	file = fopen("result.txt", "wt");
+//	yyin = fopen(argv[1], "r");
+//	
+//	//yylex();	// «¿Ã≈Õ≈Õ≈ÕŒ
+//	
+//	yyparse();
+//	
+//	print_tree();		// ¬˚‚Ó‰ ‰ÂÂ‚‡
+//	
+//	fclose(file);
+//	getchar();
+//	return 0;
+//}
 
 // œ≈–≈Õ≈—≈ÕŒ ¬ ¡»«ŒÕŒ¬— »… ”-‘¿…À!!!
 

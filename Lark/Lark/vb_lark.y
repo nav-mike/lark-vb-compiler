@@ -1,18 +1,23 @@
 %{
-	#include "tree_nodes.h"
 	#include <stdio.h>
+	#include <malloc.h>
 	#include "dot.h"
 	
 	extern int yylex(void);
+	//extern int yyparse(void);
 	
 	struct VB_Module_stmt* root;
+	
+	void yyerror (char const* s);
+	
+	extern FILE* yyin;
 %}
 
 %start module_stmt
 
 %union
 {
-	bool	b_const;
+	int		b_const;
 	int		i_const;
 	char	c_const;
 	char*	s_const;
@@ -27,9 +32,9 @@
 	struct VB_If_stmt*			If_stmt;
 	struct VB_End_if_stmt*		End_if;
 	struct VB_Dim_stmt*			Dim;
-	struct VB_As_expr_list*		As_l;
+	struct VB_As_Expr_list*		As_l;
     struct VB_As_expr*			As_expr_str;
-	struct VB_Id_list_stmt*		Id_l;
+	struct VB_Id_list*			Id_l;
 	struct VB_Array_expr*		Arr;
 	struct VB_For_stmt*			For;
 	struct VB_While_stmt*		While;
@@ -48,10 +53,10 @@
 	
 	enum VB_Id_type				Id_type;
 
-	struct VB_Console_print_stmt*	console_print;
-	struct VB_Console_println_stmt*	console_println;
-	struct VB_Console_read_stmt*	console_read;
-	struct VB_Console_readln_stmt*	console_readln;
+	struct VB_Print_stmt*			console_print;
+	struct VB_Println_stmt*			console_println;
+	struct VB_Read_stmt*			console_read;
+	struct VB_Readln_stmt*			console_readln;
 }
 
 %type <Module>		module_stmt
@@ -136,7 +141,7 @@
 %token EXCEPTION
 %token INTEGER
 %token CHAR
-%token STRING
+%token STRING_T
 %token BOOLEAN
 %token CONSOLE
 %token WRITE
@@ -145,6 +150,8 @@
 %token READLINE
 %token SYSTEM
 %token FINALLY
+%token TRUE
+%token FALSE
 
 %right '='
 %left '>' '<' MORE_OR_EQUAL LESS_OR_EQUAL NONEQUAL EQUAL
@@ -156,7 +163,7 @@
 
 %%
 
-	module_stmt: MODULE ID ENDL stmt_list END_MODULE ENDL {root = $$;$$ = create_VB_Module_stmt($2,$4);}
+	module_stmt: MODULE ID ENDL stmt_list END_MODULE ENDL {$$ = root = create_VB_Module_stmt($2,$4);}
 			   ;
 		
 	stmt_list: stmt					{$$ = create_VB_Stmt_list($1);}
@@ -182,41 +189,41 @@
 				
 	expr: ID						{$$ = create_id_expr($1);}
 		| ID'('expr_list')'			{$$ = create_brackets_actions($1,$3);}
-		| INT_CONST					{$$ = create_int_boolean_char_const_expr(INT_CONST,$1);}
-		| CHAR_CONST				{$$ = create_int_boolean_char_const_expr(CHAR_CONST,$1);}
+		| INT_CONST					{$$ = create_int_boolean_char_const_expr(3,$1);}
+		| CHAR_CONST				{$$ = create_int_boolean_char_const_expr(2,$1);}
 		| STRING_CONST				{$$ = create_string_const_expr($1);}
-		| BOOLEAN_CONST				{$$ = create_int_boolean_char_const_expr(BOOLEAN_CONST,$1);}
-        | expr '=' expr				{$$ = create_operator_expr(ASSIGN,$1,$3);}
-		| expr '+' expr				{$$ = create_operator_expr(PLUS,$1,$3);}
-		| expr '-' expr				{$$ = create_operator_expr(MINUS,$1,$3);}
-		| expr '*' expr				{$$ = create_operator_expr(MUL,$1,$3);}
-		| expr '/' expr				{$$ = create_operator_expr(DIV,$1,$3);}
-		| expr '\\' expr			{$$ = create_operator_expr(INT_DIV,$1,$3);}
-		| expr '^' expr				{$$ = create_operator_expr(POWER,$1,$3);}
-		| expr '>' expr				{$$ = create_operator_expr(MORE,$1,$3);}
-		| expr '<' expr				{$$ = create_operator_expr(LESS,$1,$3);}
-		| expr MORE_OR_EQUAL expr	{$$ = create_operator_expr(MORE_OR_EQUAL,$1,$3);}
-		| expr LESS_OR_EQUAL expr	{$$ = create_operator_expr(LESS_OR_EQUAL,$1,$3);}
-		| expr NONEQUAL	expr		{$$ = create_operator_expr(NONEQUAL,$1,$3);}
-		| expr EQUAL	expr		{$$ = create_operator_expr(EQUAL,$1,$3);}
+		| BOOLEAN_CONST				{$$ = create_int_boolean_char_const_expr(5,$1);}
+        | expr '=' expr				{$$ = create_operator_expr(6,$1,$3);}
+		| expr '+' expr				{$$ = create_operator_expr(7,$1,$3);}
+		| expr '-' expr				{$$ = create_operator_expr(8,$1,$3);}
+		| expr '*' expr				{$$ = create_operator_expr(9,$1,$3);}
+		| expr '/' expr				{$$ = create_operator_expr(11,$1,$3);}
+		| expr '\\' expr			{$$ = create_operator_expr(10,$1,$3);}
+		| expr '^' expr				{$$ = create_operator_expr(12,$1,$3);}
+		| expr '>' expr				{$$ = create_operator_expr(13,$1,$3);}
+		| expr '<' expr				{$$ = create_operator_expr(14,$1,$3);}
+		| expr MORE_OR_EQUAL expr	{$$ = create_operator_expr(15,$1,$3);}
+		| expr LESS_OR_EQUAL expr	{$$ = create_operator_expr(16,$1,$3);}
+		| expr NONEQUAL	expr		{$$ = create_operator_expr(17,$1,$3);}
+		| expr EQUAL	expr		{$$ = create_operator_expr(18,$1,$3);}
 		| '('expr')'				{$$ = $2;}
-		| '-' expr %prec UMINUS		{$$ = create_operator_expr(UMINUS,$2,0);}
+		| '-' expr %prec UMINUS		{$$ = create_operator_expr(19,$2,0);}
 		;
 			
-	if_stmt: IF expr THEN ENDL stmt_list end_if_stmt							{$$ = create_with_Then_expr_stmt_list_end_if_stmt(IF_THEN,$2,$5,$6);}
-		   | IF expr ENDL stmt_list end_if_stmt									{$$ = create_with_Then_expr_stmt_list_end_if_stmt(IF_ENDL,$2,$4,$5);}
-		   | IF expr THEN stmt_list_inline END_IF ENDL							{$$ = create_if_inline(IF_INLINE,$2,$4,0);}
-		   | IF expr THEN stmt_list_inline ELSE stmt_list_inline END_IF ENDL	{$$ = create_if_inline(IF_ELSE_INLINE,$2,$4,$6);}
+	if_stmt: IF expr THEN ENDL stmt_list end_if_stmt							{$$ = create_with_Then_expr_stmt_list_end_if_stmt(0,$2,$5,$6);}
+		   | IF expr ENDL stmt_list end_if_stmt									{$$ = create_with_Then_expr_stmt_list_end_if_stmt(1,$2,$4,$5);}
+		   | IF expr THEN stmt_list_inline END_IF ENDL							{$$ = create_if_inline(2,$2,$4,0);}
+		   | IF expr THEN stmt_list_inline ELSE stmt_list_inline END_IF ENDL	{$$ = create_if_inline(3,$2,$4,$6);}
 		   ;
 		   
 		stmt_list_inline: stmt									 {$$ = create_VB_Stmt_list($1);}
 						| stmt_list_inline ':' stmt				 {$$ = edit_VB_Stmt_list($1,$3);}
 						;
 		   
-		end_if_stmt: END_IF ENDL								 {$$ = create_end_if_stmt(ENDIF,NULL,NULL,NULL);}
-				   | ELSE ENDL stmt_list END_IF ENDL			 {$$ = create_end_if_stmt(ELSE,NULL,$3,NULL);}
-				   | ELSEIF expr THEN ENDL stmt_list end_if_stmt {$$ = create_end_if_stmt(ELSE_IF_THEN,$2,$5,$6);}
-				   | ELSEIF expr ENDL stmt_list end_if_stmt		 {$$ = create_end_if_stmt(ELSE_IF_ENDL,$2,$4,$5);}
+		end_if_stmt: END_IF ENDL								 {$$ = create_end_if_stmt(0,NULL,NULL,NULL);}
+				   | ELSE ENDL stmt_list END_IF ENDL			 {$$ = create_end_if_stmt(1,NULL,$3,NULL);}
+				   | ELSEIF expr THEN ENDL stmt_list end_if_stmt {$$ = create_end_if_stmt(2,$2,$5,$6);}
+				   | ELSEIF expr ENDL stmt_list end_if_stmt		 {$$ = create_end_if_stmt(3,$2,$4,$5);}
 				   ;			   		
 
 	dim_stmt: DIM as_expr_list ENDL				 		{$$ = create_dim_stmt($2);}
@@ -228,24 +235,24 @@
 					| as_expr_list',' array_expr 		{$$ = add_to_as_expr_list($1,NULL,$3);}
 					;	   
 
-		as_expr: id_list_stmt AS INTEGER				{$$ = create_as_expr(ID_LIST,$1,NULL,INTEGER,NULL);}	
-			   | id_list_stmt AS BOOLEAN				{$$ = create_as_expr(ID_LIST,$1,NULL,BOOLEAN,NULL);}	
-			   | id_list_stmt AS CHAR					{$$ = create_as_expr(ID_LIST,$1,NULL,CHAR,NULL);}	
-			   | id_list_stmt AS STRING					{$$ = create_as_expr(ID_LIST,$1,NULL,STRING,NULL);}	
-			   | id_list_stmt AS INTEGER '=' expr		{$$ = create_as_expr(ID_INIT,NULL,$1,INTEGER,$5);}
-			   | id_list_stmt AS BOOLEAN '=' expr		{$$ = create_as_expr(ID_INIT,NULL,$1,BOOLEAN,$5);}
-			   | id_list_stmt AS CHAR '=' expr			{$$ = create_as_expr(ID_INIT,NULL,$1,CHAR,$5);}
-			   | id_list_stmt AS STRING '=' expr		{$$ = create_as_expr(ID_INIT,NULL,$1,STRING,$5);}
+		as_expr: id_list_stmt AS INTEGER				{$$ = create_as_expr(0,$1,NULL,0,NULL);}	
+			   | id_list_stmt AS BOOLEAN				{$$ = create_as_expr(0,$1,NULL,1,NULL);}	
+			   | id_list_stmt AS CHAR					{$$ = create_as_expr(0,$1,NULL,2,NULL);}	
+			   | id_list_stmt AS STRING_T					{$$ = create_as_expr(0,$1,NULL,3,NULL);}	
+			   | id_list_stmt AS INTEGER '=' expr		{$$ = create_as_expr(0,$1,NULL,0,$5);}
+			   | id_list_stmt AS BOOLEAN '=' expr		{$$ = create_as_expr(0,$1,NULL,1,$5);}
+			   | id_list_stmt AS CHAR '=' expr			{$$ = create_as_expr(0,$1,NULL,2,$5);}
+			   | id_list_stmt AS STRING_T '=' expr		{$$ = create_as_expr(0,$1,NULL,3,$5);}
 			   ;				
 	       
 		id_list_stmt: ID								{$$ = create_id_list($1);}
 					| id_list_stmt',' ID				{$$ = add_to_id_list($1,$3);}
 					;	
 		
-		array_expr: ID '(' INT_CONST ')' AS INTEGER		{$$ = create_Array($1,$3,INTEGER);}
-				  | ID '(' INT_CONST ')' AS BOOLEAN		{$$ = create_Array($1,$3,BOOLEAN);}
-				  | ID '(' INT_CONST ')' AS CHAR		{$$ = create_Array($1,$3,CHAR);}
-				  | ID '(' INT_CONST ')' AS STRING		{$$ = create_Array($1,$3,STRING);}
+		array_expr: ID '(' INT_CONST ')' AS INTEGER		{$$ = create_Array($1,$3,0);}
+				  | ID '(' INT_CONST ')' AS BOOLEAN		{$$ = create_Array($1,$3,1);}
+				  | ID '(' INT_CONST ')' AS CHAR		{$$ = create_Array($1,$3,2);}
+				  | ID '(' INT_CONST ')' AS STRING_T		{$$ = create_Array($1,$3,3);}
 				  ;
 
 		expr_list: expr					{$$ = create_Expr_list($1);}
@@ -254,21 +261,21 @@
 		
         for_stmt: FOR ID '=' INT_CONST TO INT_CONST ENDL stmt_list NEXT ENDL            				{$$ = create_for_stmt($2,$4,$6,$8);}
                 | FOR ID '=' INT_CONST TO INT_CONST STEP INT_CONST ENDL stmt_list NEXT ENDL 			{$$ = create_for_with_step_stmt($2,$4,$6,$8,$10);}
-                | FOR ID AS INTEGER '=' INT_CONST TO INT_CONST ENDL stmt_list NEXT ENDL 				{$$ = create_for_with_decl_stmt($2,INTEGER,$6,$8,$10);}
-				| FOR ID AS BOOLEAN '=' INT_CONST TO INT_CONST ENDL stmt_list NEXT ENDL 				{$$ = create_for_with_decl_stmt($2,BOOLEAN,$6,$8,$10);}
-				| FOR ID AS CHAR '=' INT_CONST TO INT_CONST ENDL stmt_list NEXT ENDL 					{$$ = create_for_with_decl_stmt($2,CHAR,$6,$8,$10);}
-                | FOR ID AS INTEGER '=' INT_CONST TO INT_CONST STEP INT_CONST ENDL stmt_list NEXT ENDL 	{$$ = create_for_with_decl_with_step_stmt($2,STRING,$6,$8,$10,$12);}
-				| FOR ID AS BOOLEAN '=' INT_CONST TO INT_CONST STEP INT_CONST ENDL stmt_list NEXT ENDL 	{$$ = create_for_with_decl_with_step_stmt($2,STRING,$6,$8,$10,$12);}
-				| FOR ID AS CHAR '=' INT_CONST TO INT_CONST STEP INT_CONST ENDL stmt_list NEXT ENDL 	{$$ = create_for_with_decl_with_step_stmt($2,STRING,$6,$8,$10,$12);}
+                | FOR ID AS INTEGER '=' INT_CONST TO INT_CONST ENDL stmt_list NEXT ENDL 				{$$ = create_for_with_decl_stmt($2,0,$6,$8,$10);}
+				| FOR ID AS BOOLEAN '=' INT_CONST TO INT_CONST ENDL stmt_list NEXT ENDL 				{$$ = create_for_with_decl_stmt($2,1,$6,$8,$10);}
+				| FOR ID AS CHAR '=' INT_CONST TO INT_CONST ENDL stmt_list NEXT ENDL 					{$$ = create_for_with_decl_stmt($2,2,$6,$8,$10);}
+                | FOR ID AS INTEGER '=' INT_CONST TO INT_CONST STEP INT_CONST ENDL stmt_list NEXT ENDL 	{$$ = create_for_with_decl_with_step_stmt($2,0,$6,$8,$10,$12);}
+				| FOR ID AS BOOLEAN '=' INT_CONST TO INT_CONST STEP INT_CONST ENDL stmt_list NEXT ENDL 	{$$ = create_for_with_decl_with_step_stmt($2,1,$6,$8,$10,$12);}
+				| FOR ID AS CHAR '=' INT_CONST TO INT_CONST STEP INT_CONST ENDL stmt_list NEXT ENDL 	{$$ = create_for_with_decl_with_step_stmt($2,2,$6,$8,$10,$12);}
 				;				
 
         while_stmt: WHILE expr ENDL stmt_list END_WHILE ENDL 	 {$$ = create_while_stmt($2,$4);}
 				  ;
 
-        do_loop_stmt: DO WHILE expr ENDL stmt_list LOOP ENDL     {$$ = create_do_loop_stmt(DO_WHILE,$3,$5);}
-                    | DO UNTIL expr ENDL stmt_list LOOP ENDL     {$$ = create_do_loop_stmt(DO_UNTIL,$3,$5);}
-                    | DO ENDL stmt_list LOOP WHILE expr ENDL     {$$ = create_do_loop_stmt(LOOP_WHILE,$6,$3);}
-                    | DO ENDL stmt_list LOOP UNTIL expr ENDL     {$$ = create_do_loop_stmt(LOOP_UNTIL,$6,$3);}
+        do_loop_stmt: DO WHILE expr ENDL stmt_list LOOP ENDL     {$$ = create_do_loop_stmt(0,$3,$5);}
+                    | DO UNTIL expr ENDL stmt_list LOOP ENDL     {$$ = create_do_loop_stmt(1,$3,$5);}
+                    | DO ENDL stmt_list LOOP WHILE expr ENDL     {$$ = create_do_loop_stmt(2,$6,$3);}
+                    | DO ENDL stmt_list LOOP UNTIL expr ENDL     {$$ = create_do_loop_stmt(3,$6,$3);}
                     ;
 	
         enum_stmt: ENUM ID ENDL enum_expr_list END_ENUM ENDL    {$$ = create_enum_stmt($2,$4);}
@@ -286,24 +293,24 @@
                 | SUB ID '('param_list')' ENDL stmt_list END_SUB ENDL   {$$ = create_sub_stmt($2,$4,$7);}
 				;		
 
-                param_list: param_stmt                  {$$ = create_param_list($1):}
-                          | param_list',' param_stmt    {$$ = add_to_param_list($1,$3):}
+                param_list: param_stmt                  {$$ = create_param_list($1);}
+                          | param_list',' param_stmt    {$$ = add_to_param_list($1,$3);}
 						  ;
 
-                param_stmt: BYVAL ID AS INTEGER         {$$ = create_param_stmt($2,INTEGER):}
-						  | BYVAL ID AS BOOLEAN         {$$ = create_param_stmt($2,BOOLEAN):}
-						  | BYVAL ID AS CHAR            {$$ = create_param_stmt($2,CHAR):}
-						  | BYVAL ID AS STRING          {$$ = create_param_stmt($2,STRING):}
+                param_stmt: BYVAL ID AS INTEGER         {$$ = create_param_stmt($2,0);}
+						  | BYVAL ID AS BOOLEAN         {$$ = create_param_stmt($2,1);}
+						  | BYVAL ID AS CHAR            {$$ = create_param_stmt($2,2);}
+						  | BYVAL ID AS STRING_T          {$$ = create_param_stmt($2,3);}
 						  ; 
 
-        func_stmt: FUNCTION ID '('')' AS INTEGER ENDL stmt_list RETURN expr ENDL END_FUNCTION ENDL           {$$ = create_func_stmt($2,NULL,INTEGER,$8,$10);}
-				 | FUNCTION ID '('')' AS BOOLEAN ENDL stmt_list RETURN expr ENDL END_FUNCTION ENDL           {$$ = create_func_stmt($2,NULL,BOOLEAN,$8,$10);}
-				 | FUNCTION ID '('')' AS CHAR ENDL stmt_list RETURN expr ENDL END_FUNCTION ENDL              {$$ = create_func_stmt($2,NULL,CHAR,$8,$10);}
-				 | FUNCTION ID '('')' AS STRING ENDL stmt_list RETURN expr ENDL END_FUNCTION ENDL            {$$ = create_func_stmt($2,NULL,STRING,$8,$10);}
-                 | FUNCTION ID '('param_list')' AS INTEGER ENDL stmt_list RETURN expr ENDL END_FUNCTION ENDL {$$ = create_func_stmt($2,$4,INTEGER,$9,$11);}
-				 | FUNCTION ID '('param_list')' AS BOOLEAN ENDL stmt_list RETURN expr ENDL END_FUNCTION ENDL {$$ = create_func_stmt($2,$4,BOOLEAN,$9,$11);}
-				 | FUNCTION ID '('param_list')' AS CHAR ENDL stmt_list RETURN expr ENDL END_FUNCTION ENDL 	 {$$ = create_func_stmt($2,$4,CHAR,$9,$11);}
-				 | FUNCTION ID '('param_list')' AS STRING ENDL stmt_list RETURN expr ENDL END_FUNCTION ENDL  {$$ = create_func_stmt($2,$4,STRING,$9,$11);}
+        func_stmt: FUNCTION ID '('')' AS INTEGER ENDL stmt_list RETURN expr ENDL END_FUNCTION ENDL           {$$ = create_func_stmt($2,NULL,0,$8,$10);}
+				 | FUNCTION ID '('')' AS BOOLEAN ENDL stmt_list RETURN expr ENDL END_FUNCTION ENDL           {$$ = create_func_stmt($2,NULL,1,$8,$10);}
+				 | FUNCTION ID '('')' AS CHAR ENDL stmt_list RETURN expr ENDL END_FUNCTION ENDL              {$$ = create_func_stmt($2,NULL,2,$8,$10);}
+				 | FUNCTION ID '('')' AS STRING_T ENDL stmt_list RETURN expr ENDL END_FUNCTION ENDL            {$$ = create_func_stmt($2,NULL,3,$8,$10);}
+                 | FUNCTION ID '('param_list')' AS INTEGER ENDL stmt_list RETURN expr ENDL END_FUNCTION ENDL {$$ = create_func_stmt($2,$4,0,$9,$11);}
+				 | FUNCTION ID '('param_list')' AS BOOLEAN ENDL stmt_list RETURN expr ENDL END_FUNCTION ENDL {$$ = create_func_stmt($2,$4,1,$9,$11);}
+				 | FUNCTION ID '('param_list')' AS CHAR ENDL stmt_list RETURN expr ENDL END_FUNCTION ENDL 	 {$$ = create_func_stmt($2,$4,2,$9,$11);}
+				 | FUNCTION ID '('param_list')' AS STRING_T ENDL stmt_list RETURN expr ENDL END_FUNCTION ENDL  {$$ = create_func_stmt($2,$4,3,$9,$11);}
 				 ;
 			 
 	try_catch_stmt: TRY ENDL stmt_list catch_stmt_list FINALLY ENDL stmt_list ENDL END_TRY ENDL {$$ = create_Try_Catch($3,$4,$7);}
@@ -322,7 +329,7 @@
 	console_print_stmt: CONSOLE '.' WRITE '(' STRING_CONST ')' ENDL		  	{$$ = create_Print($5);}
 					  ;
 				 
-	console_println_stmt: CONSOLE '.' WRITELINE '(' STRING_CONST ')' ENDL 	{$$ = create_Println$5);}
+	console_println_stmt: CONSOLE '.' WRITELINE '(' STRING_CONST ')' ENDL 	{$$ = create_Println($5);}
 						;
 				   
 	console_read_stmt: CONSOLE '.' READ '('')' ENDL						  	{$$ = create_Read();}
@@ -332,8 +339,17 @@
 					   ;							   	
 %%
 
+void yyerror (char const* s)
+{
+	printf("%s\n",s);
+	getchar();
+	exit(0);
+}
+
 int main (int argc, char* argv[])
 {
+	FILE* file;
+	
 	file = fopen("result.txt", "wt");
 	yyin = fopen(argv[1], "r");
 	
@@ -342,7 +358,7 @@ int main (int argc, char* argv[])
 	yyparse();
 	
 	print_tree();		// Вывод дерева
-	
+
 	fclose(file);
 	getchar();
 	return 0;

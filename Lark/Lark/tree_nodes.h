@@ -55,23 +55,23 @@ struct VB_Stmt
  */
 enum VB_Stmt_type
 {
-	ENDL,
-	STMT_EXPR,
-	IF,
-	DIM,
-	FOR,
-	WHILE,
-	DO_LOOP,
-	ENUM,
-	SUB,
-	FUNC,
-	TRY_CATCH,
-	THROW,
-	PRINT,
-	PRINTLN,
-	READ,
-	READLN,
-	READKEY
+	ENDL_E,
+	STMT_EXPR_E,
+	IF_E,
+	DIM_E,
+	FOR_E,
+	WHILE_E,
+	DO_LOOP_E,
+	ENUM_E,
+	SUB_E,
+	FUNC_E,
+	TRY_CATCH_E,
+	THROW_E,
+	PRINT_E,
+	PRINTLN_E,
+	READ_E,
+	READLN_E,
+	READKEY_E
 };
 
 /*! \struct VB_Expr_list
@@ -104,12 +104,12 @@ struct VB_Expr
  */
 enum VB_Expr_type
 {
-	ID,				//!< Идентификатор
+	ID_E,				//!< Идентификатор
 	EXPR_FUNC,		//!< Процедура или функция
-	CHAR_CONST,		//!< Символьная константа
-	INT_CONST,		//!< Целочисленная константа
-	STRING_CONST,	//!< Строковая константа
-	BOOLEAN_CONST,	//!< Булевая константа
+	CHAR_CONST_E,		//!< Символьная константа
+	INT_CONST_E,		//!< Целочисленная константа
+	STRING_CONST_E,	//!< Строковая константа
+	BOOLEAN_CONST_E,	//!< Булевая константа
 	ASSIGN,			//!< Оператор присваивания
 	PLUS,			//!< Оператор сложения
 	MINUS,			//!< Оператор вычитания
@@ -119,11 +119,11 @@ enum VB_Expr_type
 	POWER,			//!< Оператор возведения в степень
 	MORE,			//!< Оператор "больше"
 	LESS,			//!< Оператор "меньше"
-	MORE_OR_EQUAL,	//!< Оператор "больше или равно"
-	LESS_OR_EQUAL,	//!< Оператор "меньше или равно"
-	NONEQUAL,		//!< Оператор "неравно"
-	EQUAL,			//!< Оператор "равно"
-	UMINUS,			//!< Оператор унарного минуса
+	MORE_OR_EQUAL_E,	//!< Оператор "больше или равно"
+	LESS_OR_EQUAL_E,	//!< Оператор "меньше или равно"
+	NONEQUAL_E,		//!< Оператор "неравно"
+	EQUAL_E,			//!< Оператор "равно"
+	UMINUS_E,			//!< Оператор унарного минуса
 	UPLUS,			//!< Оператор унарного плюса
 	GET_ITEM,		//!< Получение элемента массива
 	BRK_EXPR		//!< Выражение со скобками
@@ -170,10 +170,10 @@ struct VB_End_if_stmt
  */
 enum VB_End_if_stmt_type
 {
-	ENDIF,						//!< Операция завершилась
-	ELSE,						//!< Есть альтернативное действие
-	ELSE_IF_THEN,				//!< Есть альтернативное действие с условием и на конце условия стоит "Then"
-	ELSE_IF_ENDL				//!< Есть альтернативное действие с условием и на конце условия стоит ENDL
+	ENDIF_E=0,						//!< Операция завершилась
+	ELSE_E=1,						//!< Есть альтернативное действие
+	ELSE_IF_THEN_E=2,				//!< Есть альтернативное действие с условием и на конце условия стоит "Then"
+	ELSE_IF_ENDL_E=3				//!< Есть альтернативное действие с условием и на конце условия стоит ENDL
 };
 
 /*! \struct VB_Dim_stmt
@@ -231,10 +231,10 @@ enum VB_As_expr_type
  */
 enum VB_Id_type
 {
-	INTEGER,
-	BOOLEAN,
-	CHAR,
-	STRING
+	INTEGER_E,
+	BOOLEAN_E,
+	CHAR_E,
+	STRING_E
 };
 
 /*! \struct VB_Id_list
@@ -476,12 +476,18 @@ struct VB_Module_stmt* create_VB_Module_stmt (char* id, struct VB_Stmt_list* lis
 {
 	struct VB_Module_stmt* module = NULL;
 
+	printf("CREATING MODULE");
+
 	if (list == NULL) return module;
 
 	module = (struct VB_Module_stmt*)malloc(sizeof(struct VB_Module_stmt));
 
-	if (id == NULL) strcpy(module->id, "Unknown");
-	else strcpy(module->id, id);
+	if (id == NULL)
+	{
+		module->id = (char*)malloc(8 * sizeof(char));
+		strcpy(module->id, "Unknown\0");
+	}
+	else module->id = id;
 
 	module->stmt_list = list;
 
@@ -587,53 +593,53 @@ struct VB_Stmt* fill_stmt(enum VB_Stmt_type type, void* data)
 
 		stmt->type = type;
 
-		switch (type)
+	switch (type)
 		{
-		case(ENDL):
+		case(0):
 			break;
-		case(STMT_EXPR):
+		case(1):
 			stmt->expr = (struct VB_Expr*)data;
 			break;
-		case(IF):
+		case(2):
 			stmt->if_stmt = (struct VB_If_stmt*)data;
 			break;
-		case(DIM):
+		case(3):
 			stmt->dim_stmt = (struct VB_Dim_stmt*)data;
 			break;
-		case(FOR):
+		case(4):
 			stmt->for_stmt = (struct VB_For_stmt*)data;
 			break;
-		case(WHILE):
+		case(5):
 			stmt->while_stmt = (struct VB_While_stmt*)data;
 			break;
-		case(DO_LOOP):
+		case(6):
 			stmt->do_loop_stmt = (struct VB_Do_loop_stmt*)data;
 			break;
-		case(ENUM):
+		case(7):
 			stmt->enum_stmt = (struct VB_Enum_stmt*)data;
 			break;
-		case(SUB):
+		case(8):
 			stmt->sub_stmt = (struct VB_Sub_stmt*)data;
 			break;
-		case(FUNC):
+		case(9):
 			stmt->func_stmt = (struct VB_Func_stmt*)data;
 			break;
-		case(TRY_CATCH):
+		case(10):
 			stmt->try_catch_stmt = (struct VB_Try_catch_stmt*)data;
 			break;
-		case(THROW):
+		case(11):
 			stmt->throw_stmt = (struct VB_Throw_stmt*)data;
 			break;
-		case(PRINT):
+		case(12):
 			stmt->print_stmt = (struct VB_Print_stmt*)data;
 			break;
-		case(PRINTLN):
+		case(13):
 			stmt->println_stmt = (struct VB_Println_stmt*)data;
 			break;
-		case(READ):
+		case(14):
 			stmt->read_stmt = (struct VB_Read_stmt*)data;
 			break;
-		case(READLN):
+		case(15):
 			stmt->readln_stmt = (struct VB_Readln_stmt*)data;
 			break;
 		}
@@ -648,7 +654,7 @@ struct VB_Stmt* fill_stmt(enum VB_Stmt_type type, void* data)
 */
 struct VB_Stmt* create_VB_Stmt_Expr (struct VB_Expr* expr)
 {
-	return fill_stmt(STMT_EXPR,(void*)expr);
+	return fill_stmt(1,(void*)expr);
 }
 
 /*!
@@ -658,7 +664,7 @@ struct VB_Stmt* create_VB_Stmt_Expr (struct VB_Expr* expr)
 */
 struct VB_Stmt* create_VB_Stmt_If (struct VB_If_stmt* if_stmt)
 {
-	return fill_stmt(IF,(void*)if_stmt);
+	return fill_stmt(2,(void*)if_stmt);
 }
 
 /*!
@@ -668,7 +674,7 @@ struct VB_Stmt* create_VB_Stmt_If (struct VB_If_stmt* if_stmt)
 */
 struct VB_Stmt* create_VB_Stmt_Dim (struct VB_Dim_stmt* dim_stmt)
 {
-	return fill_stmt(DIM,(void*)dim_stmt);
+	return fill_stmt(3,(void*)dim_stmt);
 }
 
 /*!
@@ -678,7 +684,7 @@ struct VB_Stmt* create_VB_Stmt_Dim (struct VB_Dim_stmt* dim_stmt)
 */
 struct VB_Stmt* create_VB_Stmt_For (struct VB_For_stmt* for_stmt)
 {
-	return fill_stmt(FOR,(void*)for_stmt);
+	return fill_stmt(4,(void*)for_stmt);
 }
 
 /*!
@@ -688,7 +694,7 @@ struct VB_Stmt* create_VB_Stmt_For (struct VB_For_stmt* for_stmt)
 */
 struct VB_Stmt* create_VB_Stmt_While (struct VB_While_stmt* while_stmt)
 {
-	return fill_stmt(WHILE,(void*)while_stmt);
+	return fill_stmt(5,(void*)while_stmt);
 }
 
 /*!
@@ -698,7 +704,7 @@ struct VB_Stmt* create_VB_Stmt_While (struct VB_While_stmt* while_stmt)
 */
 struct VB_Stmt* create_VB_Stmt_Do_Loop (struct VB_Do_loop_stmt* do_loop_stmt)
 {
-	return fill_stmt(DO_LOOP,(void*)do_loop_stmt);
+	return fill_stmt(6,(void*)do_loop_stmt);
 }
 
 /*!
@@ -708,7 +714,7 @@ struct VB_Stmt* create_VB_Stmt_Do_Loop (struct VB_Do_loop_stmt* do_loop_stmt)
 */
 struct VB_Stmt* create_VB_Stmt_Enum (struct VB_Enum_stmt* enum_stmt)
 {
-	return fill_stmt(ENUM,(void*)enum_stmt);
+	return fill_stmt(7,(void*)enum_stmt);
 }
 
 /*!
@@ -718,7 +724,7 @@ struct VB_Stmt* create_VB_Stmt_Enum (struct VB_Enum_stmt* enum_stmt)
 */
 struct VB_Stmt* create_VB_Stmt_Sub (struct VB_Sub_stmt* sub_stmt)
 {
-	return fill_stmt(SUB,(void*)sub_stmt);
+	return fill_stmt(8,(void*)sub_stmt);
 }
 
 /*!
@@ -728,7 +734,7 @@ struct VB_Stmt* create_VB_Stmt_Sub (struct VB_Sub_stmt* sub_stmt)
 */
 struct VB_Stmt* create_VB_Stmt_Func (struct VB_Func_stmt* func_stmt)
 {
-	return fill_stmt(FUNC,(void*)func_stmt);
+	return fill_stmt(9,(void*)func_stmt);
 }
 
 /*!
@@ -738,7 +744,7 @@ struct VB_Stmt* create_VB_Stmt_Func (struct VB_Func_stmt* func_stmt)
 */
 struct VB_Stmt* create_VB_Stmt_Try_Catch (struct VB_Try_catch_stmt* try_catch_stmt)
 {
-	return fill_stmt(TRY_CATCH,(void*)try_catch_stmt);
+	return fill_stmt(10,(void*)try_catch_stmt);
 }
 
 /*!
@@ -748,7 +754,7 @@ struct VB_Stmt* create_VB_Stmt_Try_Catch (struct VB_Try_catch_stmt* try_catch_st
 */
 struct VB_Stmt* create_VB_Stmt_Throw(struct VB_Throw_stmt* throw_stmt)
 {
-	return fill_stmt(THROW,(void*)throw_stmt);
+	return fill_stmt(11,(void*)throw_stmt);
 }
 
 /*!
@@ -758,7 +764,7 @@ struct VB_Stmt* create_VB_Stmt_Throw(struct VB_Throw_stmt* throw_stmt)
 */
 struct VB_Stmt* create_VB_Stmt_Print (struct VB_Print_stmt* print_stmt)
 {
-	return fill_stmt(PRINT,(void*)print_stmt);
+	return fill_stmt(12,(void*)print_stmt);
 }
 
 /*!
@@ -768,7 +774,7 @@ struct VB_Stmt* create_VB_Stmt_Print (struct VB_Print_stmt* print_stmt)
 */
 struct VB_Stmt* create_VB_Stmt_Println (struct VB_Println_stmt* println_stmt)
 {
-	return fill_stmt(PRINTLN,(void*)println_stmt);
+	return fill_stmt(13,(void*)println_stmt);
 }
 
 /*!
@@ -778,7 +784,7 @@ struct VB_Stmt* create_VB_Stmt_Println (struct VB_Println_stmt* println_stmt)
 */
 struct VB_Stmt* create_VB_Stmt_Readln (struct VB_Readln_stmt* readln_stmt)
 {
-	return fill_stmt(READLN,(void*)readln_stmt);
+	return fill_stmt(15,(void*)readln_stmt);
 }
 
 /*!
@@ -788,7 +794,7 @@ struct VB_Stmt* create_VB_Stmt_Readln (struct VB_Readln_stmt* readln_stmt)
 */
 struct VB_Stmt* create_VB_Stmt_Read (struct VB_Read_stmt* read_stmt)
 {
-	return fill_stmt(READ,(void*)read_stmt);
+	return fill_stmt(14,(void*)read_stmt);
 }
 
 /* Инициализация условного выражения:
@@ -1081,9 +1087,14 @@ struct VB_Try_catch_stmt* create_Try_Catch (struct VB_Stmt_list* stmt_list,
 struct VB_Expr* create_id_expr(char* name)
 {
 	struct VB_Expr* result = (struct VB_Expr*)malloc(sizeof(struct VB_Expr));
+	printf("Create ID %s\n", name);
 
-	result->type = ID;
+	result->type = 0;
 	result->expr_string = name;
+	result->left_chld = NULL;
+	result->list = NULL;
+	result->next = NULL;
+	result->right_chld = NULL;
 
 	return result;
 }
@@ -1098,9 +1109,12 @@ struct VB_Expr* create_func_expr(char* name, struct VB_Expr_list* params)
 {
 	struct VB_Expr* result = (struct VB_Expr*)malloc(sizeof(struct VB_Expr));
 
-	result->type = FUNC;
+	result->type = 9;
 	result->expr_string = name;
 	result->list = params;
+	result->left_chld = NULL;
+	result->next = NULL;
+	result->right_chld = NULL;
 
 	return result;
 }
@@ -1112,9 +1126,12 @@ struct VB_Expr* create_brackets_actions(char* name, struct VB_Expr_list* params)
 {
 	struct VB_Expr* result = (struct VB_Expr*)malloc(sizeof(struct VB_Expr));
 	
-	result->type = BRK_EXPR;
+	result->type = 22;
 	result->expr_string = name;
 	result->list = params;
+	result->left_chld = NULL;
+	result->next = NULL;
+	result->right_chld = NULL;
 
 	return result;
 }
@@ -1128,9 +1145,15 @@ struct VB_Expr* create_brackets_actions(char* name, struct VB_Expr_list* params)
 struct VB_Expr* create_int_boolean_char_const_expr(enum VB_Expr_type type, int value)
 {
 	struct VB_Expr* result = (struct VB_Expr*)malloc(sizeof(struct VB_Expr));
+	printf("Create Expr %d", value);
 
 	result->type = type;
 	result->int_val = value;
+	result->expr_string = "int";
+	result->left_chld = NULL;
+	result->list = NULL;
+	result->next = NULL;
+	result->right_chld = NULL;
 
 	return result;
 }
@@ -1144,9 +1167,13 @@ struct VB_Expr* create_string_const_expr(char* string)
 {
 	struct VB_Expr* result = (struct VB_Expr*)malloc(sizeof(struct VB_Expr));
 
-	result->type = STRING_CONST;
+	result->type = STRING_CONST_E;
 	strcpy(result->expr_string,string);
-
+	result->left_chld = NULL;
+	result->list = NULL;
+	result->next = NULL;
+	result->right_chld = NULL;
+	
 	return result;
 }
 
@@ -1163,10 +1190,14 @@ struct VB_Expr* create_operator_expr(enum VB_Expr_type type,
 {
 	struct VB_Expr* result = (struct VB_Expr*)malloc(sizeof(struct VB_Expr));
 
+	result->expr_string = "???";
+
 	result->type = type;
 	result->left_chld = left;
 	result->right_chld = right;
-
+	result->list = NULL;
+	result->next = NULL;
+	
 	return result;
 }
 
@@ -1181,7 +1212,7 @@ struct VB_Dim_stmt* create_dim_stmt(struct VB_As_Expr_list* list)
 	
 	dim_stmt->list = list;
 	dim_stmt->next = NULL;
-
+	
 	return dim_stmt;
 }
 
@@ -1254,7 +1285,9 @@ struct VB_Id_list* create_id_list(char* id)
 {
 	struct VB_Id_list* list = (struct VB_Id_list*)malloc(sizeof(struct VB_Id_list));
 
-	strcpy(list->id->expr_string,id);
+	list->id = (struct VB_Expr*)malloc(sizeof(struct VB_Expr));
+
+	list->id->expr_string = id;
 	list->next = NULL;
 
 	return list;
@@ -1288,7 +1321,7 @@ struct VB_Sub_stmt * create_sub_stmt(char * id, struct VB_Param_list * params, s
 {
 	struct VB_Sub_stmt* result = (struct VB_Sub_stmt*)malloc(sizeof(struct VB_Sub_stmt));
 
-	strcpy(result->id,id);
+	result->id = id;
 	result->next = NULL;
 	result->param_list = params;
 	result->stmt_list = body;
