@@ -993,6 +993,8 @@ struct VB_Array_expr* create_Array (char* id, int int_const, enum VB_Id_type typ
 	arr->size = int_const;
 	arr->id = (struct VB_Expr*)malloc(sizeof(struct VB_Expr));
 	strcpy(arr->id->expr_string,id);
+	arr->id->left_chld = NULL;
+	arr->id->right_chld = NULL;
 
 	return arr;
 }
@@ -1015,6 +1017,8 @@ struct VB_Array_expr* create_Array_with_init (char* id, enum VB_Id_type type, st
 	result->is_init = 1;
 	result->id = (struct VB_Expr*)malloc(sizeof(struct VB_Expr));
 	strcpy(result->id->expr_string, id);
+	result->id->left_chld = NULL;
+	result->id->right_chld = NULL;
 
 	return result;
 }
@@ -1372,6 +1376,8 @@ struct VB_Id_list* create_id_list(char* id)
 
 	list->id->expr_string = id;
 	list->next = NULL;
+	list->id->left_chld = NULL;
+	list->id->right_chld = NULL;
 
 	return list;
 }
@@ -1569,6 +1575,8 @@ struct VB_For_stmt * create_for_with_decl_with_step_stmt(char* id, enum VB_Id_ty
 	result->step_val = step;
 	result->stmt_list = body;
 	result->next = NULL;
+	result->new_id->left_chld = NULL;
+
 
     return result;
 }

@@ -209,7 +209,7 @@
 					 | sub_stmt					{$$ = create_VB_Decl_Sub($1);}
 					 | func_stmt				{$$ = create_VB_Decl_Func($1);}
 					 ;
-
+					 
 	expr: ID						{$$ = create_id_expr($1);}
 		| ID'('expr_list')'			{$$ = create_brackets_actions($1,$3);}
 		| INT_CONST					{$$ = create_int_boolean_char_const_expr(3,$1);}
@@ -232,42 +232,42 @@
 		| '('expr')'				{$$ = $2;}
 		| '-' expr %prec UMINUS		{$$ = create_operator_expr(19,$2,0);}
 		;
-			
+
 	if_stmt: IF expr THEN ENDL stmt_list end_if_stmt							{$$ = create_with_Then_expr_stmt_list_end_if_stmt(0,$2,$5,$6);}
 		   | IF expr ENDL stmt_list end_if_stmt									{$$ = create_with_Then_expr_stmt_list_end_if_stmt(1,$2,$4,$5);}
 		   | IF expr THEN stmt_list_inline END_IF ENDL							{$$ = create_if_inline(2,$2,$4,0);}
 		   | IF expr THEN stmt_list_inline ELSE stmt_list_inline END_IF ENDL	{$$ = create_if_inline(3,$2,$4,$6);}
 		   ;
-		   
+
 		stmt_list_inline: stmt									 {$$ = create_VB_Stmt_list($1);}
 						| stmt_list_inline ':' stmt				 {$$ = edit_VB_Stmt_list($1,$3);}
 						;
-		   
+
 		end_if_stmt: END_IF ENDL								 {$$ = create_end_if_stmt(0,NULL,NULL,NULL);}
 				   | ELSE ENDL stmt_list END_IF ENDL			 {$$ = create_end_if_stmt(1,NULL,$3,NULL);}
 				   | ELSEIF expr THEN ENDL stmt_list end_if_stmt {$$ = create_end_if_stmt(2,$2,$5,$6);}
 				   | ELSEIF expr ENDL stmt_list end_if_stmt		 {$$ = create_end_if_stmt(3,$2,$4,$5);}
-				   ;			   		
+				   ;
 
 	dim_stmt: DIM as_expr_list ENDL				 		{$$ = create_dim_stmt($2);}
 			;
-		   
+
 		as_expr_list: as_expr					 		{$$ = create_as_expr_list($1,NULL);}
 					| array_expr				 		{$$ = create_as_expr_list(NULL,$1);}
 					| as_expr_list',' as_expr	 		{$$ = add_to_as_expr_list($1,$3,NULL);}
 					| as_expr_list',' array_expr 		{$$ = add_to_as_expr_list($1,NULL,$3);}
-					;	   
+					;
 
 		as_expr: id_list_stmt AS INTEGER				{$$ = create_as_expr(0,$1,NULL,0,NULL);}	
 			   | id_list_stmt AS BOOLEAN				{$$ = create_as_expr(0,$1,NULL,1,NULL);}	
 			   | id_list_stmt AS CHAR					{$$ = create_as_expr(0,$1,NULL,2,NULL);}	
-			   | id_list_stmt AS STRING_T					{$$ = create_as_expr(0,$1,NULL,3,NULL);}	
+			   | id_list_stmt AS STRING_T				{$$ = create_as_expr(0,$1,NULL,3,NULL);}	
 			   | id_list_stmt AS INTEGER '=' expr		{$$ = create_as_expr(0,$1,NULL,0,$5);}
 			   | id_list_stmt AS BOOLEAN '=' expr		{$$ = create_as_expr(0,$1,NULL,1,$5);}
 			   | id_list_stmt AS CHAR '=' expr			{$$ = create_as_expr(0,$1,NULL,2,$5);}
 			   | id_list_stmt AS STRING_T '=' expr		{$$ = create_as_expr(0,$1,NULL,3,$5);}
-			   ;				
-	       
+			   ;
+
 		id_list_stmt: ID								{$$ = create_id_list($1);}
 					| id_list_stmt',' ID				{$$ = add_to_id_list($1,$3);}
 					;	
