@@ -16,6 +16,17 @@ struct VB_Module_stmt
 	struct VB_Stmt_list* stmt_list; //!< Список операций модуля
 };
 
+struct VB_Decl_stmt_list
+{
+	struct VB_Decl_stmt* first;
+	struct VB_Decl_stmt* last;
+};
+
+struct VB_Decl_stmt
+{
+	struct VB_Decl_stmt* next;
+};
+
 /*! \struct VB_Stmt_list
     Структура, описывающая список операций.
  */
@@ -472,7 +483,7 @@ struct VB_Throw_stmt
   \param list Список выражений модуля.
   \return Новый модуль.
 */
-struct VB_Module_stmt* create_VB_Module_stmt (char* id, struct VB_Stmt_list* list)
+struct VB_Module_stmt* create_VB_Module_stmt (char* id, struct VB_Stmt_list* list, struct VB_Decl_stmt_list* prev_decl, struct VB_Decl_stmt_list* post_decl)
 {
 	struct VB_Module_stmt* module = NULL;
 
@@ -492,6 +503,16 @@ struct VB_Module_stmt* create_VB_Module_stmt (char* id, struct VB_Stmt_list* lis
 	module->stmt_list = list;
 
 	return module;
+}
+
+struct VB_Decl_stmt_list* create_VB_Decl_stmt_list(struct VB_Decl_stmt* decl_stmt)
+{
+	return NULL;
+}
+
+struct VB_Decl_stmt_list* edit_VB_Decl_stmt_list(struct VB_Decl_stmt_list* decl_list, struct VB_Decl_stmt* decl_stmt)
+{
+	return NULL;
 }
 
 /* Инициализация списка операций:
@@ -712,9 +733,10 @@ struct VB_Stmt* create_VB_Stmt_Do_Loop (struct VB_Do_loop_stmt* do_loop_stmt)
   \param enum_stmt Перечисление.
   \return Новая операция.
 */
-struct VB_Stmt* create_VB_Stmt_Enum (struct VB_Enum_stmt* enum_stmt)
+struct VB_Decl_stmt* create_VB_Decl_Enum (struct VB_Enum_stmt* enum_stmt)
 {
-	return fill_stmt(7,(void*)enum_stmt);
+	//return fill_stmt(7,(void*)enum_stmt);
+	return NULL;
 }
 
 /*!
@@ -722,9 +744,10 @@ struct VB_Stmt* create_VB_Stmt_Enum (struct VB_Enum_stmt* enum_stmt)
   \param sub_stmt Процедура.
   \return Новая операция.
 */
-struct VB_Stmt* create_VB_Stmt_Sub (struct VB_Sub_stmt* sub_stmt)
+struct VB_Decl_stmt* create_VB_Decl_Sub (struct VB_Sub_stmt* sub_stmt)
 {
-	return fill_stmt(8,(void*)sub_stmt);
+	//return fill_stmt(8,(void*)sub_stmt);
+	return NULL;
 }
 
 /*!
@@ -732,9 +755,10 @@ struct VB_Stmt* create_VB_Stmt_Sub (struct VB_Sub_stmt* sub_stmt)
   \param func_stmt Функция.
   \return Новая операция.
 */
-struct VB_Stmt* create_VB_Stmt_Func (struct VB_Func_stmt* func_stmt)
+struct VB_Decl_stmt* create_VB_Decl_Func (struct VB_Func_stmt* func_stmt)
 {
-	return fill_stmt(9,(void*)func_stmt);
+	//return fill_stmt(9,(void*)func_stmt);
+	return NULL;
 }
 
 /*!
