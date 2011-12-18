@@ -64,6 +64,7 @@
 
 %type <Module>		module_stmt
 %type <List>		stmt_list
+%type <List>		stmt_listE
 %type <Stmt>		stmt
 %type <Expr>		expr
 %type <Expr_l>		expr_list
@@ -171,12 +172,16 @@
 
 %%
 
-	module_stmt: MODULE ID ENDL decl_stmt_list SUB_MAIN_ENDL stmt_list END_SUB ENDL decl_stmt_list END_MODULE {$$ = root = create_VB_Module_stmt($2,$6,$4,$9);}
+	module_stmt: MODULE ID ENDL decl_stmt_list SUB_MAIN_ENDL stmt_list END_SUB decl_stmt_list END_MODULE {$$ = root = create_VB_Module_stmt($2,$6,$4,$8);}
 			   ;
 		
-	stmt_list: stmt					{$$ = create_VB_Stmt_list($1);}
-			 | stmt_list stmt		{$$ = edit_VB_Stmt_list($1,$2);}
+	stmt_list: ENDL					{$$ = create_VB_Stmt_list(0);}
+			 | stmt_listE
 		     ;
+		     	
+	stmt_listE: stmt				{$$ = create_VB_Stmt_list($1);}
+			  | stmt_listE stmt		{$$ = edit_VB_Stmt_list($1,$2);}
+		      ;
 			 	     
         stmt: expr ENDL				{$$ = create_VB_Stmt_Expr($1);}
 		    | if_stmt				{$$ = create_VB_Stmt_If($1);}
@@ -192,7 +197,8 @@
 		    | console_readln_stmt	{$$ = create_VB_Stmt_Readln($1);}
 		    ;
 		  
-	decl_stmt_list: 
+	decl_stmt_list:								{$$ = create_VB_Decl_stmt_list(0);}
+				  | ENDL						{$$ = create_VB_Decl_stmt_list(0);}
 				  | decl_stmt_listE
 				  ;
 				  	    

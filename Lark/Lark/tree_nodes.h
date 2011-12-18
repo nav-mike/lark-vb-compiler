@@ -491,8 +491,6 @@ struct VB_Module_stmt* create_VB_Module_stmt (char* id, struct VB_Stmt_list* lis
 
 	printf("CREATING MODULE");
 
-	if (list == NULL) return module;
-
 	module = (struct VB_Module_stmt*)malloc(sizeof(struct VB_Module_stmt));
 	module->decl_list = NULL;
 
@@ -501,7 +499,8 @@ struct VB_Module_stmt* create_VB_Module_stmt (char* id, struct VB_Stmt_list* lis
 		module->id = (char*)malloc(8 * sizeof(char));
 		strcpy(module->id, "Unknown\0");
 	}
-	else module->id = id;
+	else
+		module->id = id;
 
 	module->stmt_list = list;
 

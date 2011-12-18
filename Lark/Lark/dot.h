@@ -223,6 +223,8 @@ int add_node_stmt_module (struct VB_Module_stmt* module)
 		error = add_node_stmt_list(module->stmt_list);
 		if (error) return 1;
 	}
+	else
+		fclose(file);
 
 	return 0;
 }

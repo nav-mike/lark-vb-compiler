@@ -40,7 +40,7 @@ Dim                      {
 						   return DIM;
 						 }
 						 
-(Sub[[:space:]]Main\n)   {
+(Sub[[:space:]]Main\(\)) {
                           //fprintf(file,"\nKeyword \"Dim\" has found\n");
 						   return SUB_MAIN_ENDL;
 						 }
