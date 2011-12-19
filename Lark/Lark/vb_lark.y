@@ -50,6 +50,7 @@
 	struct VB_Catch_stmt_list*	Catch_l;
 	struct VB_Catch_stmt*		Catch;
 	struct VB_Throw_stmt*		Throw;
+	struct VB_Return_stmt*		Ret;
 	
 	struct VB_Decl_stmt_list*	Decl_l;
 	struct VB_Decl_stmt*		Decl;
@@ -94,6 +95,9 @@
 %type <Decl_l>		decl_stmt_listE
 %type <Decl_l>		decl_stmt_list
 %type <Decl>		decl_stmt
+
+%type <Id_type> param_type 
+%type <Ret> return_stmt
 
 %type <console_print>	console_print_stmt
 %type <console_println> console_println_stmt
@@ -173,6 +177,7 @@
 %%
 
 	module_stmt: MODULE ID ENDL decl_stmt_list SUB_MAIN ENDL stmt_list END_SUB ENDL decl_stmt_list END_MODULE {$$ = root = create_VB_Module_stmt($2,$7,$4,$10);}
+			   | MODULE ID ENDL decl_stmt_list SUB_MAIN ENDL stmt_list END_SUB ENDL decl_stmt_list END_MODULE ENDL {$$ = root = create_VB_Module_stmt($2,$7,$4,$10);}
 			   ;
 			   		
 	stmt_list:						{$$ = create_VB_Stmt_list(0);}
@@ -195,6 +200,7 @@
 		    | console_println_stmt	{$$ = create_VB_Stmt_Println($1);}
 		    | console_read_stmt		{$$ = create_VB_Stmt_Read($1);}
 		    | console_readln_stmt	{$$ = create_VB_Stmt_Readln($1);}
+		    | return_stmt			{$$ = create_VB_Stmt_Return($1);}
 		    ;
 		  
 	decl_stmt_list:								{$$ = create_VB_Decl_stmt_list(0);}
@@ -258,24 +264,15 @@
 					| as_expr_list',' array_expr 		{$$ = add_to_as_expr_list($1,NULL,$3);}
 					;
 
-		as_expr: id_list_stmt AS INTEGER				{$$ = create_as_expr(0,$1,NULL,0,NULL);}	
-			   | id_list_stmt AS BOOLEAN				{$$ = create_as_expr(0,$1,NULL,1,NULL);}	
-			   | id_list_stmt AS CHAR					{$$ = create_as_expr(0,$1,NULL,2,NULL);}	
-			   | id_list_stmt AS STRING_T				{$$ = create_as_expr(0,$1,NULL,3,NULL);}	
-			   | id_list_stmt AS INTEGER '=' expr		{$$ = create_as_expr(0,$1,NULL,0,$5);}
-			   | id_list_stmt AS BOOLEAN '=' expr		{$$ = create_as_expr(0,$1,NULL,1,$5);}
-			   | id_list_stmt AS CHAR '=' expr			{$$ = create_as_expr(0,$1,NULL,2,$5);}
-			   | id_list_stmt AS STRING_T '=' expr		{$$ = create_as_expr(0,$1,NULL,3,$5);}
+		as_expr: id_list_stmt AS param_type				{$$ = create_as_expr(0,$1,NULL,$3,NULL);}		
+			   | id_list_stmt AS param_type '=' expr		{$$ = create_as_expr(0,$1,NULL,$3,$5);}
 			   ;
 
 		id_list_stmt: ID								{$$ = create_id_list($1);}
 					| id_list_stmt',' ID				{$$ = add_to_id_list($1,$3);}
 					;	
 		
-		array_expr: ID '(' INT_CONST ')' AS INTEGER		{$$ = create_Array($1,$3,0);}
-				  | ID '(' INT_CONST ')' AS BOOLEAN		{$$ = create_Array($1,$3,1);}
-				  | ID '(' INT_CONST ')' AS CHAR		{$$ = create_Array($1,$3,2);}
-				  | ID '(' INT_CONST ')' AS STRING_T		{$$ = create_Array($1,$3,3);}
+		array_expr: ID '(' INT_CONST ')' AS param_type		{$$ = create_Array($1,$3,$6);}
 				  ;
 
 		expr_list: expr					{$$ = create_Expr_list($1);}
@@ -284,12 +281,10 @@
 		
         for_stmt: FOR ID '=' INT_CONST TO INT_CONST ENDL stmt_list NEXT ENDL            				{$$ = create_for_stmt($2,$4,$6,$8);}
                 | FOR ID '=' INT_CONST TO INT_CONST STEP INT_CONST ENDL stmt_list NEXT ENDL 			{$$ = create_for_with_step_stmt($2,$4,$6,$8,$10);}
-                | FOR ID AS INTEGER '=' INT_CONST TO INT_CONST ENDL stmt_list NEXT ENDL 				{$$ = create_for_with_decl_stmt($2,0,$6,$8,$10);}
-				| FOR ID AS BOOLEAN '=' INT_CONST TO INT_CONST ENDL stmt_list NEXT ENDL 				{$$ = create_for_with_decl_stmt($2,1,$6,$8,$10);}
-				| FOR ID AS CHAR '=' INT_CONST TO INT_CONST ENDL stmt_list NEXT ENDL 					{$$ = create_for_with_decl_stmt($2,2,$6,$8,$10);}
-                | FOR ID AS INTEGER '=' INT_CONST TO INT_CONST STEP INT_CONST ENDL stmt_list NEXT ENDL 	{$$ = create_for_with_decl_with_step_stmt($2,0,$6,$8,$10,$12);}
-				| FOR ID AS BOOLEAN '=' INT_CONST TO INT_CONST STEP INT_CONST ENDL stmt_list NEXT ENDL 	{$$ = create_for_with_decl_with_step_stmt($2,1,$6,$8,$10,$12);}
-				| FOR ID AS CHAR '=' INT_CONST TO INT_CONST STEP INT_CONST ENDL stmt_list NEXT ENDL 	{$$ = create_for_with_decl_with_step_stmt($2,2,$6,$8,$10,$12);}
+                | FOR ID AS INTEGER '=' INT_CONST TO INT_CONST ENDL stmt_list NEXT ENDL 					{$$ = create_for_with_decl_stmt($2,INTEGER_E,$6,$8,$10);}
+                | FOR ID AS INTEGER '=' INT_CONST TO INT_CONST STEP INT_CONST ENDL stmt_list NEXT ENDL 	{$$ = create_for_with_decl_with_step_stmt($2,INTEGER_E,$6,$8,$10,$12);}
+                | FOR ID AS CHAR '=' CHAR_CONST TO CHAR_CONST ENDL stmt_list NEXT ENDL 					{$$ = create_for_with_decl_stmt($2,CHAR_E,$6,$8,$10);}
+                | FOR ID AS CHAR '=' CHAR_CONST TO CHAR_CONST STEP CHAR_CONST ENDL stmt_list NEXT ENDL 	{$$ = create_for_with_decl_with_step_stmt($2,CHAR_E,$6,$8,$10,$12);}
 				;				
 
         while_stmt: WHILE expr ENDL stmt_list END_WHILE ENDL 	 {$$ = create_while_stmt($2,$4);}
@@ -320,20 +315,19 @@
                           | param_list',' param_stmt    {$$ = add_to_param_list($1,$3);}
 						  ;
 
-                param_stmt: BYVAL ID AS INTEGER         {$$ = create_param_stmt($2,0);}
-						  | BYVAL ID AS BOOLEAN         {$$ = create_param_stmt($2,1);}
-						  | BYVAL ID AS CHAR            {$$ = create_param_stmt($2,2);}
-						  | BYVAL ID AS STRING_T          {$$ = create_param_stmt($2,3);}
-						  ; 
-
-        func_stmt: FUNCTION ID '('')' AS INTEGER ENDL stmt_list RETURN expr ENDL END_FUNCTION ENDL           {$$ = create_func_stmt($2,NULL,0,$8,$10);}
-				 | FUNCTION ID '('')' AS BOOLEAN ENDL stmt_list RETURN expr ENDL END_FUNCTION ENDL           {$$ = create_func_stmt($2,NULL,1,$8,$10);}
-				 | FUNCTION ID '('')' AS CHAR ENDL stmt_list RETURN expr ENDL END_FUNCTION ENDL              {$$ = create_func_stmt($2,NULL,2,$8,$10);}
-				 | FUNCTION ID '('')' AS STRING_T ENDL stmt_list RETURN expr ENDL END_FUNCTION ENDL            {$$ = create_func_stmt($2,NULL,3,$8,$10);}
-                 | FUNCTION ID '('param_list')' AS INTEGER ENDL stmt_list RETURN expr ENDL END_FUNCTION ENDL {$$ = create_func_stmt($2,$4,0,$9,$11);}
-				 | FUNCTION ID '('param_list')' AS BOOLEAN ENDL stmt_list RETURN expr ENDL END_FUNCTION ENDL {$$ = create_func_stmt($2,$4,1,$9,$11);}
-				 | FUNCTION ID '('param_list')' AS CHAR ENDL stmt_list RETURN expr ENDL END_FUNCTION ENDL 	 {$$ = create_func_stmt($2,$4,2,$9,$11);}
-				 | FUNCTION ID '('param_list')' AS STRING_T ENDL stmt_list RETURN expr ENDL END_FUNCTION ENDL  {$$ = create_func_stmt($2,$4,3,$9,$11);}
+                param_stmt: BYVAL ID AS param_type         {$$ = create_param_stmt($2,$4);}
+						  ;
+						  
+			  param_type: INTEGER		{$$ = return_type(INTEGER_E);}
+						| BOOLEAN		{$$ = return_type(BOOLEAN_E);}
+						| CHAR			{$$ = return_type(CHAR_E);}
+						| STRING_T		{$$ = return_type(STRING_E);}
+						;
+			  
+		return_stmt: RETURN expr ENDL   {$$ = create_return_stmt();}
+			  
+        func_stmt: FUNCTION ID '('')' AS param_type ENDL stmt_list END_FUNCTION ENDL          {$$ = create_func_stmt($2,NULL,$6,$8);}
+				 | FUNCTION ID '('param_list')' AS param_type ENDL stmt_list END_FUNCTION ENDL  {$$ = create_func_stmt($2,$4,$7,$9);}
 				 ;
 			 
 	try_catch_stmt: TRY ENDL stmt_list catch_stmt_list FINALLY ENDL stmt_list ENDL END_TRY ENDL {$$ = create_Try_Catch($3,$4,$7);}
