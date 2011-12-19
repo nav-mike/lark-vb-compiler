@@ -60,6 +60,7 @@ struct VB_Stmt
 	struct VB_Read_stmt*      read_stmt;      //!< Указатель на содержащееся в операции считывание символа.
 	struct VB_Readln_stmt*    readln_stmt;    //!< Указатель на содержащееся в операции считывание строки.
 	struct VB_Readkey_stmt*   readkey_stmt;   //!< Указатель на содержащееся в операции считывание нажатой клавиши.
+	struct VB_Return_stmt*    return_stmt;
 	struct VB_Stmt*		      next;	          //!< Указатель на следующий элемент последовательности операторов.
 };
 
@@ -85,6 +86,7 @@ enum VB_Stmt_type
 	READ_E,
 	READLN_E,
 	READKEY_E
+	RETURN_E
 };
 
 /*! \struct VB_Expr_list
@@ -140,6 +142,11 @@ enum VB_Expr_type
 	UPLUS,			//!< Оператор унарного плюса
 	GET_ITEM,		//!< Получение элемента массива
 	BRK_EXPR		//!< Выражение со скобками
+};
+
+struct VB_Return_stmt
+{
+	struct VB_Expr*	expr;
 };
 
 /*! \struct VB_If_stmt
@@ -249,6 +256,11 @@ enum VB_Id_type
 	CHAR_E,
 	STRING_E
 };
+
+enum VB_Id_type return_type(enum VB_Id_type type)
+{
+	return type;
+}
 
 /*! \struct VB_Id_list
     Список идентификаторов.
@@ -642,6 +654,7 @@ struct VB_Stmt* fill_stmt(enum VB_Stmt_type type, void* data)
 		stmt->throw_stmt	 = NULL;
 		stmt->try_catch_stmt = NULL;
 		stmt->while_stmt	 = NULL;
+		stmt->return_stmt	 = NULL;
 
 		stmt->type = type;
 
@@ -693,6 +706,10 @@ struct VB_Stmt* fill_stmt(enum VB_Stmt_type type, void* data)
 			break;
 		case(15):
 			stmt->readln_stmt = (struct VB_Readln_stmt*)data;
+			break;
+		}
+		case(16):
+			stmt-> = (struct VB_Readln_stmt*)data;
 			break;
 		}
 	}
@@ -1697,7 +1714,7 @@ struct VB_Enum_expr * create_enum_expr(char* id, int number)
 }
 
 struct VB_Func_stmt * create_func_stmt(char* id, struct VB_Param_list* params, enum VB_Id_type type,
-									   struct VB_Stmt_list* body, struct VB_Expr* ret_val)
+									   struct VB_Stmt_list* body)
 {
 	struct VB_Func_stmt* result = (struct VB_Func_stmt*)malloc(sizeof(struct VB_Func_stmt));
 
@@ -1705,8 +1722,13 @@ struct VB_Func_stmt * create_func_stmt(char* id, struct VB_Param_list* params, e
 	result->id_type = type;
 	result->param_list = params;
 	result->stmt_list = body;
-	result->expr = ret_val;
+	//result->expr = ret_val;
 	result->next = NULL;
 
     return result;
+}
+
+struct VB_Return_stmt* create_return_stmt()
+{
+	return NULL;
 }
