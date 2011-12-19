@@ -33,6 +33,7 @@ typedef union
 	struct VB_Catch_stmt_list*	Catch_l;
 	struct VB_Catch_stmt*		Catch;
 	struct VB_Throw_stmt*		Throw;
+	struct VB_Return_stmt*		Ret;
 	
 	struct VB_Decl_stmt_list*	Decl_l;
 	struct VB_Decl_stmt*		Decl;

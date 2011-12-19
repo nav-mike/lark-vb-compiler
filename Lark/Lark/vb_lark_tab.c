@@ -120,6 +120,7 @@ typedef union
 	struct VB_Catch_stmt_list*	Catch_l;
 	struct VB_Catch_stmt*		Catch;
 	struct VB_Throw_stmt*		Throw;
+	struct VB_Return_stmt*		Ret;
 	
 	struct VB_Decl_stmt_list*	Decl_l;
 	struct VB_Decl_stmt*		Decl;
@@ -274,17 +275,17 @@ static const short yyrhs[] = {    32,
 
 #if YYDEBUG != 0
 static const short yyrline[] = { 0,
-   178,   179,   182,   183,   186,   187,   190,   191,   192,   193,
-   194,   195,   196,   197,   198,   199,   200,   201,   202,   205,
-   206,   209,   210,   213,   214,   215,   218,   219,   220,   221,
-   222,   223,   224,   225,   226,   227,   228,   229,   230,   231,
-   232,   233,   234,   235,   236,   237,   238,   241,   242,   243,
-   244,   247,   248,   251,   252,   253,   254,   257,   260,   261,
-   262,   263,   266,   267,   270,   271,   274,   277,   278,   281,
-   282,   283,   284,   285,   286,   289,   292,   293,   294,   295,
-   298,   301,   302,   305,   306,   309,   310,   313,   314,   317,
-   320,   321,   322,   323,   326,   328,   329,   332,   335,   336,
-   339,   342,   345,   348,   351,   354
+   179,   180,   183,   184,   187,   188,   191,   192,   193,   194,
+   195,   196,   197,   198,   199,   200,   201,   202,   203,   206,
+   207,   210,   211,   214,   215,   216,   219,   220,   221,   222,
+   223,   224,   225,   226,   227,   228,   229,   230,   231,   232,
+   233,   234,   235,   236,   237,   238,   239,   242,   243,   244,
+   245,   248,   249,   252,   253,   254,   255,   258,   261,   262,
+   263,   264,   267,   268,   271,   272,   275,   278,   279,   282,
+   283,   284,   285,   286,   287,   290,   293,   294,   295,   296,
+   299,   302,   303,   306,   307,   310,   311,   314,   315,   318,
+   321,   322,   323,   324,   327,   329,   330,   333,   336,   337,
+   340,   343,   346,   349,   352,   355
 };
 
 static const char * const yytname[] = {   "$","error","$undefined.","BOOLEAN_CONST",
@@ -1012,419 +1013,419 @@ yyreduce:
   switch (yyn) {
 
 case 1:
-#line 178 "vb_lark.y"
+#line 179 "vb_lark.y"
 {yyval.Module = root = create_VB_Module_stmt(yyvsp[-9].Id,yyvsp[-4].List,yyvsp[-7].Decl_l,yyvsp[-1].Decl_l);;
     break;}
 case 2:
-#line 179 "vb_lark.y"
+#line 180 "vb_lark.y"
 {yyval.Module = root = create_VB_Module_stmt(yyvsp[-10].Id,yyvsp[-5].List,yyvsp[-8].Decl_l,yyvsp[-2].Decl_l);;
     break;}
 case 3:
-#line 182 "vb_lark.y"
+#line 183 "vb_lark.y"
 {yyval.List = create_VB_Stmt_list(0);;
     break;}
 case 5:
-#line 186 "vb_lark.y"
+#line 187 "vb_lark.y"
 {yyval.List = create_VB_Stmt_list(yyvsp[0].Stmt);;
     break;}
 case 6:
-#line 187 "vb_lark.y"
+#line 188 "vb_lark.y"
 {yyval.List = edit_VB_Stmt_list(yyvsp[-1].List,yyvsp[0].Stmt);;
     break;}
 case 7:
-#line 190 "vb_lark.y"
+#line 191 "vb_lark.y"
 {yyval.Stmt = create_VB_Stmt_Expr(yyvsp[-1].Expr);;
     break;}
 case 8:
-#line 191 "vb_lark.y"
+#line 192 "vb_lark.y"
 {yyval.Stmt = create_VB_Stmt_If(yyvsp[0].If_stmt);;
     break;}
 case 9:
-#line 192 "vb_lark.y"
+#line 193 "vb_lark.y"
 {yyval.Stmt = create_VB_Stmt_Dim(yyvsp[0].Dim);;
     break;}
 case 10:
-#line 193 "vb_lark.y"
+#line 194 "vb_lark.y"
 {yyval.Stmt = create_VB_Stmt_For(yyvsp[0].For);;
     break;}
 case 11:
-#line 194 "vb_lark.y"
+#line 195 "vb_lark.y"
 {yyval.Stmt = create_VB_Stmt_While(yyvsp[0].While);;
     break;}
 case 12:
-#line 195 "vb_lark.y"
+#line 196 "vb_lark.y"
 {yyval.Stmt = create_VB_Stmt_Do_Loop(yyvsp[0].Do_loop);;
     break;}
 case 13:
-#line 196 "vb_lark.y"
+#line 197 "vb_lark.y"
 {yyval.Stmt = create_VB_Stmt_Try_Catch(yyvsp[0].Try_catch);;
     break;}
 case 14:
-#line 197 "vb_lark.y"
+#line 198 "vb_lark.y"
 {yyval.Stmt = create_VB_Stmt_Throw(yyvsp[0].Throw);;
     break;}
 case 15:
-#line 198 "vb_lark.y"
+#line 199 "vb_lark.y"
 {yyval.Stmt = create_VB_Stmt_Print(yyvsp[0].console_print);;
     break;}
 case 16:
-#line 199 "vb_lark.y"
+#line 200 "vb_lark.y"
 {yyval.Stmt = create_VB_Stmt_Println(yyvsp[0].console_println);;
     break;}
 case 17:
-#line 200 "vb_lark.y"
+#line 201 "vb_lark.y"
 {yyval.Stmt = create_VB_Stmt_Read(yyvsp[0].console_read);;
     break;}
 case 18:
-#line 201 "vb_lark.y"
+#line 202 "vb_lark.y"
 {yyval.Stmt = create_VB_Stmt_Readln(yyvsp[0].console_readln);;
     break;}
 case 19:
-#line 202 "vb_lark.y"
-{yyval.Stmt = create_VB_Stmt_Return(yyvsp[0].Decl);;
+#line 203 "vb_lark.y"
+{yyval.Stmt = create_VB_Stmt_Return(yyvsp[0].Ret);;
     break;}
 case 20:
-#line 205 "vb_lark.y"
+#line 206 "vb_lark.y"
 {yyval.Decl_l = create_VB_Decl_stmt_list(0);;
     break;}
 case 22:
-#line 209 "vb_lark.y"
+#line 210 "vb_lark.y"
 {yyval.Decl_l = create_VB_Decl_stmt_list(yyvsp[0].Decl);;
     break;}
 case 23:
-#line 210 "vb_lark.y"
+#line 211 "vb_lark.y"
 {yyval.Decl_l = edit_VB_Decl_stmt_list(yyvsp[-1].Decl_l,yyvsp[0].Decl);;
     break;}
 case 24:
-#line 213 "vb_lark.y"
+#line 214 "vb_lark.y"
 {yyval.Decl = create_VB_Decl_Enum(yyvsp[0].Enum);;
     break;}
 case 25:
-#line 214 "vb_lark.y"
+#line 215 "vb_lark.y"
 {yyval.Decl = create_VB_Decl_Sub(yyvsp[0].Sub);;
     break;}
 case 26:
-#line 215 "vb_lark.y"
+#line 216 "vb_lark.y"
 {yyval.Decl = create_VB_Decl_Func(yyvsp[0].Func);;
     break;}
 case 27:
-#line 218 "vb_lark.y"
+#line 219 "vb_lark.y"
 {yyval.Expr = create_id_expr(yyvsp[0].Id);;
     break;}
 case 28:
-#line 219 "vb_lark.y"
+#line 220 "vb_lark.y"
 {yyval.Expr = create_brackets_actions(yyvsp[-3].Id,yyvsp[-1].Expr_l);;
     break;}
 case 29:
-#line 220 "vb_lark.y"
+#line 221 "vb_lark.y"
 {yyval.Expr = create_int_boolean_char_const_expr(3,yyvsp[0].i_const);;
     break;}
 case 30:
-#line 221 "vb_lark.y"
+#line 222 "vb_lark.y"
 {yyval.Expr = create_int_boolean_char_const_expr(2,yyvsp[0].c_const);;
     break;}
 case 31:
-#line 222 "vb_lark.y"
+#line 223 "vb_lark.y"
 {yyval.Expr = create_string_const_expr(yyvsp[0].s_const);;
     break;}
 case 32:
-#line 223 "vb_lark.y"
+#line 224 "vb_lark.y"
 {yyval.Expr = create_int_boolean_char_const_expr(5,yyvsp[0].b_const);;
     break;}
 case 33:
-#line 224 "vb_lark.y"
+#line 225 "vb_lark.y"
 {yyval.Expr = create_operator_expr(6,yyvsp[-2].Expr,yyvsp[0].Expr);;
     break;}
 case 34:
-#line 225 "vb_lark.y"
+#line 226 "vb_lark.y"
 {yyval.Expr = create_operator_expr(7,yyvsp[-2].Expr,yyvsp[0].Expr);;
     break;}
 case 35:
-#line 226 "vb_lark.y"
+#line 227 "vb_lark.y"
 {yyval.Expr = create_operator_expr(8,yyvsp[-2].Expr,yyvsp[0].Expr);;
     break;}
 case 36:
-#line 227 "vb_lark.y"
+#line 228 "vb_lark.y"
 {yyval.Expr = create_operator_expr(9,yyvsp[-2].Expr,yyvsp[0].Expr);;
     break;}
 case 37:
-#line 228 "vb_lark.y"
+#line 229 "vb_lark.y"
 {yyval.Expr = create_operator_expr(11,yyvsp[-2].Expr,yyvsp[0].Expr);;
     break;}
 case 38:
-#line 229 "vb_lark.y"
+#line 230 "vb_lark.y"
 {yyval.Expr = create_operator_expr(10,yyvsp[-2].Expr,yyvsp[0].Expr);;
     break;}
 case 39:
-#line 230 "vb_lark.y"
+#line 231 "vb_lark.y"
 {yyval.Expr = create_operator_expr(12,yyvsp[-2].Expr,yyvsp[0].Expr);;
     break;}
 case 40:
-#line 231 "vb_lark.y"
+#line 232 "vb_lark.y"
 {yyval.Expr = create_operator_expr(13,yyvsp[-2].Expr,yyvsp[0].Expr);;
     break;}
 case 41:
-#line 232 "vb_lark.y"
+#line 233 "vb_lark.y"
 {yyval.Expr = create_operator_expr(14,yyvsp[-2].Expr,yyvsp[0].Expr);;
     break;}
 case 42:
-#line 233 "vb_lark.y"
+#line 234 "vb_lark.y"
 {yyval.Expr = create_operator_expr(15,yyvsp[-2].Expr,yyvsp[0].Expr);;
     break;}
 case 43:
-#line 234 "vb_lark.y"
+#line 235 "vb_lark.y"
 {yyval.Expr = create_operator_expr(16,yyvsp[-2].Expr,yyvsp[0].Expr);;
     break;}
 case 44:
-#line 235 "vb_lark.y"
+#line 236 "vb_lark.y"
 {yyval.Expr = create_operator_expr(17,yyvsp[-2].Expr,yyvsp[0].Expr);;
     break;}
 case 45:
-#line 236 "vb_lark.y"
+#line 237 "vb_lark.y"
 {yyval.Expr = create_operator_expr(18,yyvsp[-2].Expr,yyvsp[0].Expr);;
     break;}
 case 46:
-#line 237 "vb_lark.y"
+#line 238 "vb_lark.y"
 {yyval.Expr = yyvsp[-1].Expr;;
     break;}
 case 47:
-#line 238 "vb_lark.y"
+#line 239 "vb_lark.y"
 {yyval.Expr = create_operator_expr(19,yyvsp[0].Expr,0);;
     break;}
 case 48:
-#line 241 "vb_lark.y"
+#line 242 "vb_lark.y"
 {yyval.If_stmt = create_with_Then_expr_stmt_list_end_if_stmt(0,yyvsp[-4].Expr,yyvsp[-1].List,yyvsp[0].End_if);;
     break;}
 case 49:
-#line 242 "vb_lark.y"
+#line 243 "vb_lark.y"
 {yyval.If_stmt = create_with_Then_expr_stmt_list_end_if_stmt(1,yyvsp[-3].Expr,yyvsp[-1].List,yyvsp[0].End_if);;
     break;}
 case 50:
-#line 243 "vb_lark.y"
+#line 244 "vb_lark.y"
 {yyval.If_stmt = create_if_inline(2,yyvsp[-4].Expr,yyvsp[-2].List,0);;
     break;}
 case 51:
-#line 244 "vb_lark.y"
+#line 245 "vb_lark.y"
 {yyval.If_stmt = create_if_inline(3,yyvsp[-6].Expr,yyvsp[-4].List,yyvsp[-2].List);;
     break;}
 case 52:
-#line 247 "vb_lark.y"
+#line 248 "vb_lark.y"
 {yyval.List = create_VB_Stmt_list(yyvsp[0].Stmt);;
     break;}
 case 53:
-#line 248 "vb_lark.y"
+#line 249 "vb_lark.y"
 {yyval.List = edit_VB_Stmt_list(yyvsp[-2].List,yyvsp[0].Stmt);;
     break;}
 case 54:
-#line 251 "vb_lark.y"
+#line 252 "vb_lark.y"
 {yyval.End_if = create_end_if_stmt(0,NULL,NULL,NULL);;
     break;}
 case 55:
-#line 252 "vb_lark.y"
+#line 253 "vb_lark.y"
 {yyval.End_if = create_end_if_stmt(1,NULL,yyvsp[-2].List,NULL);;
     break;}
 case 56:
-#line 253 "vb_lark.y"
+#line 254 "vb_lark.y"
 {yyval.End_if = create_end_if_stmt(2,yyvsp[-4].Expr,yyvsp[-1].List,yyvsp[0].End_if);;
     break;}
 case 57:
-#line 254 "vb_lark.y"
+#line 255 "vb_lark.y"
 {yyval.End_if = create_end_if_stmt(3,yyvsp[-3].Expr,yyvsp[-1].List,yyvsp[0].End_if);;
     break;}
 case 58:
-#line 257 "vb_lark.y"
+#line 258 "vb_lark.y"
 {yyval.Dim = create_dim_stmt(yyvsp[-1].As_l);;
     break;}
 case 59:
-#line 260 "vb_lark.y"
+#line 261 "vb_lark.y"
 {yyval.As_l = create_as_expr_list(yyvsp[0].As_expr_str,NULL);;
     break;}
 case 60:
-#line 261 "vb_lark.y"
+#line 262 "vb_lark.y"
 {yyval.As_l = create_as_expr_list(NULL,yyvsp[0].Arr);;
     break;}
 case 61:
-#line 262 "vb_lark.y"
+#line 263 "vb_lark.y"
 {yyval.As_l = add_to_as_expr_list(yyvsp[-2].As_l,yyvsp[0].As_expr_str,NULL);;
     break;}
 case 62:
-#line 263 "vb_lark.y"
+#line 264 "vb_lark.y"
 {yyval.As_l = add_to_as_expr_list(yyvsp[-2].As_l,NULL,yyvsp[0].Arr);;
     break;}
 case 63:
-#line 266 "vb_lark.y"
+#line 267 "vb_lark.y"
 {yyval.As_expr_str = create_as_expr(0,yyvsp[-2].Id_l,NULL,yyvsp[0].Id_type,NULL);;
     break;}
 case 64:
-#line 267 "vb_lark.y"
+#line 268 "vb_lark.y"
 {yyval.As_expr_str = create_as_expr(0,yyvsp[-4].Id_l,NULL,yyvsp[-2].Id_type,yyvsp[0].Expr);;
     break;}
 case 65:
-#line 270 "vb_lark.y"
+#line 271 "vb_lark.y"
 {yyval.Id_l = create_id_list(yyvsp[0].Id);;
     break;}
 case 66:
-#line 271 "vb_lark.y"
+#line 272 "vb_lark.y"
 {yyval.Id_l = add_to_id_list(yyvsp[-2].Id_l,yyvsp[0].Id);;
     break;}
 case 67:
-#line 274 "vb_lark.y"
+#line 275 "vb_lark.y"
 {yyval.Arr = create_Array(yyvsp[-5].Id,yyvsp[-3].i_const,yyvsp[0].Id_type);;
     break;}
 case 68:
-#line 277 "vb_lark.y"
+#line 278 "vb_lark.y"
 {yyval.Expr_l = create_Expr_list(yyvsp[0].Expr);;
     break;}
 case 69:
-#line 278 "vb_lark.y"
+#line 279 "vb_lark.y"
 {yyval.Expr_l = add_Expr_to_list(yyvsp[-2].Expr_l,yyvsp[0].Expr);;
     break;}
 case 70:
-#line 281 "vb_lark.y"
+#line 282 "vb_lark.y"
 {yyval.For = create_for_stmt(yyvsp[-8].Id,yyvsp[-6].i_const,yyvsp[-4].i_const,yyvsp[-2].List);;
     break;}
 case 71:
-#line 282 "vb_lark.y"
+#line 283 "vb_lark.y"
 {yyval.For = create_for_with_step_stmt(yyvsp[-10].Id,yyvsp[-8].i_const,yyvsp[-6].i_const,yyvsp[-4].i_const,yyvsp[-2].List);;
     break;}
 case 72:
-#line 283 "vb_lark.y"
+#line 284 "vb_lark.y"
 {yyval.For = create_for_with_decl_stmt(yyvsp[-10].Id,INTEGER_E,yyvsp[-6].i_const,yyvsp[-4].i_const,yyvsp[-2].List);;
     break;}
 case 73:
-#line 284 "vb_lark.y"
+#line 285 "vb_lark.y"
 {yyval.For = create_for_with_decl_with_step_stmt(yyvsp[-12].Id,INTEGER_E,yyvsp[-8].i_const,yyvsp[-6].i_const,yyvsp[-4].i_const,yyvsp[-2].List);;
     break;}
 case 74:
-#line 285 "vb_lark.y"
+#line 286 "vb_lark.y"
 {yyval.For = create_for_with_decl_stmt(yyvsp[-10].Id,CHAR_E,yyvsp[-6].c_const,yyvsp[-4].c_const,yyvsp[-2].List);;
     break;}
 case 75:
-#line 286 "vb_lark.y"
+#line 287 "vb_lark.y"
 {yyval.For = create_for_with_decl_with_step_stmt(yyvsp[-12].Id,CHAR_E,yyvsp[-8].c_const,yyvsp[-6].c_const,yyvsp[-4].c_const,yyvsp[-2].List);;
     break;}
 case 76:
-#line 289 "vb_lark.y"
+#line 290 "vb_lark.y"
 {yyval.While = create_while_stmt(yyvsp[-4].Expr,yyvsp[-2].List);;
     break;}
 case 77:
-#line 292 "vb_lark.y"
+#line 293 "vb_lark.y"
 {yyval.Do_loop = create_do_loop_stmt(0,yyvsp[-4].Expr,yyvsp[-2].List);;
     break;}
 case 78:
-#line 293 "vb_lark.y"
+#line 294 "vb_lark.y"
 {yyval.Do_loop = create_do_loop_stmt(1,yyvsp[-4].Expr,yyvsp[-2].List);;
     break;}
 case 79:
-#line 294 "vb_lark.y"
+#line 295 "vb_lark.y"
 {yyval.Do_loop = create_do_loop_stmt(2,yyvsp[-1].Expr,yyvsp[-4].List);;
     break;}
 case 80:
-#line 295 "vb_lark.y"
+#line 296 "vb_lark.y"
 {yyval.Do_loop = create_do_loop_stmt(3,yyvsp[-1].Expr,yyvsp[-4].List);;
     break;}
 case 81:
-#line 298 "vb_lark.y"
+#line 299 "vb_lark.y"
 {yyval.Enum = create_enum_stmt(yyvsp[-4].Id,yyvsp[-2].Enum_l);;
     break;}
 case 82:
-#line 301 "vb_lark.y"
+#line 302 "vb_lark.y"
 {yyval.Enum_l = create_enum_list(yyvsp[-1].Enum_e);;
     break;}
 case 83:
-#line 302 "vb_lark.y"
+#line 303 "vb_lark.y"
 {yyval.Enum_l = add_to_enum_list(yyvsp[-2].Enum_l,yyvsp[-1].Enum_e);;
     break;}
 case 84:
-#line 305 "vb_lark.y"
+#line 306 "vb_lark.y"
 {yyval.Enum_e = create_enum_expr(yyvsp[0].Id,-1);;
     break;}
 case 85:
-#line 306 "vb_lark.y"
+#line 307 "vb_lark.y"
 {yyval.Enum_e = create_enum_expr(yyvsp[-2].Id,yyvsp[0].i_const);;
     break;}
 case 86:
-#line 309 "vb_lark.y"
+#line 310 "vb_lark.y"
 {yyval.Sub = create_sub_stmt(yyvsp[-6].Id,NULL,yyvsp[-2].List);;
     break;}
 case 87:
-#line 310 "vb_lark.y"
+#line 311 "vb_lark.y"
 {yyval.Sub = create_sub_stmt(yyvsp[-7].Id,yyvsp[-5].Param_l,yyvsp[-2].List);;
     break;}
 case 88:
-#line 313 "vb_lark.y"
+#line 314 "vb_lark.y"
 {yyval.Param_l = create_param_list(yyvsp[0].Param);;
     break;}
 case 89:
-#line 314 "vb_lark.y"
+#line 315 "vb_lark.y"
 {yyval.Param_l = add_to_param_list(yyvsp[-2].Param_l,yyvsp[0].Param);;
     break;}
 case 90:
-#line 317 "vb_lark.y"
+#line 318 "vb_lark.y"
 {yyval.Param = create_param_stmt(yyvsp[-2].Id,yyvsp[0].Id_type);;
     break;}
 case 91:
-#line 320 "vb_lark.y"
+#line 321 "vb_lark.y"
 {yyval.Id_type = return_type(INTEGER_E);;
     break;}
 case 92:
-#line 321 "vb_lark.y"
+#line 322 "vb_lark.y"
 {yyval.Id_type = return_type(BOOLEAN_E);;
     break;}
 case 93:
-#line 322 "vb_lark.y"
+#line 323 "vb_lark.y"
 {yyval.Id_type = return_type(CHAR_E);;
     break;}
 case 94:
-#line 323 "vb_lark.y"
+#line 324 "vb_lark.y"
 {yyval.Id_type = return_type(STRING_E);;
     break;}
 case 95:
-#line 326 "vb_lark.y"
-{yyval.Decl = create_return_stmt();;
+#line 327 "vb_lark.y"
+{yyval.Ret = create_return_stmt(yyvsp[-1].Expr);;
     break;}
 case 96:
-#line 328 "vb_lark.y"
+#line 329 "vb_lark.y"
 {yyval.Func = create_func_stmt(yyvsp[-8].Id,NULL,yyvsp[-4].Id_type,yyvsp[-2].List);;
     break;}
 case 97:
-#line 329 "vb_lark.y"
+#line 330 "vb_lark.y"
 {yyval.Func = create_func_stmt(yyvsp[-9].Id,yyvsp[-7].Param_l,yyvsp[-4].Id_type,yyvsp[-2].List);;
     break;}
 case 98:
-#line 332 "vb_lark.y"
+#line 333 "vb_lark.y"
 {yyval.Try_catch = create_Try_Catch(yyvsp[-7].List,yyvsp[-6].Catch_l,yyvsp[-3].List);;
     break;}
 case 99:
-#line 335 "vb_lark.y"
+#line 336 "vb_lark.y"
 {yyval.Catch_l = create_Catch_stmt_list(yyvsp[0].Catch);;
     break;}
 case 100:
-#line 336 "vb_lark.y"
+#line 337 "vb_lark.y"
 {yyval.Catch_l = add_new_Catch_stmt(yyvsp[-1].Catch_l,yyvsp[0].Catch);;
     break;}
 case 101:
-#line 339 "vb_lark.y"
+#line 340 "vb_lark.y"
 {yyval.Catch = create_Catch_stmt(yyvsp[-4].Id,yyvsp[0].List);;
     break;}
 case 102:
-#line 342 "vb_lark.y"
+#line 343 "vb_lark.y"
 {yyval.Throw = create_Throw(yyvsp[-2].s_const);;
     break;}
 case 103:
-#line 345 "vb_lark.y"
+#line 346 "vb_lark.y"
 {yyval.console_print = create_Print(yyvsp[-2].s_const);;
     break;}
 case 104:
-#line 348 "vb_lark.y"
+#line 349 "vb_lark.y"
 {yyval.console_println = create_Println(yyvsp[-2].s_const);;
     break;}
 case 105:
-#line 351 "vb_lark.y"
+#line 352 "vb_lark.y"
 {yyval.console_read = create_Read();;
     break;}
 case 106:
-#line 354 "vb_lark.y"
+#line 355 "vb_lark.y"
 {yyval.console_readln = create_Readln();;
     break;}
 }
@@ -1625,7 +1626,7 @@ yyerrhandle:
   yystate = yyn;
   goto yynewstate;
 }
-#line 356 "vb_lark.y"
+#line 357 "vb_lark.y"
 
 
 void yyerror (char const* s)

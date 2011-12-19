@@ -115,7 +115,7 @@ char* VB_Expr_type_to_string (enum VB_Expr_type type)
 int open_dot_file ()
 {
 	FILE* file = NULL;
-	int error = fopen_s(&file, "vb_lark.txt", "wt");
+	int error = fopen_s(&file, "vb_lark.dot", "wt");
 	if (error) return 1;
 
 	error = fprintf(file,"digraph G\n{\n\tgraph [ rankdir = \"LR\" ];\n\tnode [ fontsize = \"16\" shape = \"ellipse\"  ];\n\tedge [ ];");
@@ -133,7 +133,7 @@ int open_dot_file ()
 int close_dot_file ()
 {
 	FILE* file = NULL;
-	int error = fopen_s(&file, "vb_lark.txt", "at");
+	int error = fopen_s(&file, "vb_lark.dot", "at");
 	if (error) return 1;
 
 	error = fprintf(file, "\n};");
@@ -153,7 +153,7 @@ int add_node_expr (struct VB_Expr* node)
 {
 	FILE* file = NULL;
 	int number = Number;
-	int error = fopen_s(&file, "vb_lark.txt", "at");
+	int error = fopen_s(&file, "vb_lark.dot", "at");
 	if (error) return 1;
 
 	error = fprintf(file, "\n\t\"node%d\" [", number);
@@ -178,7 +178,7 @@ int add_node_expr (struct VB_Expr* node)
 	if (node->right_chld != NULL)
 	{
 		Number++;
-		error = fopen_s(&file,"vb_lark.txt", "at");
+		error = fopen_s(&file,"vb_lark.dot", "at");
 		if (error) return 1;
 		error = fprintf(file, "\n\t\"node%d\":f0 -> \"node%d\":f0;",
 			number, Number);
@@ -203,7 +203,7 @@ int add_node_stmt_module (struct VB_Module_stmt* module)
 {
 	FILE* file = NULL;
 	int number = Number;
-	int error = fopen_s(&file, "vb_lark.txt", "at");
+	int error = fopen_s(&file, "vb_lark.dot", "at");
 	if (error) return 1;
 
 	error = fprintf(file, "\n\t\"node%d\" [", number);
@@ -455,7 +455,7 @@ char* VB_Do_loop_type_to_string(enum VB_Do_loop_type type)
 int add_node_throw_stmt (struct VB_Throw_stmt* node)
 {
 	FILE* file = NULL;
-	int error = fopen_s(&file,"vb_lark.txt", "at");
+	int error = fopen_s(&file,"vb_lark.dot", "at");
 	if (error) return 1;
 
 	error = fprintf(file,"\n\t\"node%d\" [", Number);
@@ -480,7 +480,7 @@ int add_node_throw_stmt (struct VB_Throw_stmt* node)
 int add_node_catch_stmt (struct VB_Catch_stmt* node)
 {
 	FILE* file = NULL;
-	int error = fopen_s(&file,"vb_lark.txt", "at");
+	int error = fopen_s(&file,"vb_lark.dot", "at");
 	if (error) return 1;
 
 	error = fprintf(file,"\n\t\"node%d\" [", Number);
@@ -506,7 +506,7 @@ int add_node_catch_stmt_list (struct VB_Catch_stmt_list* node)
 {
 	FILE* file = NULL;
 	int number = Number;
-	int error = fopen_s(&file,"vb_lark.txt", "at");
+	int error = fopen_s(&file,"vb_lark.dot", "at");
 	if (error) return 1;
 
 	error = fprintf(file,"\n\t\"node%d\" [", number);
@@ -527,7 +527,7 @@ int add_node_catch_stmt_list (struct VB_Catch_stmt_list* node)
 		while (stmt != node->last)
 		{
 			Number++;
-			error = fopen_s(&file,"vb_lark.txt", "at");
+			error = fopen_s(&file,"vb_lark.dot", "at");
 			if (error) return 1;
 			error = fprintf(file, "\n\t\"node%d\":f0 -> \"node%d\":f0;",
 			number, Number);
@@ -540,7 +540,7 @@ int add_node_catch_stmt_list (struct VB_Catch_stmt_list* node)
 		}
 
 		Number++;
-		error = fopen_s(&file,"vb_lark.txt", "at");
+		error = fopen_s(&file,"vb_lark.dot", "at");
 		if (error) return 1;
 		error = fprintf(file, "\n\t\"node%d\":f0 -> \"node%d\":f0;",
 			number, Number);
@@ -563,7 +563,7 @@ int add_node_try_catch_stmt (struct VB_Try_catch_stmt* node)
 {
 	FILE* file = NULL;
 	int number = Number;
-	int error = fopen_s(&file,"vb_lark.txt", "at");
+	int error = fopen_s(&file,"vb_lark.dot", "at");
 	if (error) return 1;
 
 	error = fprintf(file,"\n\t\"node%d\" [", number);
@@ -590,7 +590,7 @@ int add_node_try_catch_stmt (struct VB_Try_catch_stmt* node)
 	if (node->fin_stmt_list != NULL)
 	{
 		Number++;
-		error = fopen_s(&file,"vb_lark.txt", "at");
+		error = fopen_s(&file,"vb_lark.dot", "at");
 		if (error) return 1;
 		error = fprintf(file, "\n\t\"node%d\":f0 -> \"node%d\":f0;",
 			number, Number);
@@ -603,7 +603,7 @@ int add_node_try_catch_stmt (struct VB_Try_catch_stmt* node)
 	if (node->stmt_list != NULL)
 	{
 		Number++;
-		error = fopen_s(&file,"vb_lark.txt", "at");
+		error = fopen_s(&file,"vb_lark.dot", "at");
 		if (error) return 1;
 		error = fprintf(file, "\n\t\"node%d\":f0 -> \"node%d\":f0;",
 			number, Number);
@@ -626,7 +626,7 @@ int add_node_func_stmt (struct VB_Func_stmt* node)
 {
 	FILE* file = NULL;
 	int number = Number;
-	int error = fopen_s(&file,"vb_lark.txt", "at");
+	int error = fopen_s(&file,"vb_lark.dot", "at");
 	if (error) return 1;
 
 	error = fprintf(file,"\n\t\"node%d\" [", number);
@@ -654,7 +654,7 @@ int add_node_func_stmt (struct VB_Func_stmt* node)
 	if (node->expr != NULL)
 	{
 		Number++;
-		error = fopen_s(&file,"vb_lark.txt", "at");
+		error = fopen_s(&file,"vb_lark.dot", "at");
 		if (error) return 1;
 		error = fprintf(file, "\n\t\"node%d\":f0 -> \"node%d\":f0;",
 		number, Number);
@@ -668,7 +668,7 @@ int add_node_func_stmt (struct VB_Func_stmt* node)
 	if (node->param_list != NULL)
 	{
 		Number++;
-		error = fopen_s(&file,"vb_lark.txt", "at");
+		error = fopen_s(&file,"vb_lark.dot", "at");
 		if (error) return 1;
 		error = fprintf(file, "\n\t\"node%d\":f0 -> \"node%d\":f0;",
 		number, Number);
@@ -691,7 +691,7 @@ int add_node_func_stmt (struct VB_Func_stmt* node)
 int add_node_param_stmt (struct VB_Param_stmt* node)
 {
 	FILE* file = NULL;
-	int error = fopen_s(&file,"vb_lark.txt", "at");
+	int error = fopen_s(&file,"vb_lark.dot", "at");
 	if (error) return 1;
 
 	error = fprintf(file,"\n\t\"node%d\" [", Number);
@@ -717,7 +717,7 @@ int add_node_param_list (struct VB_Param_list* node)
 {
 	FILE* file = NULL;
 	int number = Number;
-	int error = fopen_s(&file,"vb_lark.txt", "at");
+	int error = fopen_s(&file,"vb_lark.dot", "at");
 	if (error) return 1;
 
 	error = fprintf(file,"\n\t\"node%d\" [", number);
@@ -738,7 +738,7 @@ int add_node_param_list (struct VB_Param_list* node)
 		while (stmt != node->last)
 		{
 			Number++;
-			error = fopen_s(&file,"vb_lark.txt", "at");
+			error = fopen_s(&file,"vb_lark.dot", "at");
 			if (error) return 1;
 			error = fprintf(file, "\n\t\"node%d\":f0 -> \"node%d\":f0;",
 			number, Number);
@@ -751,7 +751,7 @@ int add_node_param_list (struct VB_Param_list* node)
 		}
 
 		Number++;
-		error = fopen_s(&file,"vb_lark.txt", "at");
+		error = fopen_s(&file,"vb_lark.dot", "at");
 		if (error) return 1;
 		error = fprintf(file, "\n\t\"node%d\":f0 -> \"node%d\":f0;",
 			number, Number);
@@ -773,7 +773,7 @@ int add_node_sub_stmt (struct VB_Sub_stmt* node)
 {
 	FILE* file = NULL;
 	int number = Number;
-	int error = fopen_s(&file,"vb_lark.txt","at");
+	int error = fopen_s(&file,"vb_lark.dot","at");
 	if (error) return 1;
 
 	error = fprintf(file,"\n\t\"node%d\" [", number);
@@ -800,7 +800,7 @@ int add_node_sub_stmt (struct VB_Sub_stmt* node)
 	if (node->param_list != NULL)
 	{
 		Number++;
-		error = fopen_s(&file,"vb_lark.txt", "at");
+		error = fopen_s(&file,"vb_lark.dot", "at");
 		if (error) return 1;
 		error = fprintf(file, "\n\t\"node%d\":f0 -> \"node%d\":f0;",
 			number, Number);
@@ -822,7 +822,7 @@ int add_node_sub_stmt (struct VB_Sub_stmt* node)
 int add_node_enum_expr (struct VB_Enum_expr* node)
 {
 	FILE* file = NULL;
-	int error = fopen_s(&file,"vb_lark.txt", "at");
+	int error = fopen_s(&file,"vb_lark.dot", "at");
 	if (error) return 1;
 
 	error = fprintf(file,"\n\t\"node%d\" [", Number);
@@ -848,7 +848,7 @@ int add_node_enum_expr_list (struct VB_Enum_expr_list* node)
 {
 	FILE* file = NULL;
 	int number = Number;
-	int error = fopen_s(&file,"vb_lark.txt", "at");
+	int error = fopen_s(&file,"vb_lark.dot", "at");
 	if (error) return 1;
 
 	error = fprintf(file,"\n\t\"node%d\" [", number);
@@ -869,7 +869,7 @@ int add_node_enum_expr_list (struct VB_Enum_expr_list* node)
 		while (stmt != node->last)
 		{
 			Number++;
-			error = fopen_s(&file,"vb_lark.txt", "at");
+			error = fopen_s(&file,"vb_lark.dot", "at");
 			if (error) return 1;
 			error = fprintf(file, "\n\t\"node%d\":f0 -> \"node%d\":f0;",
 			number, Number);
@@ -882,7 +882,7 @@ int add_node_enum_expr_list (struct VB_Enum_expr_list* node)
 		}
 
 		Number++;
-		error = fopen_s(&file,"vb_lark.txt", "at");
+		error = fopen_s(&file,"vb_lark.dot", "at");
 		if (error) return 1;
 		error = fprintf(file, "\n\t\"node%d\":f0 -> \"node%d\":f0;",
 			number, Number);
@@ -905,7 +905,7 @@ int add_node_enum_stmt (struct VB_Enum_stmt* node)
 {
 	FILE* file = NULL;
 	int number = Number;
-	int error = fopen_s(&file,"vb_lark.txt", "at");
+	int error = fopen_s(&file,"vb_lark.dot", "at");
 	if (error) return 1;
 
 	error = fprintf(file,"\n\t\"node%d\" [", number);
@@ -943,7 +943,7 @@ int add_node_do_loop_stmt (struct VB_Do_loop_stmt* node)
 {
 	FILE* file = NULL;
 	int number = Number;
-	int error = fopen_s(&file,"vb_lark.txt","at");
+	int error = fopen_s(&file,"vb_lark.dot","at");
 	if (error) return 1;
 
 	error = fprintf(file,"\n\t\"node%d\" [", number);
@@ -971,7 +971,7 @@ int add_node_do_loop_stmt (struct VB_Do_loop_stmt* node)
 	if (node->stmt_list != NULL)
 	{
 		Number++;
-		error = fopen_s(&file,"vb_lark.txt", "at");
+		error = fopen_s(&file,"vb_lark.dot", "at");
 		if (error) return 1;
 		error = fprintf(file, "\n\t\"node%d\":f0 -> \"node%d\":f0;",
 		number, Number);
@@ -995,7 +995,7 @@ int add_node_while_stmt (struct VB_While_stmt* node)
 {
 	FILE* file = NULL;
 	int number = Number;
-	int error = fopen_s(&file,"vb_lark.txt", "at");
+	int error = fopen_s(&file,"vb_lark.dot", "at");
 	if (error) return 1;
 
 	error = fprintf(file,"\n\t\"node%d\" [", number);
@@ -1023,7 +1023,7 @@ int add_node_while_stmt (struct VB_While_stmt* node)
 	if (node->stmt_list != NULL)
 	{
 		Number++;
-		error = fopen_s(&file,"vb_lark.txt", "at");
+		error = fopen_s(&file,"vb_lark.dot", "at");
 		if (error) return 1;
 		error = fprintf(file, "\n\t\"node%d\":f0 -> \"node%d\":f0;",
 		number, Number);
@@ -1046,7 +1046,7 @@ int add_node_for_stmt (struct VB_For_stmt* node)
 {
 	FILE* file = NULL;
 	int number = Number;
-	int error = fopen_s(&file,"vb_lark.txt", "at");
+	int error = fopen_s(&file,"vb_lark.dot", "at");
 	if (error) return 1;
 
 	error = fprintf(file,"\n\t\"node%d\" [", number);
@@ -1074,7 +1074,7 @@ int add_node_for_stmt (struct VB_For_stmt* node)
 	if (node->stmt_list != NULL)
 	{
 		Number++;
-		error = fopen_s(&file,"vb_lark.txt", "at");
+		error = fopen_s(&file,"vb_lark.dot", "at");
 		if (error) return 1;
 		error = fprintf(file, "\n\t\"node%d\":f0 -> \"node%d\":f0;",
 		number, Number);
@@ -1098,7 +1098,7 @@ int add_node_expr_list (struct VB_Expr_list* node)
 {
 	FILE* file = NULL;
 	int number = Number;
-	int error = fopen_s(&file,"vb_lark.txt", "at");
+	int error = fopen_s(&file,"vb_lark.dot", "at");
 	if (error) return 1;
 
 	error = fprintf(file,"\n\t\"node%d\" [", number);
@@ -1119,7 +1119,7 @@ int add_node_expr_list (struct VB_Expr_list* node)
 		while (stmt != node->last)
 		{
 			Number++;
-			error = fopen_s(&file,"vb_lark.txt", "at");
+			error = fopen_s(&file,"vb_lark.dot", "at");
 			if (error) return 1;
 			error = fprintf(file, "\n\t\"node%d\":f0 -> \"node%d\":f0;",
 			number, Number);
@@ -1132,7 +1132,7 @@ int add_node_expr_list (struct VB_Expr_list* node)
 		}
 
 		Number++;
-		error = fopen_s(&file,"vb_lark.txt", "at");
+		error = fopen_s(&file,"vb_lark.dot", "at");
 		if (error) return 1;
 		error = fprintf(file, "\n\t\"node%d\":f0 -> \"node%d\":f0;",
 			number, Number);
@@ -1155,7 +1155,7 @@ int add_node_stmt_list (struct VB_Stmt_list* node)
 {
 	FILE* file = NULL;
 	int number = Number;
-	int error = fopen_s(&file,"vb_lark.txt","at");
+	int error = fopen_s(&file,"vb_lark.dot","at");
 	if (error) return 1;
 
 	error = fprintf(file,"\n\t\"node%d\" [", number);
@@ -1176,7 +1176,7 @@ int add_node_stmt_list (struct VB_Stmt_list* node)
 		while (stmt != node->last)
 		{
 			Number++;
-			error = fopen_s(&file,"vb_lark.txt", "at");
+			error = fopen_s(&file,"vb_lark.dot", "at");
 			if (error) return 1;
 			error = fprintf(file, "\n\t\"node%d\":f0 -> \"node%d\":f0;",
 			number, Number);
@@ -1189,7 +1189,7 @@ int add_node_stmt_list (struct VB_Stmt_list* node)
 		}
 
 		Number++;
-		error = fopen_s(&file,"vb_lark.txt", "at");
+		error = fopen_s(&file,"vb_lark.dot", "at");
 		if (error) return 1;
 		error = fprintf(file, "\n\t\"node%d\":f0 -> \"node%d\":f0;",
 			number, Number);
@@ -1212,7 +1212,7 @@ int add_node_stmt (struct VB_Stmt* node)
 {
 	FILE* file = NULL;
 	int number = Number;
-	int error = fopen_s(&file,"vb_lark.txt", "at");
+	int error = fopen_s(&file,"vb_lark.dot", "at");
 	if (error) return 1;
 
 	error = fprintf(file,"\n\t\"node%d\" [", number);
@@ -1293,7 +1293,7 @@ int add_node_if_stmt (struct VB_If_stmt* node)
 {
 	FILE* file = NULL;
 	int number = Number;
-	int error = fopen_s(&file,"vb_lark.txt", "at");
+	int error = fopen_s(&file,"vb_lark.dot", "at");
 	if (error) return 1;
 
 	error = fprintf(file,"\n\t\"node%d\" [", number);
@@ -1320,7 +1320,7 @@ int add_node_if_stmt (struct VB_If_stmt* node)
 	if (node->stmt_list != NULL)
 	{
 		Number++;
-		error = fopen_s(&file,"vb_lark.txt", "at");
+		error = fopen_s(&file,"vb_lark.dot", "at");
 		if (error) return 1;
 		error = fprintf(file, "\n\t\"node%d\":f0 -> \"node%d\":f0;",
 			number, Number);
@@ -1333,7 +1333,7 @@ int add_node_if_stmt (struct VB_If_stmt* node)
 	if (node->end_stmt != NULL)
 	{
 		Number++;
-		error = fopen_s(&file,"vb_lark.txt", "at");
+		error = fopen_s(&file,"vb_lark.dot", "at");
 		if (error) return 1;
 		error = fprintf(file, "\n\t\"node%d\":f0 -> \"node%d\":f0;",
 			number, Number);
@@ -1356,7 +1356,7 @@ int add_node_end_if_stmt (struct VB_End_if_stmt* node)
 {
 	FILE* file = NULL;
 	int number = Number;
-	int error = fopen_s(&file,"vb_lark.txt", "at");
+	int error = fopen_s(&file,"vb_lark.dot", "at");
 	if (error) return 1;
 
 	error = fprintf(file,"\n\t\"node%d\" [", number);
@@ -1383,7 +1383,7 @@ int add_node_end_if_stmt (struct VB_End_if_stmt* node)
 	if (node->end_stmt != NULL)
 	{
 		Number++;
-		error = fopen_s(&file,"vb_lark.txt", "at");
+		error = fopen_s(&file,"vb_lark.dot", "at");
 		if (error) return 1;
 		error = fprintf(file, "\n\t\"node%d\":f0 -> \"node%d\":f0;",
 			number, Number);
@@ -1406,7 +1406,7 @@ int add_node_dim_stmt (struct VB_Dim_stmt* node)
 {
 	FILE* file = NULL;
 	int number = Number;
-	int error = fopen_s(&file, "vb_lark.txt", "at");
+	int error = fopen_s(&file, "vb_lark.dot", "at");
 	if (error) return 1;
 
 	error = fprintf(file,"\n\t\"node%d\" [", number);
@@ -1443,7 +1443,7 @@ int add_node_as_Expr_list (struct VB_As_Expr_list* node)
 {
 	FILE* file = NULL;
 	int number = Number;
-	int error = fopen_s(&file, "vb_lark.txt", "at");
+	int error = fopen_s(&file, "vb_lark.dot", "at");
 	if (error) return 1;
 
 	error = fprintf(file,"\n\t\"node%d\" [", number);
@@ -1468,7 +1468,7 @@ int add_node_as_Expr_list (struct VB_As_Expr_list* node)
 	if (node->arr != NULL)
 	{
 		Number++;
-		error = fopen_s(&file,"vb_lark.txt", "at");
+		error = fopen_s(&file,"vb_lark.dot", "at");
 		if (error) return 1;
 		error = fprintf(file, "\n\t\"node%d\":f0 -> \"node%d\":f0;",
 			number, Number);
@@ -1491,7 +1491,7 @@ int add_node_as_expr (struct VB_As_expr* node)
 {
 	FILE* file = NULL;
 	int number = Number;
-	int error = fopen_s(&file,"vb_lark.txt", "at");
+	int error = fopen_s(&file,"vb_lark.dot", "at");
 	if (error) return 1;
 
 	error = fprintf(file,"\n\t\"node%d\" [", number);
@@ -1516,7 +1516,7 @@ int add_node_as_expr (struct VB_As_expr* node)
 	if (node->expr != NULL)
 	{
 		Number++;
-		error = fopen_s(&file,"vb_lark.txt", "at");
+		error = fopen_s(&file,"vb_lark.dot", "at");
 		if (error) return 1;
 		error = fprintf(file, "\n\t\"node%d\":f0 -> \"node%d\":f0;",
 			number, Number);
@@ -1529,7 +1529,7 @@ int add_node_as_expr (struct VB_As_expr* node)
 	if (node->id != NULL)
 	{
 		Number++;
-		error = fopen_s(&file,"vb_lark.txt", "at");
+		error = fopen_s(&file,"vb_lark.dot", "at");
 		if (error) return 1;
 		error = fprintf(file, "\n\t\"node%d\":f0 -> \"node%d\":f0;",
 			number, Number);
@@ -1552,7 +1552,7 @@ int add_node_id_list (struct VB_Id_list* node)
 {
 	FILE* file = NULL;
 	int number = Number;
-	int error = fopen_s(&file,"vb_lark.txt", "at");
+	int error = fopen_s(&file,"vb_lark.dot", "at");
 	if (error) return 1;
 
 	error = fprintf(file,"\n\t\"node%d\" [", number);
@@ -1589,7 +1589,7 @@ int add_node_array_expr (struct VB_Array_expr* node)
 {
 	FILE* file = NULL;
 	int number = Number;
-	int error = fopen_s(&file,"vb_lark.txt", "at");
+	int error = fopen_s(&file,"vb_lark.dot", "at");
 	if (error) return 1;
 	Number++;
 
@@ -1616,7 +1616,7 @@ int add_node_array_expr (struct VB_Array_expr* node)
 
 	if (node->list != NULL)
 	{
-		error = fopen_s(&file,"vb_lark.txt","at");
+		error = fopen_s(&file,"vb_lark.dot","at");
 		if (error) return 1;
 		error = fprintf(file, "\n\t\"node%d\":f0 -> \"node%d\":f0;",
 			number, Number);
@@ -1624,7 +1624,7 @@ int add_node_array_expr (struct VB_Array_expr* node)
 		fclose(file);
 		error = add_node_expr_list(node->list);
 		if (error == -1) return 1;
-		error = fopen_s(&file, "vb_lark.txt", "at");
+		error = fopen_s(&file, "vb_lark.dot", "at");
 		if (error) return 1;
 	}
 
@@ -1641,7 +1641,7 @@ int add_node_print_stmt (struct VB_Print_stmt* node)
 {
 	FILE* file = NULL;
 	int number = Number;
-	int error = fopen_s(&file,"vb_lark.txt", "at");
+	int error = fopen_s(&file,"vb_lark.dot", "at");
 	if (error) return 1;
 	Number++;
 
@@ -1669,7 +1669,7 @@ int add_node_println_stmt (struct VB_Println_stmt* node)
 {
 	FILE* file = NULL;
 	int number = Number;
-	int error = fopen_s(&file,"vb_lark.txt", "at");
+	int error = fopen_s(&file,"vb_lark.dot", "at");
 	if (error) return 1;
 	Number++;
 
@@ -1697,7 +1697,7 @@ int add_node_read_stmt (struct VB_Read_stmt* node)
 {
 	FILE* file = NULL;
 	int number = Number;
-	int error = fopen_s(&file,"vb_lark.txt", "at");
+	int error = fopen_s(&file,"vb_lark.dot", "at");
 	if (error) return 1;
 	Number++;
 
@@ -1725,7 +1725,7 @@ int add_node_readln_stmt (struct VB_Readln_stmt* node)
 {
 	FILE* file = NULL;
 	int number = Number;
-	int error = fopen_s(&file,"vb_lark.txt", "at");
+	int error = fopen_s(&file,"vb_lark.dot", "at");
 	if (error) return 1;
 	Number++;
 
