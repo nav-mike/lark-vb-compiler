@@ -85,7 +85,7 @@ enum VB_Stmt_type
 	PRINTLN_E,
 	READ_E,
 	READLN_E,
-	READKEY_E
+	READKEY_E,
 	RETURN_E
 };
 
@@ -146,7 +146,8 @@ enum VB_Expr_type
 
 struct VB_Return_stmt
 {
-	struct VB_Expr*	expr;
+	struct VB_Expr*			expr;
+	struct VB_Stmt*			next;		//!< Указатель на следующий элемент последовательности операторов.
 };
 
 /*! \struct VB_If_stmt
@@ -707,9 +708,8 @@ struct VB_Stmt* fill_stmt(enum VB_Stmt_type type, void* data)
 		case(15):
 			stmt->readln_stmt = (struct VB_Readln_stmt*)data;
 			break;
-		}
-		case(16):
-			stmt-> = (struct VB_Readln_stmt*)data;
+		case(RETURN_E):
+			stmt->return_stmt = (struct VB_Return_stmt*)data;
 			break;
 		}
 	}
@@ -895,6 +895,21 @@ struct VB_Stmt* create_VB_Stmt_Readln (struct VB_Readln_stmt* readln_stmt)
 struct VB_Stmt* create_VB_Stmt_Read (struct VB_Read_stmt* read_stmt)
 {
 	return fill_stmt(14,(void*)read_stmt);
+}
+
+struct VB_Return_stmt* create_VB_Stmt_Return(struct VB_Return_stmt* ret)
+{
+	return fill_stmt(RETURN_E,(void*)ret);
+}
+
+struct VB_Return_stmt* create_return_stmt(struct VB_Expr* expr)
+{
+	struct VB_Return_stmt* result = (struct VB_Return_stmt*)malloc(sizeof(struct VB_Return_stmt));
+
+	result->expr = expr;
+	result->next = NULL;
+
+	return result;
 }
 
 /* Инициализация условного выражения:
@@ -1726,9 +1741,4 @@ struct VB_Func_stmt * create_func_stmt(char* id, struct VB_Param_list* params, e
 	result->next = NULL;
 
     return result;
-}
-
-struct VB_Return_stmt* create_return_stmt()
-{
-	return NULL;
 }

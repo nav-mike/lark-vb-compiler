@@ -324,7 +324,7 @@
 						| STRING_T		{$$ = return_type(STRING_E);}
 						;
 			  
-		return_stmt: RETURN expr ENDL   {$$ = create_return_stmt();}
+	return_stmt: RETURN expr ENDL   {$$ = create_return_stmt($2);}
 			  
         func_stmt: FUNCTION ID '('')' AS param_type ENDL stmt_list END_FUNCTION ENDL          {$$ = create_func_stmt($2,NULL,$6,$8);}
 				 | FUNCTION ID '('param_list')' AS param_type ENDL stmt_list END_FUNCTION ENDL  {$$ = create_func_stmt($2,$4,$7,$9);}
