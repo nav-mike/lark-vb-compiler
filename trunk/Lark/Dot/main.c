@@ -204,6 +204,36 @@ int add_catch_statement (FILE* file, struct VB_Catch_stmt* stmt)
 }
 
 /*!
+	\brief Функция добавления в файл инициализации массива.
+	\param file Дескриптор файла.
+	\param expr Инициализация массива.
+	\return 0 если ошибок нет.
+*/
+int add_array_expression (FILE* file, struct VB_Array_expr* expr)
+{
+	int error, number = Number;
+
+	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> Array Expr\
+						 | <f1> is init: %d | <f2> size: %d | <f3> id: %s | <f4> type: %s\
+						 \"\n\t\tshape = \"record\"\n\t];",number,expr->is_init,
+						 expr->size,expr->id,id_type_to_string(expr->id_type));
+	if (error == -1)
+		return 1;
+	
+	if (expr->list != NULL)
+	{
+		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",number,++Number);
+		if (error == -1)
+			return 1;
+		error = add_expression_list(file,expr->list);
+		if (error)
+			return 1;
+	}
+
+	return 0;
+}
+
+/*!
 	\brief Функция добавления выброса исключения в файл.
 	\param file Дескриптор файла.
 	\param stmt Выброс исключения.
