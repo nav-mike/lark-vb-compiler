@@ -187,8 +187,31 @@ char* statement_type_to_string (enum VB_Stmt_type type)
 	return "";
 }
 
+int add_statement_statement(FILE* file, struct VB_Stmt* stmt)
+{
+	return 0;
+}
+
+/*!
+	\brief Функция добавления списка операторов в файл.
+	\param file Дескриптор файла.
+	\param list Список операторов.
+	\return 0 если ошибок нет.
+*/
 int add_statement_list (FILE* file, struct VB_Stmt_list* list)
 {
+	int error;
+	struct VB_Stmt* item = list->first;
+
+	while (item)
+	{
+		error = add_statement_statement(file, item);
+		if (error)
+			return 1;
+
+		item = item->next;
+	}
+
 	return 0;
 }
 
