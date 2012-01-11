@@ -789,6 +789,28 @@ char* for_statement_type_to_string (enum VB_For_stmt_type type)
 	return "";
 }
 
+/*!
+	\brief Функция преобразования типа цикла Do..Loop в строку.
+	\param type Тип цикла.
+	\return Строка - тип цикла.
+*/
+char* do_loop_type_to_string (enum VB_Do_loop_type type)
+{
+	switch (type)
+	{
+	case (DO_UNTIL):
+		return "Do Until";
+	case (DO_WHILE):
+		return "Do While";
+	case (LOOP_UNTIL):
+		return "Loop Until";
+	case (LOOP_WHILE):
+		return "Loop While";
+	}
+
+	return "";
+}
+
 int add_statement (FILE* file, struct VB_Stmt* stmt)
 {
 	return 0;
