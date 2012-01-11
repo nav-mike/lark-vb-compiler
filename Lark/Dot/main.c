@@ -6,6 +6,8 @@ long int Number = 0;
 
 char* statement_type_to_string (enum VB_Stmt_type type);
 char* id_type_to_string (enum VB_Id_type type);
+char* expression_type_to_string (enum VB_Expr_type type);
+int add_expression_list (FILE* file, struct VB_Expr_list* list);
 
 /*!
 	\brief Функция открытия файла для GraphViz.
@@ -236,6 +238,55 @@ int add_declaration_statement (FILE* file, struct VB_Decl_stmt* stmt)
 	return 0;
 }
 
+int add_expression (FILE* file, struct VB_Expr* expr)
+{
+	int error, number;
+
+	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> Expression\
+						 | <f1> str: %s | <f2> int: %d | <f3> type: %s \
+						 | <f4> id type: %s\"\n\t\tshape = \"record\"\n\t];",
+						 Number,expr->expr_string,expr->int_val,expression_type_to_string(expr->type),
+						 id_type_to_string(expr->id_type));
+	if (error == -1)
+		return 1;
+
+	if (expr->left_chld != NULL)
+	{
+		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
+			Number, Number + 1);
+		number = Number;
+		if (error == -1)
+			return 1;
+		Number++;
+		error = add_expression(file,expr->left_chld);
+		if (error)
+			return 1;
+	}
+	if (expr->right_chld != NULL)
+	{
+		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
+			number, Number + 1);
+		if (error == -1)
+			return 1;
+		Number++;
+		error = add_expression(file,expr->right_chld);
+		if (error)
+			return 1;
+	}
+	if (expr->list)
+	{
+		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
+			number, ++Number);
+		if (error == -1)
+			return 1;
+		error = add_expression_list(file,expr->list);
+		if (error)
+			return 1;
+	}
+
+	return 0;
+}
+
 /*!
 	\brief Функция добавления листа объявления в файл.
 	\param file Дескриптор файла.
@@ -429,11 +480,6 @@ int add_statement_list (FILE* file, struct VB_Stmt_list* list)
 		item = item->next;
 	}
 
-	return 0;
-}
-
-int add_expression (FILE* file, struct VB_Expr* expr)
-{
 	return 0;
 }
 
