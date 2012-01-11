@@ -83,6 +83,25 @@ int add_print_stmt (FILE* file, struct VB_Print_stmt* stmt)
 }
 
 /*!
+	\brief Функция добавления в файл вывода в стандартный поток с переносом строки.
+	\param file Дескриптор файла.
+	\param stmt Вывод в стандартный поток с переносом строки.
+	\return 0 если ошибок нет.
+*/
+int add_println_stmt (FILE* file, struct VB_Println_stmt* stmt)
+{
+	int error;
+
+	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> Console.Println \
+						 | <f1> %s \"\n\t\tshape = \"record\"\n\t];", Number, stmt->text);
+	if (error == -1)
+		return 1;
+	Number++;
+
+	return 0;
+}
+
+/*!
 	\brief Функция добавления оператора объявления.
 	\param file Дескриптор файла.
 	\param stmt Оператор.
