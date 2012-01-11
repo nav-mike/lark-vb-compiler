@@ -515,7 +515,7 @@ int add_statement_list (FILE* file, struct VB_Stmt_list* list)
 	int error, number = Number;
 	struct VB_Stmt* item = list->first;
 
-	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> Decl stmt list\"\n\t\tshape = \"record\"\n\t];",
+	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> Stmt list\"\n\t\tshape = \"record\"\n\t];",
 						 number);
 	if (error == -1)
 		return 1;
@@ -572,11 +572,20 @@ int add_catch_statement (FILE* file, struct VB_Catch_stmt* stmt)
 */
 int add_catch_statement_list (FILE* file, struct VB_Catch_stmt_list* list)
 {
-	int error;
+	int error, number = Number;
 	struct VB_Catch_stmt* item = list->first;
+
+	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> Catch stmt list\"\n\t\tshape = \"record\"\n\t];",
+						 number);
+	if (error == -1)
+		return 1;
 
 	while (item)
 	{
+		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
+			number, ++Number);
+		if (error == -1)
+			return 1;
 		error = add_catch_statement(file,item);
 		if (error)
 			return 1;
