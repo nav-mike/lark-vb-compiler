@@ -8,6 +8,7 @@ char* statement_type_to_string (enum VB_Stmt_type type);
 char* id_type_to_string (enum VB_Id_type type);
 char* expression_type_to_string (enum VB_Expr_type type);
 int add_expression_list (FILE* file, struct VB_Expr_list* list);
+int add_expression (FILE* file, struct VB_Expr* expr);
 
 /*!
 	\brief Функция открытия файла для GraphViz.
@@ -238,6 +239,40 @@ int add_declaration_statement (FILE* file, struct VB_Decl_stmt* stmt)
 	return 0;
 }
 
+/*!
+	\brief Функция добавления возврата из функции в файл.
+	\param file Дескриптор файла.
+	\param stmt Возврат из функции.
+	\return 0 если ошибок нет.
+*/
+int add_return_statement (FILE* file, struct VB_Return_stmt* stmt)
+{
+	int error, number = Number;
+
+	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> Return\
+						 \"\n\t\tshape = \"record\"\n\t];", number);
+	if (error == -1)
+		return 1;
+	if (stmt->expr != NULL)
+	{
+		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
+			number, ++Number);
+		if (error == -1)
+			return 1;
+		error = add_expression(file,stmt->expr);
+		if (error)
+			return 1;
+	}
+
+	return 0;
+}
+
+/*!
+	\brief Функция добавления выражения в файл.
+	\param file Дескриптор файла.
+	\param expr Выражение.
+	\return 0 если ошибок не возникло.
+*/
 int add_expression (FILE* file, struct VB_Expr* expr)
 {
 	int error, number;
