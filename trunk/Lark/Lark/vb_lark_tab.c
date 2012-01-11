@@ -1366,19 +1366,19 @@ case 90:
     break;}
 case 91:
 #line 321 "vb_lark.y"
-{yyval.Id_type = return_type(INTEGER_E);;
+{yyval.Id_type = INTEGER_E;;
     break;}
 case 92:
 #line 322 "vb_lark.y"
-{yyval.Id_type = return_type(BOOLEAN_E);;
+{yyval.Id_type = BOOLEAN_E;;
     break;}
 case 93:
 #line 323 "vb_lark.y"
-{yyval.Id_type = return_type(CHAR_E);;
+{yyval.Id_type = CHAR_E;;
     break;}
 case 94:
 #line 324 "vb_lark.y"
-{yyval.Id_type = return_type(STRING_E);;
+{yyval.Id_type = STRING_E;;
     break;}
 case 95:
 #line 327 "vb_lark.y"

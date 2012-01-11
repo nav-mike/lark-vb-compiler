@@ -318,11 +318,11 @@
                 param_stmt: BYVAL ID AS param_type         {$$ = create_param_stmt($2,$4);}
 						  ;
 						  
-			  param_type: INTEGER		{$$ = return_type(INTEGER_E);}
-						| BOOLEAN		{$$ = return_type(BOOLEAN_E);}
-						| CHAR			{$$ = return_type(CHAR_E);}
-						| STRING_T		{$$ = return_type(STRING_E);}
-						;
+				param_type: INTEGER        {$$ = INTEGER_E;}
+                          | BOOLEAN        {$$ = BOOLEAN_E;}
+                          | CHAR           {$$ = CHAR_E;}
+                          | STRING_T       {$$ = STRING_E;}
+                          ;
 			  
 	return_stmt: RETURN expr ENDL   {$$ = create_return_stmt($2);}
 			  
