@@ -975,6 +975,32 @@ int add_for_statement (FILE* file, struct VB_For_stmt* stmt)
 }
 
 /*!
+	\brief Функция добавления конца If в файл.
+	\param file Дескриптор файла.
+	\param stmt Конец If.
+	\return 0 если ошибок нет.
+*/
+int add_end_if_statement (FILE* file, struct VB_End_if_stmt* stmt)
+{
+	int error, number = Number;
+
+	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> End If\
+						 |<f1> %s \"\t\tshape = \"record\"\n\t];", number,
+						 end_if_statement_type_to_string(stmt->type));
+	if (error == -1)
+		return 1;
+
+	if (stmt->stmt_list == NULL)
+	{
+		WRITE_CHILD(number,++Number,stmt->stmt_list,add_statement_list,&error,file);
+		if (error)
+			return 1;
+	}
+
+	return 0;
+}
+
+/*!
 	\brief Функция  добавления цикла Do...Loop в файл.
 	\param file Дескриптор файла.
 	\param stmt Цикл.
