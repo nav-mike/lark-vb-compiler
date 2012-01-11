@@ -953,6 +953,39 @@ int add_for_statement (FILE* file, struct VB_For_stmt* stmt)
 }
 
 /*!
+	\brief Функция  добавления цикла Do...Loop в файл.
+	\param file Дескриптор файла.
+	\param stmt Цикл.
+	\return 0 если ошибок нет.
+*/
+int add_do_loop_statement (FILE* file, struct VB_Do_loop_stmt* stmt)
+{
+	int error, number = Number;
+
+	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> Do...Loop\
+						 |<f1> %s \"\n\t\tshape = \"record\"\n\t];", number,
+						 do_loop_type_to_string(stmt->type));
+	if (error == -1)
+		return 1;
+
+	if (stmt->stmt_list != NULL)
+	{
+		WRITE_CHILD(number,++Number,stmt->stmt_list,add_statement_list,&error,file);
+		if (error)
+			return 1;
+	}
+
+	if (stmt->expr != NULL)
+	{
+		WRITE_CHILD(number,++Number,stmt->expr,add_expression,&error,file);
+		if (error)
+			return 1;
+	}
+
+	return 0;
+}
+
+/*!
 	\brief Функция добавления цикла While в файл.
 	\param file Дескриптор файла.
 	\param stmt Цикл While.
