@@ -931,6 +931,38 @@ int add_for_statement (FILE* file, struct VB_For_stmt* stmt)
 }
 
 /*!
+	\brief Функция добавления цикла While в файл.
+	\param file Дескриптор файла.
+	\param stmt Цикл While.
+	\return 0 если ошибок нет.
+*/
+int add_while_statement (FILE* file, struct VB_While_stmt* stmt)
+{
+	int error, number = Number;
+
+	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> While Stmt\
+						 \"\n\t\tshape = \"record\"\n\t];",number);
+	if (error == -1)
+		return 1;
+	
+	if (stmt->stmt_list)
+	{
+		WRITE_CHILD(number,++Number,stmt->stmt_list,add_statement_list,&error,file);
+		if (error)
+			return 1;
+	}
+
+	if (stmt->expr != NULL)
+	{
+		WRITE_CHILD(number,++Number,stmt->expr,add_expression,&error,file);
+		if (error)
+			return 1;
+	}
+
+	return 0;
+}
+
+/*!
 	\brief Функция добавления списка инициализации.
 	\param file Дескриптор файла.
 	\param list Список инициализации.
