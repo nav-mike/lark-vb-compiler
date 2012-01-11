@@ -330,11 +330,20 @@ int add_expression (FILE* file, struct VB_Expr* expr)
 */
 int add_declaration_list (FILE* file, struct VB_Decl_stmt_list* list)
 {
-	int error;
+	int error, number = Number;
 	struct VB_Decl_stmt* item = list->first;
+
+	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> Decl stmt list\"\n\t\tshape = \"record\"\n\t];",
+						 number);
+	if (error == -1)
+		return 1;
 
 	while (item)
 	{
+		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
+			number, ++Number);
+		if (error == -1)
+			return 1;
 		error = add_declaration_statement(file, item);
 		if (error)
 			return 1;
