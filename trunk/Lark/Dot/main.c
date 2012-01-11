@@ -811,6 +811,28 @@ char* do_loop_type_to_string (enum VB_Do_loop_type type)
 	return "";
 }
 
+/*!
+	\brief Функция преобразования типа окончания If в строку.
+	\param type Тип окончания If.
+	\return Строка - тип окончания If.
+*/
+char* end_if_statement_type_to_string (enum VB_End_if_stmt_type type)
+{
+	switch (type)
+	{
+	case (ELSE_E):
+		return "Else";
+	case (ELSE_IF_ENDL_E):
+		return "ElseIf endl";
+	case (ELSE_IF_THEN_E):
+		return "ElseIf Then";
+	case (ENDIF_E):
+		return "End If";
+	}
+
+	return "";
+}
+
 int add_statement (FILE* file, struct VB_Stmt* stmt)
 {
 	return 0;
