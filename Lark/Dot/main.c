@@ -215,6 +215,34 @@ int add_statement_list (FILE* file, struct VB_Stmt_list* list)
 	return 0;
 }
 
+int add_expression (FILE* file, struct VB_Expr* expr)
+{
+	return 0;
+}
+
+/*!
+	\brief Функция добавления списка выражений в файл.
+	\param file Дескриптор файла.
+	\param list Список выражений.
+	\return 0 если ошибок нет.
+*/
+int add_expression_list (FILE* file, struct VB_Expr_list* list)
+{
+	int error;
+	struct VB_Expr* item = list->first;
+
+	while (item)
+	{
+		error = add_expression(file,item);
+		if (error)
+			return 1;
+
+		item = item->next;
+	}
+
+	return 0;
+}
+
 /*!
 	\brief Функция добавления модуля в файл.
 	\param file Дескриптор файла.
