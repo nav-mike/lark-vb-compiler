@@ -27,8 +27,31 @@ int open_gv_file (FILE* file, char* filename)
 	return 0;
 }
 
+int add_declaration_statement (FILE* file, struct VB_Decl_stmt* stmt)
+{
+	return 0;
+}
+
+/*!
+	\brief Функция добавления листа объявления в файл.
+	\param file Дескриптор файла.
+	\list Лист объявления.
+	\return 0 если ошибок нет.
+*/
 int add_declaration_list (FILE* file, struct VB_Decl_stmt_list* list)
 {
+	int error;
+	struct VB_Decl_stmt* item = list->first;
+
+	while (item)
+	{
+		error = add_declaration_statement(file, item);
+		if (error)
+			return 1;
+
+		item = item->next;
+	}
+
 	return 0;
 }
 
