@@ -11,6 +11,7 @@ int add_expression_list (FILE* file, struct VB_Expr_list* list);
 int add_expression (FILE* file, struct VB_Expr* expr);
 int add_param_list (FILE* file, struct VB_Param_list* list);
 int add_statement_list (FILE* file, struct VB_Stmt_list* list);
+int add_catch_statement_list (FILE* file, struct VB_Catch_stmt_list* list);
 
 /*!
 	\brief Функция открытия файла для GraphViz.
@@ -122,6 +123,52 @@ int add_func_statement (FILE* file, struct VB_Func_stmt* stmt)
 		if (error == -1)
 			return 1;
 		error = add_expression(file,stmt->expr);
+		if (error)
+			return 1;
+	}
+
+	return 0;
+}
+
+/*!
+	\brief Функция добавления обработки исключения в файл.
+	\param file Дескриптор файла.
+	\param stmt Обработка исключения.
+	\return 0 если ошибок нет.
+*/
+int add_try_catch_stmt (FILE* file, struct VB_Try_catch_stmt* stmt)
+{
+	int error, number = Number;
+
+	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> Try...Catch", number);
+
+	if (error == -1)
+		return 1;
+
+	if (stmt->stmt_list != NULL)
+	{
+		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0", number, ++Number);
+		if (error == -1)
+			return 1;
+		error = add_statement_list(file,stmt->stmt_list);
+		if (error)
+			return 1;
+	}
+	if (stmt->fin_stmt_list != NULL)
+	{
+		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0", number, ++Number);
+		if (error == -1)
+			return 1;
+		error = add_statement_list(file,stmt->fin_stmt_list);
+		if (error)
+			return 1;
+	}
+	if (stmt->catch_list != NULL)
+	{
+		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0", number, ++Number);
+		if (error == -1)
+			return 1;
+		error = add_catch_statement_list(file,stmt->catch_list);
 		if (error)
 			return 1;
 	}
