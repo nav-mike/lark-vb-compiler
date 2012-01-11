@@ -201,7 +201,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\vb_lark_tab.c"
+				RelativePath=".\vb_lark.tab.c"
 				>
 			</File>
 		</Filter>
@@ -231,7 +231,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\vb_lark_tab.h"
+				RelativePath=".\vb_lark.tab.h"
 				>
 			</File>
 			<File

@@ -2,7 +2,7 @@
 	#include <stdio.h>
 	#include <malloc.h>
 	#include "dot.h"
-	
+		
 	extern int yylex(void);
 	//extern int yyparse(void);
 	
@@ -12,6 +12,7 @@
 	
 	extern FILE* yyin;
 %}
+
 
 %start module_stmt
 
@@ -62,6 +63,8 @@
 	struct VB_Read_stmt*			console_read;
 	struct VB_Readln_stmt*			console_readln;
 }
+
+
 
 %type <Module>		module_stmt
 %type <List>		stmt_list
@@ -173,7 +176,7 @@
 %left '^'
 %left UMINUS
 %nonassoc ')'
-
+%locations
 %%
 
 	module_stmt: MODULE ID ENDL decl_stmt_list SUB_MAIN ENDL stmt_list END_SUB ENDL decl_stmt_list END_MODULE {$$ = root = create_VB_Module_stmt($2,$7,$4,$10);}
@@ -359,6 +362,7 @@
 void yyerror (char const* s)
 {
 	printf("%s\n",s);
+	printf("ERROR on line: %d and column: %d", yylloc.first_line,yylloc.last_column);
 	getchar();
 	exit(0);
 }
