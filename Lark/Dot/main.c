@@ -12,6 +12,8 @@ int add_expression (FILE* file, struct VB_Expr* expr);
 int add_param_list (FILE* file, struct VB_Param_list* list);
 int add_statement_list (FILE* file, struct VB_Stmt_list* list);
 int add_catch_statement_list (FILE* file, struct VB_Catch_stmt_list* list);
+int add_enum_statement (FILE* file, struct VB_Enum_stmt* stmt);
+int add_enum_expression_list (FILE* file, struct VB_Enum_expr_list* list);
 
 /*!
 	\brief Функция открытия файла для GraphViz.
@@ -33,11 +35,6 @@ int open_gv_file (FILE* file, char* filename)
 	if (result == -1)
 		return 1;
 
-	return 0;
-}
-
-int add_enum_statement (FILE* file, struct VB_Enum_stmt* stmt)
-{
 	return 0;
 }
 
@@ -768,6 +765,28 @@ int add_statement_list (FILE* file, struct VB_Stmt_list* list)
 			return 1;
 
 		item = item->next;
+	}
+
+	return 0;
+}
+
+int add_enum_statement (FILE* file, struct VB_Enum_stmt* stmt)
+{
+	int error, number = Number;
+
+	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> Enum Stmt\
+						 | <f1> id: %s \"\n\t\tshape = \"record\"\n\t];", number, stmt->id);
+	if (error == -1)
+		return 1;
+
+	if (stmt->list != NULL)
+	{
+		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0", number, ++Number);
+		if (error == -1)
+			return 1;
+		error = add_enum_expression_list(file,stmt->list);
+		if (error)
+			return 1;
 	}
 
 	return 0;
