@@ -613,11 +613,20 @@ int add_catch_statement_list (FILE* file, struct VB_Catch_stmt_list* list)
 */
 int add_enum_expression_list (FILE* file, struct VB_Enum_expr_list* list)
 {
-	int error;
+	int error, number = Number;
 	struct VB_Enum_expr* item = list->first;
+
+	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> Enum expr list\"\n\t\tshape = \"record\"\n\t];",
+						 number);
+	if (error == -1)
+		return 1;
 
 	while (item)
 	{
+		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
+			number, ++Number);
+		if (error == -1)
+			return 1;
 		error = add_enum_expression(file,item);
 		if (error)
 			return 1;
