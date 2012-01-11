@@ -767,6 +767,28 @@ char* as_expression_type_to_string (enum VB_As_expr_type type)
 	return "";
 }
 
+/*!
+	\brief Функция преобразования типа цикла FOR в строку.
+	\param type Тип цикла FOR.
+	\return Строка - тип цикла FOR.
+*/
+char* for_statement_type_to_string (enum VB_For_stmt_type type)
+{
+	switch (type)
+	{
+	case (SIMPLE):
+		return "SIMPLE";
+	case (WITH_DECL):
+		return "WITH_DECL";
+	case (WITH_DECL_AND_STEP):
+		return "WITH_DECL_AND_STEP";
+	case (WITH_STEP):
+		return "WITH_STEP";
+	}
+
+	return "";
+}
+
 int add_statement (FILE* file, struct VB_Stmt* stmt)
 {
 	return 0;
@@ -860,6 +882,13 @@ int add_as_expression (FILE* file, struct VB_As_expr* expr)
 	if (expr->id != NULL)
 	{
 		WRITE_CHILD(number,++Number,expr->id,add_expression,&error,file);
+		if (error)
+			return 1;
+	}
+
+	if (expr->list)
+	{
+		WRITE_CHILD(number,++Number,expr->list,add_id_list,&error,file);
 		if (error)
 			return 1;
 	}
