@@ -299,6 +299,34 @@ int add_enum_expression_list (FILE* file, struct VB_Enum_expr_list* list)
 	return 0;
 }
 
+int add_param_statement (FILE* file, struct VB_Param_stmt* stmt)
+{
+	return 0;
+}
+
+/*!
+	\brief Функция добавления списка параметров в файл.
+	\param file Дескриптор файла.
+	\param list Список параметров.
+	\return 0 если ошибок нет.
+*/
+int add_param_list (FILE* file, struct VB_Param_list* list)
+{
+	int error;
+	struct VB_Param_stmt* item;
+
+	while(item)
+	{
+		error = add_param_statement(file,item);
+		if (error)
+			return 1;
+
+		item = item->next;
+	}
+
+	return 0;
+}
+
 /*!
 	\brief Функция добавления модуля в файл.
 	\param file Дескриптор файла.
