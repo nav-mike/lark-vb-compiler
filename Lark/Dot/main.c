@@ -239,6 +239,28 @@ int add_declaration_list (FILE* file, struct VB_Decl_stmt_list* list)
 }
 
 /*!
+	\brief Функция преобразования типа идентификатора в строку.
+	\param type Тип идентификатора.
+	\return Тип идентификатора в виде строки.
+*/
+char* id_type_to_string (enum VB_Id_type type)
+{
+	switch (type)
+	{
+	case (BOOLEAN_E):
+		return "boolean";
+	case (CHAR_E):
+		return "char";
+	case (INTEGER_E):
+		return "integer";
+	case (STRING_E):
+		return "string";
+	}
+
+	return "";
+}
+
+/*!
 	\brief Функция преобразует тип Stmt в строку.
 	\param type - Тип Stmt.
 	\return Строка - тип Stmt.
