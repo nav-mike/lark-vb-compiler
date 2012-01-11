@@ -716,7 +716,27 @@ char* statement_type_to_string (enum VB_Stmt_type type)
 	return "";
 }
 
-int add_statement_statement(FILE* file, struct VB_Stmt* stmt)
+/*!
+	\brief Функция преобразования типа инициализации в строку.
+	\param type Тип инициализации.
+	\return Строка - тип инициализации.
+*/
+char* as_expression_type_to_string (enum VB_As_expr_type type)
+{
+	switch (type)
+	{
+	case (ID_INIT):
+		return "ID INIT";
+	case (ID_LIST):
+		return "ID LIST";
+	case (ONE_ID):
+		return "ONE ID";
+	}
+
+	return "";
+}
+
+int add_statement (FILE* file, struct VB_Stmt* stmt)
 {
 	return 0;
 }
@@ -743,7 +763,7 @@ int add_statement_list (FILE* file, struct VB_Stmt_list* list)
 			number, ++Number);
 		if (error == -1)
 			return 1;
-		error = add_statement_statement(file, item);
+		error = add_statement(file, item);
 		if (error)
 			return 1;
 
