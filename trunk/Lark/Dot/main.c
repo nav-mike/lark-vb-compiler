@@ -243,6 +243,34 @@ int add_expression_list (FILE* file, struct VB_Expr_list* list)
 	return 0;
 }
 
+int add_catch_statement (FILE* file, struct VB_Catch_stmt* stmt)
+{
+	return 0;
+}
+
+/*!
+	\brief Функция добавления списка обработки исключений.
+	\param file Дескриптор файла.
+	\param list Список обработки исключений.
+	\return 0 если ошибок нет.
+*/
+int add_catch_statement_list (FILE* file, struct VB_Catch_stmt_list* list)
+{
+	int error;
+	struct VB_Catch_stmt* item = list->first;
+
+	while (item)
+	{
+		error = add_catch_statement(file,item);
+		if (error)
+			return 1;
+
+		item = item->next;
+	}
+
+	return 0;
+}
+
 /*!
 	\brief Функция добавления модуля в файл.
 	\param file Дескриптор файла.
