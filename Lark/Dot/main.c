@@ -55,6 +55,71 @@ int add_declaration_list (FILE* file, struct VB_Decl_stmt_list* list)
 	return 0;
 }
 
+/*!
+	\brief Функция преобразует тип Stmt в строку.
+	\param type - Тип Stmt.
+	\return Строка - тип Stmt.
+*/
+char* statement_type_to_string (enum VB_Stmt_type type)
+{
+	switch (type)
+	{
+	case(0):
+		return "ENDL";
+		break;
+	case(1):
+		return "EXPR";
+		break;
+	case(2):
+		return "IF";
+		break;
+	case(3):
+		return "DIM";
+		break;
+	case(4):
+		return "FOR";
+		break;
+	case(5):
+		return "WHILE";
+		break;
+	case(6):
+		return "DO_LOOP";
+		break;
+	case(7):
+		return "ENUM";
+		break;
+	case(8):
+		return "SUB";
+		break;
+	case(9):
+		return "FUNC";
+		break;
+	case(10):
+		return "TRY_CATCH";
+		break;
+	case(11):
+		return "THROW";
+		break;
+	case(12):
+		return "PRINT";
+		break;
+	case(13):
+		return "PRINTLN";
+		break;
+	case(14):
+		return "READ";
+		break;
+	case(15):
+		return "READLN";
+		break;
+	case(16):
+		return "READKEY";
+		break;
+	}
+
+	return "";
+}
+
 int add_statement_list (FILE* file, struct VB_Stmt_list* list)
 {
 	return 0;
