@@ -282,6 +282,64 @@ char* id_type_to_string (enum VB_Id_type type)
 }
 
 /*!
+	\brief Функция преобразования типа выражения в строку.
+	\param type Тип выражения.
+	\return Тип выражения в виде строки.
+*/
+char* expression_type_to_string (enum VB_Expr_type type)
+{
+	switch(type)
+	{
+	case (ASSIGN):
+		return "ASSIGN";
+	case (BOOLEAN_CONST_E):
+		return "BOOLEAN CONST";
+	case (BRK_EXPR):
+		return "()";
+	case (CHAR_CONST_E):
+		return "CHAR CONST";
+	case (DIV):
+		return "Div";
+	case (EQUAL_E):
+		return "EQUAL";
+	case (GET_ITEM):
+		return "(i)";
+	case (ID_E):
+		return "id";
+	case (INT_CONST_E):
+		return "INTEGER CONST";
+	case (INT_DIV):
+		return ("int div");
+	case (LESS):
+		return "<";
+	case (LESS_OR_EQUAL_E):
+		return "<=";
+	case (MINUS):
+		return "-";
+	case (MORE):
+		return ">";
+	case (MORE_OR_EQUAL_E):
+		return ">=";
+	case (MUL):
+		return "*";
+	case (NONEQUAL_E):
+		return "<>";
+	case (PLUS):
+		return "+";
+	case (POWER):
+		return "^";
+	case (STRING_CONST_E):
+		return "STRING CONST";
+	case (UMINUS_E):
+		return "uminus";
+	case (UPLUS):
+		return "uplus";
+	}
+
+	return "";
+}
+
+/*!
 	\brief Функция преобразует тип Stmt в строку.
 	\param type - Тип Stmt.
 	\return Строка - тип Stmt.
