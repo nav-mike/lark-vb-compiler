@@ -832,8 +832,38 @@ int add_enum_statement (FILE* file, struct VB_Enum_stmt* stmt)
 	return 0;
 }
 
+/*!
+	\brief Функция добавления инициализации в файл.
+	\param file Дескриптор файла.
+	\param expr Инициализация.
+	\return 0 если ошибок нет.
+*/
 int add_as_expression (FILE* file, struct VB_As_expr* expr)
 {
+	int error, number = Number;
+
+	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> As Expr\
+						 |<f1> type: %s | <f2> id type: %s\
+						 \"\n\t\tshape = \"record\"\n\t];",number,
+						 as_expression_type_to_string(expr->type),
+						 id_type_to_string(expr->id_type));
+	if (error == -1)
+		return 1;
+
+	if (expr->expr != NULL)
+	{
+		WRITE_CHILD(number,++Number,expr->expr,add_expression,&error,file);
+		if (error)
+			return 1;
+	}
+
+	if (expr->id != NULL)
+	{
+		WRITE_CHILD(number,++Number,expr->id,add_expression,&error,file);
+		if (error)
+			return 1;
+	}
+
 	return 0;
 }
 
