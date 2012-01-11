@@ -177,6 +177,33 @@ int add_try_catch_stmt (FILE* file, struct VB_Try_catch_stmt* stmt)
 }
 
 /*!
+	\brief Функция добавления обработки исключений.
+	\param file Дескриптор файла.
+	\param stmt Обработка исключений.
+	\return 0 если ошибок нет.
+*/
+int add_catch_statement (FILE* file, struct VB_Catch_stmt* stmt)
+{
+	int error, number = Number;
+
+	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> Catch stmt\
+						 | <f1> id: %s \"\n\t\tshape = \"record\"\n\t];", number,stmt->id);
+	if (error == -1)
+		return 1;
+	if (stmt->stmt_list != NULL)
+	{
+		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0", number, ++Number);
+		if (error == -1)
+			return 1;
+		error = add_statement_list(file,stmt->stmt_list);
+		if (error)
+			return 1;
+	}
+
+	return 0;
+}
+
+/*!
 	\brief Функция добавления выброса исключения в файл.
 	\param file Дескриптор файла.
 	\param stmt Выброс исключения.
@@ -693,11 +720,6 @@ int add_expression_list (FILE* file, struct VB_Expr_list* list)
 		item = item->next;
 	}
 
-	return 0;
-}
-
-int add_catch_statement (FILE* file, struct VB_Catch_stmt* stmt)
-{
 	return 0;
 }
 
