@@ -2,7 +2,9 @@
 
 #include"tree_nodes.h"
 
-int Number;
+long int Number = 0;
+
+char* statement_type_to_string (enum VB_Stmt_type type);
 
 /*!
 	\brief Функция открытия файла для GraphViz.
@@ -27,8 +29,73 @@ int open_gv_file (FILE* file, char* filename)
 	return 0;
 }
 
+int add_enum_statement (FILE* file, struct VB_Enum_stmt* stmt)
+{
+	return 0;
+}
+
+int add_sub_statement (FILE* file, struct VB_Sub_stmt* stmt)
+{
+	return 0;
+}
+
+int add_func_statement (FILE* file, struct VB_Func_stmt* stmt)
+{
+	return 0;
+}
+
+/*!
+	\brief Функция добавления оператора объявления.
+	\param file Дескриптор файла.
+	\param stmt Оператор.
+	\reuturn 0 если ошибок нет.
+*/
 int add_declaration_statement (FILE* file, struct VB_Decl_stmt* stmt)
 {
+	int error, number;
+	
+	error = fprintf(file,"\n\nt\"\"node%d\" [\n\t\tlabel = \"<f0> Declaration \
+						 \\nstaement| <f1> %s \"\n\t\tshape = \"record\"\n\t];", Number,statement_type_to_string(stmt->type));
+	if (error == -1)
+		return 1;
+
+	if (stmt->enum_stmt != NULL)
+	{
+		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0;",
+			Number, Number + 1);
+		if (error == -1)
+			return 1;
+		number = Number;
+		Number++;
+		error = add_enum_statement (file, stmt->enum_stmt);
+		if (error)
+			return 1;
+	}
+
+	if (stmt->sub_stmt != NULL)
+	{
+		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0;",
+			number, Number + 1);
+		if (error == -1)
+			return 1;
+		Number++;
+		error = add_sub_statement (file, stmt->sub_stmt);
+		if (error)
+			return 1;
+	}
+	
+	if (stmt->func_stmt != NULL)
+	{
+		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0;",
+			number, Number + 1);
+		if (error == -1)
+			return 1;
+		Number++;
+		error = add_func_statement (file, stmt->func_stmt);
+		if (error)
+			return 1;
+	}
+
 	return 0;
 }
 
@@ -133,6 +200,7 @@ int add_statement_list (FILE* file, struct VB_Stmt_list* list)
 */
 int add_module_statement (FILE* file, struct VB_Module_stmt* module)
 {
+	int number = 0;
 	int error = fprintf(file,"\n\nt\"\"node%d\" [\n\t\tlabel = \"<f0> Module | <f1> %s \"\n\t\tshape = \"record\"\n\t];",
 		Number, module->id);
 	if (error == -1)
@@ -144,6 +212,7 @@ int add_module_statement (FILE* file, struct VB_Module_stmt* module)
 			Number, Number + 1);
 		if (error == -1)
 			return 1;
+		number = Number;
 		Number++;
 		error = add_declaration_list(file, module->decl_list);
 		if (error)
@@ -153,7 +222,7 @@ int add_module_statement (FILE* file, struct VB_Module_stmt* module)
 	if (module->stmt_list != NULL)
 	{
 		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0;",
-			Number, Number + 1);
+			number, Number + 1);
 		if (error == -1)
 			return 1;
 		Number++;
