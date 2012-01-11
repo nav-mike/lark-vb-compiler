@@ -121,6 +121,27 @@ int add_readln_stmt (FILE* file, struct VB_Readln_stmt* stmt)
 }
 
 /*!
+	\brief Функция добавляет в файл элемент перечисления.
+	\param file Дескриптор файла.
+	\param expr Элемент перечисления.
+	\return 0 если нет ошибок.
+*/
+int add_enum_expression (FILE* file, struct VB_Enum_expr* expr)
+{
+	int error;
+
+	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> Enum Expr\
+						 | <f1> is init: %d | <f2> id: %s | <f3>value: %d\
+						 \"\n\t\tshape = \"record\"\n\t];", Number,
+						 expr->is_init, expr->id, expr->value);
+	if (error == -1)
+		return 1;
+	Number++;
+
+	return 0;
+}
+
+/*!
 	\brief Функция добавления в файл вывода в стандартный поток с переносом строки.
 	\param file Дескриптор файла.
 	\param stmt Вывод в стандартный поток с переносом строки.
@@ -363,11 +384,6 @@ int add_catch_statement_list (FILE* file, struct VB_Catch_stmt_list* list)
 		item = item->next;
 	}
 
-	return 0;
-}
-
-int add_enum_expression (FILE* file, struct VB_Enum_expr* expr)
-{
 	return 0;
 }
 
