@@ -271,6 +271,34 @@ int add_catch_statement_list (FILE* file, struct VB_Catch_stmt_list* list)
 	return 0;
 }
 
+int add_enum_expression (FILE* file, struct VB_Enum_expr* expr)
+{
+	return 0;
+}
+
+/*!
+	\brief Функция добавления в файл списка перечисления.
+	\param file Дескриптор файла.
+	\param list Список перечисления.
+	\return 0 если ошибок нет.
+*/
+int add_enum_expression_list (FILE* file, struct VB_Enum_expr_list* list)
+{
+	int error;
+	struct VB_Enum_expr* item = list->first;
+
+	while (item)
+	{
+		error = add_enum_expression(file,item);
+		if (error)
+			return 1;
+
+		item = item->next;
+	}
+
+	return 0;
+}
+
 /*!
 	\brief Функция добавления модуля в файл.
 	\param file Дескриптор файла.
