@@ -64,6 +64,25 @@ int add_throw_stmt (FILE* file, struct VB_Throw_stmt* stmt)
 }
 
 /*!
+	\brief Функция добавляет в файл вывод в стандартный поток вывода.
+	\param file Дескриптор файла.
+	\param stmt Вывод в стандартный поток вывода.
+	\return 0, если ошибок нет.
+*/
+int add_print_stmt (FILE* file, struct VB_Print_stmt* stmt)
+{
+	int error;
+
+	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> Console.Print \
+						 | <f1> %s \"\n\t\tshape = \"record\"\n\t];", Number, stmt->text);
+	if (error == -1)
+		return 1;
+	Number++;
+
+	return 0;
+}
+
+/*!
 	\brief Функция добавления оператора объявления.
 	\param file Дескриптор файла.
 	\param stmt Оператор.
@@ -332,7 +351,7 @@ int add_param_statement (FILE* file, struct VB_Param_stmt* stmt)
 int add_param_list (FILE* file, struct VB_Param_list* list)
 {
 	int error;
-	struct VB_Param_stmt* item;
+	struct VB_Param_stmt* item = list->first;
 
 	while(item)
 	{
