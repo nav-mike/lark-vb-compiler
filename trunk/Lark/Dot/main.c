@@ -833,6 +833,28 @@ char* end_if_statement_type_to_string (enum VB_End_if_stmt_type type)
 	return "";
 }
 
+/*!
+	\brief Функция преобразования типа If в строку.
+	\param type Тип If.
+	\return Строка - тип If.
+*/
+char* if_statement_type_to_string (enum VB_If_stmt_type type)
+{
+	switch (type)
+	{
+	case (IF_ELSE_INLINE):
+		return "IF_ELSE_INLINE";
+	case (IF_ENDL):
+		return "IF_ENDL";
+	case (IF_INLINE):
+		return "IF_INLINE";
+	case (IF_THEN):
+		return "IF_THEN";
+	}
+
+	return "";
+}
+
 int add_statement (FILE* file, struct VB_Stmt* stmt)
 {
 	return 0;
