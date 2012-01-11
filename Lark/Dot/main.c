@@ -2,6 +2,17 @@
 
 #include"tree_nodes.h"
 
+#define WRITE_CHILD(number,Number,data,func,error,file)\
+	{\
+		int error1;\
+		error1 = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0;",number, Number);\
+		if (error1 == -1)\
+		{ *error = 1; }\
+		else {\
+		error1 = (*func)(file, data);\
+		if (error1) { *error = 1; }\
+		 else { *error = 0; } } }
+
 long int Number = 0;
 
 char* statement_type_to_string (enum VB_Stmt_type type);
@@ -821,8 +832,44 @@ int add_enum_statement (FILE* file, struct VB_Enum_stmt* stmt)
 	return 0;
 }
 
+int add_as_expression (FILE* file, struct VB_As_expr* expr)
+{
+	return 0;
+}
+
+/*!
+	\brief Функция добавления списка инициализации.
+	\param file Дескриптор файла.
+	\param list Список инициализации.
+	\return 0 если ошибок нет.
+*/
 int add_as_expression_list (FILE* file, struct VB_As_Expr_list* list)
 {
+	int error, number = Number;
+
+	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> As Expr List\
+						 | <f1> type: %s \"\n\t\tshape = \"record\"\n\t];", number,
+						 as_expression_list_type_to_string(list->type));
+	if (error == -1)
+		return 1;
+
+	if (list->as_expr != NULL)
+	{
+		int (*func)(FILE*,struct VB_As_expr*) = add_as_expression;
+		struct VB_As_expr* data = list->as_expr;
+		WRITE_CHILD(number,++Number,data,add_as_expression,&error,file);
+
+		if (error)
+			return 1;
+	}
+	if (list->arr != NULL)
+	{
+		int (*func)(FILE*,struct VB_Array_expr*) = add_array_expression;
+		WRITE_CHILD(number,++Number,list->arr,func,&error,file);
+		if (error)
+			return 1;
+	}
+
 	return 0;
 }
 
@@ -1040,7 +1087,6 @@ int close_gv_file (FILE* file)
 
 	return 0;
 }
-
 int main (int argc, char* argv[])
 {
 	return 0;
