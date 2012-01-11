@@ -83,6 +83,25 @@ int add_print_stmt (FILE* file, struct VB_Print_stmt* stmt)
 }
 
 /*!
+	\brief Функция добавляет в файл ввод с стандартного потока ввода.
+	\param file Дескриптор файла.
+	\param stmt Ввод с стандарнтый поток ввода.
+	\return 0 если ошибок нет.
+*/
+int add_read_stmt (FILE* file, struct VB_Read_stmt* stmt)
+{
+	int error;
+
+	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> Console.Read \
+						 \"\n\t\tshape = \"record\"\n\t];", Number);
+	if (error == -1)
+		return 1;
+	Number++;
+
+	return 0;
+}
+
+/*!
 	\brief Функция добавления в файл вывода в стандартный поток с переносом строки.
 	\param file Дескриптор файла.
 	\param stmt Вывод в стандартный поток с переносом строки.
