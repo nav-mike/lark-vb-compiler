@@ -1,4 +1,4 @@
-#include "stdafx.h"
+Ôªø#include "stdafx.h"
 /*  A Bison parser, made from vb_lark.y with Bison version GNU Bison version 1.24
   */
 
@@ -1643,11 +1643,11 @@ int main (int argc, char* argv[])
 	file = fopen("result.txt", "wt");
 	yyin = fopen(argv[1], "r");
 	
-	//yylex();	// «¿Ã≈Õ≈Õ≈ÕŒ
+	//yylex();	// –ó–ê–ú–ï–ù–ï–ù–ï–ù–û
 	
 	yyparse();
 	
-	print_tree();		// ¬˚‚Ó‰ ‰ÂÂ‚‡
+	print_tree();		// –í—ã–≤–æ–¥ –¥–µ—Ä–µ–≤–∞
 
 	fclose(file);
 	getchar();
