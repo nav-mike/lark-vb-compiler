@@ -258,11 +258,6 @@ enum VB_Id_type
 	STRING_E
 };
 
-enum VB_Id_type return_type(enum VB_Id_type type)
-{
-	return type;
-}
-
 /*! \struct VB_Id_list
     Список идентификаторов.
  */
