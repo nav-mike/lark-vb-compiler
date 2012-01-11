@@ -80,8 +80,52 @@ int add_sub_statement (FILE* file, struct VB_Sub_stmt* stmt)
 	return 0;
 }
 
+/*!
+	\brief Функция добавления функции в файл.
+	\param file Дескриптор файла.
+	\param stmt Функция.
+	\return 0 если ошибок нет.
+*/
 int add_func_statement (FILE* file, struct VB_Func_stmt* stmt)
 {
+	int error, number = Number;
+	
+	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> Sub Stmt\
+						 | <f1> id: %s | <f2> return type: %s \"\n\t\tshape = \"record\"\n\t];",
+						 number, stmt->id, id_type_to_string(stmt->id_type));
+	if (error == -1)
+		return 1;
+	
+	if (stmt->param_list != NULL)
+	{
+		error = fprintf(file,"\n\t\"node%d\":f0 -> \
+							 \"node%d\":f0", number, ++Number);
+		if (error == -1)
+			return 1;
+		error = add_param_list(file,stmt->param_list);
+		if (error)
+			return 1;
+	}
+	if (stmt->stmt_list)
+	{
+		error = fprintf(file,"\n\t\"node%d\":f0 -> \
+							 \"node%d\":f0", number, ++Number);
+		if (error == -1)
+			return 1;
+		error = add_statement_list(file,stmt->stmt_list);
+		if (error)
+			return 1;
+	}
+	if (stmt->expr)
+	{
+		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0", number, ++Number);
+		if (error == -1)
+			return 1;
+		error = add_expression(file,stmt->expr);
+		if (error)
+			return 1;
+	}
+
 	return 0;
 }
 
