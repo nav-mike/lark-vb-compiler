@@ -645,11 +645,21 @@ int add_enum_expression_list (FILE* file, struct VB_Enum_expr_list* list)
 */
 int add_param_list (FILE* file, struct VB_Param_list* list)
 {
-	int error;
+	int error, number = Number;
 	struct VB_Param_stmt* item = list->first;
+
+	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> Param list\"\n\t\tshape = \"record\"\n\t];",
+						 number);
+	if (error == -1)
+		return 1;
 
 	while(item)
 	{
+		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
+			number, ++Number);
+		if (error == -1)
+			return 1;
+
 		error = add_param_statement(file,item);
 		if (error)
 			return 1;
