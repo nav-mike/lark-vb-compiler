@@ -770,6 +770,12 @@ int add_statement_list (FILE* file, struct VB_Stmt_list* list)
 	return 0;
 }
 
+/*!
+	\brief Функция для добавления оператора перечисления.
+	\param file Дескриптор файла.
+	\param stmt Оператор перечисления.
+	\return 0 если нет ошибок.
+*/
 int add_enum_statement (FILE* file, struct VB_Enum_stmt* stmt)
 {
 	int error, number = Number;
@@ -785,6 +791,39 @@ int add_enum_statement (FILE* file, struct VB_Enum_stmt* stmt)
 		if (error == -1)
 			return 1;
 		error = add_enum_expression_list(file,stmt->list);
+		if (error)
+			return 1;
+	}
+
+	return 0;
+}
+
+int add_as_expression_list (FILE* file, struct VB_As_Expr_list* list)
+{
+	return 0;
+}
+
+/*!
+	\brief Функция для добавления оператора объявления в файл.
+	\param file Дескриптор файла.
+	\param stmt Оператор объявления переменных.
+	\return 0 если ошибок нет.
+*/
+int add_dim_statement (FILE* file, struct VB_Dim_stmt* stmt)
+{
+	int error, number = Number;
+
+	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> Dim Stmt\
+						 \"\n\t\tshape = \"record\"\n\t];", number);
+	if (error == -1)
+		return 1;
+
+	if (stmt->list != NULL)
+	{
+		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",number, ++Number);
+		if (error == -1)
+			return 1;
+		error = add_as_expression_list(file,stmt->list);
 		if (error)
 			return 1;
 	}
