@@ -9,6 +9,8 @@ char* id_type_to_string (enum VB_Id_type type);
 char* expression_type_to_string (enum VB_Expr_type type);
 int add_expression_list (FILE* file, struct VB_Expr_list* list);
 int add_expression (FILE* file, struct VB_Expr* expr);
+int add_param_list (FILE* file, struct VB_Param_list* list);
+int add_statement_list (FILE* file, struct VB_Stmt_list* list);
 
 /*!
 	\brief Функция открытия файла для GraphViz.
@@ -38,8 +40,43 @@ int add_enum_statement (FILE* file, struct VB_Enum_stmt* stmt)
 	return 0;
 }
 
+/*!
+	\brief Функция добавления процедуры в файл.
+	\param file Дескриптор файла.
+	\param stmt Процедура.
+	\return 0 если ошибок нет.
+*/
 int add_sub_statement (FILE* file, struct VB_Sub_stmt* stmt)
 {
+	int error, number = Number;
+	
+	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> Sub Stmt\
+						 | <f1> id: %s \"\n\t\tshape = \"record\"\n\t];",
+						 number, stmt->id);
+	if (error == -1)
+		return 1;
+	
+	if (stmt->param_list != NULL)
+	{
+		error = fprintf(file,"\n\t\"node%d\":f0 -> \
+							 \"node%d\":f0", number, ++Number);
+		if (error == -1)
+			return 1;
+		error = add_param_list(file,stmt->param_list);
+		if (error)
+			return 1;
+	}
+	if (stmt->stmt_list)
+	{
+		error = fprintf(file,"\n\t\"node%d\":f0 -> \
+							 \"node%d\":f0", number, ++Number);
+		if (error == -1)
+			return 1;
+		error = add_statement_list(file,stmt->stmt_list);
+		if (error)
+			return 1;
+	}
+
 	return 0;
 }
 
