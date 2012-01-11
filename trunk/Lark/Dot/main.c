@@ -27,6 +27,17 @@ int add_enum_statement (FILE* file, struct VB_Enum_stmt* stmt);
 int add_enum_expression_list (FILE* file, struct VB_Enum_expr_list* list);
 char* as_expression_list_type_to_string (enum VB_As_Expr_list_type type);
 int add_end_if_statement (FILE* file, struct VB_End_if_stmt* stmt);
+int add_if_statement (FILE* file, struct VB_If_stmt* stmt);
+int add_readln_stmt (FILE* file, struct VB_Readln_stmt* stmt);
+int add_println_stmt (FILE* file, struct VB_Println_stmt* stmt);
+int add_try_catch_stmt (FILE* file, struct VB_Try_catch_stmt* stmt);
+int add_print_stmt (FILE* file, struct VB_Print_stmt* stmt);
+int add_throw_stmt (FILE* file, struct VB_Throw_stmt* stmt);
+int add_while_statement (FILE* file, struct VB_While_stmt* stmt);
+int add_for_statement (FILE* file, struct VB_For_stmt* stmt);
+int add_dim_statement (FILE* file, struct VB_Dim_stmt* stmt);
+int add_do_loop_statement (FILE* file, struct VB_Do_loop_stmt* stmt);
+int add_read_stmt (FILE* file, struct VB_Read_stmt* stmt);
 
 /*!
 	\brief Функция открытия файла для GraphViz.
@@ -858,6 +869,60 @@ char* if_statement_type_to_string (enum VB_If_stmt_type type)
 
 int add_statement (FILE* file, struct VB_Stmt* stmt)
 {
+	int error, number = Number;
+
+	error = fprintf(file,"\n\t\"node%\" [\n\t\tlabel = \"<f0> Stmt\
+						 | type: %s \"\n\t\tshape = \"record\"\n\t];",number,
+						 statement_type_to_string(stmt->type));
+	if (error == -1)
+		return 1;
+
+	if (stmt->value == NULL)
+		return 0;
+
+	switch (stmt->type)
+	{
+	case(1):
+		WRITE_CHILD(number,++Number,(struct VB_Expr*)stmt->value,add_expression,&error,file);
+		break;
+	case(2):
+		WRITE_CHILD(number,++Number,(struct VB_If_stmt*)stmt->value,add_if_statement,&error,file);
+		break;
+	case(3):
+		WRITE_CHILD(number,++Number,(struct VB_Dim_stmt*)stmt->value,add_dim_statement,&error,file);
+		break;
+	case(4):
+		WRITE_CHILD(number,++Number,(struct VB_For_stmt*)stmt->value,add_for_statement,&error,file);
+		break;
+	case(5):
+		WRITE_CHILD(number,++Number,(struct VB_While_stmt*)stmt->value,add_while_statement,&error,file);
+		break;
+	case(6):
+		WRITE_CHILD(number,++Number,(struct VB_Do_loop_stmt*)stmt->value,add_do_loop_statement,&error,file);
+		break;
+	case(10):
+		WRITE_CHILD(number,++Number,(struct VB_Try_catch_stmt*)stmt->value,add_try_catch_stmt,&error,file);
+		break;
+	case(11):
+		WRITE_CHILD(number,++Number,(struct VB_Throw_stmt*)stmt->value,add_throw_stmt,&error,file);
+		break;
+	case(12):
+		WRITE_CHILD(number,++Number,(struct VB_Print_stmt*)stmt->value,add_print_stmt,&error,file);
+		break;
+	case(13):
+		WRITE_CHILD(number,++Number,(struct VB_Println_stmt*)stmt->value,add_println_stmt,&error,file);
+		break;
+	case(14):
+		WRITE_CHILD(number,++Number,(struct VB_Read_stmt*)stmt->value,add_read_stmt,&error,file);
+		break;
+	case(15):
+		WRITE_CHILD(number,++Number,(struct VB_Readln_stmt*)stmt->value,add_readln_stmt,&error,file);
+		break;
+	}
+
+	if (error)
+		return 1;
+
 	return 0;
 }
 
