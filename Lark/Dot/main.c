@@ -234,6 +234,38 @@ int add_array_expression (FILE* file, struct VB_Array_expr* expr)
 }
 
 /*!
+	\brief Функция добавления списка id в файл.
+	\param file Дескриптор файла.
+	\param list Список id.
+	\return 0 если ошибок нет.
+*/
+int add_id_list (FILE* file, struct VB_Id_list* list)
+{
+	int error, number = Number;
+	struct VB_Expr* item = list->id;
+
+	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> id list\
+						 \"\n\t\tshape = \"record\"\n\t];",number);
+
+	if (error == -1)
+		return 1;
+
+	while (item)
+	{
+		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",number,++Number);
+		if (error == -1)
+			return 1;
+		error = add_expression(file,item);
+		if (error)
+			return 1;
+
+		item = item->next;
+	}
+
+	return 0;
+}
+
+/*!
 	\brief Функция добавления выброса исключения в файл.
 	\param file Дескриптор файла.
 	\param stmt Выброс исключения.
