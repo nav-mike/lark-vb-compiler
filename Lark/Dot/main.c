@@ -26,6 +26,7 @@ int add_catch_statement_list (FILE* file, struct VB_Catch_stmt_list* list);
 int add_enum_statement (FILE* file, struct VB_Enum_stmt* stmt);
 int add_enum_expression_list (FILE* file, struct VB_Enum_expr_list* list);
 char* as_expression_list_type_to_string (enum VB_As_Expr_list_type type);
+int add_end_if_statement (FILE* file, struct VB_End_if_stmt* stmt);
 
 /*!
 	\brief Функция открытия файла для GraphViz.
@@ -857,6 +858,53 @@ char* if_statement_type_to_string (enum VB_If_stmt_type type)
 
 int add_statement (FILE* file, struct VB_Stmt* stmt)
 {
+	return 0;
+}
+
+/*!
+	\brief Функция добавления If в файл.
+	\param file Дескриптор файла.
+	\param stmt If.
+	\return 0 если ошибок нет.
+*/
+int add_if_statement (FILE* file, struct VB_If_stmt* stmt)
+{
+	int error, number = Number;
+
+	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> If Stmt\
+						 | type: %s \"\n\t\tshape = \"record\"\n\t];", number,
+						 if_statement_type_to_string(stmt->type));
+	if (error != -1)
+		return 1;
+
+	if (stmt->expr != NULL)
+	{
+		WRITE_CHILD(number,++Number,stmt->expr,add_expression,&error,file);
+		if (error)
+			return 1;
+	}
+	
+	if (stmt->stmt_list != NULL)
+	{
+		WRITE_CHILD(number,++Number,stmt->stmt_list,add_statement_list,&error,file);
+		if (error)
+			return 1;
+	}
+
+	if (stmt->else_list)
+	{
+		WRITE_CHILD(number,++Number,stmt->else_list,add_statement_list,&error,file);
+		if (error)
+			return 1;
+	}
+
+	if (stmt->end_stmt != NULL)
+	{
+		WRITE_CHILD(number,++Number,stmt->end_stmt,add_end_if_statement,&error,file);
+		if (error)
+			return 1;
+	}
+
 	return 0;
 }
 
