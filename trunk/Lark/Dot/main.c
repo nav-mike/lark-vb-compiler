@@ -5,6 +5,7 @@
 long int Number = 0;
 
 char* statement_type_to_string (enum VB_Stmt_type type);
+char* id_type_to_string (enum VB_Id_type type);
 
 /*!
 	\brief Функция открытия файла для GraphViz.
@@ -137,6 +138,26 @@ int add_enum_expression (FILE* file, struct VB_Enum_expr* expr)
 	if (error == -1)
 		return 1;
 	Number++;
+
+	return 0;
+}
+
+/*!
+	\brief Функция добавления параметра функции в файл.
+	\param file Дескриптор файла.
+	\param stmt Параметр функции.
+	\return 0 если ошибок нет.
+*/
+int add_param_statement (FILE* file, struct VB_Param_stmt* stmt)
+{
+	int error;
+
+	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> Param Stmt\
+						 | <f1> is by ref: %d | <f2> id: %s | <f3>type: %s\
+						 \"\n\t\tshape = \"record\"\n\t];", Number++,stmt->is_by_ref,
+						 stmt->id,id_type_to_string(stmt->id_type));
+	if (error == -1)
+		return 1;
 
 	return 0;
 }
@@ -429,11 +450,6 @@ int add_enum_expression_list (FILE* file, struct VB_Enum_expr_list* list)
 		item = item->next;
 	}
 
-	return 0;
-}
-
-int add_param_statement (FILE* file, struct VB_Param_stmt* stmt)
-{
 	return 0;
 }
 
