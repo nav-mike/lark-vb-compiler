@@ -14,6 +14,7 @@ int add_statement_list (FILE* file, struct VB_Stmt_list* list);
 int add_catch_statement_list (FILE* file, struct VB_Catch_stmt_list* list);
 int add_enum_statement (FILE* file, struct VB_Enum_stmt* stmt);
 int add_enum_expression_list (FILE* file, struct VB_Enum_expr_list* list);
+char* as_expression_list_type_to_string (enum VB_As_Expr_list_type type);
 
 /*!
 	\brief Функция открытия файла для GraphViz.
@@ -708,6 +709,28 @@ char* statement_type_to_string (enum VB_Stmt_type type)
 	case(16):
 		return "READKEY";
 		break;
+	}
+
+	return "";
+}
+
+/*!
+	\brief Фукнкция преобразрвания типа списка инициализации в строку.
+	\param type Тип списка инициализации.
+	\return Строка - тип списка инициализации.
+*/
+char* as_expression_list_type_to_string (enum VB_As_Expr_list_type type)
+{
+	switch (type)
+	{
+	case (ARRAY):
+		return "Array";
+	case (ARR_LIST):
+		return "Array List";
+	case (EXPR):
+		return "Expression";
+	case (EXPR_LIST):
+		return "Expression List";
 	}
 
 	return "";
