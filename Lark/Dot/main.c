@@ -897,6 +897,40 @@ int add_as_expression (FILE* file, struct VB_As_expr* expr)
 }
 
 /*!
+	\brief Функция добавления цикла FOR в файл.
+	\param file Дескриптор файла.
+	\param stmt Цикл FOR.
+	\return 0 если ошибок нет.
+*/
+int add_for_statement (FILE* file, struct VB_For_stmt* stmt)
+{
+	int error, number = Number;
+
+	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> For Stmt\
+						 |<f1> type: %s |<f2> id: %s |<f3> from: %d\
+						 |<f4> to: %d |<f5> step: %d \"\n\t\tshape = \"record\"\n\t];",
+						 number,for_statement_type_to_string(stmt->type),stmt->id,
+						 stmt->from_val,stmt->to_val,stmt->step_val);
+	if (error == -1)
+		return 1;
+	if (stmt->stmt_list != NULL)
+	{
+		WRITE_CHILD(number,++Number,stmt->stmt_list,add_statement_list,&error,file);
+		if (error)
+			return 1;
+	}
+
+	if (stmt->new_id)
+	{
+		WRITE_CHILD(number,++Number,stmt->new_id,add_expression,&error,file);
+		if (error)
+			return 1;
+	}
+
+	return 0;
+}
+
+/*!
 	\brief Функция добавления списка инициализации.
 	\param file Дескриптор файла.
 	\param list Список инициализации.
