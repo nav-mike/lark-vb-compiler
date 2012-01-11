@@ -1,4 +1,4 @@
-typedef union
+﻿typedef union
 {
 	int		b_const;
 	int		i_const;
