@@ -45,6 +45,25 @@ int add_func_statement (FILE* file, struct VB_Func_stmt* stmt)
 }
 
 /*!
+	\brief Функция добавления выброса исключения в файл.
+	\param file Дескриптор файла.
+	\param stmt Выброс исключения.
+	\return 0 если ошибок нет.
+*/
+int add_throw_stmt (FILE* file, struct VB_Throw_stmt* stmt)
+{
+	int error;
+
+	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> Throw \
+						 | <f1> %s \"\n\t\tshape = \"record\"\n\t];", Number, stmt->string);
+	if (error == -1)
+		return 1;
+	Number++;
+
+	return 0;
+}
+
+/*!
 	\brief Функция добавления оператора объявления.
 	\param file Дескриптор файла.
 	\param stmt Оператор.
@@ -54,7 +73,7 @@ int add_declaration_statement (FILE* file, struct VB_Decl_stmt* stmt)
 {
 	int error, number;
 	
-	error = fprintf(file,"\n\nt\"\"node%d\" [\n\t\tlabel = \"<f0> Declaration \
+	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> Declaration \
 						 \\nstaement| <f1> %s \"\n\t\tshape = \"record\"\n\t];", Number,statement_type_to_string(stmt->type));
 	if (error == -1)
 		return 1;
@@ -336,7 +355,7 @@ int add_param_list (FILE* file, struct VB_Param_list* list)
 int add_module_statement (FILE* file, struct VB_Module_stmt* module)
 {
 	int number = 0;
-	int error = fprintf(file,"\n\nt\"\"node%d\" [\n\t\tlabel = \"<f0> Module | <f1> %s \"\n\t\tshape = \"record\"\n\t];",
+	int error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> Module | <f1> %s \"\n\t\tshape = \"record\"\n\t];",
 		Number, module->id);
 	if (error == -1)
 		return 1;
