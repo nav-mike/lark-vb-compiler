@@ -256,6 +256,7 @@ enum VB_Id_type return_type(enum VB_Id_type type)
  */
 struct VB_Id_list
 {
+	int counter;
 	struct VB_Expr* id;					//!< Имя текущего идентификатора
 	struct VB_Id_list* next;	//!Б Указатель на следубщий идентификатор
 };
@@ -511,8 +512,7 @@ struct VB_Module_stmt* create_VB_Module_stmt (char* id, struct VB_Stmt_list* lis
 
 	if (post_decl != NULL)
 	{
-		module->decl_list->last->next = post_decl->first;
-		module->decl_list->last = post_decl->last;
+		module->decl_list = post_decl;
 	}
 
 	return module;
@@ -889,6 +889,7 @@ struct VB_If_stmt* create_with_Then_expr_stmt_list_end_if_stmt (enum VB_If_stmt_
 	if_stmt->expr = expr;
 	if_stmt->end_stmt = end_if_stmt;
 	if_stmt->stmt_list = stmt_list;
+	if_stmt->else_list = NULL;
 
 	return if_stmt;
 }
@@ -1028,6 +1029,7 @@ struct VB_Print_stmt* create_Print (char* text)
 	struct VB_Print_stmt* print = NULL;
 
 	print = (struct VB_Print_stmt*)malloc(sizeof(struct VB_Print_stmt));
+	print->text = (char*)malloc(sizeof(char)*strlen(text));
 
 	strcpy(print->text,text);
 
@@ -1044,6 +1046,7 @@ struct VB_Println_stmt* create_Println (char* text)
 	struct VB_Println_stmt* println = NULL;
 
 	println = (struct VB_Println_stmt*)malloc(sizeof(struct VB_Println_stmt));
+	println->text = (char*)malloc(sizeof(char)*strlen(text));
 
 	strcpy(println->text,text);
 
@@ -1312,7 +1315,7 @@ struct VB_As_Expr_list* add_to_as_expr_list(struct VB_As_Expr_list* list, struct
 											struct VB_Array_expr* arr)
 {
 	struct VB_As_Expr_list* new_item = (struct VB_As_Expr_list*)malloc(sizeof(struct VB_As_Expr_list));
-
+	
 	new_item->as_expr = expr;
 	new_item->arr = arr;
 	new_item->next = NULL;
@@ -1325,11 +1328,11 @@ struct VB_As_Expr_list* add_to_as_expr_list(struct VB_As_Expr_list* list, struct
 struct VB_As_expr* create_as_expr(enum VB_As_expr_type type, struct VB_Id_list* list, char* id, enum VB_Id_type id_type, struct VB_Expr* expr)
 {
 	struct VB_As_expr* as_expr = (struct VB_As_expr*)malloc(sizeof(struct VB_As_expr));
-
+	list->counter = 1;
 	as_expr->type = type;
 	as_expr->id_type = id_type;
 
-	if (type == ID_LIST)
+	if (list->counter>1)
 	{
 		as_expr->list = list;
 		as_expr->expr = NULL;
@@ -1337,8 +1340,10 @@ struct VB_As_expr* create_as_expr(enum VB_As_expr_type type, struct VB_Id_list* 
 	}
 	else
 	{
-		as_expr->expr = expr;
-		strcpy(as_expr->id->expr_string,id);
+		as_expr->expr = NULL;
+		as_expr->id = expr;
+		as_expr->list = list;
+		//strcpy(as_expr->id->expr_string,id);
 	}
 
 	return as_expr;
@@ -1355,12 +1360,13 @@ struct VB_Id_list* create_id_list(char* id)
 
 	list->id = (struct VB_Expr*)malloc(sizeof(struct VB_Expr));
 
+	list->id->list = NULL;
 	list->id->next = NULL;
 	list->id->expr_string = id;
 	list->next = NULL;
 	list->id->left_chld = NULL;
 	list->id->right_chld = NULL;
-
+	list->counter = 0;
 	return list;
 }
 
@@ -1372,12 +1378,14 @@ struct VB_Id_list* create_id_list(char* id)
 struct VB_Id_list* add_to_id_list(struct VB_Id_list* list,char* id)
 {
 	struct VB_Id_list* new_list = (struct VB_Id_list*)malloc(sizeof(struct VB_Id_list));
+	new_list->id = (struct VB_Expr*)malloc(sizeof(struct VB_Expr*));
 
+	new_list->id = create_id_expr(id);
 	strcpy(new_list->id->expr_string,id);
 	new_list->next = NULL;
 
 	list->next = new_list;
-
+	list->counter++;
 	return list;
 }
 
@@ -1462,12 +1470,14 @@ struct VB_For_stmt * create_for_stmt(char* id, int start, int end, struct VB_Stm
 	struct VB_For_stmt* result = (struct VB_For_stmt*)malloc(sizeof(struct VB_For_stmt));
 
 	result->type = SIMPLE;
+	result->id = (char*)malloc(sizeof(char)*strlen(id));
 	strcpy(result->id,id);
 	result->from_val = start;
 	result->to_val = end;
 	result->step_val = 1;
 	result->stmt_list = body;
 	result->next = NULL;
+	result->new_id = NULL;
 
     return result;
 }
@@ -1519,6 +1529,8 @@ struct VB_For_stmt * create_for_with_decl_stmt(char* id, enum VB_Id_type type, i
 
 	result->type = WITH_DECL;
 	result->new_id = (struct VB_Expr*)malloc(sizeof(struct VB_Expr));
+
+	result->new_id->list = NULL;
 	strcpy(result->new_id->expr_string,id);
 	result->new_id->type = type;
 	result->from_val = start;
@@ -1550,6 +1562,9 @@ struct VB_For_stmt * create_for_with_decl_with_step_stmt(char* id, enum VB_Id_ty
 
 	result->type = WITH_DECL_AND_STEP;
 	result->new_id = (struct VB_Expr*)malloc(sizeof(struct VB_Expr));
+
+
+	result->new_id->list =NULL;
 	strcpy(result->new_id->expr_string,id);
 	result->new_id->type = type;
 	result->from_val = start;
