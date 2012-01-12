@@ -59,16 +59,16 @@ int add_return_statement (FILE* file, struct VB_Return_stmt* stmt);
 	\param filename Имя открываемого файла.
 	\return 0 если ошибок нет.
 */
-int open_gv_file (FILE* file, char* filename)
+int open_gv_file (FILE** file, char* filename)
 {
 	int result = 0;
 
-	result = fopen_s(&file,filename,"wt");
+	result = fopen_s(file,filename,"wt");
 
 	if (result)
 		return 1;
 
-	result = fprintf(file,
+	result = fprintf(*file,
 		"digraph G\n{\n\tgraph [ rankdir = \"LR\" ];\n\tnode [ fontsize = \"16\" shape = \"ellipse\"  ];\n\tedge [ ];");
 	if (result == -1)
 		return 1;
@@ -527,7 +527,7 @@ int add_return_statement (FILE* file, struct VB_Return_stmt* stmt)
 */
 int add_expression (FILE* file, struct VB_Expr* expr)
 {
-	int error, number;
+	int error, number = Number;
 
 	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> Expression\
 						 | <f1> str: %s | <f2> int: %d | <f3> type: %s \
@@ -1042,32 +1042,44 @@ int add_if_statement (FILE* file, struct VB_If_stmt* stmt)
 
 	if (stmt->expr != NULL)
 	{
-	    int (*func)(FILE*, struct VB_Expr*) = add_expression;
-		WRITE_CHILD(number,++Number,stmt->expr,func,&error,file);
+		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
+			number, ++Number);
+		if (error == -1)
+			return 1;
+		error = add_expression(file,stmt->expr);
 		if (error)
 			return 1;
 	}
 
 	if (stmt->stmt_list != NULL)
 	{
-	    int (*func)(FILE*, struct VB_Stmt_list*) = add_statement_list;
-		WRITE_CHILD(number,++Number,stmt->stmt_list,func,&error,file);
+		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
+			number, ++Number);
+		if (error == -1)
+			return 1;
+		error = add_statement_list(file,stmt->stmt_list);
 		if (error)
 			return 1;
 	}
 
 	if (stmt->else_list)
 	{
-	    int (*func)(FILE*, struct VB_Stmt_list*) = add_statement_list;
-		WRITE_CHILD(number,++Number,stmt->else_list,func,&error,file);
+		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
+			number, ++Number);
+		if (error == -1)
+			return 1;
+		error = add_statement_list(file,stmt->else_list);
 		if (error)
 			return 1;
 	}
 
 	if (stmt->end_stmt != NULL)
 	{
-	    int (*func)(FILE*, struct VB_End_if_stmt*) = add_end_if_statement;
-		WRITE_CHILD(number,++Number,stmt->end_stmt,func,&error,file);
+		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
+			number, ++Number);
+		if (error == -1)
+			return 1;
+		error = add_end_if_statement(file,stmt->end_stmt);
 		if (error)
 			return 1;
 	}
@@ -1155,24 +1167,33 @@ int add_as_expression (FILE* file, struct VB_As_expr* expr)
 
 	if (expr->expr != NULL)
 	{
-	    int (*func)(FILE*, struct VB_Expr*) = add_expression;
-		WRITE_CHILD(number,++Number,expr->expr,func,&error,file);
+		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
+			number, ++Number);
+		if (error == -1)
+			return 1;
+		error = add_expression(file,expr->expr);
 		if (error)
 			return 1;
 	}
 
 	if (expr->id != NULL)
 	{
-	    int (*func)(FILE*, struct VB_Expr*) = add_expression;
-		WRITE_CHILD(number,++Number,expr->id,func,&error,file);
+		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
+			number, ++Number);
+		if (error == -1)
+			return 1;
+		error = add_expression(file,expr->id);
 		if (error)
 			return 1;
 	}
 
 	if (expr->list)
 	{
-	    int (*func)(FILE*,struct VB_Id_list*) = add_id_list;
-		WRITE_CHILD(number,++Number,expr->list,func,&error,file);
+		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
+			number, ++Number);
+		if (error == -1)
+			return 1;
+		error = add_id_list(file,expr->list);
 		if (error)
 			return 1;
 	}
@@ -1199,16 +1220,22 @@ int add_for_statement (FILE* file, struct VB_For_stmt* stmt)
 		return 1;
 	if (stmt->stmt_list != NULL)
 	{
-	    int (*func)(FILE*,struct VB_Stmt_list*) = add_statement_list;
-		WRITE_CHILD(number,++Number,stmt->stmt_list,func,&error,file);
+		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
+			number, ++Number);
+		if (error == -1)
+			return 1;
+		error = add_statement_list(file,stmt->stmt_list);
 		if (error)
 			return 1;
 	}
 
 	if (stmt->new_id)
 	{
-	    int (*func)(FILE*,struct VB_Expr*) = add_expression;
-		WRITE_CHILD(number,++Number,stmt->new_id,func,&error,file);
+		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
+			number, ++Number);
+		if (error == -1)
+			return 1;
+		error = add_expression(file,stmt->new_id);
 		if (error)
 			return 1;
 	}
@@ -1234,8 +1261,11 @@ int add_end_if_statement (FILE* file, struct VB_End_if_stmt* stmt)
 
 	if (stmt->stmt_list == NULL)
 	{
-	    int (*func)(FILE*,struct VB_Stmt_list*) = add_statement_list;
-		WRITE_CHILD(number,++Number,stmt->stmt_list,func,&error,file);
+		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
+			number, ++Number);
+		if (error == -1)
+			return 1;
+		error = add_statement_list(file,stmt->stmt_list);
 		if (error)
 			return 1;
 	}
@@ -1261,16 +1291,22 @@ int add_do_loop_statement (FILE* file, struct VB_Do_loop_stmt* stmt)
 
 	if (stmt->stmt_list != NULL)
 	{
-	    int (*func)(FILE*,struct VB_Stmt_list*) = add_statement_list;
-		WRITE_CHILD(number,++Number,stmt->stmt_list,func,&error,file);
+		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
+			number, ++Number);
+		if (error == -1)
+			return 1;
+		error = add_statement_list(file,stmt->stmt_list);
 		if (error)
 			return 1;
 	}
 
 	if (stmt->expr != NULL)
 	{
-	    int (*func)(FILE*,struct VB_Expr*) = add_expression;
-		WRITE_CHILD(number,++Number,stmt->expr,func,&error,file);
+		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
+			number, ++Number);
+		if (error == -1)
+			return 1;
+		error = add_expression(file,stmt->expr);
 		if (error)
 			return 1;
 	}
@@ -1295,16 +1331,22 @@ int add_while_statement (FILE* file, struct VB_While_stmt* stmt)
 
 	if (stmt->stmt_list)
 	{
-	    int (*func)(FILE*,struct VB_Stmt_list*) = add_statement_list;
-		WRITE_CHILD(number,++Number,stmt->stmt_list,func,&error,file);
+		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
+			number, ++Number);
+		if (error == -1)
+			return 1;
+		error = add_statement_list(file,stmt->stmt_list);
 		if (error)
 			return 1;
 	}
 
 	if (stmt->expr != NULL)
 	{
-	    int (*func)(FILE*,struct VB_Expr*) = add_expression;
-		WRITE_CHILD(number,++Number,stmt->expr,func,&error,file);
+		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
+			number, ++Number);
+		if (error == -1)
+			return 1;
+		error = add_expression(file,stmt->expr);
 		if (error)
 			return 1;
 	}
@@ -1330,17 +1372,21 @@ int add_as_expression_list (FILE* file, struct VB_As_Expr_list* list)
 
 	if (list->as_expr != NULL)
 	{
-		int (*func)(FILE*,struct VB_As_expr*) = add_as_expression;
-		struct VB_As_expr* data = list->as_expr;
-		WRITE_CHILD(number,++Number,data,func,&error,file);
-
+		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
+			number, ++Number);
+		if (error == -1)
+			return 1;
+		error = add_as_expression(file,list->as_expr);
 		if (error)
 			return 1;
 	}
 	if (list->arr != NULL)
 	{
-		int (*func)(FILE*,struct VB_Array_expr*) = add_array_expression;
-		WRITE_CHILD(number,++Number,list->arr,func,&error,file);
+		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
+			number, ++Number);
+		if (error == -1)
+			return 1;
+		error = add_array_expression(file,list->arr);
 		if (error)
 			return 1;
 	}
@@ -1565,10 +1611,9 @@ int close_gv_file (FILE* file)
 
 void print_tree(){
 	FILE* file = NULL;
-
-////	open_gv_file(file,"QWE.dot");
-//	add_module_statement (file, root);
-//	close_gv_file (file);
+	open_gv_file(&file,"QWE.dot");
+	add_module_statement (file, root);
+	close_gv_file (file);
 
 	VBX_createXML (root);
 }

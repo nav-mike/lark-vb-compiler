@@ -634,8 +634,6 @@ struct VB_Stmt* fill_stmt(enum VB_Stmt_type type, void* data)
 		stmt->type = type;
 
 		stmt->next = NULL;
-		
-
 	}
 	return stmt;
 }
