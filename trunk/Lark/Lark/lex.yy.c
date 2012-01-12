@@ -9,7 +9,6 @@
 #define YY_FLEX_MINOR_VERSION 5
 
 #include <stdio.h>
-#include "stdafx.h"
 
 /* cfront 1.2 defines "c_plusplus" instead of "__cplusplus" */
 #ifdef c_plusplus
@@ -590,10 +589,10 @@ char *yytext;
   #include <stdio.h>
   #include <string.h>
   #include "vb_lark.tab.h"
-  
+
   extern int yyparse(void);
   extern int print_tree();
-  
+
   //extern FILE* file;
   char literal[100];
   int num = 0;
@@ -1248,7 +1247,7 @@ YY_RULE_SETUP
 case 51:
 YY_RULE_SETUP
 #line 279 "vb_lark.l"
-{ 
+{
                           // fprintf(file,"\nKeyword \"Read\" has found\n");
 						   return READ;
 						 }
@@ -2425,13 +2424,13 @@ int main()
 //{
 //	file = fopen("result.txt", "wt");
 //	yyin = fopen(argv[1], "r");
-//	
+//
 //	//yylex();	// ЗАМЕНЕНЕНО
-//	
+//
 //	yyparse();
-//	
+//
 //	print_tree();		// Вывод дерева
-//	
+//
 //	fclose(file);
 //	getchar();
 //	return 0;
