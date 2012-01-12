@@ -1,11 +1,20 @@
-﻿//
+//
 //
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
-long int Number = 0;
+/*! \enum VB_Id_type
+    Перечисление типов идентификаторов.
+ */
+enum VB_Id_type
+{
+	INTEGER_E,
+	BOOLEAN_E,
+	CHAR_E,
+	STRING_E
+};
 
 /*! \struct VB_Module_stmt
     Структура дерева для хранения корня дерева.
@@ -21,6 +30,31 @@ struct VB_Decl_stmt_list
 {
 	struct VB_Decl_stmt* first;
 	struct VB_Decl_stmt* last;
+};
+
+/*! \enum VB_Type_of_expr
+    Перечисление типов операций.
+ */
+enum VB_Stmt_type
+{
+	ENDL_E,
+	STMT_EXPR_E,
+	IF_E,
+	DIM_E,
+	FOR_E,
+	WHILE_E,
+	DO_LOOP_E,
+	ENUM_D,
+	SUB_D,
+	FUNC_D,
+	TRY_CATCH_E,
+	THROW_E,
+	PRINT_E,
+	PRINTLN_E,
+	READ_E,
+	READLN_E,
+	READKEY_E,
+	RETURN_E
 };
 
 struct VB_Decl_stmt
@@ -47,46 +81,8 @@ struct VB_Stmt_list
 struct VB_Stmt
 {
 	enum VB_Stmt_type	      type;	          //!< Тип операции.
-	struct VB_Expr*		      expr;	          //!< Указатель на содержащееся в операции выражение.
-	struct VB_If_stmt*        if_stmt;        //!< Указатель на содержащееся в операции условие.
-	struct VB_Dim_stmt*       dim_stmt;       //!< Указатель на содержащуюся в операции инициализацию.
-	struct VB_For_stmt*       for_stmt;       //!< Указатель на содержащийся в операции цикл.
-	struct VB_While_stmt*     while_stmt;     //!< Указатель на содержащийся в операции цикл.
-	struct VB_Do_loop_stmt*   do_loop_stmt;   //!< Указатель на содержащийся в операции цикл.
-	struct VB_Try_catch_stmt* try_catch_stmt; //!< Указатель на содержащееся в операции отлов и обработка исключений.
-	struct VB_Throw_stmt*     throw_stmt;     //!< Указатель на содержащийся в операции выброс исключения.
-	struct VB_Print_stmt*     print_stmt;     //!< Указатель на содержащуюся в операции печать символа.
-	struct VB_Println_stmt*   println_stmt;   //!< Указатель на содержащуюся в операции печать строки.
-	struct VB_Read_stmt*      read_stmt;      //!< Указатель на содержащееся в операции считывание символа.
-	struct VB_Readln_stmt*    readln_stmt;    //!< Указатель на содержащееся в операции считывание строки.
-	struct VB_Readkey_stmt*   readkey_stmt;   //!< Указатель на содержащееся в операции считывание нажатой клавиши.
-	struct VB_Return_stmt*    return_stmt;
+	void* value;
 	struct VB_Stmt*		      next;	          //!< Указатель на следующий элемент последовательности операторов.
-};
-
-/*! \enum VB_Type_of_expr
-    Перечисление типов операций. 
- */
-enum VB_Stmt_type
-{
-	ENDL_E,
-	STMT_EXPR_E,
-	IF_E,
-	DIM_E,
-	FOR_E,
-	WHILE_E,
-	DO_LOOP_E,
-	ENUM_D,
-	SUB_D,
-	FUNC_D,
-	TRY_CATCH_E,
-	THROW_E,
-	PRINT_E,
-	PRINTLN_E,
-	READ_E,
-	READLN_E,
-	READKEY_E,
-	RETURN_E
 };
 
 /*! \struct VB_Expr_list
@@ -98,24 +94,8 @@ struct VB_Expr_list
 	struct VB_Expr* last;   //!< Указатель на последний элемент списка
 };
 
-/*! \struct VB_Expr
-    Структура дерева для хранения выражения.
- */
-struct VB_Expr
-{
-	enum VB_Expr_type	 type;			//!< Тип выражения.
-	char*				 expr_string;	//!< Имя идентификатора, либо строка.
-	int					 int_val;		//!< Значение выражения. Используется для bool, int, char.
-	struct VB_Expr*		 left_chld;		//!< Указатель на левого сына.
-	struct VB_Expr*		 right_chld;		//!< Указатель на правого сына.
-	struct VB_Expr_list* list;			//!< Параметры процедуры или функции
-	struct VB_Expr*      next;           //!< Указатель на следующего, для Expr_list.
-	
-	enum VB_Id_type		id_type;		//!< Тип идентификатора 	????
-};
-
 /*! \enum VB_Type_of_expr
-    Перечисление типов выражения. 
+    Перечисление типов выражения.
  */
 enum VB_Expr_type
 {
@@ -144,10 +124,38 @@ enum VB_Expr_type
 	BRK_EXPR		//!< Выражение со скобками
 };
 
+/*! \struct VB_Expr
+    Структура дерева для хранения выражения.
+ */
+struct VB_Expr
+{
+	enum VB_Expr_type	 type;			//!< Тип выражения.
+	char*				 expr_string;	//!< Имя идентификатора, либо строка.
+	int					 int_val;		//!< Значение выражения. Используется для bool, int, char.
+	struct VB_Expr*		 left_chld;		//!< Указатель на левого сына.
+	struct VB_Expr*		 right_chld;		//!< Указатель на правого сына.
+	struct VB_Expr_list* list;			//!< Параметры процедуры или функции
+	struct VB_Expr*      next;           //!< Указатель на следующего, для Expr_list.
+
+	enum VB_Id_type		id_type;		//!< Тип идентификатора 	????
+};
+
 struct VB_Return_stmt
 {
 	struct VB_Expr*			expr;
 	struct VB_Stmt*			next;		//!< Указатель на следующий элемент последовательности операторов.
+};
+
+
+/*! \enum VB_If_stmt_type
+    Перечисление типов условного перехода.
+ */
+enum VB_If_stmt_type
+{
+	IF_THEN,
+	IF_ENDL,
+	IF_INLINE,
+	IF_ELSE_INLINE
 };
 
 /*! \struct VB_If_stmt
@@ -163,15 +171,15 @@ struct VB_If_stmt
 	struct VB_Stmt*			next;		//!< Указатель на следующий элемент последовательности операторов.
 };
 
-/*! \enum VB_If_stmt_type
-    Перечисление типов условного перехода. 
+/*! \enum VB_End_if_stmt_type
+    Перечисление типов окончания операции условного перехода.
  */
-enum VB_If_stmt_type
+enum VB_End_if_stmt_type
 {
-	IF_THEN,
-	IF_ENDL,
-	IF_INLINE,
-	IF_ELSE_INLINE
+	ENDIF_E=0,						//!< Операция завершилась
+	ELSE_E=1,						//!< Есть альтернативное действие
+	ELSE_IF_THEN_E=2,				//!< Есть альтернативное действие с условием и на конце условия стоит "Then"
+	ELSE_IF_ENDL_E=3				//!< Есть альтернативное действие с условием и на конце условия стоит ENDL
 };
 
 /*! \struct VB_End_if_stmt
@@ -186,17 +194,6 @@ struct VB_End_if_stmt
 	struct VB_Stmt*				next;		//!< Указатель на следующий элемент последовательности операторов.
 };
 
-/*! \enum VB_End_if_stmt_type
-    Перечисление типов окончания операции условного перехода. 
- */
-enum VB_End_if_stmt_type
-{
-	ENDIF_E=0,						//!< Операция завершилась
-	ELSE_E=1,						//!< Есть альтернативное действие
-	ELSE_IF_THEN_E=2,				//!< Есть альтернативное действие с условием и на конце условия стоит "Then"
-	ELSE_IF_ENDL_E=3				//!< Есть альтернативное действие с условием и на конце условия стоит ENDL
-};
-
 /*! \struct VB_Dim_stmt
     Структура, описывающая операцию объявления переменных.
  */
@@ -204,6 +201,18 @@ struct VB_Dim_stmt
 {
 	struct VB_As_Expr_list* list;		//!< Указатель на элемент списка объявляемых переменных
 	struct VB_Stmt*			next;		//!< Следующий оператор
+};
+
+
+/*! \enum VB_As_Stmt_list
+    Перечисление, описывющее тип списка последовательности определения переменных
+ */
+enum VB_As_Expr_list_type
+{
+	EXPR,		//!< Определяется идентификатор
+	ARRAY,		//!< Определяется массив
+	EXPR_LIST,	//!< Определяется список идентификаторов
+	ARR_LIST	//!< Определяется список массивов
 };
 
 /*! \struct VB_As_Stmt_list
@@ -217,15 +226,12 @@ struct VB_As_Expr_list
 	struct VB_Array_expr*		arr;		//!< Массив
 };
 
-/*! \enum VB_As_Stmt_list
-    Перечисление, описывющее тип списка последовательности определения переменных
- */
-enum VB_As_Expr_list_type
+
+enum VB_As_expr_type
 {
-	EXPR,		//!< Определяется идентификатор
-	ARRAY,		//!< Определяется массив
-	EXPR_LIST,	//!< Определяется список идентификаторов
-	ARR_LIST	//!< Определяется список массивов
+	ID_LIST,	//!< Список идентификаторов
+	ONE_ID,		//!< Один идентификаор
+	ID_INIT		//!< Инициализированный идентификатор
 };
 
 /*! \struct VB_As_stmt
@@ -233,30 +239,17 @@ enum VB_As_Expr_list_type
  */
 struct VB_As_expr
 {
-	enum	VB_As_expr_type	type;		//!< Тип 
+	enum	VB_As_expr_type	type;		//!< Тип
 	struct	VB_Id_list*		list;		//!< Список идентификаторов
 	enum	VB_Id_type		id_type;	//!< Тип определяемого идентификатора
 	struct	VB_Expr*		expr;		//!< Инициализируемое значение
 	struct 	VB_Expr*		id;			//!< Идентификатор
 };
 
-enum VB_As_expr_type 
+enum VB_Id_type return_type(enum VB_Id_type type)
 {
-	ID_LIST,	//!< Список идентификаторов
-	ONE_ID,		//!< Один идентификаор
-	ID_INIT		//!< Инициализированный идентификатор
-};
-
-/*! \enum VB_Id_type
-    Перечисление типов идентификаторов. 
- */
-enum VB_Id_type
-{
-	INTEGER_E,
-	BOOLEAN_E,
-	CHAR_E,
-	STRING_E
-};
+	return type;
+}
 
 /*! \struct VB_Id_list
     Список идентификаторов.
@@ -276,7 +269,7 @@ struct VB_Array_expr
 	int size;					//!< Размер массива
 	enum VB_Id_type	id_type;	//!< Тип определяемого идентификатора или масива
 	struct VB_Expr_list* list;	//!< Данные, которыми заполняется массив
-	struct VB_Expr*	id;			//!< Идентификатор		???	
+	char*	id;			//!< Идентификатор		???
 };
 
 /*! \struct VB_For_stmt_type
@@ -297,7 +290,7 @@ struct VB_For_stmt
 {
 	enum VB_For_stmt_type type;			//!< Тип операции For
 	char*				 id;			//!< Идентификатор
-	int 				 from_val;		//!< Начало отсчета		
+	int 				 from_val;		//!< Начало отсчета
 	int 				 to_val;		//!< Конец отчета
 	int 				 step_val;		//!< Шаг
 	struct VB_Stmt_list* stmt_list;		//!< Тело цикла
@@ -315,16 +308,6 @@ struct VB_While_stmt
 	struct VB_Stmt*		 next;		//!< Следующий оператор
 };
 
-/*! \struct VB_Do_loop_stmt
-    Структура, описывающая оператор цикла Do...Loop.
- */
-struct VB_Do_loop_stmt
-{
-	enum VB_Do_loop_type type;		//!< Тип
-	struct VB_Stmt_list* stmt_list;	//!< Тело цикла
-	struct VB_Expr*		 expr;		//!< Условие
-	struct VB_Stmt*		 next;		//!< Следующий оператор
-};
 
 /*! \struct VB_Do_loop_type
     Тип цикла Do...Loop.
@@ -335,6 +318,17 @@ enum VB_Do_loop_type
 	DO_UNTIL,
 	LOOP_WHILE,
 	LOOP_UNTIL
+};
+
+/*! \struct VB_Do_loop_stmt
+    Структура, описывающая оператор цикла Do...Loop.
+ */
+struct VB_Do_loop_stmt
+{
+	enum VB_Do_loop_type type;		//!< Тип
+	struct VB_Stmt_list* stmt_list;	//!< Тело цикла
+	struct VB_Expr*		 expr;		//!< Условие
+	struct VB_Stmt*		 next;		//!< Следующий оператор
 };
 
 /*! \struct VB_Enum_stmt
@@ -393,7 +387,7 @@ struct VB_Readln_stmt
  */
 struct VB_Enum_expr
 {
-	int 				 is_init;	//!< Инициализируется ли				
+	int 				 is_init;	//!< Инициализируется ли
 	char*				 id;		//!< Имя
 	int					 value;		//!< Значение
 	struct VB_Enum_expr* next;		//!< Следующий элемент
@@ -427,7 +421,7 @@ struct VB_Param_stmt
 	int  is_by_ref;			//!< Передача по ссылке
 	char* id;					//!< Имя парметра
 	enum VB_Id_type	id_type;	//!< Тип параметра
-	struct VB_Param_stmt* next;	//!< Следующий 
+	struct VB_Param_stmt* next;	//!< Следующий
 };
 
 /*! \struct VB_Func_stmt
@@ -449,13 +443,13 @@ struct VB_Func_stmt
 struct VB_Try_catch_stmt
 {
 	struct VB_Stmt_list*       stmt_list;		//!< Отлавливаемый код
-	struct VB_Stmt_list*       fin_stmt_list;	//!< 
+	struct VB_Stmt_list*       fin_stmt_list;	//!<
 	struct VB_Stmt*		       next;			//!< Следующий оператор
 	struct VB_Catch_stmt_list* catch_list;      //!< Блок всех обработчиков исключения.
 };
 
 /*! \struct VB_Catch_stmt_list
-    
+
  */
 struct VB_Catch_stmt_list
 {
@@ -464,12 +458,12 @@ struct VB_Catch_stmt_list
 };
 
 /*! \struct VB_Catch_stmt
-    
+
  */
 struct VB_Catch_stmt
 {
 	char* id;
-	struct VB_Stmt_list* stmt_list;	
+	struct VB_Stmt_list* stmt_list;
 	struct VB_Catch_stmt* next;
 };
 
@@ -633,80 +627,12 @@ struct VB_Stmt* fill_stmt(enum VB_Stmt_type type, void* data)
 	{
 		stmt = (struct VB_Stmt*)malloc(sizeof(struct VB_Stmt));
 
-		stmt->expr			 = NULL;
-		stmt->dim_stmt		 = NULL;
-		stmt->do_loop_stmt	 = NULL;
-//		stmt->enum_stmt		 = NULL;
-		stmt->for_stmt		 = NULL;
-//		stmt->func_stmt		 = NULL;
-		stmt->if_stmt		 = NULL;
-		stmt->next			 = NULL;
-		stmt->print_stmt	 = NULL;
-		stmt->println_stmt	 = NULL;
-		stmt->read_stmt		 = NULL;
-		stmt->readkey_stmt	 = NULL;
-		stmt->readln_stmt	 = NULL;
-//		stmt->sub_stmt		 = NULL;
-		stmt->throw_stmt	 = NULL;
-		stmt->try_catch_stmt = NULL;
-		stmt->while_stmt	 = NULL;
-		stmt->return_stmt	 = NULL;
+		stmt->value = NULL;
+
+		stmt->value = data;
 
 		stmt->type = type;
 
-	switch (type)
-		{
-		case(0):
-			break;
-		case(1):
-			stmt->expr = (struct VB_Expr*)data;
-			break;
-		case(2):
-			stmt->if_stmt = (struct VB_If_stmt*)data;
-			break;
-		case(3):
-			stmt->dim_stmt = (struct VB_Dim_stmt*)data;
-			break;
-		case(4):
-			stmt->for_stmt = (struct VB_For_stmt*)data;
-			break;
-		case(5):
-			stmt->while_stmt = (struct VB_While_stmt*)data;
-			break;
-		case(6):
-			stmt->do_loop_stmt = (struct VB_Do_loop_stmt*)data;
-			break;
-		//case(7):
-		//	stmt->enum_stmt = (struct VB_Enum_stmt*)data;
-		//	break;
-		//case(8):
-		//	stmt->sub_stmt = (struct VB_Sub_stmt*)data;
-		//	break;
-		//case(9):
-		//	stmt->func_stmt = (struct VB_Func_stmt*)data;
-		//	break;
-		case(10):
-			stmt->try_catch_stmt = (struct VB_Try_catch_stmt*)data;
-			break;
-		case(11):
-			stmt->throw_stmt = (struct VB_Throw_stmt*)data;
-			break;
-		case(12):
-			stmt->print_stmt = (struct VB_Print_stmt*)data;
-			break;
-		case(13):
-			stmt->println_stmt = (struct VB_Println_stmt*)data;
-			break;
-		case(14):
-			stmt->read_stmt = (struct VB_Read_stmt*)data;
-			break;
-		case(15):
-			stmt->readln_stmt = (struct VB_Readln_stmt*)data;
-			break;
-		case(RETURN_E):
-			stmt->return_stmt = (struct VB_Return_stmt*)data;
-			break;
-		}
 	}
 	return stmt;
 }
@@ -728,6 +654,36 @@ struct VB_Decl_stmt* fill_decl_stmt(enum VB_Stmt_type type, void* data)
 
 		switch(type)
 		{
+		    case(RETURN_E):
+                break;
+		    case(READKEY_E):
+                break;
+		    case(READLN_E):
+                break;
+		    case(PRINT_E):
+                break;
+            case(PRINTLN_E):
+                break;
+            case(READ_E):
+                break;
+		    case(THROW_E):
+                break;
+		    case(ENDL_E):
+                break;
+            case(STMT_EXPR_E):
+                break;
+            case(IF_E):
+                break;
+            case(DIM_E):
+                break;
+            case(FOR_E):
+                break;
+            case(WHILE_E):
+                break;
+            case(DO_LOOP_E):
+                break;
+            case(TRY_CATCH_E):
+                break;
 			case(7):
 				stmt->enum_stmt = (struct VB_Enum_stmt*)data;
 				break;
@@ -889,12 +845,12 @@ struct VB_Stmt* create_VB_Stmt_Readln (struct VB_Readln_stmt* readln_stmt)
 */
 struct VB_Stmt* create_VB_Stmt_Read (struct VB_Read_stmt* read_stmt)
 {
-	return fill_stmt(14,(void*)read_stmt);
+	return (struct VB_Stmt*)fill_stmt(14,(void*)read_stmt);
 }
 
 struct VB_Return_stmt* create_VB_Stmt_Return(struct VB_Return_stmt* ret)
 {
-	return fill_stmt(RETURN_E,(void*)ret);
+	return (struct VB_Return_stmt*)fill_stmt(RETURN_E,(void*)ret);
 }
 
 struct VB_Return_stmt* create_return_stmt(struct VB_Expr* expr)
@@ -957,7 +913,7 @@ struct VB_End_if_stmt* create_end_if_stmt(enum VB_End_if_stmt_type type, struct 
   \param end_if_stmt Действия при ложном условии.
   \return Новое условное выражение.
 */
-struct VB_If_stmt* create_if_inline(enum VB_If_stmt_type type, struct VB_Expr* expr, 
+struct VB_If_stmt* create_if_inline(enum VB_If_stmt_type type, struct VB_Expr* expr,
 									struct VB_Stmt_list* if_list, struct VB_Stmt_list* else_list)
 {
 	struct VB_If_stmt* if_stmt = NULL;
@@ -1018,10 +974,8 @@ struct VB_Array_expr* create_Array (char* id, int int_const, enum VB_Id_type typ
 	arr->id_type = type;
 	arr->is_init = 0;
 	arr->size = int_const;
-	arr->id = (struct VB_Expr*)malloc(sizeof(struct VB_Expr));
-	strcpy(arr->id->expr_string,id);
-	arr->id->left_chld = NULL;
-	arr->id->right_chld = NULL;
+	arr->id = (char*)malloc(sizeof(char) * strlen(arr->id));
+	strcpy(arr->id,id);
 
 	return arr;
 }
@@ -1042,10 +996,8 @@ struct VB_Array_expr* create_Array_with_init (char* id, enum VB_Id_type type, st
 	result->id_type = type;
 	result->list = list;
 	result->is_init = 1;
-	result->id = (struct VB_Expr*)malloc(sizeof(struct VB_Expr));
-	strcpy(result->id->expr_string, id);
-	result->id->left_chld = NULL;
-	result->id->right_chld = NULL;
+	result->id = (char*)malloc(sizeof(char) * strlen(id));
+	strcpy(result->id, id);
 
 	return result;
 }
@@ -1239,7 +1191,7 @@ struct VB_Expr* create_func_expr(char* name, struct VB_Expr_list* params)
 struct VB_Expr* create_brackets_actions(char* name, struct VB_Expr_list* params)
 {
 	struct VB_Expr* result = (struct VB_Expr*)malloc(sizeof(struct VB_Expr));
-	
+
 	result->type = 22;
 	result->expr_string = name;
 	result->list = params;
@@ -1287,7 +1239,7 @@ struct VB_Expr* create_string_const_expr(char* string)
 	result->list = NULL;
 	result->next = NULL;
 	result->right_chld = NULL;
-	
+
 	return result;
 }
 
@@ -1311,7 +1263,7 @@ struct VB_Expr* create_operator_expr(enum VB_Expr_type type,
 	result->right_chld = right;
 	result->list = NULL;
 	result->next = NULL;
-	
+
 	return result;
 }
 
@@ -1323,10 +1275,10 @@ struct VB_Expr* create_operator_expr(enum VB_Expr_type type,
 struct VB_Dim_stmt* create_dim_stmt(struct VB_As_Expr_list* list)
 {
 	struct VB_Dim_stmt* dim_stmt = (struct VB_Dim_stmt*)malloc(sizeof(struct VB_Dim_stmt));
-	
+
 	dim_stmt->list = list;
 	dim_stmt->next = NULL;
-	
+
 	return dim_stmt;
 }
 
@@ -1350,11 +1302,11 @@ struct VB_As_Expr_list* create_as_expr_list(struct VB_As_expr* expr, struct VB_A
 /*!
 	Функция добавление переменной в список последовательности определения переменныхх.
   \param list Текущий список
-  \param expr Доавляемое выражение 
+  \param expr Доавляемое выражение
   \param arr Добавляемый массив
   \return указатель на объект выражения.
 */
-struct VB_As_Expr_list* add_to_as_expr_list(struct VB_As_Expr_list* list, struct VB_As_expr* expr, 
+struct VB_As_Expr_list* add_to_as_expr_list(struct VB_As_Expr_list* list, struct VB_As_expr* expr,
 											struct VB_Array_expr* arr)
 {
 	struct VB_As_Expr_list* new_item = (struct VB_As_Expr_list*)malloc(sizeof(struct VB_As_Expr_list));
@@ -1379,12 +1331,12 @@ struct VB_As_expr* create_as_expr(enum VB_As_expr_type type, struct VB_Id_list* 
 	{
 		as_expr->list = list;
 		as_expr->expr = NULL;
-		as_expr->id = NULL;	
+		as_expr->id = NULL;
 	}
 	else
 	{
 		as_expr->expr = expr;
-		strcpy(as_expr->id->expr_string,id);	
+		strcpy(as_expr->id->expr_string,id);
 	}
 
 	return as_expr;
@@ -1659,7 +1611,7 @@ struct VB_Do_loop_stmt * create_do_loop_stmt(enum VB_Do_loop_type type, struct V
 		delete = 8
 	End Enum"
 
-  \param id имя перечисления 
+  \param id имя перечисления
   \param list Список элементов
   \return указатель на объект Enum.
 */
@@ -1732,7 +1684,6 @@ struct VB_Func_stmt * create_func_stmt(char* id, struct VB_Param_list* params, e
 	result->id_type = type;
 	result->param_list = params;
 	result->stmt_list = body;
-	//result->expr = ret_val;
 	result->next = NULL;
 
     return result;

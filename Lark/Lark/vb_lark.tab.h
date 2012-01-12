@@ -119,9 +119,9 @@ typedef union YYSTYPE
 	int		i_const;
 	char	c_const;
 	char*	s_const;
-	
+
 	char* 	Id;
-	
+
 	struct VB_Module_stmt*		Module;
 	struct VB_Stmt_list*		List;
 	struct VB_Stmt*				Stmt;
@@ -149,10 +149,10 @@ typedef union YYSTYPE
 	struct VB_Catch_stmt*		Catch;
 	struct VB_Throw_stmt*		Throw;
 	struct VB_Return_stmt*		Ret;
-	
+
 	struct VB_Decl_stmt_list*	Decl_l;
 	struct VB_Decl_stmt*		Decl;
-	
+
 	enum VB_Id_type				Id_type;
 
 	struct VB_Print_stmt*			console_print;

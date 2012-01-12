@@ -1,4 +1,4 @@
-#include "stdafx.h"
+
 /* A Bison parser, made by GNU Bison 2.4.1.  */
 
 /* Skeleton implementation for Bison's Yacc-like parsers in C
@@ -73,14 +73,14 @@
 	#include <stdio.h>
 	#include <malloc.h>
 	#include "dot.h"
-		
+
 	extern int yylex(void);
 	//extern int yyparse(void);
-	
+
 	struct VB_Module_stmt* root;
-	
+
 	void yyerror (char const* s);
-	
+
 	extern FILE* yyin;
 
 
@@ -192,9 +192,9 @@ typedef union YYSTYPE
 	int		i_const;
 	char	c_const;
 	char*	s_const;
-	
+
 	char* 	Id;
-	
+
 	struct VB_Module_stmt*		Module;
 	struct VB_Stmt_list*		List;
 	struct VB_Stmt*				Stmt;
@@ -222,10 +222,10 @@ typedef union YYSTYPE
 	struct VB_Catch_stmt*		Catch;
 	struct VB_Throw_stmt*		Throw;
 	struct VB_Return_stmt*		Ret;
-	
+
 	struct VB_Decl_stmt_list*	Decl_l;
 	struct VB_Decl_stmt*		Decl;
-	
+
 	enum VB_Id_type				Id_type;
 
 	struct VB_Print_stmt*			console_print;
@@ -2747,14 +2747,14 @@ void yyerror (char const* s)
 int main (int argc, char* argv[])
 {
 	FILE* file;
-	
+
 	file = fopen("result.txt", "wt");
 	yyin = fopen(argv[1], "r");
-	
+
 	//yylex();	// ÇÀÌÅÍÅÍÅÍÎ
-	
+
 	yyparse();
-	
+
 	print_tree();		// Âûגמה הונוגא
 
 	fclose(file);
