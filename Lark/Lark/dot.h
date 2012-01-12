@@ -277,7 +277,7 @@ int add_array_expression (FILE* file, struct VB_Array_expr* expr)
 int add_id_list (FILE* file, struct VB_Id_list* list)
 {
 	int error, number = Number;
-	struct VB_Expr* item = list->id;
+	//struct VB_Expr* item = list->id;
 
 	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> id list\
 						 \"\n\t\tshape = \"record\"\n\t];",number);
@@ -285,16 +285,28 @@ int add_id_list (FILE* file, struct VB_Id_list* list)
 	if (error == -1)
 		return 1;
 
-	while (item)
+	if (list->id != NULL)
 	{
 		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",number,++Number);
 		if (error == -1)
 			return 1;
-		error = add_expression(file,item);
+		error = add_expression(file,list->id);
+		if (error)
+			return 1;
+	}
+
+	list = list->next;
+
+	while (list)
+	{
+		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",number,++Number);
+		if (error == -1)
+			return 1;
+		error = add_id_list(file,list);
 		if (error)
 			return 1;
 
-		item = item->next;
+		list = list->next;
 	}
 
 	return 0;
@@ -444,10 +456,10 @@ int add_println_stmt (FILE* file, struct VB_Println_stmt* stmt)
 */
 int add_declaration_statement (FILE* file, struct VB_Decl_stmt* stmt)
 {
-	int error, number;
+	int error, number = Number;
 
 	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> Declaration \
-						 \\nstaement| <f1> %s \"\n\t\tshape = \"record\"\n\t];", Number,statement_type_to_string(stmt->type));
+						 \\nstaement| <f1> %s \"\n\t\tshape = \"record\"\n\t];", number,statement_type_to_string(stmt->type));
 	if (error == -1)
 		return 1;
 
@@ -532,7 +544,7 @@ int add_expression (FILE* file, struct VB_Expr* expr)
 	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> Expression\
 						 | <f1> str: %s | <f2> int: %d | <f3> type: %s \
 						 | <f4> id type: %s\"\n\t\tshape = \"record\"\n\t];",
-						 Number,expr->expr_string,expr->int_val,expression_type_to_string(expr->type),
+						 number,expr->expr_string,expr->int_val,expression_type_to_string(expr->type),
 						 id_type_to_string(expr->id_type));
 	if (error == -1)
 		return 1;
@@ -660,19 +672,19 @@ char* expression_type_to_string (enum VB_Expr_type type)
 	case (INT_DIV):
 		return ("int div");
 	case (LESS):
-		return "<";
+		return "less";
 	case (LESS_OR_EQUAL_E):
-		return "<=";
+		return "nonmore";
 	case (MINUS):
 		return "-";
 	case (MORE):
-		return ">";
+		return "more";
 	case (MORE_OR_EQUAL_E):
-		return ">=";
+		return "nonless";
 	case (MUL):
 		return "*";
 	case (NONEQUAL_E):
-		return "<>";
+		return "nonequal";
 	case (PLUS):
 		return "+";
 	case (POWER):
@@ -1037,7 +1049,7 @@ int add_if_statement (FILE* file, struct VB_If_stmt* stmt)
 	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> If Stmt\
 						 | type: %s \"\n\t\tshape = \"record\"\n\t];", number,
 						 if_statement_type_to_string(stmt->type));
-	if (error != -1)
+	if (error == -1)
 		return 1;
 
 	if (stmt->expr != NULL)
@@ -1187,7 +1199,7 @@ int add_as_expression (FILE* file, struct VB_As_expr* expr)
 			return 1;
 	}
 
-	if (expr->list)
+	if (expr->list != NULL)
 	{
 		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
 			number, ++Number);
