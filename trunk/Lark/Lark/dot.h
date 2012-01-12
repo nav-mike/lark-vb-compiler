@@ -1634,6 +1634,9 @@ void print_tree(){
 	_spawnl(_P_WAIT,"D:\\Graphviz2.26.3\\bin\\dot.exe",
 		"dot.exe -Tpng test.dot -o test.png",NULL);
 
+	_spawnl(_P_NOWAIT,"C:\\Windows\\system32\\mspaint.exe",
+		"mspaint.exe test.png",NULL);
+
 	printf("Done!\n\n");
 
 	printf("Creating the xml tree...\n");
