@@ -351,10 +351,10 @@
 	throw_stmt: THROW NEW SYSTEM '.' EXCEPTION '(' STRING_CONST ')' ENDL  	{$$ = create_Throw($7);}
 			  ;
 
-	console_print_stmt: CONSOLE '.' WRITE '(' STRING_CONST ')' ENDL		  	{$$ = create_Print($5);}
+	console_print_stmt: CONSOLE '.' WRITE '(' expr_list_empty ')' ENDL		  	{$$ = create_Print($5);}
 					  ;
 
-	console_println_stmt: CONSOLE '.' WRITELINE '(' STRING_CONST ')' ENDL 	{$$ = create_Println($5);}
+	console_println_stmt: CONSOLE '.' WRITELINE '(' expr_list_empty ')' ENDL 	{$$ = create_Println($5);}
 						;
 
 	console_read_stmt: CONSOLE '.' READ '('')' ENDL						  	{$$ = create_Read();}
