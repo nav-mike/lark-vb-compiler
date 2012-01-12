@@ -1631,11 +1631,11 @@ void print_tree(){
 
 	printf("\n\nCreating the image...\n");
 
-	_spawnl(_P_WAIT,"D:\\Graphviz2.26.3\\bin\\dot.exe",
-		"dot.exe -Tpng test.dot -o test.png",NULL);
-
-	_spawnl(_P_NOWAIT,"C:\\Windows\\system32\\mspaint.exe",
-		"mspaint.exe test.png",NULL);
+	// Сюда надо вписать путь до dot.exe
+	if (_spawnl(_P_WAIT,"D:\\Graphviz2.26.3\\bin\\dot.exe",
+		"dot.exe -Tpng test.dot -o test.png",NULL) == 0)
+		_spawnl(_P_NOWAIT,"C:\\Windows\\system32\\mspaint.exe",
+			"mspaint.exe test.png",NULL);
 
 	printf("Done!\n\n");
 
