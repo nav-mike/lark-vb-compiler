@@ -1566,9 +1566,9 @@ int close_gv_file (FILE* file)
 void print_tree(){
 	FILE* file = NULL;
 
-	open_gv_file(file,"QWE.dot");
-	add_module_statement (file, root);
-	close_gv_file (file);
+////	open_gv_file(file,"QWE.dot");
+//	add_module_statement (file, root);
+//	close_gv_file (file);
 
 	VBX_createXML (root);
 }
