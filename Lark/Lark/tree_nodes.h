@@ -479,6 +479,26 @@ struct VB_Throw_stmt
 
 /** Функции инициализации структур. */
 
+/*!
+	\brief Функция слияния списков функций/процедур до Main и после.
+	\param prev Список методов до Main.
+	\param post Список методов после Main.
+	\return Список, содержащий prev и post.
+*/
+struct VB_Decl_stmt_list* merge_two_decl_stmt_list (struct VB_Decl_stmt_list* prev, struct VB_Decl_stmt_list* post)
+{
+	struct VB_Decl_stmt* item = post->first;
+
+	//while (item)
+	//{
+		prev->last->next = item;
+
+	//	item = item->next;
+	//}
+
+	return prev;
+}
+
 /* Инициализация модуля:
 	module_stmt: MODULE ID ENDL stmt_list END_MODULE ENDL ;
 */
@@ -507,10 +527,11 @@ struct VB_Module_stmt* create_VB_Module_stmt (char* id, struct VB_Stmt_list* lis
 
 	module->stmt_list = list;
 
-	if (prev_decl != NULL)
+	if (prev_decl != NULL && post_decl != NULL)
+		module->decl_list = merge_two_decl_stmt_list(prev_decl,post_decl);
+	else if (prev_decl != NULL)
 		module->decl_list = prev_decl;
-
-	if (post_decl != NULL)
+	else if (post_decl != NULL)
 	{
 		module->decl_list = post_decl;
 	}
@@ -1445,6 +1466,7 @@ struct VB_Param_list *add_to_param_list(struct VB_Param_list* list, struct VB_Pa
 struct VB_Param_stmt* create_param_stmt(char* id, enum VB_Id_type type)
 {
 	struct VB_Param_stmt* result = (struct VB_Param_stmt*)malloc(sizeof(struct VB_Param_stmt));
+	result->id = (char*)malloc(sizeof(char)*strlen(id));
 
 	strcpy(result->id,id);
 	result->id_type = type;
