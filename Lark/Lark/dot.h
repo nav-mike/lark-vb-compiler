@@ -1,4 +1,6 @@
 ﻿#include <stdio.h>
+#include <process.h>
+
 
 #include"xml.h"
 
@@ -1623,9 +1625,20 @@ int close_gv_file (FILE* file)
 
 void print_tree(){
 	FILE* file = NULL;
-	open_gv_file(&file,"QWE.dot");
+	open_gv_file(&file,"test.dot");
 	add_module_statement (file, root);
 	close_gv_file (file);
 
+	printf("\n\nCreating the image...\n");
+
+	_spawnl(_P_WAIT,"D:\\Graphviz2.26.3\\bin\\dot.exe",
+		"dot.exe -Tpng test.dot -o test.png",NULL);
+
+	printf("Done!\n\n");
+
+	printf("Creating the xml tree...\n");
+
 	VBX_createXML (root);
+
+	printf("Done!\n");
 }
