@@ -72,6 +72,7 @@
 %type <Stmt>		stmt
 %type <Expr>		expr
 %type <Expr_l>		expr_list
+%type <Expr_l>		expr_list_empty
 %type <If_stmt>		if_stmt
 %type <List>		stmt_list_inline
 %type <End_if>		end_if_stmt
@@ -220,7 +221,7 @@
 					 ;
 
 	expr: ID						{$$ = create_id_expr($1);}
-		| ID'('expr_list')'			{$$ = create_brackets_actions($1,$3);}
+		| ID'('expr_list_empty')'	{$$ = create_brackets_actions($1,$3);}
 		| INT_CONST					{$$ = create_int_boolean_char_const_expr(3,$1);}
 		| CHAR_CONST				{$$ = create_int_boolean_char_const_expr(2,$1);}
 		| STRING_CONST				{$$ = create_string_const_expr($1);}
@@ -277,6 +278,10 @@
 
 		array_expr: ID '(' INT_CONST ')' AS param_type		{$$ = create_Array($1,$3,$6);}
 				  ;
+
+		expr_list_empty: /*empty*/		{$$ = create_Expr_list(NULL);}
+					   | expr_list
+					   ;
 
 		expr_list: expr					{$$ = create_Expr_list($1);}
 				 | expr_list',' expr	{$$ = add_Expr_to_list($1,$3);}
