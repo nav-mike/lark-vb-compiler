@@ -633,6 +633,9 @@ struct VB_Stmt* fill_stmt(enum VB_Stmt_type type, void* data)
 
 		stmt->type = type;
 
+		stmt->next = NULL;
+		
+
 	}
 	return stmt;
 }
@@ -1279,6 +1282,7 @@ struct VB_Dim_stmt* create_dim_stmt(struct VB_As_Expr_list* list)
 	dim_stmt->list = list;
 	dim_stmt->next = NULL;
 
+
 	return dim_stmt;
 }
 
@@ -1353,6 +1357,7 @@ struct VB_Id_list* create_id_list(char* id)
 
 	list->id = (struct VB_Expr*)malloc(sizeof(struct VB_Expr));
 
+	list->id->next = NULL;
 	list->id->expr_string = id;
 	list->next = NULL;
 	list->id->left_chld = NULL;
