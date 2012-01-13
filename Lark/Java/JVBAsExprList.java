@@ -15,7 +15,23 @@ public class JVBAsExprList {
     private JVBAsExprList next;
     /** Массив. */
     private JVBArrayExpr arr;
-
+    
+    /**
+     * Закрытый метод превращения строки в тип.
+     * @param str Тип в виде строки.
+     */
+    private void parseString (String str) {
+        
+        if ("Array".equals(str))
+            type = JVBAsExprListType.ARRAY;
+        else if ("Array List".equals(str))
+            type = JVBAsExprListType.ARR_LIST;
+        else if ("Expression".equals(str))
+            type = JVBAsExprListType.EXPR;
+        else if ("Expression List".equals(str))
+            type = JVBAsExprListType.EXPR_LIST;
+    }
+ 
     /** 
      * Метод получения массива.
      * @return Массив.
