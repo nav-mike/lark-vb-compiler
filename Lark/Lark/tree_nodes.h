@@ -997,8 +997,9 @@ struct VB_Array_expr* create_Array (char* id, int int_const, enum VB_Id_type typ
 	arr->id_type = type;
 	arr->is_init = 0;
 	arr->size = int_const;
-	arr->id = (char*)malloc(sizeof(char) * strlen(arr->id));
+	arr->id = (char*)malloc(sizeof(char) * strlen(id));
 	strcpy(arr->id,id);
+	arr->list = NULL;
 
 	return arr;
 }
