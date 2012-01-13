@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-
+void yyerror (char const* s);
 /*! \enum VB_Id_type
     Перечисление типов идентификаторов.
  */
@@ -1317,7 +1317,6 @@ struct VB_Dim_stmt* create_dim_stmt(struct VB_As_Expr_list* list)
 	dim_stmt->list = list;
 	dim_stmt->next = NULL;
 
-
 	return dim_stmt;
 }
 
@@ -1507,10 +1506,15 @@ struct VB_Param_stmt* create_param_stmt(char* id, enum VB_Id_type type)
 }
 
 /*!
+
 	Создать выражение For:
 	" For i = 0 To 10
 		действия
 	  Next"
+
+for_stmt: FOR ID '=' expr TO expr ENDL stmt_list NEXT ENDL            				{$$ = create_for_stmt($2,$4,$6,$8);}
+		;
+
 
   \param id Итератор
   \param start Начальное значение
@@ -1518,15 +1522,15 @@ struct VB_Param_stmt* create_param_stmt(char* id, enum VB_Id_type type)
   \param body Тело цикла
   \return указатель на объект For.
 */
-struct VB_For_stmt * create_for_stmt(char* id, int start, int end, struct VB_Stmt_list* body)
+struct VB_For_stmt * create_for_stmt(char* id, struct VB_Expr* start_expr, struct VB_Expr* end_expr, struct VB_Stmt_list* body)
 {
 	struct VB_For_stmt* result = (struct VB_For_stmt*)malloc(sizeof(struct VB_For_stmt));
 
 	result->type = SIMPLE;
 	result->id = (char*)malloc(sizeof(char)*strlen(id));
 	strcpy(result->id,id);
-	result->from_val = start;
-	result->to_val = end;
+	result->from_val = 	start_expr->int_val;
+	result->to_val = end_expr->int_val;
 	result->step_val = 1;
 	result->stmt_list = body;
 	result->next = NULL;
@@ -1541,6 +1545,9 @@ struct VB_For_stmt * create_for_stmt(char* id, int start, int end, struct VB_Stm
 		действия
 	  Next"
 
+| FOR ID '=' expr TO expr STEP expr ENDL stmt_list NEXT ENDL 				{$$ = create_for_with_step_stmt($2,$4,$6,$8,$10);}
+
+
   \param id Итератор
   \param start Начальное значение
   \param end Конечное значение
@@ -1548,16 +1555,18 @@ struct VB_For_stmt * create_for_stmt(char* id, int start, int end, struct VB_Stm
   \param body Тело цикла
   \return указатель на объект For.
 */
-struct VB_For_stmt * create_for_with_step_stmt(char* id, int start, int end, int step, struct VB_Stmt_list* body)
+struct VB_For_stmt * create_for_with_step_stmt(char* id, struct VB_Expr* start_expr, 
+												struct VB_Expr* end_expr, struct VB_Expr* step_expr,
+												struct VB_Stmt_list* body)
 {
 	struct VB_For_stmt* result = (struct VB_For_stmt*)malloc(sizeof(struct VB_For_stmt));
 
 	result->type = WITH_STEP;
 	result->id = (char*)malloc(sizeof(char)*strlen(id));
 	strcpy(result->id,id);
-	result->from_val = start;
-	result->to_val = end;
-	result->step_val = step;
+	result->from_val = start_expr->int_val;
+	result->to_val = end_expr->int_val;
+	result->step_val = step_expr->int_val;
 	result->stmt_list = body;
 	result->next = NULL;
 	result->new_id = NULL;
@@ -1571,6 +1580,9 @@ struct VB_For_stmt * create_for_with_step_stmt(char* id, int start, int end, int
 		действия
 	  Next"
 
+| FOR ID AS param_type '=' expr TO expr ENDL stmt_list NEXT ENDL 			{$$ = create_for_with_decl_stmt($2,INTEGER_E,$6,$8,$10);}
+
+
   \param id Итератор
   \param Тип итератора
   \param start Начальное значение
@@ -1578,7 +1590,8 @@ struct VB_For_stmt * create_for_with_step_stmt(char* id, int start, int end, int
   \param body Тело цикла
   \return указатель на объект For.
 */
-struct VB_For_stmt * create_for_with_decl_stmt(char* id, enum VB_Id_type type, int start, int end, struct VB_Stmt_list* body)
+struct VB_For_stmt * create_for_with_decl_stmt(char* id, enum VB_Id_type type, struct VB_Expr* start_expr,
+												struct VB_Expr* end_expr, struct VB_Stmt_list* body)
 {
 	struct VB_For_stmt* result = (struct VB_For_stmt*)malloc(sizeof(struct VB_For_stmt));
 
@@ -1594,8 +1607,8 @@ struct VB_For_stmt * create_for_with_decl_stmt(char* id, enum VB_Id_type type, i
 	result->new_id->right_chld = NULL;
 	result->new_id->next = NULL;
 	result->new_id->id_type = type;
-	result->from_val = start;
-	result->to_val = end;
+	result->from_val = start_expr->int_val;
+	result->to_val = end_expr->int_val;
 	result->step_val = 1;
 	result->stmt_list = body;
 	result->next = NULL;
@@ -1609,6 +1622,8 @@ struct VB_For_stmt * create_for_with_decl_stmt(char* id, enum VB_Id_type type, i
 		действия
 	  Next"
 
+| FOR ID AS param_type '=' expr TO expr STEP expr ENDL stmt_list NEXT ENDL 	{$$ = create_for_with_decl_with_step_stmt($2,INTEGER_E,$6,$8,$10,$12);}
+  
   \param id Итератор
   \param Тип итератора
   \param start Начальное значение
@@ -1617,7 +1632,9 @@ struct VB_For_stmt * create_for_with_decl_stmt(char* id, enum VB_Id_type type, i
   \param body Тело цикла
   \return указатель на объект For.
 */
-struct VB_For_stmt * create_for_with_decl_with_step_stmt(char* id, enum VB_Id_type type, int start, int end, int step, struct VB_Stmt_list* body)
+struct VB_For_stmt * create_for_with_decl_with_step_stmt(char* id, enum VB_Id_type type,
+														 struct VB_Expr* start_expr, struct VB_Expr* end_expr,
+													     struct VB_Expr* step_expr, struct VB_Stmt_list* body)
 {
 	struct VB_For_stmt* result = (struct VB_For_stmt*)malloc(sizeof(struct VB_For_stmt));
 
@@ -1628,9 +1645,9 @@ struct VB_For_stmt * create_for_with_decl_with_step_stmt(char* id, enum VB_Id_ty
 	result->new_id->list =NULL;
 	strcpy(result->new_id->expr_string,id);
 	result->new_id->type = type;
-	result->from_val = start;
-	result->to_val = end;
-	result->step_val = step;
+	result->from_val = start_expr->int_val;
+	result->to_val = end_expr->int_val;
+	result->step_val = step_expr->int_val;
 	result->stmt_list = body;
 	result->next = NULL;
 	result->new_id->left_chld = NULL;
