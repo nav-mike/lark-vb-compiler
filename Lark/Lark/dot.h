@@ -697,6 +697,10 @@ char* expression_type_to_string (enum VB_Expr_type type)
 		return "uminus";
 	case (UPLUS):
 		return "uplus";
+	case (READ_E):
+		return "Console.Read()";
+	case (READLN_E):
+		return "Console.ReadLine()";
 	}
 
 	return "";
@@ -755,13 +759,13 @@ char* statement_type_to_string (enum VB_Stmt_type type)
 	case(13):
 		return "PRINTLN";
 		break;
-	case(14):
-		return "READ";
-		break;
-	case(15):
-		return "READLN";
-		break;
-	case(16):
+	//case(14):
+	//	return "READ";
+	//	break;
+	//case(15):
+	//	return "READLN";
+	//	break;
+	case(READKEY_E):
 		return "READKEY";
 		break;
 	}
@@ -1016,20 +1020,20 @@ int add_statement (FILE* file, struct VB_Stmt* stmt)
 			return 1;
 		error = add_println_stmt(file,(struct VB_Println_stmt*)stmt->value);
         break;
-	case(14):
-        error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
-			number, ++Number);
-		if (error == -1)
-			return 1;
-		error = add_read_stmt(file,(struct VB_Read_stmt*)stmt->value);
-        break;
-	case(15):
-        error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
-			number, ++Number);
-		if (error == -1)
-			return 1;
-		error = add_readln_stmt(file,(struct VB_Readln_stmt*)stmt->value);
-        break;
+	//case(14):
+ //       error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
+	//		number, ++Number);
+	//	if (error == -1)
+	//		return 1;
+	//	error = add_read_stmt(file,(struct VB_Read_stmt*)stmt->value);
+ //       break;
+	//case(15):
+ //       error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
+	//		number, ++Number);
+	//	if (error == -1)
+	//		return 1;
+	//	error = add_readln_stmt(file,(struct VB_Readln_stmt*)stmt->value);
+ //       break;
 	}
 
 	if (error)

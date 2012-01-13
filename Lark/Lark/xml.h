@@ -24,12 +24,21 @@ void VBX_add_expr(xmlNodePtr node, struct VB_Expr* expr);
 /**
  * Добавить узел - if.
  */
-void VBX_add_if(xmlNodePtr node, struct VBX_add_if* stmt);
+void VBX_add_if(xmlNodePtr node, struct VB_If_stmt* stmt);
+
+void VBX_add_sub(xmlNodePtr node, struct VB_Sub_stmt* stmt);
+
+void VBX_add_func(xmlNodePtr node, struct VB_Func_stmt* stmt);
 
 /**
  * Добавить узел - stmt - один из элементов всего stmt_list
  */
 void VBX_add_statement(xmlDocPtr doc, xmlNodePtr parentList, struct VB_Stmt* stmt);
+
+/**
+ * Добавить узел - decl_stmt - один из элементов всего списка объявлений
+ */
+void VBX_add_declaration(xmlDocPtr doc, xmlNodePtr parentList, struct VB_Decl_stmt* stmt);
 
 /**
  * Получить строку с типом выражения
@@ -101,7 +110,7 @@ void VBX_add_decl_list(xmlDocPtr doc, xmlNodePtr parent, struct VB_Decl_stmt_lis
 		listNode = xmlNewTextChild(parent,NULL,(const xmlChar *)"VB_Decl_stmt_list",NULL);
 
 		while (item != NULL){
-			//VBX_add_statement(doc,listNode,item);
+			VBX_add_statement(doc,listNode,item);
 			item = item->next;
 		}
 	}
@@ -138,15 +147,6 @@ void VBX_add_statement(xmlDocPtr doc, xmlNodePtr parentList, struct VB_Stmt* stm
 	case(DO_LOOP_E):
 		//VBX_add_expr_prop(stmt_node,(struct VB_Do_loop_stmt*)stmt->value);
 		break;
-	case(ENUM_D):
-		//VBX_add_expr_prop(stmt_node,(struct VB_Enum_expr*)stmt->value);
-		break;
-	case(SUB_D):
-		//VBX_add_expr_prop(stmt_node,(struct VB_Sub_stmt*)stmt->value);
-		break;
-	case(FUNC_D):
-		//VBX_add_expr_prop(stmt_node,(struct VB_Func_stmt*)stmt->value);
-		break;
 	case(TRY_CATCH_E):
 		//VBX_add_expr_prop(stmt_node,(struct VB_Try_catch_stmt*)stmt->value);
 		break;
@@ -168,6 +168,34 @@ void VBX_add_statement(xmlDocPtr doc, xmlNodePtr parentList, struct VB_Stmt* stm
 	}
 
 }
+
+/**
+ * Добавить узел - decl_stmt - один из элементов всего списка объявлений
+ */
+void VBX_add_declaration(xmlDocPtr doc, xmlNodePtr parentList, struct VB_Decl_stmt* stmt){
+	
+	xmlNodePtr decl_node;
+
+	switch(stmt->type)
+	{
+	case(ENUM_D):
+//		VBX_add_enum(
+//			xmlNewTextChild(parentList,NULL,(const xmlChar *)"VB_Enum_expr",NULL),
+//			(struct VB_Enum_expr*)stmt->value);
+		break;
+	case(SUB_D):
+		VBX_add_sub(
+			xmlNewTextChild(parentList,NULL,(const xmlChar *)"VB_Sub_stmt",NULL),
+			stmt->sub_stmt);
+		break;
+	case(FUNC_D):
+		VBX_add_func(
+			xmlNewTextChild(parentList,NULL,(const xmlChar *)"VB_Func_stmt",NULL),
+			stmt->func_stmt);
+		break;
+	}
+}
+
 
 /**
  * Добавить узел - expr.
@@ -213,13 +241,20 @@ void VBX_add_expr(xmlNodePtr node, struct VB_Expr* expr){
 	}
 }
 
-/**
- * Добавить узел - if.
- */
-void VBX_add_if(xmlNodePtr node, struct VBX_add_if* stmt){
+void VBX_add_sub(xmlNodePtr node, struct VB_Sub_stmt* stmt){
 
 }
 
+/**
+ * Добавить узел - if.
+ */
+void VBX_add_if(xmlNodePtr node, struct VB_If_stmt* stmt){
+
+}
+
+void VBX_add_func(xmlNodePtr node, struct VB_Func_stmt* stmt){
+
+}
 /**
  * Получить строку с типом выражения
  */
