@@ -287,12 +287,10 @@
 				 | expr_list',' expr	{$$ = add_Expr_to_list($1,$3);}
 				 ;
 
-        for_stmt: FOR ID '=' INT_CONST TO INT_CONST ENDL stmt_list NEXT ENDL            				{$$ = create_for_stmt($2,$4,$6,$8);}
-                | FOR ID '=' INT_CONST TO INT_CONST STEP INT_CONST ENDL stmt_list NEXT ENDL 			{$$ = create_for_with_step_stmt($2,$4,$6,$8,$10);}
-                | FOR ID AS INTEGER '=' INT_CONST TO INT_CONST ENDL stmt_list NEXT ENDL 					{$$ = create_for_with_decl_stmt($2,INTEGER_E,$6,$8,$10);}
-                | FOR ID AS INTEGER '=' INT_CONST TO INT_CONST STEP INT_CONST ENDL stmt_list NEXT ENDL 	{$$ = create_for_with_decl_with_step_stmt($2,INTEGER_E,$6,$8,$10,$12);}
-                | FOR ID AS CHAR '=' CHAR_CONST TO CHAR_CONST ENDL stmt_list NEXT ENDL 					{$$ = create_for_with_decl_stmt($2,CHAR_E,$6,$8,$10);}
-                | FOR ID AS CHAR '=' CHAR_CONST TO CHAR_CONST STEP CHAR_CONST ENDL stmt_list NEXT ENDL 	{$$ = create_for_with_decl_with_step_stmt($2,CHAR_E,$6,$8,$10,$12);}
+        for_stmt: FOR ID '=' expr TO expr ENDL stmt_list NEXT ENDL            				{$$ = create_for_stmt($2,$4,$6,$8);}
+                | FOR ID '=' expr TO expr STEP expr ENDL stmt_list NEXT ENDL 				{$$ = create_for_with_step_stmt($2,$4,$6,$8,$10);}
+                | FOR ID AS param_type '=' expr TO expr ENDL stmt_list NEXT ENDL 			{$$ = create_for_with_decl_stmt($2,INTEGER_E,$6,$8,$10);}
+                | FOR ID AS param_type '=' expr TO expr STEP expr ENDL stmt_list NEXT ENDL 	{$$ = create_for_with_decl_with_step_stmt($2,INTEGER_E,$6,$8,$10,$12);}
 				;
 
         while_stmt: WHILE expr ENDL stmt_list END_WHILE ENDL 	 {$$ = create_while_stmt($2,$4);}
@@ -351,10 +349,10 @@
 	throw_stmt: THROW NEW SYSTEM '.' EXCEPTION '(' STRING_CONST ')' ENDL  	{$$ = create_Throw($7);}
 			  ;
 
-	console_print_stmt: CONSOLE '.' WRITE '(' expr_list_empty ')' ENDL		  	{$$ = create_Print($5);}
+	console_print_stmt: CONSOLE '.' WRITE '(' expr ')' ENDL		  	{$$ = create_Print($5);}
 					  ;
 
-	console_println_stmt: CONSOLE '.' WRITELINE '(' expr_list_empty ')' ENDL 	{$$ = create_Println($5);}
+	console_println_stmt: CONSOLE '.' WRITELINE '(' expr ')' ENDL 	{$$ = create_Println($5);}
 						;
 
 	console_read_stmt: CONSOLE '.' READ '('')' ENDL						  	{$$ = create_Read();}
