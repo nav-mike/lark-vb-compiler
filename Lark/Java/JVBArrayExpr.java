@@ -1,5 +1,8 @@
 package jlark;
 
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+
 /**
  * Класс, хранящий данные для определения массива.
  * @version 1.0
@@ -17,10 +20,27 @@ public class JVBArrayExpr {
     private JVBExprList list;
     /** Идентификатор. */
     private String id;
+    
+    /**
+     * Закрытый метод превращения строки в тип идентификатора.
+     * @param str Тип идентификатора в виде строки.
+     */
+    private void parseString (String str) {
+        
+        if ("boolean".equals(str))
+            idType = JVBIdType.BOOLEAN_E;
+        else if ("char".equals(str))
+            idType = JVBIdType.CHAR_E;
+        else if ("integer".equals(str))
+            idType = JVBIdType.INTEGER_E;
+        else if ("string".equals(str))
+            idType = JVBIdType.STRING_E;
+        
+    }
 
     /**
      * Конструктор по умолчанию.
-     * Инициализует пустой массив размером 0 элементов.
+     * Иницаилизирует пустой массив размером 0 элементов.
      */
     public JVBArrayExpr() {
         
@@ -30,7 +50,38 @@ public class JVBArrayExpr {
         list = null;
         size = 0;
     }
-
+    
+    /**
+     * Конструктор с параметром.
+     * Иницаилизирует массив данными из xml.
+     * @param node Узел xml.
+     */
+    public JVBArrayExpr (Node node) {
+        
+        String buffer;
+        NamedNodeMap attributes = node.getAttributes();
+        // Считывание факта инициализации.
+        Node attr = attributes.getNamedItem("is_init");
+        buffer = attr.getNodeValue();
+        isInit = Boolean.parseBoolean(buffer);
+        // Считывание идентификатора.
+        attr = attributes.getNamedItem("id");
+        buffer = attr.getNodeValue();
+        id = buffer;
+        // Считывание типа идентификатора.
+        attr = attributes.getNamedItem("id_type");
+        buffer = attr.getNodeValue();
+        parseString(buffer);
+        // Считывание размера массива.
+        attr = attributes.getNamedItem("size");
+        buffer = attr.getNodeValue();
+        size = Integer.parseInt(buffer);
+        // Считывание инициализации массива.
+        if (isInit)
+            list = new JVBExprList(node.getChildNodes().item(0));
+        else
+            list = new JVBExprList();
+    }
     /**
      * Метод получения идентификатора.
      * @return Идентификатор.
