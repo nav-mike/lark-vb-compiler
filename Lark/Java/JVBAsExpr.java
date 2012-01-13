@@ -1,5 +1,9 @@
 package jlark;
 
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 /**
  * Класс дерева для хранения переменных одного типа.
  * @version 1.0
@@ -76,6 +80,33 @@ public class JVBAsExpr {
             idType = JVBIdType.INTEGER_E;
         else if ("string".equals(str))
             idType = JVBIdType.STRING_E;
+        
+    }
+    
+    public JVBAsExpr (Node node) {
+        
+        this();
+        String buffer;
+        NamedNodeMap attributes = node.getAttributes();
+        // Считывание типа.
+        Node attr = attributes.getNamedItem("type");
+        buffer = attr.getNodeValue();
+        JVBAsExprTypeFromString(buffer);
+        // Считывание типа идентификатора.
+        attr = attributes.getNamedItem("id_type");
+        buffer = attr.getNodeValue();
+        parseString(buffer);
+        // Считывание вложенных структур.
+        NodeList nodes = node.getChildNodes();
+        for (int i = 0; i < nodes.getLength(); i++) {
+            // Если это список идентификаторов.
+            if ("VB_Id_list".equals(nodes.item(i).getNodeName()))
+                list = new JVBIdList(nodes.item(i));
+            else if ("VB_Expr__expr".equals(nodes.item(i).getNodeName()))
+                expr = new JVBExpr(nodes.item(i));
+            else if ("VB_Expr__id".equals(nodes.item(i).getNodeName()))
+                id = new JVBExpr(nodes.item(i));
+        }
         
     }
 
