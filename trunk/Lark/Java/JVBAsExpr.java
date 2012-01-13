@@ -47,6 +47,20 @@ public class JVBAsExpr {
         this.expr = expr;
         this.id = id;
     }
+    
+    /**
+     * Метод превращения строки в тип.
+     * @param str Тип в виде строки.
+     */
+    private void JVBAsExprTypeFromString (String str) {
+        
+        if ("ID INIT".equals(str))
+            type = JVBAsExprType.ID_INIT;
+        else if ("ID LIST".equals(str))
+            type = JVBAsExprType.ID_LIST;
+        else if ("ONE ID".equals(str))
+            type = JVBAsExprType.ONE_ID;
+    }
 
     /**
      * Метод получения инициализируемого значения.
