@@ -1,5 +1,9 @@
 package jlark;
 
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 /**
  * Класс, описывающий связный список переменных, объявленных одним типом.
  * @version 1.0
@@ -41,6 +45,34 @@ public class JVBAsExprList {
         this.asExpr = asExpr;
         this.next = next;
         this.arr = arr;
+    }
+    
+    /**
+     * Конструктор с параметром.
+     * Инициализирует из узла xml.
+     * @param node Узел Xml.
+     */
+    public JVBAsExprList (Node node) {
+        
+        this();
+        String buffer;
+        NamedNodeMap attributes = node.getAttributes();
+        // Тип.
+        Node attr = attributes.getNamedItem("type");
+        buffer = attr.getNodeValue();
+        parseString(buffer);
+        // Остальные структуры.
+        NodeList nodes = node.getChildNodes();
+        
+        for (int i = 0; i < nodes.getLength(); i++) {
+            
+            if ("VB_As_expr".equals(nodes.item(i).getNodeName()))
+                asExpr = new JVBAsExpr(nodes.item(i));
+            else if ("VB_As_Expr_list".equals(nodes.item(i).getNodeName()))
+                next = new JVBAsExprList(nodes.item(i));
+            else if ("VB_Array_expr".equals(nodes.item(i).getNodeName()))
+                arr = new JVBArrayExpr(nodes.item(i));
+        }
     }
     
     /**
