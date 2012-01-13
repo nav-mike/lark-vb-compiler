@@ -82,6 +82,24 @@ public class JVBArrayExpr {
         else
             list = new JVBExprList();
     }
+
+    /**
+     * Конструктор с параметрами.
+     * Инициализирует массив входными параметрами.
+     * @param isInit Инициализируется ли массив.
+     * @param size Размер массива.
+     * @param idType Тип идентификатора.
+     * @param list Список инициализации.
+     * @param id Идентификатор.
+     */
+    public JVBArrayExpr(boolean isInit, int size, JVBIdType idType, JVBExprList list, String id) {
+        this.isInit = isInit;
+        this.size = size;
+        this.idType = idType;
+        this.list = list;
+        this.id = id;
+    }
+    
     /**
      * Метод получения идентификатора.
      * @return Идентификатор.
