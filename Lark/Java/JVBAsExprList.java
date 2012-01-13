@@ -15,6 +15,18 @@ public class JVBAsExprList {
     private JVBAsExprList next;
     /** Массив. */
     private JVBArrayExpr arr;
+
+    /**
+     * Конструктор по умолчанию.
+     * Инициализирует null.
+     */
+    public JVBAsExprList() {
+        
+        arr = null;
+        asExpr = null;
+        next = null;
+        type = null;
+    }
     
     /**
      * Закрытый метод превращения строки в тип.
