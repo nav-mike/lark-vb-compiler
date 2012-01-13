@@ -4,7 +4,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+
 void yyerror (char const* s);
+
 /*! \enum VB_Id_type
     Перечисление типов идентификаторов.
  */
@@ -51,8 +53,6 @@ enum VB_Stmt_type
 	THROW_E,
 	PRINT_E,
 	PRINTLN_E,
-	READ_E,
-	READLN_E,
 	READKEY_E,
 	RETURN_E
 };
@@ -121,7 +121,9 @@ enum VB_Expr_type
 	UMINUS_E,			//!< Оператор унарного минуса
 	UPLUS,			//!< Оператор унарного плюса
 	GET_ITEM,		//!< Получение элемента массива
-	BRK_EXPR		//!< Выражение со скобками
+	BRK_EXPR,		//!< Выражение со скобками
+	READ_E,
+	READLN_E,
 };
 
 /*! \struct VB_Expr
@@ -1057,11 +1059,19 @@ struct VB_Print_stmt* create_Print (struct VB_Expr* expr)
 
 	print = (struct VB_Print_stmt*)malloc(sizeof(struct VB_Print_stmt));
 
-	print->expr = expr;
+	if (expr == NULL){
+		print->expr = (struct VB_Expr*)malloc(sizeof(struct VB_Expr));
+		print->expr->expr_string = (char*)malloc(sizeof(char)*2);
+		print->expr->expr_string = "\n";
+	}
+	else{
 
-	if (print->expr->expr_string == NULL){
-		print->expr->expr_string = (char*)malloc(sizeof(char)*5);
-		strcpy(print->expr->expr_string,"expr\0");
+		print->expr = expr;
+
+		if (print->expr->expr_string == NULL){
+			print->expr->expr_string = (char*)malloc(sizeof(char)*5);
+			strcpy(print->expr->expr_string,"expr\0");
+		}
 	}
 
 	return print;
@@ -1077,12 +1087,20 @@ struct VB_Println_stmt* create_Println (struct VB_Expr* expr)
 	struct VB_Println_stmt* println = NULL;
 
 	println = (struct VB_Println_stmt*)malloc(sizeof(struct VB_Println_stmt));
+	
+	if (expr == NULL){
+		println->expr = (struct VB_Expr*)malloc(sizeof(struct VB_Expr));
+		println->expr->expr_string = (char*)malloc(sizeof(char)*2);
+		println->expr->expr_string = "ENDL";
+	}
+	else{
 
-	println->expr = expr;
+		println->expr = expr;
 
-	if (println->expr->expr_string == NULL){
-		println->expr->expr_string = (char*)malloc(sizeof(char)*6);
-		strcpy(println->expr->expr_string,"expr\n\0");
+		if (println->expr->expr_string == NULL){
+			println->expr->expr_string = (char*)malloc(sizeof(char)*6);
+			strcpy(println->expr->expr_string,"exprENDL\0");
+		}
 	}
 	return println;
 }
@@ -1091,24 +1109,45 @@ struct VB_Println_stmt* create_Println (struct VB_Expr* expr)
 	Функция создания Console.Read().
   \return Узел дерева - считывание символа с стандартного потока.
 */
-struct VB_Read_stmt* create_Read ()
+struct VB_Expr* create_Read ()
 {
-	struct VB_Read_stmt* read = NULL;
 
-	read = (struct VB_Read_stmt*)malloc(sizeof(struct VB_Read_stmt));
+	struct VB_Expr* read = (struct VB_Expr*)malloc(sizeof(struct VB_Expr));
+	read->expr_string = NULL;
+	read->id_type = INTEGER_E;
+	read->int_val = 0;
+	read->left_chld = NULL;
+	read->list = NULL;
+	read->next = NULL;
+	read->right_chld = NULL;
+	read->type = READ_E;
+
+	//struct VB_Read_stmt* read = NULL;
+
+	//read = (struct VB_Read_stmt*)malloc(sizeof(struct VB_Read_stmt));
 
 	return read;
 }
 
 /*!
 	Функция создания Console.ReadLine().
-  \return Узед дерева - считывание строки с стандартного потока.
+  \return Узел дерева - считывание строки с стандартного потока.
 */
-struct VB_Readln_stmt* create_Readln ()
+struct VB_Expr* create_Readln ()
 {
-	struct VB_Readln_stmt* readln = NULL;
+	struct VB_Expr* readln = (struct VB_Expr*)malloc(sizeof(struct VB_Expr));
+	readln->expr_string = NULL;
+	readln->id_type = INTEGER_E;
+	readln->int_val = 0;
+	readln->left_chld = NULL;
+	readln->list = NULL;
+	readln->next = NULL;
+	readln->right_chld = NULL;
+	readln->type = READLN_E;
 
-	readln = (struct VB_Readln_stmt*)malloc(sizeof(struct VB_Readln_stmt));
+	//struct VB_Readln_stmt* readln = NULL;
+
+	//readln = (struct VB_Readln_stmt*)malloc(sizeof(struct VB_Readln_stmt));
 
 	return readln;
 }
