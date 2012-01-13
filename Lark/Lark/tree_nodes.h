@@ -1040,6 +1040,7 @@ struct VB_Throw_stmt* create_Throw (char* string)
 	struct VB_Throw_stmt* th = NULL;
 
 	th = (struct VB_Throw_stmt*)malloc(sizeof(struct VB_Throw_stmt));
+	th->string = (char*)malloc(sizeof(char)*strlen(string));
 	strcpy(th->string, string);
 
 	return th;
@@ -1123,6 +1124,7 @@ struct VB_Catch_stmt* create_Catch_stmt (char* id, struct VB_Stmt_list* stmt_lis
 	struct VB_Catch_stmt* catch_stmt = NULL;
 
 	catch_stmt = (struct VB_Catch_stmt*)malloc(sizeof(struct VB_Catch_stmt));
+	catch_stmt->id = (char*)malloc(sizeof(char)*strlen(id));
 
 	strcpy(catch_stmt->id,id);
 	catch_stmt->stmt_list = stmt_list;
