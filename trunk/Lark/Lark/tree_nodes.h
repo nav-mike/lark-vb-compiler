@@ -1389,7 +1389,7 @@ struct VB_Id_list* create_id_list(char* id)
 	list->next = NULL;
 	list->id->left_chld = NULL;
 	list->id->right_chld = NULL;
-	list->counter = 0;
+	list->counter = 1; /* change init 0 to 1 */
 	return list;
 }
 
@@ -1401,13 +1401,31 @@ struct VB_Id_list* create_id_list(char* id)
 struct VB_Id_list* add_to_id_list(struct VB_Id_list* list,char* id)
 {
 	struct VB_Id_list* new_list = (struct VB_Id_list*)malloc(sizeof(struct VB_Id_list));
+	struct VB_Id_list* last_list = list;
 	new_list->id = (struct VB_Expr*)malloc(sizeof(struct VB_Expr*));
 
-	new_list->id = create_id_expr(id);
+	//new_list->id = create_id_expr(id);
+	new_list->id->expr_string = (char*)malloc(sizeof(char)*strlen(id));
 	strcpy(new_list->id->expr_string,id);
 	new_list->next = NULL;
+	new_list->id->left_chld = NULL;
+	new_list->id->list = NULL;
+	new_list->id->next = NULL;
+	new_list->id->right_chld = NULL;
 
-	list->next = new_list;
+	do
+	{
+		if (last_list->next)
+			last_list = last_list->next;
+		else
+		{
+			last_list->next = new_list;
+			break;
+		}
+	}
+	while (last_list);
+
+	//list->next = new_list;
 	list->counter++;
 	return list;
 }
@@ -1721,12 +1739,14 @@ struct VB_Func_stmt * create_func_stmt(char* id, struct VB_Param_list* params, e
 									   struct VB_Stmt_list* body)
 {
 	struct VB_Func_stmt* result = (struct VB_Func_stmt*)malloc(sizeof(struct VB_Func_stmt));
+	result->id = (char*)malloc(sizeof(char)*strlen(id));
 
 	strcpy(result->id,id);
 	result->id_type = type;
 	result->param_list = params;
 	result->stmt_list = body;
 	result->next = NULL;
+	result->expr = NULL;
 
     return result;
 }
