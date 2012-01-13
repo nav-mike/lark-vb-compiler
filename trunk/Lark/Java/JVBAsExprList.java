@@ -27,6 +27,21 @@ public class JVBAsExprList {
         next = null;
         type = null;
     }
+
+    /**
+     * Конструктор с параметрами.
+     * Инициализирует входными параметрами.
+     * @param type Тип.
+     * @param asExpr Идентификатор.
+     * @param next Список идентификаторов или массивов.
+     * @param arr Массив.
+     */
+    public JVBAsExprList(JVBAsExprListType type, JVBAsExpr asExpr, JVBAsExprList next, JVBArrayExpr arr) {
+        this.type = type;
+        this.asExpr = asExpr;
+        this.next = next;
+        this.arr = arr;
+    }
     
     /**
      * Закрытый метод превращения строки в тип.
