@@ -299,7 +299,7 @@ int add_id_list (FILE* file, struct VB_Id_list* list)
 
 	list = list->next;
 
-	while (list)
+	if (list)
 	{
 		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",number,++Number);
 		if (error == -1)
@@ -308,7 +308,7 @@ int add_id_list (FILE* file, struct VB_Id_list* list)
 		if (error)
 			return 1;
 
-		list = list->next;
+		//list = list->next;
 	}
 
 	return 0;
