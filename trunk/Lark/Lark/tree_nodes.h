@@ -1259,6 +1259,7 @@ struct VB_Expr* create_string_const_expr(char* string)
 	struct VB_Expr* result = (struct VB_Expr*)malloc(sizeof(struct VB_Expr));
 
 	result->type = STRING_CONST_E;
+	result->expr_string = (char*)malloc(sizeof(char)*strlen(string));
 	strcpy(result->expr_string,string);
 	result->left_chld = NULL;
 	result->list = NULL;
