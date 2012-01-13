@@ -322,6 +322,7 @@
 						  ;
 
                 param_stmt: BYVAL ID AS param_type         {$$ = create_param_stmt($2,$4);}
+						  | BYVAL ID'('')' AS param_type       {$$ = create_param_stmt($2,$6);}
 						  ;
 
 				param_type: INTEGER        {$$ = INTEGER_E;}
