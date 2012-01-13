@@ -32,6 +32,23 @@ public class JVBAsExpr {
     }
 
     /**
+     * Конструктор с параметрами.
+     * Инициализирует объект входными параметрами.
+     * @param type Тип.
+     * @param list Список идентификаторов.
+     * @param idType Тип идентификаторов.
+     * @param expr Инициализируемое значение.
+     * @param id Идентификатор.
+     */
+    public JVBAsExpr(JVBAsExprType type, JVBIdList list, JVBIdType idType, JVBExpr expr, JVBExpr id) {
+        this.type = type;
+        this.list = list;
+        this.idType = idType;
+        this.expr = expr;
+        this.id = id;
+    }
+
+    /**
      * Метод получения инициализируемого значения.
      * @return Инициализируемое значение.
      */
