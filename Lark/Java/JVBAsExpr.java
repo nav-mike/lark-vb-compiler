@@ -19,6 +19,19 @@ public class JVBAsExpr {
     private JVBExpr id;
 
     /**
+     * Конструктор по умолчанию.
+     * Инициализирует список как пустой.
+     */
+    public JVBAsExpr() {
+        
+        expr = null;
+        id = null;
+        idType = null;
+        list = null;
+        type = null;
+    }
+
+    /**
      * Метод получения инициализируемого значения.
      * @return Инициализируемое значение.
      */
