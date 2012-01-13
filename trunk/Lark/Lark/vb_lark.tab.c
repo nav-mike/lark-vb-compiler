@@ -2782,7 +2782,7 @@ int main (int argc, char* argv[])
 	print_tree();		// Вывод дерева
 
 	fclose(file);
-	getchar();
+	//getchar();
 	return 0;
 }
 
