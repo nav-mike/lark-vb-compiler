@@ -5,7 +5,7 @@
   #include <stdlib.h>
   #include <stdio.h>
   #include <string.h>
-  #include "vb_lark_tab.h"
+  #include "vb_lark.tab.h"
   
   extern int yyparse(void);
   extern int print_tree();
@@ -347,6 +347,11 @@ Exception                {
 \<\=                     {
                         //   fprintf(file,"\nOperator \"<=\" has found\n");
 						   return LESS_OR_EQUAL;
+						 }
+						 
+\<\>                     {
+                        //   fprintf(file,"\nOperator \"<>\" has found\n");
+						   return NONEQUAL;
 						 }
 
 \(                       {
