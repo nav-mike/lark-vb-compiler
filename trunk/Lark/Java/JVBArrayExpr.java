@@ -19,6 +19,19 @@ public class JVBArrayExpr {
     private String id;
 
     /**
+     * Конструктор по умолчанию.
+     * Инициализует пустой массив размером 0 элементов.
+     */
+    public JVBArrayExpr() {
+        
+        id = null;
+        idType = null;
+        isInit = false;
+        list = null;
+        size = 0;
+    }
+
+    /**
      * Метод получения идентификатора.
      * @return Идентификатор.
      */
