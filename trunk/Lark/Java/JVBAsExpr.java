@@ -61,6 +61,23 @@ public class JVBAsExpr {
         else if ("ONE ID".equals(str))
             type = JVBAsExprType.ONE_ID;
     }
+    
+    /**
+     * Закрытый метод превращения строки в тип идентификатора.
+     * @param str Тип идентификатора в виде строки.
+     */
+    private void parseString (String str) {
+        
+        if ("boolean".equals(str))
+            idType = JVBIdType.BOOLEAN_E;
+        else if ("char".equals(str))
+            idType = JVBIdType.CHAR_E;
+        else if ("integer".equals(str))
+            idType = JVBIdType.INTEGER_E;
+        else if ("string".equals(str))
+            idType = JVBIdType.STRING_E;
+        
+    }
 
     /**
      * Метод получения инициализируемого значения.
