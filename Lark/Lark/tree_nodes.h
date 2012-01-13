@@ -356,7 +356,8 @@ struct VB_Enum_expr_list
 */
 struct VB_Print_stmt
 {
-	char* text; //!< Текст сообщения.
+//	char* text; 
+	struct VB_Expr*		 expr;	//!< Текст сообщения.
 };
 
 /*! \struct VB_Println_stmt
@@ -364,7 +365,8 @@ struct VB_Print_stmt
 */
 struct VB_Println_stmt
 {
-	char* text; //!< Текст сообщения.
+	struct VB_Expr*		 expr;	//!< Текст сообщения.
+	//char* text; 
 };
 
 /*! \struct VB_Read_stmt
@@ -1053,9 +1055,13 @@ struct VB_Print_stmt* create_Print (struct VB_Expr* expr)
 	struct VB_Print_stmt* print = NULL;
 
 	print = (struct VB_Print_stmt*)malloc(sizeof(struct VB_Print_stmt));
-	print->text = (char*)malloc(sizeof(char)*strlen(expr->expr_string));
 
-	strcpy(print->text,expr->expr_string);
+	print->expr = expr;
+
+	if (print->expr->expr_string == NULL){
+		print->expr->expr_string = (char*)malloc(sizeof(char)*5);
+		strcpy(print->expr->expr_string,"expr\0");
+	}
 
 	return print;
 }
@@ -1070,10 +1076,13 @@ struct VB_Println_stmt* create_Println (struct VB_Expr* expr)
 	struct VB_Println_stmt* println = NULL;
 
 	println = (struct VB_Println_stmt*)malloc(sizeof(struct VB_Println_stmt));
-	println->text = (char*)malloc(sizeof(char)*strlen(expr->expr_string));
 
-	strcpy(println->text,expr->expr_string);
+	println->expr = expr;
 
+	if (println->expr->expr_string == NULL){
+		println->expr->expr_string = (char*)malloc(sizeof(char)*6);
+		strcpy(println->expr->expr_string,"expr\n\0");
+	}
 	return println;
 }
 

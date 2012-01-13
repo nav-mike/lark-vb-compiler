@@ -344,7 +344,7 @@ int add_print_stmt (FILE* file, struct VB_Print_stmt* stmt)
 	int error;
 
 	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> Console.Print \
-						 | <f1> %s \"\n\t\tshape = \"record\"\n\t];", Number, stmt->text);
+						 | <f1> %s \"\n\t\tshape = \"record\"\n\t];", Number, stmt->expr->expr_string);
 	if (error == -1)
 		return 1;
 	Number++;
@@ -442,7 +442,7 @@ int add_println_stmt (FILE* file, struct VB_Println_stmt* stmt)
 	int error;
 
 	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> Console.Println \
-						 | <f1> %s \"\n\t\tshape = \"record\"\n\t];", Number, stmt->text);
+						 | <f1> %s \"\n\t\tshape = \"record\"\n\t];", Number, stmt->expr->expr_string);
 	if (error == -1)
 		return 1;
 	Number++;
