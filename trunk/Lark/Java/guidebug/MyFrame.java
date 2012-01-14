@@ -18,6 +18,14 @@ public class MyFrame {
     private JInternalFrame frame;
 
     /**
+     * Метод получения внутреннего окна.
+     * @return Внутреннее окно.
+     */
+    public JInternalFrame getFrame() {
+        return frame;
+    }
+
+    /**
      * Конструктор с параметрами.
      * Создает окно, с заголовком и таблицей.
      * @param table Таблица.
