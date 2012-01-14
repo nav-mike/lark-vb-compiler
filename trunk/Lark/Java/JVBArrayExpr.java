@@ -71,7 +71,7 @@ public class JVBArrayExpr {
         // Считывание типа идентификатора.
         attr = attributes.getNamedItem("id_type");
         buffer = attr.getNodeValue();
-        parseString(buffer);
+        idType = JVBIdType.valueOf(buffer);
         // Считывание размера массива.
         attr = attributes.getNamedItem("size");
         buffer = attr.getNodeValue();
