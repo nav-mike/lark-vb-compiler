@@ -1,5 +1,7 @@
 package main;
 
+import org.w3c.dom.Node;
+
 /**
  * Класс, описывающий операцию.
  * @version 1.0
@@ -13,6 +15,10 @@ public class JVBStmt {
     private Object m_value;
     /** Ссылка на следующую операцию. */
     private JVBStmt m_next;
+
+    JVBStmt(Node item) {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
     
     /**
      * Метод получения типа операции.
