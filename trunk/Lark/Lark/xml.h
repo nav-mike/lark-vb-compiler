@@ -35,6 +35,17 @@ void VBX_add_func(xmlNodePtr node, struct VB_Func_stmt* stmt);
 
 void VBX_add_end_if(xmlNodePtr node, struct VB_End_if_stmt* stmt);
 
+void VBX_add_as_expr_list(xmlNodePtr node, struct VB_As_Expr_list* list);
+
+void VBX_add_array_expr(xmlNodePtr node, struct VB_Array_expr * expr);
+
+void VBX_add_as_expr(xmlNodePtr node, struct VB_As_expr * expr);
+
+
+
+
+
+
 /**
  * Добавить узел - stmt - один из элементов всего stmt_list
  */
@@ -146,7 +157,7 @@ void VBX_add_statement(xmlNodePtr parentList, struct VB_Stmt* stmt){
 			(struct VB_If_stmt*)stmt->value);
 		break;
 	case(DIM_E):
-		VBX_add_dim(xmlNewTextChild(parentList,NULL,(const xmlChar *)"VB_If_stmt",NULL),
+		VBX_add_dim(xmlNewTextChild(parentList,NULL,(const xmlChar *)"VB_Dim_stmt",NULL),
 			(struct VB_Dim_stmt*)stmt->value);
 		break;
 	case(FOR_E):
@@ -365,6 +376,120 @@ void VBX_add_end_if(xmlNodePtr node, struct VB_End_if_stmt* stmt){
 
 }
 
+void VBX_add_dim(xmlNodePtr node, struct VB_Dim_stmt* stmt){
+	
+	if (stmt->list != NULL)
+		VBX_add_as_expr_list(
+			xmlNewTextChild(node,NULL,(const xmlChar *)"VB_As_Expr_list",NULL),stmt->list);
+}
+
+void VBX_add_as_expr_list(xmlNodePtr node,struct VB_As_Expr_list* list){
+		
+	char type[10];
+
+	switch(list->type)
+	{
+	case (EXPR):
+		strcpy(type,"EXPR\0");
+		break;
+	case (ARRAY):
+		strcpy(type,"ARRAY\0");
+		break;
+	case (EXPR_LIST):
+		strcpy(type,"EXPR_LIST\0");
+		break;
+	case (ARR_LIST):
+		strcpy(type,"ARR_LIST\0");
+		break;
+	}
+
+	xmlNewProp(node,(const xmlChar *)"type",(const xmlChar *)type);
+	
+	if (list->arr != NULL)
+		VBX_add_array_expr(
+			xmlNewTextChild(node,NULL,(const xmlChar *)"VB_Array_expr",NULL),list->arr);
+
+	if (list->as_expr != NULL)
+		VBX_add_as_expr(
+			xmlNewTextChild(node,NULL,(const xmlChar *)"VB_As_expr",NULL),list->as_expr);
+}
+
+void VBX_add_array_expr(xmlNodePtr node,struct VB_Array_expr * expr){
+
+	char buf[10];
+	struct VB_Expr * item = NULL;
+
+	xmlNewProp(node,(const xmlChar *)"id",(const xmlChar *)expr->id);
+
+	xmlNewProp(node,(const xmlChar *)"id_type",(const xmlChar *)VBX_id_type_to_string(expr->id_type));
+
+	if (expr->is_init)
+		xmlNewProp(node,(const xmlChar *)"is_init",(const xmlChar *)"1");
+	else
+		xmlNewProp(node,(const xmlChar *)"is_init",(const xmlChar *)"0");
+
+	itoa(expr->size,buf,10);
+
+	xmlNewProp(node,(const xmlChar *)"size",(const xmlChar *)buf);
+
+	if (expr->list != NULL)
+		item = expr->list->first;
+
+	while (item != NULL){
+		VBX_add_statement(
+			xmlNewTextChild(node,NULL,(const xmlChar *)"VB_Expr",NULL),item);
+		item = item->next;
+	}
+}
+
+void VBX_add_as_expr(xmlNodePtr node,struct VB_As_expr * expr){
+	
+	char type[10];
+	struct VB_Id_list * list = NULL;
+
+	xmlNodePtr listNode;
+
+	xmlNewProp(node,(const xmlChar *)"id",(const xmlChar *)expr->id);
+
+	xmlNewProp(node,(const xmlChar *)"id_type",(const xmlChar *)VBX_id_type_to_string(expr->id_type));
+	
+	switch(expr->type)
+	{
+	case(ID_LIST):
+		strcpy(type,"ID_LIST\0");
+		break;
+	case(ONE_ID):
+		strcpy(type,"ONE_ID\0");
+		break;
+	case(ID_INIT):
+		strcpy(type,"ID_INIT\0");
+		break;
+	}
+
+	xmlNewProp(node,(const xmlChar *)"type",(const xmlChar *)type);
+
+	if (expr->expr != NULL)
+		VBX_add_expr(
+			xmlNewTextChild(node,NULL,(const xmlChar *)"VB_Expr",NULL),expr->expr);
+
+	list = expr->list;
+
+	if (list != NULL){
+		listNode = xmlNewTextChild(node,NULL,(const xmlChar *)"VB_Id_list",NULL);
+		itoa(list->counter,type,10);
+		xmlNewProp(listNode,(const xmlChar *)"counter",(const xmlChar *)type);
+	}
+
+	while(list != NULL){
+		VBX_add_expr(
+			xmlNewTextChild(listNode,NULL,(const xmlChar *)"VB_Expr",NULL),list->id);
+		list = list->next;
+	}
+}
+
+
+
+
 /**
  * Получить строку с типом выражения
  */
@@ -416,6 +541,10 @@ char* VBX_expression_type_to_string (enum VB_Expr_type type)
 		return "STRING_CONST_E";
 	case (UMINUS_E):
 		return "UMINUS_E";
+	case (READ_E):
+		return "READ_E";
+	case (READLN_E):
+		return "READLN_E";
 	}
 
 	return "";
