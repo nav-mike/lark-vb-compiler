@@ -1,6 +1,7 @@
 package main;
 
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * Класс, список параметров процедуры.
@@ -19,10 +20,38 @@ public class JVBParamList {
      * Инициализирует объект null.
      */
     public JVBParamList() {
+        
+        first = null;
+        last = null;
     }
 
+    /**
+     * Конструктор с параметрами.
+     * Инициализирует объекта входными параметрами.
+     * @param first Первый элемент списка.
+     * @param last Последний элемент списка.
+     */
+    public JVBParamList(JVBParamStmt first, JVBParamStmt last) {
+        this.first = first;
+        this.last = last;
+    }
+
+    /**
+     * Конструктор с параметром.
+     * Инициализирует объект узлом XML дерева.
+     * @param item Узел XML дерева.
+     */
     JVBParamList(Node item) {
-        throw new UnsupportedOperationException("Not yet implemented");
+        
+        NodeList nodes = item.getChildNodes();
+        JVBParamStmt[] stmts = new JVBParamStmt[nodes.getLength()];
+        for (int i = 0; i < nodes.getLength(); i++) {
+            
+            stmts[i] = new JVBParamStmt(nodes.item(i));
+            
+            if (i > 0)
+                stmts[i - 1] = stmts[i];
+        }
     }
 
     /**
