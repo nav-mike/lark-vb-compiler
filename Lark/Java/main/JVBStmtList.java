@@ -43,6 +43,7 @@ public class JVBStmtList {
      */
     JVBStmtList(Node item) {
         
+        this();
         NodeList nodes = item.getChildNodes();
         JVBStmt[] stmts = new JVBStmt[nodes.getLength()];
         for (int i = 0; i < nodes.getLength(); i++) {

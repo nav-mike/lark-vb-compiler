@@ -1,5 +1,7 @@
 package main;
 
+import org.w3c.dom.Node;
+
 /**
  * Класс, хранящий отображения оператора возврата в дереве.
  * @version 1.0
@@ -11,6 +13,10 @@ public class JVBReturnStmt {
     private JVBExpr m_expr;
     /** Ссылка на следующий оператор. */
     private JVBStmt m_next;
+
+    JVBReturnStmt(Node item) {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
     
     /**
      * Метод задания возвращаемого значения.
