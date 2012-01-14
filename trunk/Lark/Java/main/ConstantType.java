@@ -1,10 +1,10 @@
-package guidebug;
+package main;
 
 /**
  * Перечисление для таблицы констант.
  * @version 1.0
  */
-public enum ConstatntType {
+public enum ConstantType {
     
     /** Строка UTF-8. */
     CONSTANT_Utf8,
