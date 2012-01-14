@@ -26,35 +26,65 @@ void VBX_add_expr(xmlNodePtr node, struct VB_Expr* expr);
  */
 void VBX_add_if(xmlNodePtr node, struct VB_If_stmt* stmt);
 
+/**
+ * Добавить узел - Dim
+ */
 void VBX_add_dim(xmlNodePtr node, struct VB_Dim_stmt* stmt);
 
+/**
+ * Добавить узел - For
+ */
 void VBX_add_for(xmlNodePtr node, struct VB_For_stmt* stmt);
 
+/**
+ * Добавить узел - While
+ */
 void VBX_add_while(xmlNodePtr node, struct VB_While_stmt* stmt);
 
+/**
+ * Добавить узел - Do...Loop
+ */
 void VBX_add_do_loop(xmlNodePtr node, struct VB_Do_loop_stmt* stmt);
 
+/**
+ * Добавить узел - Try...Catch
+ */
 void VBX_add_try_catch(xmlNodePtr node, struct VB_Try_catch_stmt* stmt);
 
+/**
+ * Добавить узел - Throw
+ */
 void VBX_add_throw(xmlNodePtr node, struct VB_Throw_stmt* stmt);
 
-
+/**
+ * Добавить узел - Sub
+ */
 void VBX_add_sub(xmlNodePtr node, struct VB_Sub_stmt* stmt);
 
+/**
+ * Добавить узел - Func
+ */
 void VBX_add_func(xmlNodePtr node, struct VB_Func_stmt* stmt);
 
+/**
+ * Добавить узел - EndIf
+ */
 void VBX_add_end_if(xmlNodePtr node, struct VB_End_if_stmt* stmt);
 
+/**
+ * Добавить узел - expr_list
+ */
 void VBX_add_as_expr_list(xmlNodePtr node, struct VB_As_Expr_list* list);
 
+/**
+ * Добавить узел - array_expr
+ */
 void VBX_add_array_expr(xmlNodePtr node, struct VB_Array_expr * expr);
 
+/**
+ * Добавить узел - as_expr
+ */
 void VBX_add_as_expr(xmlNodePtr node, struct VB_As_expr * expr);
-
-
-
-
-
 
 /**
  * Добавить узел - stmt - один из элементов всего stmt_list
@@ -575,11 +605,42 @@ void VBX_add_do_loop(xmlNodePtr node, struct VB_Do_loop_stmt* stmt){
 
 void VBX_add_try_catch(xmlNodePtr node, struct VB_Try_catch_stmt* stmt){
 
-	
+	struct VB_Catch_stmt* ct_stmt = NULL;
+
+	xmlNodePtr ct_list_node,ct_stmt_node;
+
+	if (stmt->fin_stmt_list != NULL)
+		VBX_add_statement_list(
+			xmlNewTextChild(node,NULL,(const xmlChar *)"VB_Stmt_list__fin_stmt_list",NULL),stmt->fin_stmt_list);
+
+	if (stmt->stmt_list != NULL)
+		VBX_add_statement_list(
+			xmlNewTextChild(node,NULL,(const xmlChar *)"VB_Stmt_list__stmt_list",NULL),stmt->stmt_list);
+
+
+	if (stmt->catch_list != NULL){
+		ct_stmt = stmt->catch_list->first;
+
+		ct_list_node = xmlNewTextChild(node,NULL,(const xmlChar *)"VB_Catch_stmt_list",NULL);
+
+		while(ct_stmt !=NULL){
+
+			ct_stmt_node = xmlNewTextChild(ct_list_node,NULL,(const xmlChar *)"VB_Catch_stmt",NULL);
+
+			xmlNewProp(ct_stmt_node,(const xmlChar *)"id",(const xmlChar *)ct_stmt->id);
+
+			if (ct_stmt->stmt_list != NULL)
+				VBX_add_statement_list(
+					xmlNewTextChild(ct_stmt_node,NULL,(const xmlChar *)"VB_Stmt_list",NULL),ct_stmt->stmt_list);
+
+			ct_stmt = ct_stmt->next;
+		}
+	}
 }
 
 void VBX_add_throw(xmlNodePtr node, struct VB_Throw_stmt* stmt){
 	
+	xmlNewProp(node,(const xmlChar *)"string",(const xmlChar *)stmt->string);
 }
 
 /**
@@ -665,8 +726,3 @@ char* VBX_id_type_to_string (enum VB_Id_type type)
 
 	return "";
 }
-
-
-
-
-
