@@ -632,13 +632,13 @@ char* id_type_to_string (enum VB_Id_type type)
 	switch (type)
 	{
 	case (BOOLEAN_E):
-		return "boolean";
+		return "BOOLEAN_E";
 	case (CHAR_E):
-		return "char";
+		return "CHAR_E";
 	case (INTEGER_E):
-		return "integer";
+		return "INTEGER_E";
 	case (STRING_E):
-		return "string";
+		return "STRING_E";
 	}
 
 	return "";
@@ -653,56 +653,60 @@ char* expression_type_to_string (enum VB_Expr_type type)
 {
 	switch(type)
 	{
-    case (EXPR_FUNC):
-        return "EXPR FUNC";
+	case (ID_E):
+		return "ID_E";
+	case (EXPR_FUNC):
+		return "EXPR_FUNC";
+	case (CHAR_CONST_E):
+		return "CHAR_CONST_E";
+	case (INT_CONST_E):
+		return "INT_CONST_E";
+	case (STRING_CONST_E):
+		return "STRING_CONST_E";
+	case (BOOLEAN_CONST_E):
+		return "BOOLEAN_CONST_E";
 	case (ASSIGN):
 		return "ASSIGN";
-	case (BOOLEAN_CONST_E):
-		return "BOOLEAN CONST";
-	case (BRK_EXPR):
-		return "()";
-	case (CHAR_CONST_E):
-		return "CHAR CONST";
-	case (DIV):
-		return "Div";
-	case (EQUAL_E):
-		return "EQUAL";
-	case (GET_ITEM):
-		return "(i)";
-	case (ID_E):
-		return "id";
-	case (INT_CONST_E):
-		return "INTEGER CONST";
-	case (INT_DIV):
-		return ("int div");
-	case (LESS):
-		return "less";
-	case (LESS_OR_EQUAL_E):
-		return "nonmore";
-	case (MINUS):
-		return "-";
-	case (MORE):
-		return "more";
-	case (MORE_OR_EQUAL_E):
-		return "nonless";
-	case (MUL):
-		return "*";
-	case (NONEQUAL_E):
-		return "nonequal";
 	case (PLUS):
-		return "+";
+		return "PLUS";
+	case (MINUS):
+		return "MINUS";
+	case (MUL):
+		return "MUL";
+	case (INT_DIV):
+		return "INT_DIV";
+	case (DIV):
+		return "DIV";
 	case (POWER):
-		return "^";
-	case (STRING_CONST_E):
-		return "STRING CONST";
+		return "POWER";
+	case (MORE):
+		return "MORE";
+	case (LESS):
+		return "LESS";
+	case (MORE_OR_EQUAL_E):
+		return "MORE_OR_EQUAL_E";
+	case (LESS_OR_EQUAL_E):
+		return "LESS_OR_EQUAL_E";
+	case (NONEQUAL_E):
+		return "NONEQUAL_E";
+	case (EQUAL_E):
+		return "EQUAL_E";
 	case (UMINUS_E):
-		return "uminus";
+		return "UMINUS_E";
 	case (UPLUS):
-		return "uplus";
+		return "UPLUS";
+	case (GET_ITEM):
+		return "GET_ITEM";
+	case (BRK_EXPR):
+		return "BRK_EXPR";
 	case (READ_E):
-		return "Console.Read()";
+		return "READ_E";
 	case (READLN_E):
-		return "Console.ReadLine()";
+		return "READLN_E";
+	case (PRINT_E):
+		return "PRINT_E";
+	case (PRINTLN_E):
+		return "PRINTLN_E";
 	}
 
 	return "";
@@ -717,36 +721,34 @@ char* statement_type_to_string (enum VB_Stmt_type type)
 {
 	switch (type)
 	{
-	case (DIM_E):
-		return "DIM_E";
-	case (DO_LOOP_E):
-		return "DO_LOOP_E";
 	case (ENDL_E):
 		return "ENDL_E";
-	case (ENUM_D):
-		return "ENUM_D";
-	case (FOR_E):
-		return "FOR_E";
-	case (FUNC_D):
-		return "FUNC_D";
-	case (IF_E):
-		return "IF_E";
-	case (PRINTLN_E):
-		return "PRINTLN_E";
-	case (PRINT_E):
-		return "PRINT_E";
-	case (RETURN_E):
-		return "RETURN_E";
 	case (STMT_EXPR_E):
 		return "STMT_EXPR_E";
-	case (SUB_D):
-		return "SUB_D";
-	case (THROW_E):
-		return "THROW_E";
-	case (TRY_CATCH_E):
-		return "TRY_CATCH_E";
+	case (IF_E):
+		return "IF_E";
+	case (DIM_E):
+		return "DIM_E";
+	case (FOR_E):
+		return "FOR_E";
 	case (WHILE_E):
 		return "WHILE_E";
+	case (DO_LOOP_E):
+		return "DO_LOOP_E";
+	case (ENUM_D):
+		return "ENUM_D";
+	case (SUB_D):
+		return "SUB_D";
+	case (FUNC_D):
+		return "FUNC_D";
+	case (TRY_CATCH_E):
+		return "TRY_CATCH_E";
+	case (THROW_E):
+		return "THROW_E";
+	case (READKEY_E):
+		return "READKEY_E";
+	case (RETURN_E):
+		return "RETURN_E";
 	}
 
 	return "";
@@ -762,13 +764,13 @@ char* as_expression_list_type_to_string (enum VB_As_Expr_list_type type)
 	switch (type)
 	{
 	case (ARRAY):
-		return "Array";
+		return "ARRAY";
 	case (ARR_LIST):
-		return "Array List";
+		return "ARR_LIST";
 	case (EXPR):
-		return "Expression";
+		return "EXPR";
 	case (EXPR_LIST):
-		return "Expression List";
+		return "EXPR_LIST";
 	}
 
 	return "";
@@ -784,11 +786,11 @@ char* as_expression_type_to_string (enum VB_As_expr_type type)
 	switch (type)
 	{
 	case (ID_INIT):
-		return "ID INIT";
+		return "ID_INIT";
 	case (ID_LIST):
-		return "ID LIST";
+		return "ID_LIST";
 	case (ONE_ID):
-		return "ONE ID";
+		return "ONE_ID";
 	}
 
 	return "";
@@ -826,13 +828,13 @@ char* do_loop_type_to_string (enum VB_Do_loop_type type)
 	switch (type)
 	{
 	case (DO_UNTIL):
-		return "Do Until";
+		return "DO_UNTIL";
 	case (DO_WHILE):
-		return "Do While";
+		return "DO_WHILE";
 	case (LOOP_UNTIL):
-		return "Loop Until";
+		return "LOOP_UNTIL";
 	case (LOOP_WHILE):
-		return "Loop While";
+		return "LOOP_WHILE";
 	}
 
 	return "";
@@ -848,13 +850,13 @@ char* end_if_statement_type_to_string (enum VB_End_if_stmt_type type)
 	switch (type)
 	{
 	case (ELSE_E):
-		return "Else";
+		return "ELSE_E";
 	case (ELSE_IF_ENDL_E):
-		return "ElseIf endl";
+		return "ELSE_IF_ENDL_E";
 	case (ELSE_IF_THEN_E):
-		return "ElseIf Then";
+		return "ELSE_IF_THEN_E";
 	case (ENDIF_E):
-		return "End If";
+		return "ENDIF_E";
 	}
 
 	return "";
