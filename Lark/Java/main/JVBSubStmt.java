@@ -23,6 +23,11 @@ public class JVBSubStmt {
      * Инициализирует все null.
      */
     public JVBSubStmt() {
+        
+        id = null;
+        next = null;
+        paramList = null;
+        stmtList = null;
     }
 
     JVBSubStmt(Node item) {
