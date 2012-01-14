@@ -7,6 +7,8 @@
 
 void yyerror (char const* s);
 
+char* expression_type_to_string (enum VB_Expr_type type);
+
 /*! \enum VB_Id_type
     Перечисление типов идентификаторов.
  */
@@ -155,6 +157,7 @@ struct VB_Return_stmt
 enum VB_If_stmt_type
 {
 	IF_THEN,
+	IF_THEN_ELSE,
 	IF_ENDL,
 	IF_INLINE,
 	IF_ELSE_INLINE
@@ -915,6 +918,7 @@ struct VB_If_stmt* create_with_Then_expr_stmt_list_end_if_stmt (enum VB_If_stmt_
 	if_stmt->end_stmt = end_if_stmt;
 	if_stmt->stmt_list = stmt_list;
 	if_stmt->else_list = NULL;
+	if_stmt->next = NULL;
 
 	return if_stmt;
 }
@@ -929,6 +933,7 @@ struct VB_End_if_stmt* create_end_if_stmt(enum VB_End_if_stmt_type type, struct 
 	end_if->expr = expr;
 	end_if->stmt_list = stmt_list;
 	end_if->end_stmt = end_if_stmt;
+	end_if->next = NULL;
 
 	return end_if_stmt;
 }
@@ -951,6 +956,24 @@ struct VB_If_stmt* create_if_inline(enum VB_If_stmt_type type, struct VB_Expr* e
 	if_stmt->expr = expr;
 	if_stmt->stmt_list = if_list;
 	if_stmt->else_list = else_list;
+	if_stmt->end_stmt = NULL;
+	if_stmt->next = NULL;
+
+	return if_stmt;
+}
+
+
+struct VB_If_stmt* create_if_stmt(int hasElse,struct VB_Expr* expr,struct VB_Stmt_list* if_list, struct VB_Stmt_list* else_list) {
+	struct VB_If_stmt* if_stmt = NULL;
+
+	if_stmt = (struct VB_If_stmt*)malloc(sizeof(struct VB_If_stmt));
+
+	if_stmt->type = hasElse;
+	if_stmt->expr = expr;
+	if_stmt->stmt_list = if_list;
+	if_stmt->else_list = else_list;
+	if_stmt->next = NULL;
+	if_stmt->end_stmt = NULL;
 
 	return if_stmt;
 }
@@ -1028,6 +1051,7 @@ struct VB_Array_expr* create_Array_with_init (char* id, enum VB_Id_type type, st
 	result->is_init = 1;
 	result->id = (char*)malloc(sizeof(char) * strlen(id));
 	strcpy(result->id, id);
+	result->size = 0;
 
 	return result;
 }
@@ -1073,6 +1097,13 @@ struct VB_Print_stmt* create_Print (struct VB_Expr* expr)
 			strcpy(print->expr->expr_string,"expr\0");
 		}
 	}
+	print->expr->id_type = STRING_E;
+	print->expr->int_val = 0;
+	print->expr->left_chld = NULL;
+	print->expr->list= NULL;
+	print->expr->next = NULL;
+	print->expr->right_chld = NULL;
+	print->expr->type = EXPR_FUNC;									/// ==================================== ПЕРЕНЕСТИ В ЕКСПР ====================
 
 	return print;
 }
@@ -1102,6 +1133,15 @@ struct VB_Println_stmt* create_Println (struct VB_Expr* expr)
 			strcpy(println->expr->expr_string,"exprENDL\0");
 		}
 	}
+
+	println->expr->id_type = STRING_E;
+	println->expr->int_val = 0;
+	println->expr->left_chld = NULL;
+	println->expr->list= NULL;
+	println->expr->next = NULL;
+	println->expr->right_chld = NULL;
+	println->expr->type = EXPR_FUNC;
+
 	return println;
 }
 
@@ -1111,7 +1151,6 @@ struct VB_Println_stmt* create_Println (struct VB_Expr* expr)
 */
 struct VB_Expr* create_Read ()
 {
-
 	struct VB_Expr* read = (struct VB_Expr*)malloc(sizeof(struct VB_Expr));
 	read->expr_string = NULL;
 	read->id_type = INTEGER_E;
@@ -1144,7 +1183,7 @@ struct VB_Expr* create_Readln ()
 	readln->next = NULL;
 	readln->right_chld = NULL;
 	readln->type = READLN_E;
-
+	
 	//struct VB_Readln_stmt* readln = NULL;
 
 	//readln = (struct VB_Readln_stmt*)malloc(sizeof(struct VB_Readln_stmt));
@@ -1167,6 +1206,7 @@ struct VB_Catch_stmt* create_Catch_stmt (char* id, struct VB_Stmt_list* stmt_lis
 
 	strcpy(catch_stmt->id,id);
 	catch_stmt->stmt_list = stmt_list;
+	catch_stmt->next = NULL;
 
 	return catch_stmt;
 }
@@ -1219,6 +1259,7 @@ struct VB_Try_catch_stmt* create_Try_Catch (struct VB_Stmt_list* stmt_list,
 	t->catch_list = catch_stmt_list;
 	t->stmt_list = stmt_list;
 	t->fin_stmt_list = f_stmt_list;
+	t->next = NULL;
 
 	return t;
 }
@@ -1239,6 +1280,8 @@ struct VB_Expr* create_id_expr(char* name)
 	result->list = NULL;
 	result->next = NULL;
 	result->right_chld = NULL;
+	result->id_type = INTEGER_E;
+	result->int_val = 0;
 
 	return result;
 }
@@ -1259,6 +1302,8 @@ struct VB_Expr* create_func_expr(char* name, struct VB_Expr_list* params)
 	result->left_chld = NULL;
 	result->next = NULL;
 	result->right_chld = NULL;
+	result->id_type = INTEGER_E;
+	result->int_val = 0;
 
 	return result;
 }
@@ -1270,12 +1315,14 @@ struct VB_Expr* create_brackets_actions(char* name, struct VB_Expr_list* params)
 {
 	struct VB_Expr* result = (struct VB_Expr*)malloc(sizeof(struct VB_Expr));
 
-	result->type = 22;
+	result->type = BRK_EXPR;
 	result->expr_string = name;
 	result->list = params;
 	result->left_chld = NULL;
 	result->next = NULL;
 	result->right_chld = NULL;
+	result->int_val = 0;
+	result->id_type = INTEGER_E;
 
 	return result;
 }
@@ -1298,6 +1345,7 @@ struct VB_Expr* create_int_boolean_char_const_expr(enum VB_Expr_type type, int v
 	result->list = NULL;
 	result->next = NULL;
 	result->right_chld = NULL;
+	result->id_type = INTEGER_E;
 
 	return result;
 }
@@ -1318,6 +1366,8 @@ struct VB_Expr* create_string_const_expr(char* string)
 	result->list = NULL;
 	result->next = NULL;
 	result->right_chld = NULL;
+	result->id_type = INTEGER_E;
+	result->int_val = 0;
 
 	return result;
 }
@@ -1335,13 +1385,15 @@ struct VB_Expr* create_operator_expr(enum VB_Expr_type type,
 {
 	struct VB_Expr* result = (struct VB_Expr*)malloc(sizeof(struct VB_Expr));
 
-	result->expr_string = "???";
+	result->expr_string = expression_type_to_string(type);
 
 	result->type = type;
 	result->left_chld = left;
 	result->right_chld = right;
 	result->list = NULL;
 	result->next = NULL;
+	result->id_type = INTEGER_E;
+	result->int_val = 0;
 
 	return result;
 }
@@ -1374,6 +1426,7 @@ struct VB_As_Expr_list* create_as_expr_list(struct VB_As_expr* expr, struct VB_A
 	as_list->as_expr = expr;
 	as_list->arr = arr;
 	as_list->next = NULL;
+	as_list->type = EXPR_LIST;
 
 	return as_list;
 }
@@ -1393,6 +1446,7 @@ struct VB_As_Expr_list* add_to_as_expr_list(struct VB_As_Expr_list* list, struct
 	new_item->as_expr = expr;
 	new_item->arr = arr;
 	new_item->next = NULL;
+	new_item->type = EXPR;
 
 	list->next = new_item;
 
@@ -1534,7 +1588,7 @@ struct VB_Param_list *add_to_param_list(struct VB_Param_list* list, struct VB_Pa
   \param type Тип параметра
   \return указатель на объект параметра.
 */
-struct VB_Param_stmt* create_param_stmt(char* id, enum VB_Id_type type)
+struct VB_Param_stmt* create_param_stmt(int is_by_ref, char* id, enum VB_Id_type type)
 {
 	struct VB_Param_stmt* result = (struct VB_Param_stmt*)malloc(sizeof(struct VB_Param_stmt));
 	result->id = (char*)malloc(sizeof(char)*strlen(id));
@@ -1542,6 +1596,7 @@ struct VB_Param_stmt* create_param_stmt(char* id, enum VB_Id_type type)
 	strcpy(result->id,id);
 	result->id_type = type;
 	result->next = NULL;
+	result->is_by_ref = is_by_ref;
 
     return result;
 }

@@ -4,6 +4,8 @@
 
 #include"xml.h"
 
+
+
 #define WRITE_CHILD(number,Number,data,func,error,file)\
 	{\
 		int error1;\
@@ -715,59 +717,36 @@ char* statement_type_to_string (enum VB_Stmt_type type)
 {
 	switch (type)
 	{
-    case (RETURN_E):
-        return "RETURN";
-	case(0):
-		return "ENDL";
-		break;
-	case(1):
-		return "EXPR";
-		break;
-	case(2):
-		return "IF";
-		break;
-	case(3):
-		return "DIM";
-		break;
-	case(4):
-		return "FOR";
-		break;
-	case(5):
-		return "WHILE";
-		break;
-	case(6):
-		return "DO_LOOP";
-		break;
-	case(7):
-		return "ENUM";
-		break;
-	case(8):
-		return "SUB";
-		break;
-	case(9):
-		return "FUNC";
-		break;
-	case(10):
-		return "TRY_CATCH";
-		break;
-	case(11):
-		return "THROW";
-		break;
-	case(12):
-		return "PRINT";
-		break;
-	case(13):
-		return "PRINTLN";
-		break;
-	//case(14):
-	//	return "READ";
-	//	break;
-	//case(15):
-	//	return "READLN";
-	//	break;
-	case(READKEY_E):
-		return "READKEY";
-		break;
+	case (DIM_E):
+		return "DIM_E";
+	case (DO_LOOP_E):
+		return "DO_LOOP_E";
+	case (ENDL_E):
+		return "ENDL_E";
+	case (ENUM_D):
+		return "ENUM_D";
+	case (FOR_E):
+		return "FOR_E";
+	case (FUNC_D):
+		return "FUNC_D";
+	case (IF_E):
+		return "IF_E";
+	case (PRINTLN_E):
+		return "PRINTLN_E";
+	case (PRINT_E):
+		return "PRINT_E";
+	case (RETURN_E):
+		return "RETURN_E";
+	case (STMT_EXPR_E):
+		return "STMT_EXPR_E";
+	case (SUB_D):
+		return "SUB_D";
+	case (THROW_E):
+		return "THROW_E";
+	case (TRY_CATCH_E):
+		return "TRY_CATCH_E";
+	case (WHILE_E):
+		return "WHILE_E";
 	}
 
 	return "";
@@ -898,6 +877,8 @@ char* if_statement_type_to_string (enum VB_If_stmt_type type)
 		return "IF_INLINE";
 	case (IF_THEN):
 		return "IF_THEN";
+	case (IF_THEN_ELSE):
+		return "IF_THEN_ELSE";
 	}
 
 	return "";
