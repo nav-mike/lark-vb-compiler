@@ -74,8 +74,8 @@
 %type <Expr_l>		expr_list
 %type <Expr_l>		expr_list_empty
 %type <If_stmt>		if_stmt
-%type <List>		stmt_list_inline
-%type <End_if>		end_if_stmt
+//%type <List>		stmt_list_inline
+//%type <End_if>	end_if_stmt
 %type <Dim>			dim_stmt
 %type <As_l>		as_expr_list
 %type <As_expr_str>	as_expr
@@ -125,6 +125,7 @@
 %token END_IF
 %token FUNCTION
 %token BYVAL
+%token BYREF
 %token RETURN
 %token END_FUNCTION
 %token SUB
@@ -243,21 +244,9 @@
 		| '-' expr %prec UMINUS					{$$ = create_operator_expr(19,$2,0);}
 		;
 
-	if_stmt: IF expr THEN ENDL stmt_list end_if_stmt							{$$ = create_with_Then_expr_stmt_list_end_if_stmt(0,$2,$5,$6);}
-		   | IF expr ENDL stmt_list end_if_stmt									{$$ = create_with_Then_expr_stmt_list_end_if_stmt(1,$2,$4,$5);}
-		   | IF expr THEN stmt_list_inline END_IF ENDL							{$$ = create_if_inline(2,$2,$4,0);}
-		   | IF expr THEN stmt_list_inline ELSE stmt_list_inline END_IF ENDL	{$$ = create_if_inline(3,$2,$4,$6);}
+	if_stmt: IF expr THEN ENDL stmt_list END_IF ENDL						{$$ = create_if_stmt(0,$2,$5,NULL);}
+		   | IF expr THEN ENDL stmt_list ELSE ENDL stmt_list END_IF ENDL	{$$ = create_if_stmt(1,$2,$5,$8);}
 		   ;
-
-		stmt_list_inline: stmt									 {$$ = create_VB_Stmt_list($1);}
-						| stmt_list_inline ':' stmt				 {$$ = edit_VB_Stmt_list($1,$3);}
-						;
-
-		end_if_stmt: END_IF ENDL								 {$$ = create_end_if_stmt(0,NULL,NULL,NULL);}
-				   | ELSE ENDL stmt_list END_IF ENDL			 {$$ = create_end_if_stmt(1,NULL,$3,NULL);}
-				   | ELSEIF expr THEN ENDL stmt_list end_if_stmt {$$ = create_end_if_stmt(2,$2,$5,$6);}
-				   | ELSEIF expr ENDL stmt_list end_if_stmt		 {$$ = create_end_if_stmt(3,$2,$4,$5);}
-				   ;
 
 	dim_stmt: DIM as_expr_list ENDL				 		{$$ = create_dim_stmt($2);}
 			;
@@ -321,8 +310,8 @@
                           | param_list',' param_stmt    {$$ = add_to_param_list($1,$3);}
 						  ;
 
-                param_stmt: BYVAL ID AS param_type         {$$ = create_param_stmt($2,$4);}
-						  | BYVAL ID'('')' AS param_type       {$$ = create_param_stmt($2,$6);}
+                param_stmt: BYVAL ID AS param_type         {$$ = create_param_stmt(0,$2,$4);}
+						  | BYREF ID'('')' AS param_type       {$$ = create_param_stmt(1,$2,$6);}
 						  ;
 
 				param_type: INTEGER        {$$ = INTEGER_E;}
@@ -335,6 +324,8 @@
 
         func_stmt: FUNCTION ID '('')' AS param_type ENDL stmt_list END_FUNCTION ENDL          {$$ = create_func_stmt($2,NULL,$6,$8);}
 				 | FUNCTION ID '('param_list')' AS param_type ENDL stmt_list END_FUNCTION ENDL  {$$ = create_func_stmt($2,$4,$7,$9);}
+				 | FUNCTION ID '('')' AS param_type'('')' ENDL stmt_list END_FUNCTION ENDL          {$$ = create_func_stmt($2,NULL,$6,$10);}
+				 | FUNCTION ID '('param_list')' AS param_type'('')' ENDL stmt_list END_FUNCTION ENDL  {$$ = create_func_stmt($2,$4,$7,$11);}
 				 ;
 
 	try_catch_stmt: TRY ENDL stmt_list catch_stmt_list FINALLY ENDL stmt_list ENDL END_TRY ENDL {$$ = create_Try_Catch($3,$4,$7);}
@@ -384,3 +375,23 @@ int main (int argc, char* argv[])
 	getchar();
 	return 0;
 }
+
+
+
+/*	
+if_stmt: IF expr THEN ENDL stmt_list end_if_stmt							
+		   | IF expr ENDL stmt_list end_if_stmt									{$$ = create_with_Then_expr_stmt_list_end_if_stmt(1,$2,$4,$5);}
+		   | IF expr THEN stmt_list_inline END_IF ENDL							{$$ = create_if_inline(2,$2,$4,0);}
+		   | IF expr THEN stmt_list_inline ELSE stmt_list_inline END_IF ENDL	{$$ = create_if_inline(3,$2,$4,$6);}
+		   ;
+
+		stmt_list_inline: stmt									 {$$ = create_VB_Stmt_list($1);}
+						| stmt_list_inline ':' stmt				 {$$ = edit_VB_Stmt_list($1,$3);}
+						;
+
+		end_if_stmt: END_IF ENDL								 {$$ = create_end_if_stmt(0,NULL,NULL,NULL);}
+				   | ELSE ENDL stmt_list END_IF ENDL			 {$$ = create_end_if_stmt(1,NULL,$3,NULL);}
+				   | ELSEIF expr THEN ENDL stmt_list end_if_stmt {$$ = create_end_if_stmt(2,$2,$5,$6);}
+				   | ELSEIF expr ENDL stmt_list end_if_stmt		 {$$ = create_end_if_stmt(3,$2,$4,$5);}
+				   ;
+*/

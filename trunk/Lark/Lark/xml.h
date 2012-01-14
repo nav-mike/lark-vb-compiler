@@ -9,7 +9,7 @@
 /**
  * Добавить узел - список операций.
  */
-void VBX_add_statement_list(xmlDocPtr doc, xmlNodePtr parent,struct VB_Stmt_list* list);
+void VBX_add_statement_list(xmlNodePtr parent,struct VB_Stmt_list* list);
 
 /**
  * Добавить узел - список объявлений.
@@ -26,14 +26,19 @@ void VBX_add_expr(xmlNodePtr node, struct VB_Expr* expr);
  */
 void VBX_add_if(xmlNodePtr node, struct VB_If_stmt* stmt);
 
+void VBX_add_dim(xmlNodePtr node, struct VB_Dim_stmt* stmt);
+
+
 void VBX_add_sub(xmlNodePtr node, struct VB_Sub_stmt* stmt);
 
 void VBX_add_func(xmlNodePtr node, struct VB_Func_stmt* stmt);
 
+void VBX_add_end_if(xmlNodePtr node, struct VB_End_if_stmt* stmt);
+
 /**
  * Добавить узел - stmt - один из элементов всего stmt_list
  */
-void VBX_add_statement(xmlDocPtr doc, xmlNodePtr parentList, struct VB_Stmt* stmt);
+void VBX_add_statement(xmlNodePtr parentList, struct VB_Stmt* stmt);
 
 /**
  * Добавить узел - decl_stmt - один из элементов всего списка объявлений
@@ -49,6 +54,11 @@ char* VBX_expression_type_to_string (enum VB_Expr_type type);
  * Получить строку с типом идентификатора
  */
 char* VBX_id_type_to_string (enum VB_Id_type type);
+
+/**
+ * Добавить параметр процедуры или функции в дерево
+ */
+void VBX_add_param(xmlNodePtr node, struct VB_Param_stmt * stmt);
 
 /**
  * Создание XML файла
@@ -69,7 +79,7 @@ void VBX_createXML (struct VB_Module_stmt* module){
 		xmlNewProp(mdlNode,(const xmlChar *)"id",(const xmlChar *)module->id);				// Задаем ему свойства
 
 		if (module->stmt_list != NULL)
-			VBX_add_statement_list(doc,mdlNode,module->stmt_list);		// Начинаем рекурсивно обходить функции Main
+			VBX_add_statement_list(mdlNode,module->stmt_list);		// Начинаем рекурсивно обходить функции Main
 		
 		if (module->decl_list != NULL)
 			VBX_add_decl_list(doc,mdlNode,module->decl_list);		// Начинаем рекурсивно обходить дерево определений функций
@@ -81,7 +91,7 @@ void VBX_createXML (struct VB_Module_stmt* module){
 /**
  * Добавить узел - список операций.
  */
-void VBX_add_statement_list(xmlDocPtr doc, xmlNodePtr parent, struct VB_Stmt_list* list){
+void VBX_add_statement_list(xmlNodePtr parent, struct VB_Stmt_list* list){
 	
 	if (list != NULL){
 		struct VB_Stmt * item = list->first;
@@ -91,7 +101,7 @@ void VBX_add_statement_list(xmlDocPtr doc, xmlNodePtr parent, struct VB_Stmt_lis
 		listNode = xmlNewTextChild(parent,NULL,(const xmlChar *)"VB_Stmt_list",NULL);
 
 		while (item != NULL){
-			VBX_add_statement(doc,listNode,item);
+			VBX_add_statement(listNode,item);
 			item = item->next;
 		}
 	}
@@ -110,7 +120,7 @@ void VBX_add_decl_list(xmlDocPtr doc, xmlNodePtr parent, struct VB_Decl_stmt_lis
 		listNode = xmlNewTextChild(parent,NULL,(const xmlChar *)"VB_Decl_stmt_list",NULL);
 
 		while (item != NULL){
-			VBX_add_statement(doc,listNode,item);
+			VBX_add_declaration(doc,listNode,item);
 			item = item->next;
 		}
 	}
@@ -119,7 +129,7 @@ void VBX_add_decl_list(xmlDocPtr doc, xmlNodePtr parent, struct VB_Decl_stmt_lis
 /**
  * Добавить узел - stmt - один из элементов всего stmt_list
  */
-void VBX_add_statement(xmlDocPtr doc, xmlNodePtr parentList, struct VB_Stmt* stmt){
+void VBX_add_statement(xmlNodePtr parentList, struct VB_Stmt* stmt){
 
 	xmlNodePtr stmt_node;
 
@@ -136,7 +146,8 @@ void VBX_add_statement(xmlDocPtr doc, xmlNodePtr parentList, struct VB_Stmt* stm
 			(struct VB_If_stmt*)stmt->value);
 		break;
 	case(DIM_E):
-		//VBX_add_expr_prop(stmt_node,(struct VB_Dim_stmt*)stmt->value);
+		VBX_add_dim(xmlNewTextChild(parentList,NULL,(const xmlChar *)"VB_If_stmt",NULL),
+			(struct VB_Dim_stmt*)stmt->value);
 		break;
 	case(FOR_E):
 		//VBX_add_expr_prop(stmt_node,(struct VB_For_stmt*)stmt->value);
@@ -222,12 +233,6 @@ void VBX_add_expr(xmlNodePtr node, struct VB_Expr* expr){
 			expr->right_chld);
 	}
 
-	if (expr->next != NULL){
-		VBX_add_expr(
-			xmlNewTextChild(node,NULL,(const xmlChar *)"VB_Expr",NULL),
-			expr->next);
-	}
-
 	if (expr->list != NULL){
 
 		struct VB_Expr * item = expr->list->first;
@@ -241,20 +246,125 @@ void VBX_add_expr(xmlNodePtr node, struct VB_Expr* expr){
 	}
 }
 
+/**
+ * Добавить процедуру в дерево
+ */
 void VBX_add_sub(xmlNodePtr node, struct VB_Sub_stmt* stmt){
 
+	struct VB_Param_stmt * param_stmt = NULL;
+	struct VB_Stmt * stmt_item = NULL;
+	xmlNodePtr param_node;
+	xmlNodePtr stmt_node;
+
+	if (stmt->param_list != NULL)
+		param_stmt = stmt->param_list->first;
+
+	if (stmt->stmt_list != NULL)
+		stmt_item = stmt->stmt_list->first;
+
+	xmlNewProp(node,(const xmlChar *)"id",(const xmlChar *)stmt->id);
+
+	param_node = xmlNewTextChild(node,NULL,(const xmlChar *)"VB_Param_stmt_list",NULL);
+
+	while (param_stmt != NULL){
+		VBX_add_param(
+			xmlNewTextChild(param_node,NULL,(const xmlChar *)"VB_Param_stmt",NULL),param_stmt);
+		param_stmt = param_stmt->next;
+	}
+
+	stmt_node = xmlNewTextChild(node,NULL,(const xmlChar *)"VB_Stmt_list",NULL);
+
+	while (stmt_item != NULL){
+		VBX_add_statement(
+			xmlNewTextChild(stmt_node,NULL,(const xmlChar *)"VB_Stmt",NULL),stmt_item);
+		stmt_item = stmt_item->next;
+	}
+}
+
+/**
+ * Добавить параметр процедуры или функции в дерево
+ */
+void VBX_add_param(xmlNodePtr node, struct VB_Param_stmt * stmt){
+
+	xmlNewProp(node,(const xmlChar *)"id",(const xmlChar *)stmt->id);
+
+	xmlNewProp(node,(const xmlChar *)"id_type",(const xmlChar *)VBX_id_type_to_string(stmt->id_type));
+
+	if (stmt->is_by_ref)
+		xmlNewProp(node,(const xmlChar *)"is_by_ref",(const xmlChar *)"1");
+	else
+		xmlNewProp(node,(const xmlChar *)"is_by_ref",(const xmlChar *)"0");
+}
+
+
+void VBX_add_func(xmlNodePtr node, struct VB_Func_stmt* stmt){
+	
+	struct VB_Param_stmt * param_stmt = NULL;
+	struct VB_Stmt * stmt_item = NULL;
+	xmlNodePtr param_node;
+	xmlNodePtr stmt_node;
+
+	if (stmt->param_list != NULL)
+		param_stmt = stmt->param_list->first;
+
+	if (stmt->stmt_list != NULL)
+		stmt_item = stmt->stmt_list->first;
+
+	xmlNewProp(node,(const xmlChar *)"id",(const xmlChar *)stmt->id);
+
+	param_node = xmlNewTextChild(node,NULL,(const xmlChar *)"VB_Param_stmt_list",NULL);
+
+	while (param_stmt != NULL){
+		VBX_add_param(
+			xmlNewTextChild(param_node,NULL,(const xmlChar *)"VB_Param_stmt",NULL),param_stmt);
+		param_stmt = param_stmt->next;
+	}
+
+	stmt_node = xmlNewTextChild(node,NULL,(const xmlChar *)"VB_Stmt_list",NULL);
+
+	while (stmt_item != NULL){
+		VBX_add_statement(
+			xmlNewTextChild(stmt_node,NULL,(const xmlChar *)"VB_Stmt",NULL),stmt_item);
+		stmt_item = stmt_item->next;
+	}
+
+	if (stmt->expr != NULL)
+		VBX_add_expr(
+			xmlNewTextChild(node,NULL,(const xmlChar *)"VB_Expr",NULL),stmt->expr);
 }
 
 /**
  * Добавить узел - if.
  */
 void VBX_add_if(xmlNodePtr node, struct VB_If_stmt* stmt){
+	
+	if (stmt->type == IF_THEN)
+		xmlNewProp(node,(const xmlChar *)"type",(const xmlChar *)"IF_THEN");
+	else
+		xmlNewProp(node,(const xmlChar *)"type",(const xmlChar *)"IF_THEN_ELSE");
+
+	if (stmt->else_list != NULL)
+		VBX_add_statement_list(
+			xmlNewTextChild(node,NULL,(const xmlChar *)"VB_Stmt_list__else_list",NULL),stmt->else_list);
+
+	if (stmt->end_stmt != NULL)
+		VBX_add_end_if(
+			xmlNewTextChild(node,NULL,(const xmlChar *)"VB_End_if_stmt",NULL),stmt->end_stmt);
+
+	if (stmt->expr != NULL)
+		VBX_add_expr(
+			xmlNewTextChild(node,NULL,(const xmlChar *)"VB_Expr",NULL),stmt->expr);
+
+	if (stmt->stmt_list != NULL)
+		VBX_add_statement_list(
+			xmlNewTextChild(node,NULL,(const xmlChar *)"VB_Stmt_list__stmt_list",NULL),stmt->stmt_list);
+}
+
+
+void VBX_add_end_if(xmlNodePtr node, struct VB_End_if_stmt* stmt){
 
 }
 
-void VBX_add_func(xmlNodePtr node, struct VB_Func_stmt* stmt){
-
-}
 /**
  * Получить строку с типом выражения
  */

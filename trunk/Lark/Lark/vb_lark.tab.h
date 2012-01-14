@@ -1,10 +1,9 @@
-
-/* A Bison parser, made by GNU Bison 2.4.1.  */
+/* A Bison parser, made by GNU Bison 2.4.2.  */
 
 /* Skeleton interface for Bison's Yacc-like parsers in C
    
-      Copyright (C) 1984, 1989, 1990, 2000, 2001, 2002, 2003, 2004, 2005, 2006
-   Free Software Foundation, Inc.
+      Copyright (C) 1984, 1989-1990, 2000-2006, 2009-2010 Free Software
+   Foundation, Inc.
    
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -54,55 +53,56 @@
      END_IF = 270,
      FUNCTION = 271,
      BYVAL = 272,
-     RETURN = 273,
-     END_FUNCTION = 274,
-     SUB = 275,
-     END_SUB = 276,
-     TRY = 277,
-     CATCH = 278,
-     END_TRY = 279,
-     THROW = 280,
-     NEW = 281,
-     CASE = 282,
-     CONST = 283,
-     SELECT = 284,
-     WHILE = 285,
-     UNTIL = 286,
-     MODULE = 287,
-     DO = 288,
-     ENUM = 289,
-     END_ENUM = 290,
-     END_MODULE = 291,
-     END_SELECT = 292,
-     END_WHILE = 293,
-     LOOP = 294,
-     FOR_EACH = 295,
-     FOR = 296,
-     TO = 297,
-     NEXT = 298,
-     IN = 299,
-     MOD = 300,
-     STEP = 301,
-     EXCEPTION = 302,
-     INTEGER = 303,
-     CHAR = 304,
-     STRING_T = 305,
-     BOOLEAN = 306,
-     CONSOLE = 307,
-     WRITE = 308,
-     WRITELINE = 309,
-     READ = 310,
-     READLINE = 311,
-     SYSTEM = 312,
-     FINALLY = 313,
-     TRUE = 314,
-     FALSE = 315,
-     SUB_MAIN = 316,
-     EQUAL = 317,
-     NONEQUAL = 318,
-     LESS_OR_EQUAL = 319,
-     MORE_OR_EQUAL = 320,
-     UMINUS = 321
+     BYREF = 273,
+     RETURN = 274,
+     END_FUNCTION = 275,
+     SUB = 276,
+     END_SUB = 277,
+     TRY = 278,
+     CATCH = 279,
+     END_TRY = 280,
+     THROW = 281,
+     NEW = 282,
+     CASE = 283,
+     CONST = 284,
+     SELECT = 285,
+     WHILE = 286,
+     UNTIL = 287,
+     MODULE = 288,
+     DO = 289,
+     ENUM = 290,
+     END_ENUM = 291,
+     END_MODULE = 292,
+     END_SELECT = 293,
+     END_WHILE = 294,
+     LOOP = 295,
+     FOR_EACH = 296,
+     FOR = 297,
+     TO = 298,
+     NEXT = 299,
+     IN = 300,
+     MOD = 301,
+     STEP = 302,
+     EXCEPTION = 303,
+     INTEGER = 304,
+     CHAR = 305,
+     STRING_T = 306,
+     BOOLEAN = 307,
+     CONSOLE = 308,
+     WRITE = 309,
+     WRITELINE = 310,
+     READ = 311,
+     READLINE = 312,
+     SYSTEM = 313,
+     FINALLY = 314,
+     TRUE = 315,
+     FALSE = 316,
+     SUB_MAIN = 317,
+     EQUAL = 318,
+     NONEQUAL = 319,
+     LESS_OR_EQUAL = 320,
+     MORE_OR_EQUAL = 321,
+     UMINUS = 322
    };
 #endif
 
@@ -112,7 +112,7 @@
 typedef union YYSTYPE
 {
 
-/* Line 1676 of yacc.c  */
+/* Line 1685 of yacc.c  */
 #line 20 "vb_lark.y"
 
 	int		b_const;
@@ -162,7 +162,7 @@ typedef union YYSTYPE
 
 
 
-/* Line 1676 of yacc.c  */
+/* Line 1685 of yacc.c  */
 #line 167 "vb_lark.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1

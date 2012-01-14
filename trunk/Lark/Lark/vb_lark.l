@@ -61,27 +61,27 @@ False                    {
 						 }
 						 
 If                       {
-                           //fprintf(file,"\nKeyword \"If\" has found\n");
+                           printf("\nKeyword \"If\" has found\n");
 						   return IF;
 						 }
 						 
 Then                     {
-                           //fprintf(file,"\nKeyword \"Then\" has found\n");
+                           printf("\nKeyword \"Then\" has found\n");
 						   return THEN;
 						 }
 						 
 ElseIf                   {
-                           //printf(file,"\nKeyword \"ElseIf\" has found\n");
+                           printf("\nKeyword \"ElseIf\" has found\n");
 						   return ELSEIF;
 						 }
 						 
 Else                     {
-                           //fprintf(file,"\nKeyword \"Else\" has found\n");
+                           printf("\nKeyword \"Else\" has found\n");
 						   return ELSE;
 						 }
 						 
 (End[[:space:]]If)       {
-                          // fprintf(file,"\nKeywords \"End If\" has found\n");
+                           printf("\nKeywords \"End If\" has found\n");
 						   return END_IF;
 						 }
 						 
@@ -93,6 +93,11 @@ Function                 {
 ByVal                    {
                            //fprintf(file,"\nKeyword \"ByVal\" has found\n");
 						   return BYVAL;
+						 }
+
+ByRef                    {
+							//fprintf(file,"\nKeyword \"ByVal\" has found\n");
+							return BYREF;
 						 }
 						 
 Return                   {
