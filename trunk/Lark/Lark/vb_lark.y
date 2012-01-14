@@ -103,8 +103,8 @@
 %type <Id_type> param_type
 %type <Ret> return_stmt
 
-%type <console_print>	console_print_stmt
-%type <console_println> console_println_stmt
+/*%type <console_print>	console_print_stmt		*/
+/*%type <console_println> console_println_stmt	*/
 /* %type <console_read>	console_read_stmt		*/
 /* %type <console_readln>	console_readln_stmt	*/
 
@@ -201,8 +201,6 @@
 		    | do_loop_stmt			{$$ = create_VB_Stmt_Do_Loop($1);}
 		    | try_catch_stmt		{$$ = create_VB_Stmt_Try_Catch($1);}
 		    | throw_stmt			{$$ = create_VB_Stmt_Throw($1);}
-		    | console_print_stmt	{$$ = create_VB_Stmt_Print($1);}
-		    | console_println_stmt	{$$ = create_VB_Stmt_Println($1);}
 		    | return_stmt			{$$ = create_VB_Stmt_Return($1);}
 		    ;
 
@@ -218,30 +216,34 @@
 					 | sub_stmt					{$$ = create_VB_Decl_Sub($1);}
 					 | func_stmt				{$$ = create_VB_Decl_Func($1);}
 					 ;
-
-	expr: ID									{$$ = create_id_expr($1);}
-		| ID'('expr_list_empty')'				{$$ = create_brackets_actions($1,$3);}
-		| CONSOLE '.' READ '('')'				{$$ = create_Read();}
-		| CONSOLE '.' READLINE '('')'			{$$ = create_Readln();}
-		| INT_CONST								{$$ = create_int_boolean_char_const_expr(3,$1);}
-		| CHAR_CONST							{$$ = create_int_boolean_char_const_expr(2,$1);}
-		| STRING_CONST							{$$ = create_string_const_expr($1);}
-		| BOOLEAN_CONST							{$$ = create_int_boolean_char_const_expr(5,$1);}
-        | expr '=' expr							{$$ = create_operator_expr(6,$1,$3);}
-		| expr '+' expr							{$$ = create_operator_expr(7,$1,$3);}
-		| expr '-' expr							{$$ = create_operator_expr(8,$1,$3);}
-		| expr '*' expr							{$$ = create_operator_expr(9,$1,$3);}
-		| expr '/' expr							{$$ = create_operator_expr(11,$1,$3);}
-		| expr '\\' expr						{$$ = create_operator_expr(10,$1,$3);}
-		| expr '^' expr							{$$ = create_operator_expr(12,$1,$3);}
-		| expr '>' expr							{$$ = create_operator_expr(13,$1,$3);}
-		| expr '<' expr							{$$ = create_operator_expr(14,$1,$3);}
-		| expr MORE_OR_EQUAL expr				{$$ = create_operator_expr(15,$1,$3);}
-		| expr LESS_OR_EQUAL expr				{$$ = create_operator_expr(16,$1,$3);}
-		| expr NONEQUAL	expr					{$$ = create_operator_expr(17,$1,$3);}
-		| expr EQUAL	expr					{$$ = create_operator_expr(18,$1,$3);}
-		| '('expr')'							{$$ = $2;}
-		| '-' expr %prec UMINUS					{$$ = create_operator_expr(19,$2,0);}
+						
+	expr: ID										{$$ = create_id_expr($1);}
+		| ID'('expr_list_empty')'					{$$ = create_brackets_actions($1,$3);}
+		| CONSOLE '.' READ '('')'					{$$ = create_Read();}
+		| CONSOLE '.' READLINE '('')'				{$$ = create_Readln();}
+		| CONSOLE '.' WRITE '(' expr ')'    		{$$ = create_Print($5);}
+		| CONSOLE '.' WRITE '('')' 		  			{$$ = create_Print(NULL);}
+		| CONSOLE '.' WRITELINE '(' expr ')'  		{$$ = create_Println($5);}
+		| CONSOLE '.' WRITELINE '('')'  			{$$ = create_Println(NULL);}
+		| INT_CONST									{$$ = create_int_boolean_char_const_expr(3,$1);}
+		| CHAR_CONST								{$$ = create_int_boolean_char_const_expr(2,$1);}
+		| STRING_CONST								{$$ = create_string_const_expr($1);}
+		| BOOLEAN_CONST								{$$ = create_int_boolean_char_const_expr(5,$1);}
+        | expr '=' expr								{$$ = create_operator_expr(6,$1,$3);}
+		| expr '+' expr								{$$ = create_operator_expr(7,$1,$3);}
+		| expr '-' expr								{$$ = create_operator_expr(8,$1,$3);}
+		| expr '*' expr								{$$ = create_operator_expr(9,$1,$3);}
+		| expr '/' expr								{$$ = create_operator_expr(11,$1,$3);}
+		| expr '\\' expr							{$$ = create_operator_expr(10,$1,$3);}
+		| expr '^' expr								{$$ = create_operator_expr(12,$1,$3);}
+		| expr '>' expr								{$$ = create_operator_expr(13,$1,$3);}
+		| expr '<' expr								{$$ = create_operator_expr(14,$1,$3);}
+		| expr MORE_OR_EQUAL expr					{$$ = create_operator_expr(15,$1,$3);}
+		| expr LESS_OR_EQUAL expr					{$$ = create_operator_expr(16,$1,$3);}
+		| expr NONEQUAL	expr						{$$ = create_operator_expr(17,$1,$3);}
+		| expr EQUAL	expr						{$$ = create_operator_expr(18,$1,$3);}
+		| '('expr')'								{$$ = $2;}
+		| '-' expr %prec UMINUS						{$$ = create_operator_expr(19,$2,0);}
 		;
 
 	if_stmt: IF expr THEN ENDL stmt_list END_IF ENDL						{$$ = create_if_stmt(0,$2,$5,NULL);}
@@ -340,14 +342,6 @@
 
 	throw_stmt: THROW NEW SYSTEM '.' EXCEPTION '(' STRING_CONST ')' ENDL  	{$$ = create_Throw($7);}
 			  ;
-
-	console_print_stmt: CONSOLE '.' WRITE '(' expr ')' ENDL		  	{$$ = create_Print($5);}
-					  | CONSOLE '.' WRITE '('')' ENDL		  	{$$ = create_Print(NULL);}
-					  ;
-
-	console_println_stmt: CONSOLE '.' WRITELINE '(' expr ')' ENDL 	{$$ = create_Println($5);}
-						| CONSOLE '.' WRITELINE '('')' ENDL 	{$$ = create_Println(NULL);}
-						;
 %%
 
 void yyerror (char const* s)

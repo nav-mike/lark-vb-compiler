@@ -987,20 +987,20 @@ int add_statement (FILE* file, struct VB_Stmt* stmt)
 			return 1;
 		error = add_throw_stmt(file,(struct VB_Throw_stmt*)stmt->value);
         break;
-	case(12):
-        error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
-			number, ++Number);
-		if (error == -1)
-			return 1;
-		error = add_print_stmt(file,(struct VB_Print_stmt*)stmt->value);
-        break;
-	case(13):
-        error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
-			number, ++Number);
-		if (error == -1)
-			return 1;
-		error = add_println_stmt(file,(struct VB_Println_stmt*)stmt->value);
-        break;
+	//case(12):
+ //       error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
+	//		number, ++Number);
+	//	if (error == -1)
+	//		return 1;
+	//	error = add_print_stmt(file,(struct VB_Print_stmt*)stmt->value);
+ //       break;
+	//case(13):
+ //       error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
+	//		number, ++Number);
+	//	if (error == -1)
+	//		return 1;
+	//	error = add_println_stmt(file,(struct VB_Println_stmt*)stmt->value);
+ //       break;
 	//case(14):
  //       error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
 	//		number, ++Number);

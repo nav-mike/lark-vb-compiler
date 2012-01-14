@@ -53,8 +53,6 @@ enum VB_Stmt_type
 	FUNC_D,
 	TRY_CATCH_E,
 	THROW_E,
-	PRINT_E,
-	PRINTLN_E,
 	READKEY_E,
 	RETURN_E
 };
@@ -126,6 +124,8 @@ enum VB_Expr_type
 	BRK_EXPR,		//!< Выражение со скобками
 	READ_E,
 	READLN_E,
+	PRINT_E,
+	PRINTLN_E,
 };
 
 /*! \struct VB_Expr
@@ -1077,33 +1077,19 @@ struct VB_Throw_stmt* create_Throw (char* string)
   \param text Текст в функции.
   \return Узел дерева - вывод в стандартный поток.
 */
-struct VB_Print_stmt* create_Print (struct VB_Expr* expr)
+struct VB_Expr* create_Print (struct VB_Expr* expr)
 {
-	struct VB_Print_stmt* print = NULL;
+	struct VB_Expr* print = (struct VB_Expr*)malloc(sizeof(struct VB_Expr));
+	print->expr_string = (char*)malloc(sizeof(char)*6);
+	print->expr_string = "PRINT";
 
-	print = (struct VB_Print_stmt*)malloc(sizeof(struct VB_Print_stmt));
-
-	if (expr == NULL){
-		print->expr = (struct VB_Expr*)malloc(sizeof(struct VB_Expr));
-		print->expr->expr_string = (char*)malloc(sizeof(char)*2);
-		print->expr->expr_string = "\n";
-	}
-	else{
-
-		print->expr = expr;
-
-		if (print->expr->expr_string == NULL){
-			print->expr->expr_string = (char*)malloc(sizeof(char)*5);
-			strcpy(print->expr->expr_string,"expr\0");
-		}
-	}
-	print->expr->id_type = STRING_E;
-	print->expr->int_val = 0;
-	print->expr->left_chld = NULL;
-	print->expr->list= NULL;
-	print->expr->next = NULL;
-	print->expr->right_chld = NULL;
-	print->expr->type = EXPR_FUNC;									/// ==================================== ПЕРЕНЕСТИ В ЕКСПР ====================
+	print->id_type = INTEGER_E;
+	print->int_val = 0;
+	print->left_chld = expr;
+	print->list = NULL;
+	print->next = NULL;
+	print->right_chld = NULL;
+	print->type = PRINT_E;
 
 	return print;
 }
@@ -1113,34 +1099,19 @@ struct VB_Print_stmt* create_Print (struct VB_Expr* expr)
   \param text Текст в функции.
   \return Узел дерева - вывод в стандратный поток с переносом строки.
 */
-struct VB_Println_stmt* create_Println (struct VB_Expr* expr)
+struct VB_Expr* create_Println (struct VB_Expr* expr)
 {
-	struct VB_Println_stmt* println = NULL;
+	struct VB_Expr* println = (struct VB_Expr*)malloc(sizeof(struct VB_Expr));
+	println->expr_string = (char*)malloc(sizeof(char)*10);
+	println->expr_string = "PRINTLINE";
 
-	println = (struct VB_Println_stmt*)malloc(sizeof(struct VB_Println_stmt));
-	
-	if (expr == NULL){
-		println->expr = (struct VB_Expr*)malloc(sizeof(struct VB_Expr));
-		println->expr->expr_string = (char*)malloc(sizeof(char)*2);
-		println->expr->expr_string = "ENDL";
-	}
-	else{
-
-		println->expr = expr;
-
-		if (println->expr->expr_string == NULL){
-			println->expr->expr_string = (char*)malloc(sizeof(char)*6);
-			strcpy(println->expr->expr_string,"exprENDL\0");
-		}
-	}
-
-	println->expr->id_type = STRING_E;
-	println->expr->int_val = 0;
-	println->expr->left_chld = NULL;
-	println->expr->list= NULL;
-	println->expr->next = NULL;
-	println->expr->right_chld = NULL;
-	println->expr->type = EXPR_FUNC;
+	println->id_type = INTEGER_E;
+	println->int_val = 0;
+	println->left_chld = expr;
+	println->list = NULL;
+	println->next = NULL;
+	println->right_chld = NULL;
+	println->type = PRINTLN_E;
 
 	return println;
 }
@@ -1886,3 +1857,65 @@ struct VB_Func_stmt * create_func_stmt(char* id, struct VB_Param_list* params, e
 
     return result;
 }
+
+
+
+	//								   	
+	//struct VB_Print_stmt* print = NULL;
+
+	//print = (struct VB_Print_stmt*)malloc(sizeof(struct VB_Print_stmt));
+
+	//if (expr == NULL){
+	//	print->expr = (struct VB_Expr*)malloc(sizeof(struct VB_Expr));
+	//	print->expr->expr_string = (char*)malloc(sizeof(char)*2);
+	//	print->expr->expr_string = "\n";
+	//}
+	//else{
+
+	//	print->expr = expr;
+
+	//	if (print->expr->expr_string == NULL){
+	//		print->expr->expr_string = (char*)malloc(sizeof(char)*5);
+	//		strcpy(print->expr->expr_string,"expr\0");
+	//	}
+	//}
+	//print->expr->id_type = STRING_E;
+	//print->expr->int_val = 0;
+	//print->expr->left_chld = NULL;
+	//print->expr->list= NULL;
+	//print->expr->next = NULL;
+	//print->expr->right_chld = NULL;
+	//print->expr->type = EXPR_FUNC;									/// ==================================== ПЕРЕНЕСТИ В ЕКСПР ====================
+
+	//return print;
+
+
+
+	//struct VB_Println_stmt* println = NULL;
+
+	//println = (struct VB_Println_stmt*)malloc(sizeof(struct VB_Println_stmt));
+	//
+	//if (expr == NULL){
+	//	println->expr = (struct VB_Expr*)malloc(sizeof(struct VB_Expr));
+	//	println->expr->expr_string = (char*)malloc(sizeof(char)*2);
+	//	println->expr->expr_string = "ENDL";
+	//}
+	//else{
+
+	//	println->expr = expr;
+
+	//	if (println->expr->expr_string == NULL){
+	//		println->expr->expr_string = (char*)malloc(sizeof(char)*6);
+	//		strcpy(println->expr->expr_string,"exprENDL\0");
+	//	}
+	//}
+
+	//println->expr->id_type = STRING_E;
+	//println->expr->int_val = 0;
+	//println->expr->left_chld = NULL;
+	//println->expr->list= NULL;
+	//println->expr->next = NULL;
+	//println->expr->right_chld = NULL;
+	//println->expr->type = EXPR_FUNC;
+
+	//return println;
