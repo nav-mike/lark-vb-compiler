@@ -154,11 +154,11 @@ public class JVBExpr {
         // Считывание типа выражения.
         Node attr = attributes.getNamedItem("type");
         buffer = attr.getNodeValue();
-        parseStringForExpr(buffer);
+        m_type = JVBExprType.valueOf(buffer);
         // Считывание типа идентификатора.
         attr = attributes.getNamedItem("id_type");
         buffer = attr.getNodeValue();
-        parseStringForId(buffer);
+        m_idType = JVBIdType.valueOf(buffer);
         // Считывание имени идентификатора или строки.
         attr = attributes.getNamedItem("expr_string");
         buffer = attr.getNodeValue();

@@ -224,7 +224,7 @@ public class JVBForStmt {
         // Считывание типа оператора.
         Node attr = attributes.getNamedItem("type");
         buffer = attr.getNodeValue();
-        parseString(buffer);
+        type = JVBForStmtType.valueOf(buffer);
         // Идентификатор.
         attr = attributes.getNamedItem("id");
         buffer = attr.getNodeValue();

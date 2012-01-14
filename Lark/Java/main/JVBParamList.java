@@ -52,6 +52,8 @@ public class JVBParamList {
             if (i > 0)
                 stmts[i - 1] = stmts[i];
         }
+        first = stmts[0];
+        last = stmts[1];
     }
 
     /**

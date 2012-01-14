@@ -140,7 +140,7 @@ public class JVBDoLoopStmt {
         // Считывание типа цикла.
         Node attr = attributes.getNamedItem("type");
         buffer = attr.getNodeValue();
-        parseString(buffer);
+        type = JVBDoLoopType.valueOf(buffer);
         // Считывание вложенных структур.
         NodeList nodes = node.getChildNodes();
         for (int i = 0; i < nodes.getLength(); i++) {
