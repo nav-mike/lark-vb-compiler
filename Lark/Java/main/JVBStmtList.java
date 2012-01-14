@@ -1,6 +1,7 @@
 package main;
 
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * Класс, описывающий список операциий.
@@ -14,8 +15,43 @@ public class JVBStmtList {
     /** Указатель на последний элемент списка. */
     private JVBStmt m_last;
 
+    /**
+     * Конструктор по умолчанию.
+     * Инициализирует все null.
+     */
+    public JVBStmtList() {
+        
+        m_first = null;
+        m_last = null;
+    }
+
+    /**
+     * Конструктор с параметрами.
+     * Инициализирует объект входными параметрами.
+     * @param m_first Первый элемент списка.
+     * @param m_last Последний элемент списка.
+     */
+    public JVBStmtList(JVBStmt m_first, JVBStmt m_last) {
+        this.m_first = m_first;
+        this.m_last = m_last;
+    }
+
+    /**
+     * Конструктор с параметром.
+     * Инициализирует объект узлом XML дерева.
+     * @param item Узел XML дерева.
+     */
     JVBStmtList(Node item) {
-        throw new UnsupportedOperationException("Not yet implemented");
+        
+        NodeList nodes = item.getChildNodes();
+        JVBStmt[] stmts = new JVBStmt[nodes.getLength()];
+        for (int i = 0; i < nodes.getLength(); i++) {
+            
+            stmts[i] = new JVBStmt(nodes.item(i));
+            
+            if (i > 0)
+                stmts[i - 1].setNext(stmts[i]);
+        }
     }
     
     /**
