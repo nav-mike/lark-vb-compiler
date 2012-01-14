@@ -90,7 +90,7 @@ public class JVBFucnStmt {
         // Считывание типа возвращаемого значения.
         attr = attributes.getNamedItem("id_type");
         buffer = attr.getNodeValue();
-        parseString(buffer);
+        idType = JVBIdType.valueOf(buffer);
         // Считывание внутренних структур.
         NodeList nodes = item.getChildNodes();
         for (int i = 0; i < nodes.getLength(); i++) {

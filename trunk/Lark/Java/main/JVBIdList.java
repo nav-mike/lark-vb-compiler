@@ -62,6 +62,8 @@ public class JVBIdList {
             
             if ("VB_Expr".equals(nodes.item(i).getNodeName()))
                 id = new JVBExpr(nodes.item(i));
+            else if ("VB_Id_list".equals(nodes.item(i).getNodeName()))
+                next = new JVBIdList(nodes.item(i));
         }
     }
 

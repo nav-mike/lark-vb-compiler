@@ -196,7 +196,7 @@ public class JVBDeclStmt {
         // Считывание типа операции.
         Node attr = attributes.getNamedItem("VB_Stmt_type");
         buffer = attr.getNodeValue();
-        parseString(buffer);
+        m_type = JVBStmtType.valueOf(buffer);
         // Считывание вложенных структур.
         NodeList nodes = node.getChildNodes();
         
