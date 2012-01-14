@@ -1,6 +1,8 @@
 package main;
 
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * Класс процедуры.
@@ -45,8 +47,29 @@ public class JVBSubStmt {
         this.next = next;
     }
 
+    /**
+     * Конструктор с параметром.
+     * Инициализирует объект узлом XML дерева.
+     * @param item Узел XML дерева.
+     */
     JVBSubStmt(Node item) {
-        throw new UnsupportedOperationException("Not yet implemented");
+        
+        this();
+        String buffer;
+        NamedNodeMap attributes = item.getAttributes();
+        // Считывание идентификатора.
+        Node attr = attributes.getNamedItem("id");
+        buffer = attr.getNodeValue();
+        id = buffer;
+        // Считывание вложенных структур.
+        NodeList nodes = item.getChildNodes();
+        for (int i = 0; i < nodes.getLength(); i++) {
+            
+            if ("VB_Param_list".equals(nodes.item(i).getNodeName()))
+                paramList =  new JVBParamList(nodes.item(i));
+            else if ("VB_Stmt_list".equals(nodes.item(i).getNodeName()))
+                stmtList = new JVBStmtList(nodes.item(i));
+        }
     }
 
     /** 
