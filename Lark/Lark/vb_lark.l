@@ -13,7 +13,11 @@
   //extern FILE* file;
   char literal[100];
   int num = 0;
+  
+  #define YY_USER_ACTION yylloc.first_line = yylloc.last_line = yylineno;
+
 %}
+%option yylineno
 
 DIGIT  [0-9]
 LETTER [A-Za-z]
@@ -33,6 +37,7 @@ LETTER [A-Za-z]
 \n+                      {
                           //fprintf(file, "\nEnd line has found\n");
 						   return ENDL;
+						   yylineno++;
 						 }
 
 Dim                      {
