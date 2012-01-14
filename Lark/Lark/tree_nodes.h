@@ -1152,7 +1152,9 @@ struct VB_Println_stmt* create_Println (struct VB_Expr* expr)
 struct VB_Expr* create_Read ()
 {
 	struct VB_Expr* read = (struct VB_Expr*)malloc(sizeof(struct VB_Expr));
-	read->expr_string = NULL;
+	read->expr_string = (char*)malloc(sizeof(char)*5);
+	read->expr_string = "READ";
+
 	read->id_type = INTEGER_E;
 	read->int_val = 0;
 	read->left_chld = NULL;
@@ -1175,7 +1177,9 @@ struct VB_Expr* create_Read ()
 struct VB_Expr* create_Readln ()
 {
 	struct VB_Expr* readln = (struct VB_Expr*)malloc(sizeof(struct VB_Expr));
-	readln->expr_string = NULL;
+	readln->expr_string = (char*)malloc(sizeof(char)*9);
+	readln->expr_string = "READLINE";
+
 	readln->id_type = INTEGER_E;
 	readln->int_val = 0;
 	readln->left_chld = NULL;
