@@ -1,5 +1,9 @@
 package jlark;
 
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 /**
  * Класс, описывающий оператор For.
  * @version 1.0
@@ -150,6 +154,102 @@ public class JVBForStmt {
      */
     public void setType(JVBForStmtType type) {
         this.type = type;
+    }
+    
+    /**
+     * Метод преобразования строки в тип оператора For.
+     * @param str Строка - тип оператора For.
+     */
+    private void parseString (String str) {
+        
+        if ("SIMPLE".equals(str))
+            type = JVBForStmtType.SIMPLE;
+        else if ("WITH_DECL".equals(str))
+            type = JVBForStmtType.WITH_DECL;
+        else if ("WITH_STEP".equals(str))
+            type = JVBForStmtType.WITH_STEP;
+        else if ("WITH_DECL_AND_STEP".equals(str))
+            type = JVBForStmtType.WITH_DECL_AND_STEP;
+    }
+
+    /**
+     * Конструктор по умолчанию.
+     * Инициализация объекта null.
+     */
+    public JVBForStmt() {
+        
+        fromVal = 0;
+        id = null;
+        newId = null;
+        next = null;
+        stepVal = 0;
+        stmtList = null;
+        toVal = 0;
+        type = null;
+    }
+
+    /**
+     * Конструктор с параметрами.
+     * Инициализирует объект входными параметрами.
+     * @param type Тип операции For.
+     * @param id Идентификатор.
+     * @param fromVal Начало отсчета.
+     * @param toVal Конец отсчета.
+     * @param stepVal Шаг.
+     * @param stmtList Тело цикла.
+     * @param next Следующий оператор.
+     * @param newId Переменная, созданная в цикле.
+     */
+    public JVBForStmt(JVBForStmtType type, String id, int fromVal, int toVal, int stepVal, JVBStmtList stmtList, JVBStmt next, JVBExpr newId) {
+        this.type = type;
+        this.id = id;
+        this.fromVal = fromVal;
+        this.toVal = toVal;
+        this.stepVal = stepVal;
+        this.stmtList = stmtList;
+        this.next = next;
+        this.newId = newId;
+    }
+    
+    /**
+     * Конструктор с параметром.
+     * Инициализирует объект узлом XML.
+     * @param node Узел XML.
+     */
+    public JVBForStmt (Node node) {
+        
+        this();
+        String buffer;
+        NamedNodeMap attributes = node.getAttributes();
+        // Считывание типа оператора.
+        Node attr = attributes.getNamedItem("type");
+        buffer = attr.getNodeValue();
+        parseString(buffer);
+        // Идентификатор.
+        attr = attributes.getNamedItem("id");
+        buffer = attr.getNodeValue();
+        id = buffer;
+        // Начало отсчета.
+        attr = attributes.getNamedItem("from_val");
+        buffer = attr.getNodeValue();
+        fromVal = Integer.parseInt(buffer);
+        // Конеч отсчета.
+        attr = attributes.getNamedItem("to_val");
+        buffer = attr.getNodeValue();
+        toVal = Integer.parseInt(buffer);
+        // Шаг.
+        attr = attributes.getNamedItem("step_val");
+        buffer = attr.getNodeValue();
+        stepVal = Integer.parseInt(buffer);
+        // Считывание вложенных структур.
+        NodeList nodes = node.getChildNodes();
+        for (int i = 0; i < nodes.getLength(); i++) {
+            
+            if ("VB_Stmt_list".equals(nodes.item(i).getNodeName()))
+                stmtList = new JVBStmtList(nodes.item(i));
+            else if ("VB_Expr".equals(nodes.item(i).getNodeName()))
+                newId = new JVBExpr(nodes.item(i));
+        }
     }
     
 }

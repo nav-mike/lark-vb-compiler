@@ -1,5 +1,9 @@
 package jlark;
 
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 /**
  * Класс дерева для хранения выражения.
  * @version 1.0
@@ -23,6 +27,159 @@ public class JVBExpr {
     private JVBExpr m_next;
     /** Тип идентификатора. */
     private JVBIdType m_idType;
+    
+    /**
+     * Метод преобразования строки в тип идентификатора.
+     * @param str Строка - тип идентификатора.
+     */
+    private void parseStringForId (String str) {
+        
+        if ("INTEGER_E".equals(str))
+            m_idType = JVBIdType.INTEGER_E;
+        else if ("BOOLEAN_E".equals(str))
+            m_idType = JVBIdType.BOOLEAN_E;
+        else if ("CHAR_E".equals(str))
+            m_idType = JVBIdType.CHAR_E;
+        else if ("STRING_E".equals(str))
+            m_idType = JVBIdType.STRING_E;
+    }
+
+    /**
+     * Метод преобразования строки в тип выражения.
+     * @param str Строка - тип выражения.
+     */
+    private void parseStringForExpr (String str) {
+        
+        if ("ID_E".equals(str))
+            m_type = JVBExprType.ID_E;
+        else if ("EXPR_FUNC".equals(str))
+            m_type = JVBExprType.EXPR_FUNC;
+        else if ("CHAR_CONST_E".equals(str))
+            m_type = JVBExprType.CHAR_CONST_E;
+        else if ("INT_CONST_E".equals(str))
+            m_type = JVBExprType.INT_CONST_E;
+        else if ("STRING_CONST_E".equals(str))
+            m_type = JVBExprType.STRING_CONST_E;
+        else if ("BOOLEAN_CONST_E".equals(str))
+            m_type = JVBExprType.BOOLEAN_CONST_E;
+        else if ("ASSIGN".equals(str))
+            m_type = JVBExprType.ASSIGN;
+        else if ("PLUS".equals(str))
+            m_type = JVBExprType.PLUS;
+        else if ("MINUS".equals(str))
+            m_type = JVBExprType.PLUS;
+        else if ("MUL".equals(str))
+            m_type = JVBExprType.MUL;
+        else if ("INT_DIV".equals(str))
+            m_type = JVBExprType.INT_DIV;
+        else if ("DIV".equals(str))
+            m_type = JVBExprType.DIV;
+        else if ("POWER".equals(str))
+            m_type = JVBExprType.POWER;
+        else if ("MORE".equals(str))
+            m_type = JVBExprType.MORE;
+        else if ("LESS".equals(str))
+            m_type = JVBExprType.LESS;
+        else if ("MORE_OR_EQUAL".equals(str))
+            m_type = JVBExprType.MORE_OR_EQUAL_E;
+        else if ("LESS_OR_EQUAL".equals(str))
+            m_type = JVBExprType.LESS_OR_EQUAL_E;
+        else if ("NONEQUAL_E".equals(str))
+            m_type = JVBExprType.NONEQUAL_E;
+        else if ("EQUAL_E".equals(str))
+            m_type = JVBExprType.EQUAL_E;
+        else if ("UMINUS_E".equals(str))
+            m_type = JVBExprType.UMINUS_E;
+        else if ("UPLUS".equals(str))
+            m_type = JVBExprType.UPLUS;
+        else if ("GET_ITEM".equals(str))
+            m_type = JVBExprType.GET_ITEM;
+        else if ("BRK_EXPR".equals(str))
+            m_type = JVBExprType.BRK_EXPR;
+        else if ("READ_E".equals(str))
+            m_type = JVBExprType.READ_E;
+        else if ("READLN_E".equals(str))
+            m_type = JVBExprType.READLN_E;
+    }
+    
+    /**
+     * Конструктор по умолчанию.
+     * Инициализирует null.
+     */
+    public JVBExpr() {
+        
+        m_exprString = null;
+        m_idType = null;
+        m_intVal = 0;
+        m_leftChld = null;
+        m_list = null;
+        m_next = null;
+        m_rightChld = null;
+        m_type = null;
+    }
+
+    /**
+     * Конструктор с параметрами.
+     * Иницилизирует массив входными параметрами.
+     * @param m_type Тип выражения.
+     * @param m_exprString Имя идентификатора, либо строка.
+     * @param m_intVal Значение выражения.
+     * @param m_leftChld Ссылка на левого сына.
+     * @param m_rightChld Ссылка на правого сына.
+     * @param m_list Параметры процедуры или функции.
+     * @param m_next Указатель следующего выражения.
+     * @param m_idType Тип идентификатора.
+     */
+    public JVBExpr(JVBExprType m_type, String m_exprString, int m_intVal, JVBExpr m_leftChld, JVBExpr m_rightChld, JVBExprList m_list, JVBExpr m_next, JVBIdType m_idType) {
+        this.m_type = m_type;
+        this.m_exprString = m_exprString;
+        this.m_intVal = m_intVal;
+        this.m_leftChld = m_leftChld;
+        this.m_rightChld = m_rightChld;
+        this.m_list = m_list;
+        this.m_next = m_next;
+        this.m_idType = m_idType;
+    }
+
+    /**
+     * Конструктор с параметром.
+     * Инициализирует объект узлом XML.
+     * @param item Узел XML.
+     */
+    JVBExpr(Node item) {
+
+        this();
+        String buffer;
+        NamedNodeMap attributes = item.getAttributes();
+        // Считывание типа выражения.
+        Node attr = attributes.getNamedItem("type");
+        buffer = attr.getNodeValue();
+        parseStringForExpr(buffer);
+        // Считывание типа идентификатора.
+        attr = attributes.getNamedItem("id_type");
+        buffer = attr.getNodeValue();
+        parseStringForId(buffer);
+        // Считывание имени идентификатора или строки.
+        attr = attributes.getNamedItem("expr_string");
+        buffer = attr.getNodeValue();
+        m_exprString = buffer;
+        // Считывание значения выражения.
+        attr = attributes.getNamedItem("int_val");
+        buffer = attr.getNodeValue();
+        m_intVal = Integer.parseInt(buffer);
+        // Считывание вложенных структур.
+        NodeList nodes = item.getChildNodes();
+        for (int i = 0; i < nodes.getLength(); i++) {
+            
+            if ("VB_Expr__left_chld".equals(nodes.item(i).getNodeName()))
+                m_leftChld = new JVBExpr(nodes.item(i));
+            else if ("VB_EXPR__left_chld".equals(nodes.item(i).getNodeName()))
+                m_rightChld = new JVBExpr(nodes.item(i));
+            else if ("VB_Expr_list".equals(nodes.item(i)))
+                m_list = new JVBExprList(nodes.item(i));
+                   
+        }
+    }
     
     /**
      * Метод получения типа выражения.

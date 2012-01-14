@@ -1,5 +1,7 @@
 package jlark;
 
+import org.w3c.dom.Node;
+
 /**
  * Класс, описывающий список операциий.
  * @version 1.0
@@ -11,6 +13,10 @@ public class JVBStmtList {
     private JVBStmt m_first;
     /** Указатель на последний элемент списка. */
     private JVBStmt m_last;
+
+    JVBStmtList(Node item) {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
     
     /**
      * Метод получения ссылки на первый элемент списка.

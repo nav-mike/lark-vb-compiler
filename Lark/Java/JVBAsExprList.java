@@ -68,8 +68,6 @@ public class JVBAsExprList {
             
             if ("VB_As_expr".equals(nodes.item(i).getNodeName()))
                 asExpr = new JVBAsExpr(nodes.item(i));
-            else if ("VB_As_Expr_list".equals(nodes.item(i).getNodeName()))
-                next = new JVBAsExprList(nodes.item(i));
             else if ("VB_Array_expr".equals(nodes.item(i).getNodeName()))
                 arr = new JVBArrayExpr(nodes.item(i));
         }

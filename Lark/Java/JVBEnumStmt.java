@@ -1,5 +1,7 @@
 package jlark;
 
+import org.w3c.dom.Node;
+
 /**
  * Класс, описывающий перечисление.
  * @version 1.0
@@ -13,6 +15,10 @@ public class JVBEnumStmt {
     private JVBEnumExprList list;
     /** Следующий оператор. */
     private JVBStmt next;
+
+    JVBEnumStmt(Node item) {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
 
     /**
      * Метод получения имени поля.

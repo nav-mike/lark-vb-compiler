@@ -1,5 +1,7 @@
 package jlark;
 
+import org.w3c.dom.Node;
+
 /**
  * Класс процедуры.
  * @version 1.0
@@ -15,6 +17,10 @@ public class JVBSubStmt {
     private JVBStmtList stmtList;
     /** Следующий оператор. */
     private JVBStmt next;
+
+    JVBSubStmt(Node item) {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
 
     /** 
      * Метод получения имени процедуры.

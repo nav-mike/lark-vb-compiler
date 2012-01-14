@@ -1,5 +1,7 @@
 package jlark;
 
+import org.w3c.dom.Node;
+
 /**
  * Класс дерева для хранения
  * второй части оператора условного перехода.
@@ -18,6 +20,10 @@ public class JVBEndIfStmt {
     private JVBEndIfStmt endStmr;
     /** Указатель на следующий оператор. */
     private JVBStmt next;
+
+    JVBEndIfStmt(Node item) {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
 
     /**
      * Метод получения списка операций при ложном условии.

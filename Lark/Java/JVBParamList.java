@@ -1,5 +1,7 @@
 package jlark;
 
+import org.w3c.dom.Node;
+
 /**
  * Класс, список параметров процедуры.
  * @version 1.0
@@ -11,6 +13,17 @@ public class JVBParamList {
     private JVBParamStmt first;
     /** Ссылка на последний элемент списка. */
     private JVBParamStmt last;
+
+    /**
+     * Конструктор по умолчанию.
+     * Инициализирует объект null.
+     */
+    public JVBParamList() {
+    }
+
+    JVBParamList(Node item) {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
 
     /**
      * Метод получения первого элемента списка.
