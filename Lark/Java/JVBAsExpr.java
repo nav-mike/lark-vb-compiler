@@ -91,11 +91,11 @@ public class JVBAsExpr {
         // Считывание типа.
         Node attr = attributes.getNamedItem("type");
         buffer = attr.getNodeValue();
-        JVBAsExprTypeFromString(buffer);
+        type = JVBAsExprType.valueOf(buffer);
         // Считывание типа идентификатора.
         attr = attributes.getNamedItem("id_type");
         buffer = attr.getNodeValue();
-        parseString(buffer);
+        idType = JVBIdType.valueOf(buffer);
         // Считывание вложенных структур.
         NodeList nodes = node.getChildNodes();
         for (int i = 0; i < nodes.getLength(); i++) {
