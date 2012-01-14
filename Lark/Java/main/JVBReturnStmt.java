@@ -1,6 +1,7 @@
 package main;
 
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * Класс, хранящий отображения оператора возврата в дереве.
@@ -14,8 +15,40 @@ public class JVBReturnStmt {
     /** Ссылка на следующий оператор. */
     private JVBStmt m_next;
 
+    /**
+     * Конструктор по умолчанию.
+     * Инициализирует все null.
+     */
+    public JVBReturnStmt() {
+        
+        m_expr = null;
+        m_next = null;
+    }
+
+    /**
+     * Конструктор с параметрами.
+     * Инициализирует объект входынми данными.
+     * @param m_expr Возвращаемое значение.
+     * @param m_next Следующий оператор.
+     */
+    public JVBReturnStmt(JVBExpr m_expr, JVBStmt m_next) {
+        this.m_expr = m_expr;
+        this.m_next = m_next;
+    }
+
+    /**
+     * Конструктор с параметром.
+     * Инициализирует объект узлом XML файла.
+     * @param item Узел XML файла.
+     */
     JVBReturnStmt(Node item) {
-        throw new UnsupportedOperationException("Not yet implemented");
+        
+        NodeList nodes = item.getChildNodes();
+        for (int i = 0; i < nodes.getLength(); i++) {
+            
+            if ("VB_Expr".equals(nodes.item(i).getNodeName()))
+                m_expr = new JVBExpr(nodes.item(0));
+        }
     }
     
     /**
