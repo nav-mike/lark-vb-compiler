@@ -30,6 +30,21 @@ public class JVBSubStmt {
         stmtList = null;
     }
 
+    /**
+     * Конструктор с параметрами.
+     * Инициализирует объект входными параметрами.
+     * @param id Имя процедуры.
+     * @param paramList Список параметров.
+     * @param stmtList Тело процедуры.
+     * @param next Следующий оператор.
+     */
+    public JVBSubStmt(String id, JVBParamList paramList, JVBStmtList stmtList, JVBStmt next) {
+        this.id = id;
+        this.paramList = paramList;
+        this.stmtList = stmtList;
+        this.next = next;
+    }
+
     JVBSubStmt(Node item) {
         throw new UnsupportedOperationException("Not yet implemented");
     }
