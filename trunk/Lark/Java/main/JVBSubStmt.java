@@ -18,6 +18,13 @@ public class JVBSubStmt {
     /** Следующий оператор. */
     private JVBStmt next;
 
+    /**
+     * Конструктор по умолчанию.
+     * Инициализирует все null.
+     */
+    public JVBSubStmt() {
+    }
+
     JVBSubStmt(Node item) {
         throw new UnsupportedOperationException("Not yet implemented");
     }
