@@ -60,7 +60,7 @@ public class JVBAsExprList {
         // Тип.
         Node attr = attributes.getNamedItem("type");
         buffer = attr.getNodeValue();
-        parseString(buffer);
+        type = JVBAsExprListType.valueOf(buffer);
         // Остальные структуры.
         NodeList nodes = node.getChildNodes();
         
