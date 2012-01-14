@@ -2,6 +2,7 @@ package guidebug;
 
 import java.util.HashMap;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 /**
  * Класс таблицы констант.
@@ -18,6 +19,8 @@ public class TableConstant {
     private JTable table;
     /** Размерность таблицы. */
     private int size;
+    /** Модель данных таблицы. */
+    private DefaultTableModel model;
     /** Столбцы класса. */
     private static final String[] colNames = {"ConstNum","Type","Value"};
 
@@ -29,7 +32,12 @@ public class TableConstant {
         
         part1 = new HashMap<Integer, String>();
         part2 = new HashMap<Integer, String>();
-        table = new JTable(null, colNames);
+        model = new DefaultTableModel();
+        table = new JTable(model);
+        for (int i = 0; i < 3; i++) {
+            
+            model.addColumn(colNames[i]);
+        }
         size = 0;
     }
 
@@ -50,9 +58,7 @@ public class TableConstant {
         
         part1.put(size, type);
         part2.put(size, value);
-        table.setValueAt(size, size, 0);
-        table.setValueAt(type, size, 1);
-        table.setValueAt(value, size, 2);
+        model.addRow(new Object[]{size, type, value});
         size++;
     }
     
