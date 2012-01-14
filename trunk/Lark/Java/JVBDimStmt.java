@@ -1,5 +1,9 @@
 package jlark;
 
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 /**
  * Класс, описывающий операцию объявления переменных.
  * @version 1.0
@@ -42,6 +46,44 @@ public class JVBDimStmt {
      */
     public void setNext(JVBStmt next) {
         this.next = next;
+    }
+
+    /**
+     * Конструктор по умолчанию.
+     * Инициализируется null.
+     */
+    public JVBDimStmt() {
+        
+        list = null;
+        next = null;
+    }
+
+    /**
+     * Конструктор с параметрами.
+     * Инициализирует объект входными параметрами.
+     * @param list Ссылка на список объявляемых переменных.
+     * @param next Ссылка на следующий оператор.
+     */
+    public JVBDimStmt(JVBAsExprList list, JVBStmt next) {
+        this.list = list;
+        this.next = next;
+    }
+    
+    /**
+     * Конструктор с параметром.
+     * Инициализирует объект узлом XML.
+     * @param node Узел XML.
+     */
+    public JVBDimStmt (Node node) {
+        
+        // Считывание списка объявляемых переменных.
+        NodeList nodes = node.getChildNodes();
+        
+        for (int i = 0; i < nodes.getLength(); i++) {
+            
+           if ("VB_As_Expr_list".equals(nodes.item(i)))
+               list = new JVBAsExprList(nodes.item(i));
+        }
     }
     
 }
