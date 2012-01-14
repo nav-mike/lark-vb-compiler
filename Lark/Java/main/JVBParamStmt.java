@@ -1,5 +1,8 @@
 package main;
 
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+
 /**
  * Класс параметра процедуры.
  * @version 1.0
@@ -15,6 +18,56 @@ public class JVBParamStmt {
     private JVBIdType idType;
     /** Следующий параметр. */
     private JVBParamStmt next;
+
+    /**
+     * Конструктор по умолчанию.
+     * Инициализирует null.
+     */
+    public JVBParamStmt() {
+        
+        id = null;
+        idType = null;
+        isByRef = 0;
+        next = null;
+    }
+
+    /**
+     * Конструктор с параметрами.
+     * Инициализирует объект входными параметрами.
+     * @param isByRef Передача по сслыке.
+     * @param id Имя параметра.
+     * @param idType Тип параметра.
+     * @param next Следующий параметр.
+     */
+    public JVBParamStmt(int isByRef, String id, JVBIdType idType, JVBParamStmt next) {
+        this.isByRef = isByRef;
+        this.id = id;
+        this.idType = idType;
+        this.next = next;
+    }
+    
+    /**
+     * Конструктор с параметром.
+     * Инициализирует объект узлом XML файла.
+     * @param item Узел XML файла.
+     */
+    public JVBParamStmt (Node item) {
+        
+        String buffer;
+        NamedNodeMap attributes = item.getAttributes();
+        // Считывание передачи по ссылке.
+        Node attr = attributes.getNamedItem("is_by_ref");
+        buffer = attr.getNodeValue();
+        isByRef = Integer.parseInt(buffer);
+        // Считывание имени параметра.
+        attr = attributes.getNamedItem("id");
+        buffer = attr.getNodeValue();
+        id = buffer;
+        // Считывание типа параметра.
+        attr = attributes.getNamedItem("id_type");
+        buffer = attr.getNodeValue();
+        idType = JVBIdType.valueOf(buffer);
+    }
 
     /**
      * Метод получения имени параметра.

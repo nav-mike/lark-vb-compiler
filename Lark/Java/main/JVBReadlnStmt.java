@@ -7,23 +7,41 @@ package main;
 public class JVBReadlnStmt {
     
     /* Поля класса. */
-    /** Текст из стандартного потока. */
-    private String text;
+    /** Выражение из стандартного потока. */
+    private JVBExpr expr;
 
     /**
-     * Метод получения текста из стандартного потока.
-     * @return Текст из стандартного потока.
+     * Конструктор по умолчанию.
+     * Инициализирует все null.
      */
-    public String getText() {
-        return text;
+    public JVBReadlnStmt() {
+        
+        expr = null;
+    }
+
+    /**
+     * Конструктор с параметром.
+     * Иницализирует объект входным параметром.
+     * @param expr Считываемое выражение.
+     */
+    public JVBReadlnStmt(JVBExpr expr) {
+        this.expr = expr;
     }
 
     /**
      * Метод задания текста из стандартного потока.
-     * @param text Текст из стандартного потока.
+     * @param expr Текст из стандартного потока.
      */
-    public void setText(String text) {
-        this.text = text;
+    public void setExpr(JVBExpr expr) {
+        this.expr = expr;
+    }
+
+    /**
+     * Метод получения текста из стандартного потока.
+     * @return Текст из стандартного потока.
+     */  
+    public JVBExpr getExpr() {
+        return expr;
     }
     
 }
