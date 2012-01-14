@@ -28,6 +28,7 @@ void VBX_add_if(xmlNodePtr node, struct VB_If_stmt* stmt);
 
 void VBX_add_dim(xmlNodePtr node, struct VB_Dim_stmt* stmt);
 
+void VBX_add_for(xmlNodePtr node, struct VB_For_stmt* stmt);
 
 void VBX_add_sub(xmlNodePtr node, struct VB_Sub_stmt* stmt);
 
@@ -161,7 +162,8 @@ void VBX_add_statement(xmlNodePtr parentList, struct VB_Stmt* stmt){
 			(struct VB_Dim_stmt*)stmt->value);
 		break;
 	case(FOR_E):
-		//VBX_add_expr_prop(stmt_node,(struct VB_For_stmt*)stmt->value);
+		VBX_add_for(xmlNewTextChild(parentList,NULL,(const xmlChar *)"VB_For_stmt",NULL),
+			(struct VB_For_stmt*)stmt->value);
 		break;
 	case(WHILE_E):
 		//VBX_add_expr_prop(stmt_node,(struct VB_While_stmt*)stmt->value);
@@ -180,12 +182,6 @@ void VBX_add_statement(xmlNodePtr parentList, struct VB_Stmt* stmt){
 		break;
 	case(PRINTLN_E):
 		//VBX_add_expr_prop(stmt_node,(struct VB_Println_stmt*)stmt->value);
-		break;
-	case(READ_E):
-		//VBX_add_expr_prop(stmt_node,(struct VB_Read_stmt*)stmt->value);
-		break;
-	case(READLN_E):
-		//VBX_add_expr_prop(stmt_node,(struct VB_Readln_stmt*)stmt->value);
 		break;
 	}
 
@@ -449,8 +445,6 @@ void VBX_add_as_expr(xmlNodePtr node,struct VB_As_expr * expr){
 
 	xmlNodePtr listNode;
 
-	xmlNewProp(node,(const xmlChar *)"id",(const xmlChar *)expr->id);
-
 	xmlNewProp(node,(const xmlChar *)"id_type",(const xmlChar *)VBX_id_type_to_string(expr->id_type));
 	
 	switch(expr->type)
@@ -468,9 +462,13 @@ void VBX_add_as_expr(xmlNodePtr node,struct VB_As_expr * expr){
 
 	xmlNewProp(node,(const xmlChar *)"type",(const xmlChar *)type);
 
+	if (expr->id != NULL)
+		VBX_add_expr(
+			xmlNewTextChild(node,NULL,(const xmlChar *)"VB_Expr__id",NULL),expr->id);
+
 	if (expr->expr != NULL)
 		VBX_add_expr(
-			xmlNewTextChild(node,NULL,(const xmlChar *)"VB_Expr",NULL),expr->expr);
+			xmlNewTextChild(node,NULL,(const xmlChar *)"VB_Expr__expr",NULL),expr->expr);
 
 	list = expr->list;
 
@@ -487,7 +485,50 @@ void VBX_add_as_expr(xmlNodePtr node,struct VB_As_expr * expr){
 	}
 }
 
+void VBX_add_for(xmlNodePtr node, struct VB_For_stmt* stmt){
+	
+	char buf[10];
 
+	xmlNewProp(node,(const xmlChar *)"id",(const xmlChar *)stmt->id);
+
+	itoa(stmt->from_val,buf,10);
+
+	xmlNewProp(node,(const xmlChar *)"from_val",(const xmlChar *)buf);
+	
+	itoa(stmt->step_val,buf,10);
+
+	xmlNewProp(node,(const xmlChar *)"step_val",(const xmlChar *)buf);
+
+	itoa(stmt->to_val,buf,10);
+
+	xmlNewProp(node,(const xmlChar *)"to_val",(const xmlChar *)buf);
+		
+	switch(stmt->type)
+	{
+	case (SIMPLE):
+		strcpy(buf,"SIMPLE\0");
+		break;
+	case (WITH_DECL):
+		strcpy(buf,"WITH_DECL\0");
+		break;
+	case (WITH_STEP):
+		strcpy(buf,"WITH_STEP\0");
+		break;
+	case (WITH_DECL_AND_STEP):
+		strcpy(buf,"WITH_DECL_AND_STEP\0");
+		break;
+	}
+
+	xmlNewProp(node,(const xmlChar *)"type",(const xmlChar *)buf);
+
+	if (stmt->new_id != NULL)
+		VBX_add_expr(
+			xmlNewTextChild(node,NULL,(const xmlChar *)"VB_Expr",NULL),stmt->new_id);
+	
+	if (stmt->stmt_list != NULL)
+		VBX_add_statement_list(
+			xmlNewTextChild(node,NULL,(const xmlChar *)"VB_Stmt_list",NULL),stmt->stmt_list);
+}
 
 
 /**
