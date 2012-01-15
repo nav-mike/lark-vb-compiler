@@ -101,6 +101,9 @@ void VBX_add_declaration(xmlNodePtr parentList, struct VB_Decl_stmt* stmt);
  */
 char* VBX_expression_type_to_string (enum VB_Expr_type type);
 
+
+char* statement_type_to_string (enum VB_Stmt_type type);
+
 /**
  * Получить строку с типом идентификатора
  */
@@ -130,7 +133,9 @@ void VBX_createXML (struct VB_Module_stmt* module){
 		xmlNewProp(mdlNode,(const xmlChar *)"id",(const xmlChar *)module->id);				// Задаем ему свойства
 
 		if (module->stmt_list != NULL)
-			VBX_add_statement_list(mdlNode,module->stmt_list);		// Начинаем рекурсивно обходить функции Main
+			VBX_add_statement_list(
+			xmlNewTextChild(mdlNode,NULL,(const xmlChar *)"VB_Stmt_list",NULL),
+			module->stmt_list);		// Начинаем рекурсивно обходить функции Main
 		
 		if (module->decl_list != NULL)
 			VBX_add_decl_list(mdlNode,module->decl_list);		// Начинаем рекурсивно обходить дерево определений функций
@@ -147,12 +152,12 @@ void VBX_add_statement_list(xmlNodePtr parent, struct VB_Stmt_list* list){
 	if (list != NULL){
 		struct VB_Stmt * item = list->first;
 
-		xmlNodePtr listNode;
+	//	xmlNodePtr listNode;
 
-		listNode = xmlNewTextChild(parent,NULL,(const xmlChar *)"VB_Stmt_list",NULL);
+	//	listNode = xmlNewTextChild(parent,NULL,(const xmlChar *)"VB_Stmt_list",NULL);
 
 		while (item != NULL){
-			VBX_add_statement(listNode,item);
+			VBX_add_statement(parent,item);
 			item = item->next;
 		}
 	}
@@ -182,40 +187,46 @@ void VBX_add_decl_list(xmlNodePtr parent, struct VB_Decl_stmt_list* list){
  */
 void VBX_add_statement(xmlNodePtr parentList, struct VB_Stmt* stmt){
 
+	xmlNodePtr stmt_node;
+
+	stmt_node = xmlNewTextChild(parentList,NULL,(const xmlChar *)"VB_Stmt",NULL);
+
+	xmlNewProp(stmt_node,(const xmlChar *)"type",(const xmlChar *)statement_type_to_string(stmt->type));
+
 	switch(stmt->type)
 	{
 	case (STMT_EXPR_E):
 		VBX_add_expr(
-			xmlNewTextChild(parentList,NULL,(const xmlChar *)"VB_Expr",NULL),
+			xmlNewTextChild(stmt_node,NULL,(const xmlChar *)"VB_Expr",NULL),
 			(struct VB_Expr*)stmt->value);
 		break;
 	case(IF_E):
 		VBX_add_if(
-			xmlNewTextChild(parentList,NULL,(const xmlChar *)"VB_If_stmt",NULL),
+			xmlNewTextChild(stmt_node,NULL,(const xmlChar *)"VB_If_stmt",NULL),
 			(struct VB_If_stmt*)stmt->value);
 		break;
 	case(DIM_E):
-		VBX_add_dim(xmlNewTextChild(parentList,NULL,(const xmlChar *)"VB_Dim_stmt",NULL),
+		VBX_add_dim(xmlNewTextChild(stmt_node,NULL,(const xmlChar *)"VB_Dim_stmt",NULL),
 			(struct VB_Dim_stmt*)stmt->value);
 		break;
 	case(FOR_E):
-		VBX_add_for(xmlNewTextChild(parentList,NULL,(const xmlChar *)"VB_For_stmt",NULL),
+		VBX_add_for(xmlNewTextChild(stmt_node,NULL,(const xmlChar *)"VB_For_stmt",NULL),
 			(struct VB_For_stmt*)stmt->value);
 		break;
 	case(WHILE_E):
-		VBX_add_while(xmlNewTextChild(parentList,NULL,(const xmlChar *)"VB_While_stmt",NULL),
+		VBX_add_while(xmlNewTextChild(stmt_node,NULL,(const xmlChar *)"VB_While_stmt",NULL),
 			(struct VB_While_stmt*)stmt->value);
 		break;
 	case(DO_LOOP_E):
-		VBX_add_do_loop(xmlNewTextChild(parentList,NULL,(const xmlChar *)"VB_Do_loop_stmt",NULL),
+		VBX_add_do_loop(xmlNewTextChild(stmt_node,NULL,(const xmlChar *)"VB_Do_loop_stmt",NULL),
 			(struct VB_Do_loop_stmt*)stmt->value);
 		break;
 	case(TRY_CATCH_E):
-		VBX_add_try_catch(xmlNewTextChild(parentList,NULL,(const xmlChar *)"VB_Try_catch_stmt",NULL),
+		VBX_add_try_catch(xmlNewTextChild(stmt_node,NULL,(const xmlChar *)"VB_Try_catch_stmt",NULL),
 			(struct VB_Try_catch_stmt*)stmt->value);
 		break;
 	case(THROW_E):
-		VBX_add_throw(xmlNewTextChild(parentList,NULL,(const xmlChar *)"VB_Throw_stmt",NULL),
+		VBX_add_throw(xmlNewTextChild(stmt_node,NULL,(const xmlChar *)"VB_Throw_stmt",NULL),
 			(struct VB_Throw_stmt*)stmt->value);
 		break;
 	}
@@ -251,13 +262,19 @@ void VBX_add_declaration(xmlNodePtr parentList, struct VB_Decl_stmt* stmt){
 /**
  * Добавить узел - expr.
  */
-void VBX_add_expr(xmlNodePtr node, struct VB_Expr* expr){
+void VBX_add_expr(xmlNodePtr node, struct VB_Expr* expr) {
+
+	char buf[15];
+
+	itoa(expr->int_val,buf,10);
 
 	xmlNewProp(node,(const xmlChar *)"expr_string",(const xmlChar *)expr->expr_string);
 
 	xmlNewProp(node,(const xmlChar *)"id_type",(const xmlChar *)VBX_id_type_to_string(expr->id_type));
 
 	xmlNewProp(node,(const xmlChar *)"type",(const xmlChar *)VBX_expression_type_to_string(expr->type));
+
+	xmlNewProp(node,(const xmlChar *)"int_val",(const xmlChar *)buf);
 	
 	if (expr->left_chld != NULL){
 		VBX_add_expr(
@@ -313,8 +330,7 @@ void VBX_add_sub(xmlNodePtr node, struct VB_Sub_stmt* stmt){
 	stmt_node = xmlNewTextChild(node,NULL,(const xmlChar *)"VB_Stmt_list",NULL);
 
 	while (stmt_item != NULL){
-		VBX_add_statement(
-			xmlNewTextChild(stmt_node,NULL,(const xmlChar *)"VB_Stmt",NULL),stmt_item);
+		VBX_add_statement(stmt_node,stmt_item);
 		stmt_item = stmt_item->next;
 	}
 }
@@ -361,8 +377,7 @@ void VBX_add_func(xmlNodePtr node, struct VB_Func_stmt* stmt){
 	stmt_node = xmlNewTextChild(node,NULL,(const xmlChar *)"VB_Stmt_list",NULL);
 
 	while (stmt_item != NULL){
-		VBX_add_statement(
-			xmlNewTextChild(stmt_node,NULL,(const xmlChar *)"VB_Stmt",NULL),stmt_item);
+		VBX_add_statement(stmt_node,stmt_item);
 		stmt_item = stmt_item->next;
 	}
 
@@ -471,7 +486,7 @@ void VBX_add_array_expr(xmlNodePtr node,struct VB_Array_expr * expr){
 
 void VBX_add_as_expr(xmlNodePtr node,struct VB_As_expr * expr){
 	
-	char type[10];
+	char type[15];
 	struct VB_Id_list * list = NULL;
 
 	xmlNodePtr listNode;
@@ -507,9 +522,18 @@ void VBX_add_as_expr(xmlNodePtr node,struct VB_As_expr * expr){
 		listNode = xmlNewTextChild(node,NULL,(const xmlChar *)"VB_Id_list",NULL);
 		itoa(list->counter,type,10);
 		xmlNewProp(listNode,(const xmlChar *)"counter",(const xmlChar *)type);
+
+		VBX_add_expr(
+			xmlNewTextChild(listNode,NULL,(const xmlChar *)"VB_Expr",NULL),list->id);
 	}
 
+	list = list->next;
+
 	while(list != NULL){
+		listNode = xmlNewTextChild(listNode,NULL,(const xmlChar *)"VB_Id_list",NULL);
+		itoa(list->counter,type,10);
+		xmlNewProp(listNode,(const xmlChar *)"counter",(const xmlChar *)type);
+
 		VBX_add_expr(
 			xmlNewTextChild(listNode,NULL,(const xmlChar *)"VB_Expr",NULL),list->id);
 		list = list->next;
