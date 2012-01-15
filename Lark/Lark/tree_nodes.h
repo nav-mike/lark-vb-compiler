@@ -1443,8 +1443,8 @@ struct VB_As_expr* create_as_expr(enum VB_As_expr_type type, struct VB_Id_list* 
 	}
 	else
 	{
-		as_expr->expr = NULL;
-		as_expr->id = expr;
+		as_expr->expr = expr;
+		as_expr->id = NULL; ///////////////////////// ldsjhfb akbf kjabf kjabf kjhdsbf kjasdbf kjhasbf khadfk jhbsdhf bwhf bkasf bsf
 		as_expr->list = list;
 		//strcpy(as_expr->id->expr_string,id);
 	}
@@ -1465,10 +1465,17 @@ struct VB_Id_list* create_id_list(char* id)
 
 	list->id->list = NULL;
 	list->id->next = NULL;
-	list->id->expr_string = id;
+	list->id->expr_string = (char*)malloc(sizeof(char)*strlen(id));
+	strcpy(list->id->expr_string,id);
+
+
 	list->next = NULL;
 	list->id->left_chld = NULL;
 	list->id->right_chld = NULL;
+	list->id->id_type = INTEGER_E;
+	list->id->type = ID_E;
+	list->id->int_val = 0;
+
 	list->counter = 1; /* change init 0 to 1 */
 	return list;
 }
@@ -1480,18 +1487,22 @@ struct VB_Id_list* create_id_list(char* id)
 */
 struct VB_Id_list* add_to_id_list(struct VB_Id_list* list,char* id)
 {
+
 	struct VB_Id_list* new_list = (struct VB_Id_list*)malloc(sizeof(struct VB_Id_list));
 	struct VB_Id_list* last_list = list;
-	new_list->id = (struct VB_Expr*)malloc(sizeof(struct VB_Expr*));
+	new_list->next = NULL;
 
-	//new_list->id = create_id_expr(id);
+	new_list->id = (struct VB_Expr*)malloc(sizeof(struct VB_Expr*));
 	new_list->id->expr_string = (char*)malloc(sizeof(char)*strlen(id));
 	strcpy(new_list->id->expr_string,id);
-	new_list->next = NULL;
+	
 	new_list->id->left_chld = NULL;
 	new_list->id->list = NULL;
 	new_list->id->next = NULL;
 	new_list->id->right_chld = NULL;
+	new_list->id->id_type = INTEGER_E;
+	new_list->id->int_val = 0;
+	new_list->id->type = ID_E;
 
 	do
 	{
@@ -1506,7 +1517,9 @@ struct VB_Id_list* add_to_id_list(struct VB_Id_list* list,char* id)
 	while (last_list);
 
 	//list->next = new_list;
-	list->counter++;
+
+	new_list->counter = ++(list->counter);
+
 	return list;
 }
 
