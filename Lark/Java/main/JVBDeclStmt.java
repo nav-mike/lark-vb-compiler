@@ -132,14 +132,6 @@ public class JVBDeclStmt {
             m_type = JVBStmtType.FUNC_D;
         else if ("IF_E".equals(str))
             m_type = JVBStmtType.IF_E;
-        else if ("PRINTLN_E".equals(str))
-            m_type = JVBStmtType.PRINTLN_E;
-        else if ("PRINT_E".equals(str))
-            m_type = JVBStmtType.PRINT_E;
-        else if ("READLN_E".equals(str))
-            m_type = JVBStmtType.READLN_E;
-        else if ("READ_E".equals(str))
-            m_type = JVBStmtType.READ_E;
         else if ("RETURN_E".equals(str))
             m_type = JVBStmtType.RETURN_E;
         else if ("STMT_EXPR_E".equals(str))
