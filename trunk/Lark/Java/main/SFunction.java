@@ -15,6 +15,16 @@ public class SFunction {
     private HashMap<String, SLocalVariable> locals;
     /** Ссылка на функцию (Процедуру). */
     private Object func;
+    
+    /**
+     * Метод добавления локальной переменной в функцию.
+     * @param name Имя переменной.
+     * @param slv Локальная переменная.
+     */
+    public void addLocalVariable (String name, SLocalVariable slv) {
+        
+        locals.put(name, slv);
+    }
 
     /**
      * Метод задания ссылки на таблицу констант.
