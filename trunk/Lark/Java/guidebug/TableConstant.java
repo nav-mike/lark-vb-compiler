@@ -58,7 +58,7 @@ public class TableConstant {
         
         part1.put(size, type);
         part2.put(size, value);
-        model.addRow(new Object[]{size, type, value});
+        model.addRow(new Object[]{size + 1, type, value});
         size++;
     }
     

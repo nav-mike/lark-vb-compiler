@@ -81,7 +81,7 @@ public class JVBDimStmt {
         
         for (int i = 0; i < nodes.getLength(); i++) {
             
-           if ("VB_As_Expr_list".equals(nodes.item(i)))
+           if ("VB_As_Expr_list".equals(nodes.item(i).getNodeName()))
                list = new JVBAsExprList(nodes.item(i));
         }
     }
