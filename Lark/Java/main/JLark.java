@@ -12,12 +12,61 @@ import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JTable;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 /**
  *
  * @author Mikhail Navrotskiy
  */
 public class JLark {
+    
+    /**
+     * Метод запускающий GraphViz.exe для построения дререва.
+     */
+    private static void runDotProcess () throws IOException {
+        
+        String line;
+        InputStream stdout = null;
+        OutputStream stdin = null;
+        Process process = Runtime.getRuntime().exec("dot.bat");
+        stdout = process.getInputStream();
+        BufferedReader brCleanUp =
+                new BufferedReader (new InputStreamReader (stdout));
+        while ((line = brCleanUp.readLine ()) != null) {
+            System.out.println ("[GV Stdout] " + line);
+        }
+        brCleanUp.close();
+    }
+    
+    /**
+     * Функция считывания XML файла.
+     * @param filename Имя файла.
+     */
+    private static JVBModuleStmt readXML (String filename) throws ParserConfigurationException, SAXException, IOException {
+        
+        JVBModuleStmt result = null;
+        DocumentBuilderFactory f = DocumentBuilderFactory.newInstance();
+        f.setValidating(false);
+        DocumentBuilder builder = f.newDocumentBuilder();
+        Document doc = builder.parse(new File(filename));
+        
+        NodeList nodes = doc.getChildNodes();
+        
+        for (int i = 0; i < nodes.getLength(); i++) {
+            
+            if ("VB_Module_stmt".equals(nodes.item(i).getNodeName()))
+                result = new JVBModuleStmt(nodes.item(i));
+        }
+        
+       
+        return result;
+        
+    }
 
     /** Список элементов таблицы констант. */
     static private HashMap<Integer, SConstant> m_constantsList = new HashMap<Integer, SConstant>();
@@ -81,6 +130,60 @@ public class JLark {
     public static void main(String[] args) {
        
         
+                        try {
+                    String line;
+                OutputStream stdin = null;
+                InputStream stderr = null;
+                InputStream stdout = null;
+        
+                  // launch EXE and grab stdin/stdout and stderr
+                  Process process = Runtime.getRuntime ().exec ("Lark.exe "+ args[0]);
+        //          stdin = process.getOutputStream ();
+                  stderr = process.getErrorStream ();
+                  stdout = process.getInputStream ();
+        
+        //          // "write" the parms into stdin
+        //          line = "param1" + "\n";
+        //          stdin.write(line.getBytes() );
+        //          stdin.flush();
+        //
+        //          line = "param2" + "\n";
+        //          stdin.write(line.getBytes() );
+        //          stdin.flush();
+        //
+        //          line = "param3" + "\n";
+        //          stdin.write(line.getBytes() );
+        //          stdin.flush();
+        //
+        //          stdin.close();
+        //
+                  // clean up if any output in stdout
+//                  BufferedReader brCleanUp =
+//                    new BufferedReader (new InputStreamReader (stdout));
+////                  while ((line = brCleanUp.readLine ()) != null) {
+////                    System.out.println ("[Stdout] " + line);
+////                  }
+//                  brCleanUp.close();
+//        
+//                  // clean up if any output in stderr
+//                  brCleanUp =
+//                    new BufferedReader (new InputStreamReader (stderr));
+//                  while ((line = brCleanUp.readLine ()) != null) {
+//                    System.out.println ("[Stderr] " + line);
+//                  }
+//                  brCleanUp.close();
+                  runDotProcess();
+            try {
+                JVBModuleStmt module = readXML("tree.xml");
+            } catch (ParserConfigurationException ex) {
+                Logger.getLogger(JLark.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SAXException ex) {
+                Logger.getLogger(JLark.class.getName()).log(Level.SEVERE, null, ex);
+            }
+                } catch (IOException ex) {
+                    Logger.getLogger(JLark.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                        
         TableConstant tc = new TableConstant();
         JTable[] tables = new JTable[1];
         String[] titles = new String[1];
@@ -88,51 +191,6 @@ public class JLark {
         tables[0] = tc.getTable();
         titles[0] = "Таблица констант";
         IntFrame intFrame = new IntFrame(tables, titles);
-        //        try {
-        //            String line;
-        //        OutputStream stdin = null;
-        //        InputStream stderr = null;
-        //        InputStream stdout = null;
-        //
-        //          // launch EXE and grab stdin/stdout and stderr
-        //          Process process = Runtime.getRuntime ().exec ("__lark__.exe test.txt");
-        ////          stdin = process.getOutputStream ();
-        //          stderr = process.getErrorStream ();
-        //          stdout = process.getInputStream ();
-        //
-        ////          // "write" the parms into stdin
-        ////          line = "param1" + "\n";
-        ////          stdin.write(line.getBytes() );
-        ////          stdin.flush();
-        ////
-        ////          line = "param2" + "\n";
-        ////          stdin.write(line.getBytes() );
-        ////          stdin.flush();
-        ////
-        ////          line = "param3" + "\n";
-        ////          stdin.write(line.getBytes() );
-        ////          stdin.flush();
-        ////
-        ////          stdin.close();
-        ////
-        //          // clean up if any output in stdout
-        //          BufferedReader brCleanUp =
-        //            new BufferedReader (new InputStreamReader (stdout));
-        //          while ((line = brCleanUp.readLine ()) != null) {
-        //            System.out.println ("[Stdout] " + line);
-        //          }
-        //          brCleanUp.close();
-        //
-        //          // clean up if any output in stderr
-        //          brCleanUp =
-        //            new BufferedReader (new InputStreamReader (stderr));
-        //          while ((line = brCleanUp.readLine ()) != null) {
-        //            System.out.println ("[Stderr] " + line);
-        //          }
-        //          brCleanUp.close();
-        //        } catch (IOException ex) {
-        //            Logger.getLogger(JLark.class.getName()).log(Level.SEVERE, null, ex);
-        //        }
     }
     
 }
