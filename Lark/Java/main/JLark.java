@@ -69,30 +69,98 @@ public class JLark {
     }
 
     /** Список элементов таблицы констант. */
-    static private HashMap<Integer, SConstant> m_constantsList = new HashMap<Integer, SConstant>();
+    static private HashMap<Integer, SConstant> m_constantsTable = new HashMap<Integer, SConstant>();
     /** Таблица методов класса. */
-    static private HashMap<SConstant, SFunction> m_functionsList = new HashMap<SConstant, SFunction>();
+    static private HashMap<SConstant, SFunction> m_functionsTable = new HashMap<SConstant, SFunction>();
     /** Список ошибок. */
     static private ArrayList<CError> m_errorList = new ArrayList<CError>();
     
     /** Корень получаемого дерева. */
     static private JVBModuleStmt m_module;
     
+    static private int currentIndex = 0;
+    
+    static private int index(){
+        return ++currentIndex;
+    }
     /**
      * Заполнить список элементов таблицы констант
      */
     static private void fillSConstantList(Object attr){
         
-        SConstant sc = null;
+        SConstant codeConst = new SConstant(index(), ConstantType.CONSTANT_Utf8, "Code", -1, null,null);
         
-        if (attr.getClass() == JVBModuleStmt.class) {
+        addToCTable(codeConst);
+    }
+
+    static private void addTreeNodeToCTable(Object node){
+        
+        if (node == null)
+            return;
+        
+        SConstant CTableItem;
+        
+        if(node.getClass() == JVBModuleStmt.class){
+            CTableItem = new SConstant(index(), ConstantType.CONSTANT_Utf8, ((JVBModuleStmt)node).getName(), -1, null,null);
+            SConstant classItem  = new SConstant(index(), ConstantType.CONSTANT_Class, Integer.toString(CTableItem.getId()), CTableItem.getId(), CTableItem, null);
             
-       //     sc = new SConstant(m_constantsList.size(), ConstantType.CONSTANT_Utf8, null, intConst, sc, sc)
+            addToCTable(CTableItem);
+            addToCTable(classItem);
+            addTreeNodeToCTable(((JVBModuleStmt)node).getDeclStmtList());
+            addTreeNodeToCTable(((JVBModuleStmt)node).getMainStmt());
+            
+        } else if (node.getClass() == JVBStmtList.class){
+            
+            JVBStmtList list = (JVBStmtList)node;
+            JVBStmt item = list.getFirst();
+            
+            while (item != null){
+                addTreeNodeToCTable(item);
+                item = item.getNext();
+            }
+        } else if (node.getClass() == JVBDeclStmtList.class){
+            
+            JVBDeclStmtList list = (JVBDeclStmtList)node;
+            JVBDeclStmt item = list.getFirst();
+            
+            while (item != null){
+                addTreeNodeToCTable(item);
+                item = item.getNext();
+            }
+            
+        } else if (node.getClass() == JVBStmt.class){           
+            addTreeNodeToCTable(((JVBStmt)node).getValue());
+            
+        } else if (node.getClass() == JVBDeclStmt.class){
+            addTreeNodeToCTable(((JVBDeclStmt)node).getSubStmt());
+            addTreeNodeToCTable(((JVBDeclStmt)node).getFuncStmt());
+            
+        } else if (node.getClass() == JVBDimStmt.class){
+            JVBDimStmt dim = (JVBDimStmt)node;
+            
+            JVBAsExprList list = dim.getList();
+            
+            while(list != null){
+                addTreeNodeToCTable(list.getArr());
+                addTreeNodeToCTable(list.getAsExpr());
+                list = list.getNext();
+            }
+            
+        }else if (node.getClass() == JVBIfStmt.class){
+            JVBIfStmt ifStmt = (JVBIfStmt)node;
+            
+            addTreeNodeToCTable(ifStmt.getExpr());
+            addTreeNodeToCTable(ifStmt.getStmtList());
+            addTreeNodeToCTable(ifStmt.getElseList());
+        
+        }else if (node.getClass() == JVBExpr.class){
+            JVBExpr expr = (JVBExpr)node;
+            
         }
-            
-        addToCList(sc);
         
     }
+        
+    
     
     /**
      * Функция добавления ошибки в список.
@@ -107,10 +175,10 @@ public class JLark {
      * Функция добавления константы в таблицу констант.
      * @param constant Добавляемая константа.
      */
-    static private void addToCList(SConstant constant){
+    static private void addToCTable(SConstant constant){
         
-        if (constant.getId() > 0 && constant.getId() == m_constantsList.size())
-            m_constantsList.put(constant.getId(), constant);
+        //if (constant.getId() > 0 && constant.getId() == m_constantsTable.size())
+            m_constantsTable.put(constant.getId(), constant);
         
     }
     
@@ -120,7 +188,7 @@ public class JLark {
      */
     static private void AddToFList (SFunction function) {
         
-        m_functionsList.put(function.getMethodRef(), function);
+        m_functionsTable.put(function.getMethodRef(), function);
     }
         
     
@@ -174,7 +242,7 @@ public class JLark {
 //                  brCleanUp.close();
                   runDotProcess();
             try {
-                JVBModuleStmt module = readXML("tree.xml");
+                m_module = readXML("tree.xml");
             } catch (ParserConfigurationException ex) {
                 Logger.getLogger(JLark.class.getName()).log(Level.SEVERE, null, ex);
             } catch (SAXException ex) {
@@ -183,14 +251,29 @@ public class JLark {
                 } catch (IOException ex) {
                     Logger.getLogger(JLark.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                        
+                       
+        fillSConstantList(null);
+        addTreeNodeToCTable(m_module);
         TableConstant tc = new TableConstant();
         JTable[] tables = new JTable[1];
         String[] titles = new String[1];
-        tc.addRow("UTF-8", "mass");
+        for (int i = 1; i < currentIndex + 1; i++) {
+            tc.addRow(m_constantsTable.get(i).getType().toString(), m_constantsTable.get(i).getUtfConst());
+        }
         tables[0] = tc.getTable();
         titles[0] = "Таблица констант";
         IntFrame intFrame = new IntFrame(tables, titles);
     }
     
 }
+
+
+
+//        SConstant sc = null;
+//        
+//        if (attr.getClass() == JVBModuleStmt.class) {
+//            
+//       //     sc = new SConstant(m_constantsTable.size(), ConstantType.CONSTANT_Utf8, null, intConst, sc, sc)
+//        }
+//            
+//        addToCTable(sc);
