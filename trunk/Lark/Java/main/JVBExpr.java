@@ -173,9 +173,9 @@ public class JVBExpr {
             
             if ("VB_Expr__left_chld".equals(nodes.item(i).getNodeName()))
                 m_leftChld = new JVBExpr(nodes.item(i));
-            else if ("VB_EXPR__left_chld".equals(nodes.item(i).getNodeName()))
+            else if ("VB_Expr__right_chld".equals(nodes.item(i).getNodeName()))
                 m_rightChld = new JVBExpr(nodes.item(i));
-            else if ("VB_Expr_list".equals(nodes.item(i)))
+            else if ("VB_Expr_list".equals(nodes.item(i).getNodeName()))
                 m_list = new JVBExprList(nodes.item(i));
                    
         }

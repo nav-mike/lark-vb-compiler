@@ -144,6 +144,7 @@ void VBX_createXML (struct VB_Module_stmt* module){
 	xmlSaveFile((const xmlChar *)"tree.xml",doc);	// Сохраняем документ
 }
 
+
 /**
  * Добавить узел - список операций.
  */
@@ -278,13 +279,13 @@ void VBX_add_expr(xmlNodePtr node, struct VB_Expr* expr) {
 	
 	if (expr->left_chld != NULL){
 		VBX_add_expr(
-			xmlNewTextChild(node,NULL,(const xmlChar *)"VB_Expr",NULL),
+			xmlNewTextChild(node,NULL,(const xmlChar *)"VB_Expr__left_chld",NULL),
 			expr->left_chld);
 	}
 
 	if (expr->right_chld != NULL){
 		VBX_add_expr(
-			xmlNewTextChild(node,NULL,(const xmlChar *)"VB_Expr",NULL),
+			xmlNewTextChild(node,NULL,(const xmlChar *)"VB_Expr__right_chld",NULL),
 			expr->right_chld);
 	}
 
