@@ -545,6 +545,8 @@ int add_expression (FILE* file, struct VB_Expr* expr)
 {
 	int error, number = Number;
 
+	printf("\nadd_expression. expr: %d\n",expr->int_val);
+
 	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> Expression\
 						 | <f1> str: %s | <f2> int: %d | <f3> type: %s \
 						 | <f4> id type: %s\"\n\t\tshape = \"record\"\n\t];",
@@ -576,7 +578,7 @@ int add_expression (FILE* file, struct VB_Expr* expr)
 		if (error)
 			return 1;
 	}
-	if (expr->list)
+	if (expr->type == BRK_EXPR && expr->list != NULL)
 	{
 		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
 			number, ++Number);
