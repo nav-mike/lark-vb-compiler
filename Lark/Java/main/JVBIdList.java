@@ -57,7 +57,7 @@ public class JVBIdList {
         buffer = attr.getNodeValue();
         counter = Integer.parseInt(buffer);
         // Считывание внутренних структур.
-        NodeList nodes = item.getChildNodes();
+        NodeList nodes = item.getChildNodes(); 
         for (int i = 0; i < nodes.getLength(); i++) {
             
             if ("VB_Expr".equals(nodes.item(i).getNodeName()))

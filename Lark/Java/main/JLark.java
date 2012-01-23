@@ -155,8 +155,65 @@ public class JLark {
         
         }else if (node.getClass() == JVBExpr.class){
             JVBExpr expr = (JVBExpr)node;
+           
+            if (expr.getExprType() == JVBExprType.INT_CONST_E) {
+                
+                CTableItem = new SConstant(index(), ConstantType.CONSTANT_Integer,
+                        "\"" + Integer.toString(expr.getIntVal()) + "\"",
+                        expr.getIntVal(), null, null);
+                addToCTable(CTableItem);
+            } else if (expr.getExprType() == JVBExprType.CHAR_CONST_E) {
+                
+                char c = (char) expr.getIntVal();
+                CTableItem = new SConstant(index(), ConstantType.CONSTANT_Utf8,
+                        Character.toString(c), expr.getIntVal(), null, null);
+                addToCTable(CTableItem);
+            } else if (expr.getExprType() == JVBExprType.BOOLEAN_CONST_E) {
+                
+                boolean b;
+                if (expr.getIntVal() == 0) b = false; else b = true;
+                CTableItem = new SConstant(index(), ConstantType.CONSTANT_Integer,
+                        Boolean.toString(b), expr.getIntVal(), null, null);
+                addToCTable(CTableItem);
+            } else if (expr.getExprType() == JVBExprType.STRING_CONST_E) {
+                
+                CTableItem = new SConstant(index(), ConstantType.CONSTANT_Utf8,
+                        "\"" + expr.getExprString() + "\"", expr.getIntVal(),
+                        null, null);
+                addToCTable(CTableItem);
+            } else if (expr.getExprType() == JVBExprType.ID_E) {
+                
+                CTableItem = new SConstant(index(), ConstantType.CONSTANT_Utf8,
+                        expr.getExprString(), expr.getIntVal(),
+                        null, null);
+                addToCTable(CTableItem);
+            }
             
-        }
+            addTreeNodeToCTable(expr.getLeftChld());
+            addTreeNodeToCTable(expr.getRightChld());
+        } else if (node.getClass() == JVBAsExprList.class) {
+            
+            JVBAsExprList list = (JVBAsExprList)node;
+            
+            addTreeNodeToCTable(list.getArr());
+            addTreeNodeToCTable(list.getAsExpr());
+        } else if (node.getClass() == JVBAsExpr.class) {
+            
+            JVBAsExpr expr = (JVBAsExpr)node;
+            
+            addTreeNodeToCTable(expr.getExpr());
+            addTreeNodeToCTable(expr.getId());
+            addTreeNodeToCTable(expr.getList());
+        } else if (node.getClass() == JVBIdList.class) {
+            
+            JVBIdList list = (JVBIdList)node;
+            
+            while (list != null) {
+                
+                addTreeNodeToCTable(list.getId());
+                list = list.getNext();
+            }
+        }// else if (node.getClass() == JVB)
         
     }
         
@@ -177,9 +234,21 @@ public class JLark {
      */
     static private void addToCTable(SConstant constant){
         
-        //if (constant.getId() > 0 && constant.getId() == m_constantsTable.size())
+        if (!m_constantsTable.containsValue(constant))
             m_constantsTable.put(constant.getId(), constant);
         
+    }
+    
+    private static void printTree (String filename) throws FileNotFoundException, IOException {
+        
+        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(filename)));
+        
+        String buffer;
+        
+        while ((buffer = br.readLine()) != null) {
+            
+            System.out.println(buffer);
+        }
     }
     
     /**
@@ -242,6 +311,7 @@ public class JLark {
 //                  brCleanUp.close();
                   runDotProcess();
             try {
+                printTree("tree.xml");
                 m_module = readXML("tree.xml");
             } catch (ParserConfigurationException ex) {
                 Logger.getLogger(JLark.class.getName()).log(Level.SEVERE, null, ex);
