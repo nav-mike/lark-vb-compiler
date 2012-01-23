@@ -46,6 +46,7 @@ public class JVBStmtList {
         this();
         NodeList nodes = item.getChildNodes();
         JVBStmt[] stmts = new JVBStmt[nodes.getLength()];
+        
         for (int i = 0; i < nodes.getLength(); i++) {
             
             stmts[i] = new JVBStmt(nodes.item(i));
@@ -53,6 +54,8 @@ public class JVBStmtList {
             if (i > 0)
                 stmts[i - 1].setNext(stmts[i]);
         }
+        m_first = stmts[0];
+        m_last = stmts[stmts.length - 1];
     }
     
     /**
