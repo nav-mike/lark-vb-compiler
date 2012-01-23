@@ -288,7 +288,7 @@ void VBX_add_expr(xmlNodePtr node, struct VB_Expr* expr) {
 			expr->right_chld);
 	}
 
-	if (expr->list != NULL){
+	if (expr->list != NULL && expr->type == BRK_EXPR){
 
 		struct VB_Expr * item = expr->list->first;
 
