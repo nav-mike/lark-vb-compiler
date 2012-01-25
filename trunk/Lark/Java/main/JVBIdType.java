@@ -13,5 +13,24 @@ public enum JVBIdType {
     /** Символьный тип. */
     CHAR_E,
     /** Строковый тип. */
-    STRING_E
+    STRING_E;
+
+    /**
+     * Метод преобразования перечисления в строку.
+     * @return Тип идентификатора в виде строки.
+     */
+    @Override
+    public String toString() {
+        
+        if (this == JVBIdType.BOOLEAN_E)
+            return "BOOLEAN";
+       else if (this == JVBIdType.CHAR_E)
+           return "CHAR";
+       else if (this == JVBIdType.INTEGER_E)
+           return "INTEGER";
+       else if (this == JVBIdType.STRING_E)
+           return "STRING";
+        
+        return "";
+    }
 }
