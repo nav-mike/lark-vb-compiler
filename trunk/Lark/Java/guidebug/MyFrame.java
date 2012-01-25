@@ -36,7 +36,8 @@ public class MyFrame {
         this.table = table;
         frame = new JInternalFrame(title, true);
         frame.add(table);
-        frame.setPreferredSize(new Dimension(100, 100));
+        frame.setResizable(true);
+        frame.setPreferredSize(new Dimension(400, 400));
         frame.setVisible(true);
     }
     
