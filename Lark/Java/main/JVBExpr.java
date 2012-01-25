@@ -27,6 +27,24 @@ public class JVBExpr {
     private JVBExpr m_next;
     /** Тип идентификатора. */
     private JVBIdType m_idType;
+    /** Флаг объявления переменной. */
+    private boolean decl;
+
+    /**
+     * Метод получения того, объявленна переменная/функция или нет.
+     * @return Объявлена переменная/функция.
+     */
+    public boolean isDecl() {
+        return decl;
+    }
+
+    /**
+     * Метод задания того, объявляется переменная/функция или нет.
+     * @param decl Объявлена перменная/функция.
+     */
+    public void setDecl(boolean decl) {
+        this.decl = decl;
+    }
     
     /**
      * Метод преобразования строки в тип идентификатора.
@@ -116,6 +134,7 @@ public class JVBExpr {
         m_next = null;
         m_rightChld = null;
         m_type = null;
+        decl = false;
     }
 
     /**
@@ -139,6 +158,7 @@ public class JVBExpr {
         this.m_list = m_list;
         this.m_next = m_next;
         this.m_idType = m_idType;
+        decl = false;
     }
 
     /**
