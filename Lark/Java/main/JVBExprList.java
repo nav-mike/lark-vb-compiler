@@ -1,5 +1,6 @@
 package main;
 
+import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -8,7 +9,7 @@ import org.w3c.dom.NodeList;
  * Класс, описывающий список выражений.
  * @version 1.0
  */
-public class JVBExprList {
+public class JVBExprList implements XMLInterface{
     
     /* Поля класса. */
     /** Ссылка на первый элемент списка. */
@@ -24,6 +25,7 @@ public class JVBExprList {
     public JVBExprList(Node item) {
         
         this();
+        
         String buffer;
         NamedNodeMap attributes = item.getAttributes();
         // Считывание вложенных структур.
@@ -47,6 +49,9 @@ public class JVBExprList {
      * @param m_last Второй элемент списка.
      */
     public JVBExprList(JVBExpr m_first, JVBExpr m_last) {
+        
+        System.out.println("JVBExprList");
+        
         this.m_first = m_first;
         this.m_last = m_last;
     }
@@ -56,7 +61,7 @@ public class JVBExprList {
      * Инициализирует объект null.
      */
     public JVBExprList() {
-        
+       
         m_first = null;
         m_last = null;
     }
@@ -95,6 +100,11 @@ public class JVBExprList {
     public JVBExpr getLast () {
         
         return m_last;
+    }
+
+    @Override
+    public void write(Element parent) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
             
 } 

@@ -1,10 +1,12 @@
 package main;
 
+import org.w3c.dom.Element;
+
 /**
  * Класс элемента перечисления Enum.
  * @version 1.0
  */
-public class JVBEnumExpr {
+public class JVBEnumExpr implements XMLInterface{
     
     /* Поля класса. */
     /** Инициализируется ли. */
@@ -78,6 +80,11 @@ public class JVBEnumExpr {
      */
     public void setValue(int value) {
         this.value = value;
+    }
+
+    @Override
+    public void write(Element parent) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
     
 }

@@ -1,10 +1,12 @@
 package main;
 
+import org.w3c.dom.Element;
+
 /**
  * Класс, считывание строки из стандартного потока.
  * @version 1.0
  */
-public class JVBReadlnStmt {
+public class JVBReadlnStmt implements XMLInterface{
     
     /* Поля класса. */
     /** Выражение из стандартного потока. */
@@ -42,6 +44,11 @@ public class JVBReadlnStmt {
      */  
     public JVBExpr getExpr() {
         return expr;
+    }
+
+    @Override
+    public void write(Element parent) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
     
 }

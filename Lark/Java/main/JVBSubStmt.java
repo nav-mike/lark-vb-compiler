@@ -1,5 +1,6 @@
 package main;
 
+import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -8,7 +9,7 @@ import org.w3c.dom.NodeList;
  * Класс процедуры.
  * @version 1.0
  */
-public class JVBSubStmt {
+public class JVBSubStmt implements XMLInterface {
     
     /* Поля класса. */
     /** Имя процедуры. */
@@ -134,6 +135,11 @@ public class JVBSubStmt {
      */
     public void setStmtList(JVBStmtList stmtList) {
         this.stmtList = stmtList;
+    }
+
+    @Override
+    public void write(Element parent) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
     
 }

@@ -1,10 +1,12 @@
 package main;
 
+import org.w3c.dom.Element;
+
 /**
  * Класс сообщения в стандартный поток вывода.
  * @version 1.0
  */
-public class JVBPrintStmt {
+public class JVBPrintStmt implements XMLInterface{
     
     /* Поля класса. */
     /** Текст сообщения. */
@@ -24,6 +26,11 @@ public class JVBPrintStmt {
      */
     public void setText(String text) {
         this.text = text;
+    }
+
+    @Override
+    public void write(Element parent) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
     
 }

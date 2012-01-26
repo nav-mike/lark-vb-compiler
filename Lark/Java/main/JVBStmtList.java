@@ -1,5 +1,6 @@
 package main;
 
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -7,7 +8,7 @@ import org.w3c.dom.NodeList;
  * Класс, описывающий список операциий.
  * @version 1.0
  */
-public class JVBStmtList {
+public class JVBStmtList implements XMLInterface {
     
     /* Поля класса. */
     /** Указатель на первый элемент списка. */
@@ -92,5 +93,21 @@ public class JVBStmtList {
     public void setLast (JVBStmt stmt) {
         
         m_last = stmt;
+    }
+
+    @Override
+    public void write(Element parent) {
+        
+        Element node = JLark.doc.createElement("VB_Stmt_list");
+                        
+        parent.appendChild(node);
+        
+        JVBStmt item = m_first;
+
+        while (item != null){
+            
+            item.write(node);
+            item = item.getNext();
+        }
     }
 }

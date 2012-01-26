@@ -1,5 +1,6 @@
 package main;
 
+import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -8,7 +9,7 @@ import org.w3c.dom.NodeList;
  * Список идентификаторов.
  * @version 1.0
  */
-public class JVBIdList {
+public class JVBIdList implements XMLInterface{
     
     /* Поля класса. */
     /** Размер списка. */
@@ -113,6 +114,11 @@ public class JVBIdList {
      */
     public void setNext(JVBIdList next) {
         this.next = next;
+    }
+
+    @Override
+    public void write(Element parent) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
     
 }

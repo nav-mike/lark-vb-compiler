@@ -11,13 +11,21 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+//import javax.lang.model.element.Element;
 import javax.swing.JTable;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import org.w3c.dom.Element;
         
         
 /**
@@ -37,6 +45,8 @@ public class JLark {
     static private JVBModuleStmt m_module;
     
     static private int currentIndex = 0;
+    
+    public static Document doc;
     
     static private int index(){
         return ++currentIndex;
@@ -118,7 +128,30 @@ public class JLark {
             m_constantsTable.put(constant.getId(), constant);
         
     }
+    
+    /**
+     * Сохраним данные в файл для проверки
+     * @throws ParserConfigurationException
+     * @throws SAXException
+     * @throws IOException
+     * @throws TransformerConfigurationException
+     * @throws TransformerException 
+     */
+    public static void saveToXML() throws ParserConfigurationException, SAXException, IOException, TransformerConfigurationException, TransformerException {
+        DocumentBuilderFactory fact = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = fact.newDocumentBuilder();
+        doc = builder.newDocument();
 
+        m_module.write(null);
+        
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        Transformer transformer = transformerFactory.newTransformer();
+        DOMSource source = new DOMSource(doc);
+        StreamResult result = new StreamResult(new File("JavaTree.xml"));
+
+        transformer.transform(source, result);
+    }
+    
     
     /**
      * @param args the command line arguments
@@ -136,19 +169,35 @@ public class JLark {
             Logger.getLogger(JLark.class.getName()).log(Level.SEVERE, null, ex);
         }
         
+        try {
+            saveToXML();
+        } catch (ParserConfigurationException ex){
+            Logger.getLogger(JLark.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SAXException ex){
+            Logger.getLogger(JLark.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex){
+            Logger.getLogger(JLark.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (TransformerConfigurationException ex){
+            Logger.getLogger(JLark.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (TransformerException ex){
+            Logger.getLogger(JLark.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
         fillSConstantList();
         addTreeNodeToCTable(m_module);
         
-        TableConstant tc = new TableConstant();
-        JTable[] tables = new JTable[2];
-        String[] titles = new String[2];
-        for (int i = 1; i < currentIndex + 1; i++) {
-            tc.addRow(m_constantsTable.get(i).getType().toString(), m_constantsTable.get(i).getUtfConst());
-        }
-        tables[0] = tc.getTable();
-        tables[1] = tc.getTable();
-        titles[0] = "Таблица констант";
-        titles[1] = "Таблица qweqwe";
-        IntFrame intFrame = new IntFrame(tables, titles);
     }
 }
+
+//        TableConstant tc = new TableConstant();
+//        JTable[] tables = new JTable[2];
+//        String[] titles = new String[2];
+//        for (int i = 1; i < currentIndex + 1; i++) {
+//            tc.addRow(m_constantsTable.get(i).getType().toString(), m_constantsTable.get(i).getUtfConst());
+//        }
+//        tables[0] = tc.getTable();
+//        tables[1] = tc.getTable();
+//        titles[0] = "Таблица констант";
+//        titles[1] = "Таблица qweqwe";
+//        IntFrame intFrame = new IntFrame(tables, titles);

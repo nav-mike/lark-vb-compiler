@@ -1,5 +1,6 @@
 package main;
 
+import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -8,7 +9,7 @@ import org.w3c.dom.NodeList;
  * Класс, описывающий операцию объявления переменных.
  * @version 1.0
  */
-public class JVBDimStmt {
+public class JVBDimStmt implements XMLInterface {
     
     /* Поля класса. */
     /** Ссылка на элемент списка объявляемых переменных. */
@@ -54,6 +55,8 @@ public class JVBDimStmt {
      */
     public JVBDimStmt() {
         
+        System.out.println("JVBDimStmt");
+         
         list = null;
         next = null;
     }
@@ -84,6 +87,11 @@ public class JVBDimStmt {
            if ("VB_As_Expr_list".equals(nodes.item(i).getNodeName()))
                list = new JVBAsExprList(nodes.item(i));
         }
+    }
+
+    @Override
+    public void write(Element parent) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
     
 }

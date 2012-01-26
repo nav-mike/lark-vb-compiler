@@ -1,5 +1,6 @@
 package main;
 
+import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -8,7 +9,7 @@ import org.w3c.dom.NodeList;
  * Класс, описывающий операцию.
  * @version 1.0
  */
-public class JVBStmt {
+public class JVBStmt implements XMLInterface{
     
     /* Поля класса. */
     /** Тип операции. */
@@ -128,6 +129,16 @@ public class JVBStmt {
     public void setNext (JVBStmt stmt) {
         
         m_next = stmt;
+    }
+
+    @Override
+    public void write(Element parent) {
+        Element node = JLark.doc.createElement("VB_Stmt");
+        node.setAttribute("type", getType().toString());
+            
+        parent.appendChild(node);
+        
+        
     }
             
 }

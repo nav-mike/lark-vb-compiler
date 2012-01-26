@@ -1,5 +1,6 @@
 package main;
 
+import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
@@ -7,7 +8,7 @@ import org.w3c.dom.Node;
  * Класс параметра процедуры.
  * @version 1.0
  */
-public class JVBParamStmt {
+public class JVBParamStmt implements XMLInterface{
     
     /* Поля класса. */
     /** Передача по ссылке. */
@@ -24,7 +25,7 @@ public class JVBParamStmt {
      * Инициализирует null.
      */
     public JVBParamStmt() {
-        
+
         id = null;
         idType = null;
         isByRef = 0;
@@ -131,6 +132,11 @@ public class JVBParamStmt {
      */
     public void setNext(JVBParamStmt next) {
         this.next = next;
+    }
+
+    @Override
+    public void write(Element parent) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
     
 }

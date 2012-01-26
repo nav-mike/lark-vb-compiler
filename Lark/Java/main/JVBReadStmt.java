@@ -1,10 +1,12 @@
 package main;
 
+import org.w3c.dom.Element;
+
 /**
  * Класс, считывание символа из стандартного потока.
  * @version 1.0
  */
-public class JVBReadStmt {
+public class JVBReadStmt implements XMLInterface{
     
     /* Поля класса. */
     /** Символ, считанный из консоли. */
@@ -24,6 +26,11 @@ public class JVBReadStmt {
      */
     public void setSymbol(char symbol) {
         this.symbol = symbol;
+    }
+
+    @Override
+    public void write(Element parent) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
     
 }
