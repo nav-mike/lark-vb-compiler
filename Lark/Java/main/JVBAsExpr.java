@@ -194,7 +194,7 @@ public class JVBAsExpr implements XMLInterface{
 
     @Override
     public void write(Element parent) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        
     }
     
 }

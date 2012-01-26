@@ -91,7 +91,12 @@ public class JVBDimStmt implements XMLInterface {
 
     @Override
     public void write(Element parent) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        Element node = JLark.doc.createElement("VB_Dim_list");
+                        
+        parent.appendChild(node);
+        
+        if (list != null)
+            list.write(node);
     }
     
 }
