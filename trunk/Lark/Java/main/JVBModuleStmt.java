@@ -128,8 +128,11 @@ public class JVBModuleStmt implements XMLInterface{
         Element mdlNode = JLark.doc.createElement("VB_Module_stmt");
         mdlNode.setAttribute("id", getName());
         
-        this.m_stmtList.write(mdlNode);
-        //this.m_declList.write(mdlNode);
+        if (m_stmtList!=null)
+            this.m_stmtList.write(mdlNode);
+        
+        if (m_declList!=null)
+            this.m_declList.write(mdlNode);
         
         JLark.doc.appendChild(mdlNode);
     }

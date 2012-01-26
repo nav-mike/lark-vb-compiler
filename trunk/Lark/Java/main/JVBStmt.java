@@ -133,12 +133,37 @@ public class JVBStmt implements XMLInterface{
 
     @Override
     public void write(Element parent) {
+        
         Element node = JLark.doc.createElement("VB_Stmt");
         node.setAttribute("type", getType().toString());
-            
         parent.appendChild(node);
         
-        
+        if (m_value != null){
+            if (m_type == JVBStmtType.DIM_E)
+                ((JVBDimStmt)m_value).write(node);
+
+            else if (m_type == JVBStmtType.DO_LOOP_E)
+                ((JVBDoLoopStmt)m_value).write(node);
+
+            else if (m_type == JVBStmtType.FOR_E)
+                ((JVBForStmt)m_value).write(node);
+
+            else if (m_type == JVBStmtType.FUNC_D)
+                ((JVBFucnStmt)m_value).write(node);
+
+            else if (m_type == JVBStmtType.IF_E)
+                ((JVBIfStmt)m_value).write(node);
+
+            else if (m_type == JVBStmtType.RETURN_E)
+                ((JVBReturnStmt)m_value).write(node);
+
+            else if (m_type == JVBStmtType.STMT_EXPR_E)
+                ((JVBExpr)m_value).write(node);
+
+            else if (m_type == JVBStmtType.WHILE_E)
+                ((JVBWhileStmt)m_value).write(node);
+        }
+       
     }
             
 }

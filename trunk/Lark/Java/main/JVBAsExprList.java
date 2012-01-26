@@ -157,7 +157,20 @@ public class JVBAsExprList implements XMLInterface {
 
     @Override
     public void write(Element parent) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        
+        Element node = JLark.doc.createElement("VB_As_Expr_list");
+        node.setAttribute("type", type.toString());          
+        
+        parent.appendChild(node);
+        
+        if (this.arr != null)
+            arr.write(node);
+        
+        else if (asExpr != null)
+            asExpr.write(node);
+        
+        if (next != null)
+            next.write(node);
     }
     
 }

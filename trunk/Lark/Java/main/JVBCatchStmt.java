@@ -66,7 +66,7 @@ public class JVBCatchStmt implements XMLInterface {
 
     @Override
     public void write(Element parent) {
-        throw new UnsupportedOperationException("Not supported yet.");
+ //       throw new UnsupportedOperationException("Not supported yet.");
     }
     
 }
