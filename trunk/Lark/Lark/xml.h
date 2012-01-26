@@ -172,12 +172,17 @@ void VBX_add_decl_list(xmlNodePtr parent, struct VB_Decl_stmt_list* list){
 	if (list != NULL){
 		struct VB_Decl_stmt * item = list->first;
 
-		xmlNodePtr listNode;
+		xmlNodePtr listNode, decl_node;
 
 		listNode = xmlNewTextChild(parent,NULL,(const xmlChar *)"VB_Decl_stmt_list",NULL);
 
 		while (item != NULL){
-			VBX_add_declaration(listNode,item);
+			decl_node = xmlNewTextChild(listNode,NULL,(const xmlChar *)"VB_Decl_stmt",NULL);
+
+			xmlNewProp(decl_node,(const xmlChar *)"type",(const xmlChar *)statement_type_to_string(item->type));
+
+			VBX_add_declaration(decl_node,item);
+
 			item = item->next;
 		}
 	}
