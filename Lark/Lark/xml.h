@@ -66,6 +66,8 @@ void VBX_add_sub(xmlNodePtr node, struct VB_Sub_stmt* stmt);
  */
 void VBX_add_func(xmlNodePtr node, struct VB_Func_stmt* stmt);
 
+void VBX_add_return(xmlNodePtr node, struct VB_Return_stmt* stmt);
+
 /**
  * Добавить узел - EndIf
  */
@@ -235,7 +237,12 @@ void VBX_add_statement(xmlNodePtr parentList, struct VB_Stmt* stmt){
 		VBX_add_throw(xmlNewTextChild(stmt_node,NULL,(const xmlChar *)"VB_Throw_stmt",NULL),
 			(struct VB_Throw_stmt*)stmt->value);
 		break;
+	case(RETURN_E):
+		VBX_add_return(xmlNewTextChild(stmt_node,NULL,(const xmlChar *)"VB_Return_stmt",NULL),
+			(struct VB_Throw_stmt*)stmt->value);
+		break;
 	}
+
 
 }
 
@@ -370,8 +377,11 @@ void VBX_add_func(xmlNodePtr node, struct VB_Func_stmt* stmt){
 	if (stmt->stmt_list != NULL)
 		stmt_item = stmt->stmt_list->first;
 
+	
 	xmlNewProp(node,(const xmlChar *)"id",(const xmlChar *)stmt->id);
 
+	xmlNewProp(node,(const xmlChar *)"id_type",(const xmlChar *)VBX_id_type_to_string(stmt->id_type));
+	
 	param_node = xmlNewTextChild(node,NULL,(const xmlChar *)"VB_Param_stmt_list",NULL);
 
 	while (param_stmt != NULL){
@@ -671,6 +681,14 @@ void VBX_add_try_catch(xmlNodePtr node, struct VB_Try_catch_stmt* stmt){
 void VBX_add_throw(xmlNodePtr node, struct VB_Throw_stmt* stmt){
 	
 	xmlNewProp(node,(const xmlChar *)"string",(const xmlChar *)stmt->string);
+}
+
+
+void VBX_add_return(xmlNodePtr node, struct VB_Return_stmt* stmt){
+	
+	if (stmt->expr != NULL)
+		VBX_add_expr(
+			xmlNewTextChild(node,NULL,(const xmlChar *)"VB_Expr",NULL),stmt->expr);
 }
 
 /**
