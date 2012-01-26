@@ -1,5 +1,6 @@
 package main;
 
+import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
@@ -7,7 +8,7 @@ import org.w3c.dom.Node;
  * Класс, хранящий данные для определения массива.
  * @version 1.0
  */
-public class JVBArrayExpr {
+public class JVBArrayExpr implements XMLInterface{
     
     /* Поля класса. */
     /** Инициализируется ли массив. */
@@ -178,6 +179,11 @@ public class JVBArrayExpr {
      */
     public void setSize(int size) {
         this.size = size;
+    }
+
+    @Override
+    public void write(Element parent) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
     
 }

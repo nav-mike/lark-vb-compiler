@@ -1,5 +1,6 @@
 package main;
 
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -7,7 +8,7 @@ import org.w3c.dom.NodeList;
  * Класс, хранящий отображения оператора возврата в дереве.
  * @version 1.0
  */
-public class JVBReturnStmt {
+public class JVBReturnStmt implements XMLInterface{
     
     /* Поля класса. */
     /** Ссылка на возвращаемое выражение. */
@@ -20,6 +21,8 @@ public class JVBReturnStmt {
      * Инициализирует все null.
      */
     public JVBReturnStmt() {
+        
+        System.out.println("JVBReturnStmt");
         
         m_expr = null;
         m_next = null;
@@ -85,5 +88,10 @@ public class JVBReturnStmt {
     public JVBStmt getNext () {
         
         return m_next;
+    }
+
+    @Override
+    public void write(Element parent) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

@@ -1,5 +1,6 @@
 package main;
 
+import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -8,7 +9,7 @@ import org.w3c.dom.NodeList;
  * Класс дерева для хранения переменных одного типа.
  * @version 1.0
  */
-public class JVBAsExpr {
+public class JVBAsExpr implements XMLInterface{
     
     /* Поля класса. */
     /** Тип. */
@@ -86,6 +87,7 @@ public class JVBAsExpr {
     public JVBAsExpr (Node node) {
         
         this();
+        
         String buffer;
         NamedNodeMap attributes = node.getAttributes();
         // Считывание типа.
@@ -188,6 +190,11 @@ public class JVBAsExpr {
      */
     public void setType(JVBAsExprType type) {
         this.type = type;
+    }
+
+    @Override
+    public void write(Element parent) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
     
 }

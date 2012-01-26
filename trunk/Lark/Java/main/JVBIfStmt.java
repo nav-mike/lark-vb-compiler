@@ -1,5 +1,6 @@
 package main;
 
+import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -8,7 +9,7 @@ import org.w3c.dom.NodeList;
  * Класс дерева для хранения оператора условного перехода.
  * @version 1.0
  */
-public class JVBIfStmt {
+public class JVBIfStmt implements XMLInterface{
     
     /* Поля класса. */
     /** Тип условного перехода. */
@@ -179,6 +180,11 @@ public class JVBIfStmt {
      */
     public void setNext(JVBStmt m_next) {
         this.m_next = m_next;
+    }
+
+    @Override
+    public void write(Element parent) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
         
 }

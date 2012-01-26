@@ -1,10 +1,12 @@
 package main;
 
+import org.w3c.dom.Element;
+
 /**
  * Связный список элементов Enum.
  * @version 1.0
  */
-public class JVBEnumExprList {
+public class JVBEnumExprList implements XMLInterface{
     
     /* Поля класса. */
     /** Ссылка на первый элемент списка. */
@@ -42,6 +44,11 @@ public class JVBEnumExprList {
      */
     public void setLast(JVBEnumExpr last) {
         this.last = last;
+    }
+
+    @Override
+    public void write(Element parent) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
     
 }

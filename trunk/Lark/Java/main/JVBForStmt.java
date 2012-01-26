@@ -1,5 +1,6 @@
 package main;
 
+import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -8,7 +9,7 @@ import org.w3c.dom.NodeList;
  * Класс, описывающий оператор For.
  * @version 1.0
  */
-public class JVBForStmt {
+public class JVBForStmt implements XMLInterface{
     
     /* Поля класса. */
     /** Тип оператора For. */
@@ -250,6 +251,11 @@ public class JVBForStmt {
             else if ("VB_Expr".equals(nodes.item(i).getNodeName()))
                 newId = new JVBExpr(nodes.item(i));
         }
+    }
+
+    @Override
+    public void write(Element parent) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
     
 }

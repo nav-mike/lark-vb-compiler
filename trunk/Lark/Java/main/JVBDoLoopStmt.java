@@ -1,5 +1,6 @@
 package main;
 
+import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -8,7 +9,7 @@ import org.w3c.dom.NodeList;
  * Класс, описывающий оператор цикла Do...Loop.
  * @version 1.0
  */
-public class JVBDoLoopStmt {
+public class JVBDoLoopStmt implements XMLInterface{
     
     /* Поля класса. */
     /** Тип. */
@@ -150,6 +151,11 @@ public class JVBDoLoopStmt {
             else if ("VB_Expr".equals(nodes.item(i).getNodeName()))
                 expr = new JVBExpr(nodes.item(i));
         }
+    }
+
+    @Override
+    public void write(Element parent) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
     
 }

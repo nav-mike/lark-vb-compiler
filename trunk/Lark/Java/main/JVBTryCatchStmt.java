@@ -1,10 +1,11 @@
 package main;
 
+import org.w3c.dom.Element;
 /**
  * Класс обработки исключения.
  * @version 1.0
  */
-public class JVBTryCatchStmt {
+public class JVBTryCatchStmt implements XMLInterface{
     
     /* Поля класса. */
     /** Отлавливаемый код. */
@@ -78,6 +79,11 @@ public class JVBTryCatchStmt {
      */
     public void setStmtList(JVBStmtList stmtList) {
         this.stmtList = stmtList;
+    }
+
+    @Override
+    public void write(Element parent) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
     
 }

@@ -1,5 +1,6 @@
 package main;
 
+import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -8,7 +9,7 @@ import org.w3c.dom.NodeList;
  * Класс дерева для хранения выражения.
  * @version 1.0
  */
-public class JVBExpr {
+public class JVBExpr implements XMLInterface {
     
     /* Поля класса. */
     /** Тип выражения. */
@@ -125,7 +126,7 @@ public class JVBExpr {
      * Инициализирует null.
      */
     public JVBExpr() {
-        
+               
         m_exprString = null;
         m_idType = null;
         m_intVal = 0;
@@ -150,6 +151,7 @@ public class JVBExpr {
      * @param m_idType Тип идентификатора.
      */
     public JVBExpr(JVBExprType m_type, String m_exprString, int m_intVal, JVBExpr m_leftChld, JVBExpr m_rightChld, JVBExprList m_list, JVBExpr m_next, JVBIdType m_idType) {
+        
         this.m_type = m_type;
         this.m_exprString = m_exprString;
         this.m_intVal = m_intVal;
@@ -169,6 +171,7 @@ public class JVBExpr {
     JVBExpr(Node item) {
 
         this();
+        
         String buffer;
         NamedNodeMap attributes = item.getAttributes();
         // Считывание типа выражения.
@@ -344,6 +347,11 @@ public class JVBExpr {
     public JVBIdType getIdType () {
         
         return m_idType;
+    }
+
+    @Override
+    public void write(Element parent) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
     
 }

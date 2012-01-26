@@ -1,5 +1,6 @@
 package main;
 
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 /**
@@ -7,7 +8,7 @@ import org.w3c.dom.Node;
  * второй части оператора условного перехода.
  * @version 1.0
  */
-public class JVBEndIfStmt {
+public class JVBEndIfStmt implements XMLInterface{
     
     /* Поля класса. */
     /** Тип условного оператора. */
@@ -103,6 +104,11 @@ public class JVBEndIfStmt {
      */
     public void setType(JVBEndIfStmtType type) {
         this.type = type;
+    }
+
+    @Override
+    public void write(Element parent) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
     
 }

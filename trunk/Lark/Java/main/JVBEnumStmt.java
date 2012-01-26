@@ -1,12 +1,13 @@
 package main;
 
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 /**
  * Класс, описывающий перечисление.
  * @version 1.0
  */
-public class JVBEnumStmt {
+public class JVBEnumStmt implements XMLInterface{
     
     /* Поля класса. */
     /** Имя поля. */
@@ -66,6 +67,11 @@ public class JVBEnumStmt {
      */
     public void setNext(JVBStmt next) {
         this.next = next;
+    }
+
+    @Override
+    public void write(Element parent) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
     
 }

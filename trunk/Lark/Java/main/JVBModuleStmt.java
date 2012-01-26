@@ -1,5 +1,6 @@
 package main;
 
+import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -8,7 +9,7 @@ import org.w3c.dom.NodeList;
  * Класс для хранения корня дерева.
  * @version 1.0
  */
-public class JVBModuleStmt {
+public class JVBModuleStmt implements XMLInterface{
     
     /* Поля класса. */
     /** Идентификатор модуля. */
@@ -50,6 +51,7 @@ public class JVBModuleStmt {
     public JVBModuleStmt (Node node) {
         
         this();
+        
         String buffer;
         NamedNodeMap attributes = node.getAttributes();
         // Считывание идентификатора модуля.
@@ -119,5 +121,16 @@ public class JVBModuleStmt {
     public JVBDeclStmtList getDeclStmtList () {
         
         return m_declList;
+    }
+
+    @Override
+    public void write(Element parent) {
+        Element mdlNode = JLark.doc.createElement("VB_Module_stmt");
+        mdlNode.setAttribute("id", getName());
+        
+        this.m_stmtList.write(mdlNode);
+        //this.m_declList.write(mdlNode);
+        
+        JLark.doc.appendChild(mdlNode);
     }
 }

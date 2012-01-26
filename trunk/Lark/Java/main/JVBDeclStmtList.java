@@ -1,5 +1,6 @@
 package main;
 
+import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -8,7 +9,7 @@ import org.w3c.dom.NodeList;
  * Класс, описывающий список глобальных функций и переменных модуля.
  * @version 1.0
  */
-public class JVBDeclStmtList {
+public class JVBDeclStmtList implements XMLInterface {
     
     /* Поля класса. */
     /** Ссылка на первый элемент списка. */
@@ -45,6 +46,7 @@ public class JVBDeclStmtList {
     public JVBDeclStmtList (Node node) {
         
         this();
+        
         String buffer;
         NamedNodeMap attributes = node.getAttributes();
         // Считывание вложенных структур.
@@ -95,5 +97,10 @@ public class JVBDeclStmtList {
     public JVBDeclStmt getLast () {
         
         return m_last;
+    }
+
+    @Override
+    public void write(Element parent) {
+       // throw new UnsupportedOperationException("Not supported yet.");
     }
 } 

@@ -1,5 +1,6 @@
 package main;
 
+import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -8,7 +9,7 @@ import org.w3c.dom.NodeList;
  * Класс описывающий описание функции/процелуры/перечисления.
  * @version 1.0
  */
-public class JVBDeclStmt {
+public class JVBDeclStmt implements XMLInterface{
     
     /* Поля класса. */
     /** Тип операции. */
@@ -152,6 +153,8 @@ public class JVBDeclStmt {
      */
     public JVBDeclStmt() {
         
+        
+        
         m_enumStmt = null;
         m_funcStmt = null;
         m_next = null;
@@ -168,6 +171,9 @@ public class JVBDeclStmt {
      * @param m_next Следующая операция.
      */
     public JVBDeclStmt(JVBStmtType m_type, JVBEnumStmt m_enumStmt, JVBSubStmt m_subStmt, JVBFucnStmt m_funcStmt, JVBDeclStmt m_next) {
+        
+
+        
         this.m_type = m_type;
         this.m_enumStmt = m_enumStmt;
         this.m_subStmt = m_subStmt;
@@ -183,10 +189,11 @@ public class JVBDeclStmt {
     public JVBDeclStmt (Node node) {
         
         this();
+       
         String buffer;
         NamedNodeMap attributes = node.getAttributes();
         // Считывание типа операции.
-        Node attr = attributes.getNamedItem("VB_Stmt_type");
+        Node attr = attributes.getNamedItem("type");
         buffer = attr.getNodeValue();
         m_type = JVBStmtType.valueOf(buffer);
         // Считывание вложенных структур.
@@ -202,6 +209,11 @@ public class JVBDeclStmt {
                 m_enumStmt = new JVBEnumStmt(nodes.item(i));
                 
         }
+    }
+
+    @Override
+    public void write(Element parent) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
             
 }

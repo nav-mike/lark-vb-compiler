@@ -1,5 +1,6 @@
 package main;
 
+import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -8,7 +9,7 @@ import org.w3c.dom.NodeList;
  * Класс, описывающий связный список переменных, объявленных одним типом.
  * @version 1.0
  */
-public class JVBAsExprList {
+public class JVBAsExprList implements XMLInterface {
     
     /* Поля класса. */
     /** Тип. */
@@ -55,6 +56,7 @@ public class JVBAsExprList {
     public JVBAsExprList (Node node) {
         
         this();
+        
         String buffer;
         NamedNodeMap attributes = node.getAttributes();
         // Тип.
@@ -151,6 +153,11 @@ public class JVBAsExprList {
      */
     public void setType(JVBAsExprListType type) {
         this.type = type;
+    }
+
+    @Override
+    public void write(Element parent) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
     
 }

@@ -1,10 +1,12 @@
 package main;
 
+import org.w3c.dom.Element;
+
 /**
  * Список обработчиков иключений.
  * @version 1.0
  */
-public class JVBCatchStmtList {
+public class JVBCatchStmtList implements XMLInterface{
     
     /* Поле класса. */
     /** Ссылка на первый элемент списка. */
@@ -42,6 +44,11 @@ public class JVBCatchStmtList {
      */
     public void setLast(JVBCatchStmt last) {
         this.last = last;
+    }
+
+    @Override
+    public void write(Element parent) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
     
 }
