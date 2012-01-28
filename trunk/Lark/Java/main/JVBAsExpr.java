@@ -194,7 +194,21 @@ public class JVBAsExpr implements XMLInterface{
 
     @Override
     public void write(Element parent) {
+        Element node = JLark.doc.createElement("VB_As_expr");
+
+        node.setAttribute("idType", idType.toString()); 
+        node.setAttribute("type", type.toString());
+
+        if (id != null)
+            id.writeWithName(node, "VB_Expr__id");
         
+        if (expr != null)
+            expr.writeWithName(node, "VB_Expr__expr");
+
+        if (list != null)
+            list.write(node);
+        
+        parent.appendChild(node);       
     }
     
 }

@@ -98,7 +98,12 @@ public class JVBStmtList implements XMLInterface {
     @Override
     public void write(Element parent) {
         
-        Element node = JLark.doc.createElement("VB_Stmt_list");
+        writeWithName(parent, "VB_Stmt_list");
+    }
+    
+    public void writeWithName(Element parent, String name) {
+        
+        Element node = JLark.doc.createElement(name);
                         
         parent.appendChild(node);
         

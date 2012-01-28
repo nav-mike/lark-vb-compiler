@@ -148,9 +148,6 @@ public class JVBStmt implements XMLInterface{
             else if (m_type == JVBStmtType.FOR_E)
                 ((JVBForStmt)m_value).write(node);
 
-            else if (m_type == JVBStmtType.FUNC_D)
-                ((JVBFucnStmt)m_value).write(node);
-
             else if (m_type == JVBStmtType.IF_E)
                 ((JVBIfStmt)m_value).write(node);
 
@@ -162,6 +159,18 @@ public class JVBStmt implements XMLInterface{
 
             else if (m_type == JVBStmtType.WHILE_E)
                 ((JVBWhileStmt)m_value).write(node);
+            
+//            else if (m_type == JVBStmtType.READLN_E)
+//                ((JVBReadlnStmt)m_value).write(node);
+//            
+//            else if (m_type == JVBStmtType.READ_E)
+//                ((JVBReadStmt)m_value).write(node);
+//            
+//            else if (m_type == JVBStmtType.PRINTLN_E)
+//                ((JVBPrintlnStmt)m_value).write(node);
+//            
+//            else if (m_type == JVBStmtType.PRINT_E)
+//                ((JVBPrintStmt)m_value).write(node);
         }
        
     }

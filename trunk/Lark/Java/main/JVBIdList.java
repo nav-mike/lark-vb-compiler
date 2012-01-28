@@ -118,7 +118,18 @@ public class JVBIdList implements XMLInterface{
 
     @Override
     public void write(Element parent) {
-//        throw new UnsupportedOperationException("Not supported yet.");
+        Element node = JLark.doc.createElement("VB_Id_list");
+
+        node.setAttribute("counter", Integer.toString(counter)); 
+
+        if (id != null)
+            id.write(node);
+        
+        if (next != null)
+            next.write(node);
+        
+        parent.appendChild(node);        
+        
     }
     
 }

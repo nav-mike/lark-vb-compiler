@@ -184,7 +184,29 @@ public class JVBIfStmt implements XMLInterface{
 
     @Override
     public void write(Element parent) {
- //       throw new UnsupportedOperationException("Not supported yet.");
+        Element node = JLark.doc.createElement("VB_For_stmt");
+
+        if (m_type == JVBIfStmtType.IF_THEN)
+            node.setAttribute("type", "IF_THEN");
+        else
+            node.setAttribute("type", "IF_THEN_ELSE");
+        
+        if (elseList != null)
+            elseList.writeWithName(node,"VB_Stmt_list__else_list");
+        
+        if (m_endStmt != null)
+            m_endStmt.write(node);
+        
+        if (m_expr != null)
+            m_expr.write(node);
+        
+        if (m_stmtList != null)
+            m_stmtList.writeWithName(node, "VB_Stmt_list__stmt_list");
+
+        
+        
+        
+        parent.appendChild(node);
     }
         
 }

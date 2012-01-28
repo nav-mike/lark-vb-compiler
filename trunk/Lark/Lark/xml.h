@@ -470,6 +470,10 @@ void VBX_add_as_expr_list(xmlNodePtr node,struct VB_As_Expr_list* list){
 	if (list->as_expr != NULL)
 		VBX_add_as_expr(
 			xmlNewTextChild(node,NULL,(const xmlChar *)"VB_As_expr",NULL),list->as_expr);
+
+	if (list->next != NULL)
+		VBX_add_as_expr_list(
+			xmlNewTextChild(node,NULL,(const xmlChar *)"VB_As_Expr_list",NULL),list->next);
 }
 
 void VBX_add_array_expr(xmlNodePtr node,struct VB_Array_expr * expr){

@@ -255,7 +255,22 @@ public class JVBForStmt implements XMLInterface{
 
     @Override
     public void write(Element parent) {
-//        throw new UnsupportedOperationException("Not supported yet.");
+        Element node = JLark.doc.createElement("VB_For_stmt");
+        node.setAttribute("id", id.toString());
+        node.setAttribute("from_val", Integer.toString(fromVal));
+        node.setAttribute("step_val", Integer.toString(stepVal));
+        node.setAttribute("to_val", Integer.toString(toVal));
+        
+        node.setAttribute("type", type.toString());
+        
+        if (newId != null)
+            newId.write(node);
+        
+        if (stmtList != null)
+            stmtList.write(node);
+        
+        
+        parent.appendChild(node);
     }
     
 }
