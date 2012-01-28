@@ -151,7 +151,59 @@ public class JLark {
 
         transformer.transform(source, result);
     }
+    public static String readXMLLine(BufferedReader buf) throws IOException{
+        String result = "";
+        char ch;
+        do{
+            ch = (char)buf.read();
+            
+            if (ch != '\n')
+                result += ch;
+            
+        }while(ch != '>');
+        
+        return result;
+    }
     
+    
+    public static void verifyTree(){
+        try{
+            BufferedReader first = new BufferedReader(new FileReader(new File("tree.xml").getAbsoluteFile()));
+            BufferedReader second = new BufferedReader(new FileReader(new File("JavaTree.xml").getAbsoluteFile()));
+            
+            String firstBuf = "0";
+            String secondBuf = "0";
+            
+            int i = 1;
+            boolean isError = false;
+            
+            while(firstBuf != null && secondBuf != null && isError == false){
+                firstBuf = readXMLLine(first);
+                secondBuf = readXMLLine(second);
+                
+                if (i!=1){
+                    if (firstBuf != null && secondBuf != null && firstBuf.equals(secondBuf) == false){
+                        isError = true;
+
+                        System.out.println("\nError on " + Integer.toString(i) + " string!\n");
+                    }
+                    else
+                        i++;
+                }
+                else
+                    i++;
+            }
+            
+            first.close();
+            second.close();
+            
+            if (isError == false)
+                System.out.println("\nNo errors!\n");
+            
+        } catch (IOException e){
+            throw new RuntimeException(e);
+        }
+    }
     
     /**
      * @param args the command line arguments
@@ -183,6 +235,7 @@ public class JLark {
             Logger.getLogger(JLark.class.getName()).log(Level.SEVERE, null, ex);
         }
         
+        verifyTree();
         
         fillSConstantList();
         addTreeNodeToCTable(m_module);
