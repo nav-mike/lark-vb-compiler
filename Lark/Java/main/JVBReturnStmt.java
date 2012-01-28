@@ -92,6 +92,11 @@ public class JVBReturnStmt implements XMLInterface{
 
     @Override
     public void write(Element parent) {
- //       throw new UnsupportedOperationException("Not supported yet.");
+        Element node = JLark.doc.createElement("VB_Return_stmt");
+                
+        if (m_expr != null)
+            m_expr.write(node);
+        
+        parent.appendChild(node);
     }
 }

@@ -183,7 +183,27 @@ public class JVBArrayExpr implements XMLInterface{
 
     @Override
     public void write(Element parent) {
-//        throw new UnsupportedOperationException("Not supported yet.");
+
+        Element node = JLark.doc.createElement("VB_Array_expr");
+        node.setAttribute("id", id.toString());
+        node.setAttribute("idType", idType.toString()); 
+        
+        if (isInit == true)
+            node.setAttribute("isInit", "1");
+        else
+            node.setAttribute("isInit", "0");
+        
+        node.setAttribute("size", Integer.toString(size)); 
+        
+        JVBExpr item = list.getFirst();
+
+        while (item != null){
+            
+            item.write(node);
+            item = item.getNext();
+        }
+        
+        parent.appendChild(node);
     }
     
 }

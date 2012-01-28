@@ -23,13 +23,13 @@ public enum JVBIdType {
     public String toString() {
         
         if (this == JVBIdType.BOOLEAN_E)
-            return "BOOLEAN";
+            return "BOOLEAN_E";
        else if (this == JVBIdType.CHAR_E)
-           return "CHAR";
+           return "CHAR_E";
        else if (this == JVBIdType.INTEGER_E)
-           return "INTEGER";
+           return "INTEGER_E";
        else if (this == JVBIdType.STRING_E)
-           return "STRING";
+           return "STRING_E";
         
         return "";
     }

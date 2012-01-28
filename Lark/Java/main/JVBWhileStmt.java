@@ -113,7 +113,15 @@ public class JVBWhileStmt implements XMLInterface {
 
     @Override
     public void write(Element parent) {
-//        throw new UnsupportedOperationException("Not supported yet.");
+        Element node = JLark.doc.createElement("VB_While_stmt");
+                
+        if (expr != null)
+            expr.write(node);
+        
+        if (stmtList != null)
+            stmtList.write(node);
+        
+        parent.appendChild(node);
     }
     
 }

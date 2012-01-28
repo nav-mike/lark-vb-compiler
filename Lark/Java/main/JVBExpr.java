@@ -351,7 +351,34 @@ public class JVBExpr implements XMLInterface {
 
     @Override
     public void write(Element parent) {
-//        throw new UnsupportedOperationException("Not supported yet.");
+        writeWithName(parent,"VB_Expr");
+    }
+    
+
+    public void writeWithName(Element parent, String name) {
+        Element node = JLark.doc.createElement(name);
+        node.setAttribute("expr_string", m_exprString.toString());
+        node.setAttribute("id_type", m_idType.toString());
+        node.setAttribute("type", m_type.toString());
+        node.setAttribute("int_val", Integer.toString(m_intVal));
+
+        if (m_leftChld != null)
+            m_leftChld.writeWithName(node,"VB_Expr__left_chld");
+        
+        if (m_rightChld != null)
+            m_rightChld.writeWithName(node,"VB_Expr__right_chld");
+
+        if (m_list != null && m_type == JVBExprType.BRK_EXPR){
+            JVBExpr item = m_list.getFirst();
+            
+            while (item != null){
+            
+                item.write(node);
+                item = item.getNext();
+            }
+        }
+        
+        parent.appendChild(node);
     }
     
 }

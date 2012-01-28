@@ -155,7 +155,17 @@ public class JVBDoLoopStmt implements XMLInterface{
 
     @Override
     public void write(Element parent) {
-   //     throw new UnsupportedOperationException("Not supported yet.");
+        Element node = JLark.doc.createElement("JVBDoLoopStmt");
+        
+        node.setAttribute("type", getType().toString());
+        
+        if (expr!= null)
+            expr.write(node);
+        
+        if (stmtList != null)
+            stmtList.write(node);
+        
+        parent.appendChild(node);
     }
     
 }

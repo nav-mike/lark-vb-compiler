@@ -31,5 +31,13 @@ public enum JVBStmtType {
     /** Операция - выброс исключения. */
     THROW_E,
     /** Операция - возврат из функции. */
-    RETURN_E
+    RETURN_E,
+    
+    READ_E,
+    
+    READLN_E,
+    
+    PRINT_E,
+    
+    PRINTLN_E
 }
