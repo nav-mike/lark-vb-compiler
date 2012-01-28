@@ -91,7 +91,7 @@ public class JVBDimStmt implements XMLInterface {
 
     @Override
     public void write(Element parent) {
-        Element node = JLark.doc.createElement("VB_Dim_list");
+        Element node = JLark.doc.createElement("VB_Dim_stmt");
                         
         parent.appendChild(node);
         

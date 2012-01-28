@@ -128,7 +128,7 @@ void VBX_createXML (struct VB_Module_stmt* module){
 	doc = xmlNewDoc((const xmlChar *)"1.0");	// Создаем документ
 
 	if (module != NULL){
-		mdlNode = xmlNewDocNode(doc,NULL,(const xmlChar *)"VB_Module_stmt",(const xmlChar *)"\n");	// Добавляем узел модуля	
+		mdlNode = xmlNewDocNode(doc,NULL,(const xmlChar *)"VB_Module_stmt",NULL);	// Добавляем узел модуля	
 		
 		xmlDocSetRootElement(doc,mdlNode);															// Задаем корень файлу
 		
