@@ -51,10 +51,10 @@ public class JVBParamList implements XMLInterface{
             stmts[i] = new JVBParamStmt(nodes.item(i));
             
             if (i > 0)
-                stmts[i - 1] = stmts[i];
+                stmts[i - 1].setNext(stmts[i]);
         }
         first = stmts[0];
-        last = stmts[1];
+        last = stmts[stmts.length - 1];
     }
 
     /**
@@ -91,7 +91,15 @@ public class JVBParamList implements XMLInterface{
 
     @Override
     public void write(Element parent) {
-//       throw new UnsupportedOperationException("Not supported yet.");
+        
+        JVBParamStmt item = first;
+
+        while (item != null){
+
+            item.write(parent);
+            item = item.getNext();
+        }
+
     }
     
 }

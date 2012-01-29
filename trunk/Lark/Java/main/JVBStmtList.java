@@ -113,6 +113,6 @@ public class JVBStmtList implements XMLInterface {
             
             item.write(node);
             item = item.getNext();
-        }
+        }       
     }
 }

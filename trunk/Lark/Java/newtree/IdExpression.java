@@ -20,7 +20,7 @@ public class IdExpression extends Expression {
     public IdExpression() {
         
         super(ID);
-        body = new ArrayList<>();
+       body = new ArrayList();
     }
 
     /**
@@ -43,7 +43,7 @@ public class IdExpression extends Expression {
     public IdExpression(Expression item) {
         
         super(ID);
-        this.body = new ArrayList<>();
+        this.body = new ArrayList();
         
         this.body.add(item);
     }
@@ -56,7 +56,7 @@ public class IdExpression extends Expression {
     public IdExpression(Expression[] list) {
         
         super(ID);
-        body = new ArrayList<>(Arrays.asList(list));
+        body = new ArrayList(Arrays.asList(list));
     }
 
     /**

@@ -66,7 +66,7 @@ public class JVBSubStmt implements XMLInterface {
         NodeList nodes = item.getChildNodes();
         for (int i = 0; i < nodes.getLength(); i++) {
             
-            if ("VB_Param_list".equals(nodes.item(i).getNodeName()))
+            if ("VB_Param_stmt_list".equals(nodes.item(i).getNodeName()))
                 paramList =  new JVBParamList(nodes.item(i));
             else if ("VB_Stmt_list".equals(nodes.item(i).getNodeName()))
                 stmtList = new JVBStmtList(nodes.item(i));
@@ -139,7 +139,21 @@ public class JVBSubStmt implements XMLInterface {
 
     @Override
     public void write(Element parent) {
-//       throw new UnsupportedOperationException("Not supported yet.");
+        Element node = JLark.doc.createElement("VB_Sub_stmt");
+
+        node.setAttribute("id", id);
+
+        Element nodeParam = JLark.doc.createElement("VB_Param_stmt_list");
+
+        node.appendChild(nodeParam); 
+         
+        if (paramList != null)
+            paramList.write(nodeParam);
+
+        if (stmtList != null)
+            stmtList.write(node);
+
+        parent.appendChild(node); 
     }
     
 }
