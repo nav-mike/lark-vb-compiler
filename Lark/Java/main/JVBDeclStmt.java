@@ -213,7 +213,21 @@ public class JVBDeclStmt implements XMLInterface{
 
     @Override
     public void write(Element parent) {
-  //      throw new UnsupportedOperationException("Not supported yet.");
+        
+        Element node = JLark.doc.createElement("VB_Decl_stmt");
+
+        if (m_funcStmt != null){
+            node.setAttribute("type", "FUNC_D");
+            
+            m_funcStmt.write(node);
+        }
+        
+        if (m_subStmt != null){
+            node.setAttribute("type", "SUB_D");
+            m_subStmt.write(node);
+        }
+        
+        parent.appendChild(node);  
     }
             
 }

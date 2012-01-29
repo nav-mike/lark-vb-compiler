@@ -196,7 +196,7 @@ public class JVBAsExpr implements XMLInterface{
     public void write(Element parent) {
         Element node = JLark.doc.createElement("VB_As_expr");
 
-        node.setAttribute("idType", idType.toString()); 
+        node.setAttribute("id_type", idType.toString()); 
         node.setAttribute("type", type.toString());
 
         if (id != null)

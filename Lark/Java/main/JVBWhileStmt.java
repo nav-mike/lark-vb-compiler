@@ -56,9 +56,9 @@ public class JVBWhileStmt implements XMLInterface {
         NodeList nodes = node.getChildNodes();
         for (int i = 0; i < nodes.getLength(); i++) {
             
-            if ("JVBStmtList".equals(nodes.item(i).getNodeName()))
+            if ("VB_Stmt_list".equals(nodes.item(i).getNodeName()))
                 stmtList = new JVBStmtList(nodes.item(i));
-            else if ("JVBExpr".equals(nodes.item(i).getNodeName()))
+            else if ("VB_Expr".equals(nodes.item(i).getNodeName()))
                 expr = new JVBExpr(nodes.item(i));
         }
     }

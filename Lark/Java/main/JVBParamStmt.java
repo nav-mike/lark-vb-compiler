@@ -136,7 +136,17 @@ public class JVBParamStmt implements XMLInterface{
 
     @Override
     public void write(Element parent) {
-//        throw new UnsupportedOperationException("Not supported yet.");
+        Element node = JLark.doc.createElement("VB_Param_stmt");
+
+        node.setAttribute("id", id);
+        node.setAttribute("id_type", idType.toString());
+
+        if (isByRef == 0)
+            node.setAttribute("is_by_ref", "0");
+        else
+            node.setAttribute("is_by_ref", "1");
+            
+        parent.appendChild(node); 
     }
     
 }

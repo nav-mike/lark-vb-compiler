@@ -361,6 +361,8 @@ public class JVBExpr implements XMLInterface {
         node.setAttribute("id_type", m_idType.toString());
         node.setAttribute("type", m_type.toString());
         node.setAttribute("int_val", Integer.toString(m_intVal));
+        
+        
 
         if (m_leftChld != null)
             m_leftChld.writeWithName(node,"VB_Expr__left_chld");
@@ -369,13 +371,18 @@ public class JVBExpr implements XMLInterface {
             m_rightChld.writeWithName(node,"VB_Expr__right_chld");
 
         if (m_list != null && m_type == JVBExprType.BRK_EXPR){
+            
+            Element listNode = JLark.doc.createElement("VB_Expr_list");
+            
             JVBExpr item = m_list.getFirst();
             
             while (item != null){
             
-                item.write(node);
+                item.write(listNode);
                 item = item.getNext();
             }
+            
+            node.appendChild(listNode);
         }
         
         parent.appendChild(node);

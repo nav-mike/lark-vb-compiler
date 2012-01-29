@@ -203,7 +203,25 @@ public class JVBFucnStmt implements XMLInterface{
 
     @Override
     public void write(Element parent) {
- //       throw new UnsupportedOperationException("Not supported yet.");
+        Element node = JLark.doc.createElement("VB_Func_stmt");
+
+        node.setAttribute("id", id);
+        node.setAttribute("id_type", idType.toString());
+
+        Element nodeParam = JLark.doc.createElement("VB_Param_stmt_list");
+
+        node.appendChild(nodeParam); 
+        
+        if (paramList != null)
+            paramList.write(nodeParam);
+
+        if (stmtList != null)
+            stmtList.write(node);
+
+        if (expr != null)
+            expr.write(node);
+
+        parent.appendChild(node); 
     }
     
 }

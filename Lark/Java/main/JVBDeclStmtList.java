@@ -101,6 +101,16 @@ public class JVBDeclStmtList implements XMLInterface {
 
     @Override
     public void write(Element parent) {
-       // throw new UnsupportedOperationException("Not supported yet.");
+        Element node = JLark.doc.createElement("VB_Decl_stmt_list");
+
+        JVBDeclStmt item = this.m_first;
+
+        while (item != null){
+
+            item.write(node);
+            item = item.getNext();
+        }
+
+        parent.appendChild(node);  
     }
 } 

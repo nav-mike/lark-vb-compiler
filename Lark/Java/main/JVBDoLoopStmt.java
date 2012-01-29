@@ -146,7 +146,7 @@ public class JVBDoLoopStmt implements XMLInterface{
         NodeList nodes = node.getChildNodes();
         for (int i = 0; i < nodes.getLength(); i++) {
             
-            if ("VB_Do_loop_type".equals(nodes.item(i).getNodeName()))
+            if ("VB_Stmt_list".equals(nodes.item(i).getNodeName()))
                 stmtList = new JVBStmtList(nodes.item(i));
             else if ("VB_Expr".equals(nodes.item(i).getNodeName()))
                 expr = new JVBExpr(nodes.item(i));
@@ -155,7 +155,7 @@ public class JVBDoLoopStmt implements XMLInterface{
 
     @Override
     public void write(Element parent) {
-        Element node = JLark.doc.createElement("JVBDoLoopStmt");
+        Element node = JLark.doc.createElement("VB_Do_loop_stmt");
         
         node.setAttribute("type", getType().toString());
         

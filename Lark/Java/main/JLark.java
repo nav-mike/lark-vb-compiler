@@ -168,24 +168,36 @@ public class JLark {
     
     public static void verifyTree(){
         try{
-            BufferedReader first = new BufferedReader(new FileReader(new File("tree.xml").getAbsoluteFile()));
-            BufferedReader second = new BufferedReader(new FileReader(new File("JavaTree.xml").getAbsoluteFile()));
+            File qwe = new File("JavaTree.xml");
+            File asd = new File("tree.xml");
+            
+           
+            BufferedReader first = new BufferedReader(new FileReader(qwe.getAbsoluteFile()));
+            BufferedReader second = new BufferedReader(new FileReader(asd.getAbsoluteFile()));
             
             String firstBuf = "0";
             String secondBuf = "0";
-            
-            int i = 1;
+           
+           
+                       int i = 1;
             boolean isError = false;
             
-            while(firstBuf != null && secondBuf != null && isError == false){
+            while((firstBuf != null || secondBuf != null) && isError == false && firstBuf.equals("</VB_Module_stmt>") == true){
                 firstBuf = readXMLLine(first);
                 secondBuf = readXMLLine(second);
+                
+                if (i == 267)
+                    i=i;
                 
                 if (i!=1){
                     if (firstBuf != null && secondBuf != null && firstBuf.equals(secondBuf) == false){
                         isError = true;
 
-                        System.out.println("\nError on " + Integer.toString(i) + " string!\n");
+                        System.out.println("\nError on " + Integer.toString(i) + " string!");
+                        System.out.println("Strings:");
+                        System.out.println(firstBuf);
+                        System.out.println(secondBuf);
+                        System.out.println("\n");
                     }
                     else
                         i++;

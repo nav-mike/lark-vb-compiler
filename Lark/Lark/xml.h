@@ -285,9 +285,9 @@ void VBX_add_expr(xmlNodePtr node, struct VB_Expr* expr) {
 
 	xmlNewProp(node,(const xmlChar *)"id_type",(const xmlChar *)VBX_id_type_to_string(expr->id_type));
 
-	xmlNewProp(node,(const xmlChar *)"type",(const xmlChar *)VBX_expression_type_to_string(expr->type));
-
 	xmlNewProp(node,(const xmlChar *)"int_val",(const xmlChar *)buf);
+
+	xmlNewProp(node,(const xmlChar *)"type",(const xmlChar *)VBX_expression_type_to_string(expr->type));
 	
 	if (expr->left_chld != NULL){
 		VBX_add_expr(
@@ -305,9 +305,11 @@ void VBX_add_expr(xmlNodePtr node, struct VB_Expr* expr) {
 
 		struct VB_Expr * item = expr->list->first;
 
+		xmlNodePtr list_node = xmlNewTextChild(node,NULL,(const xmlChar *)"VB_Expr_list",NULL);
+
 		while (item != NULL){
 			VBX_add_expr(
-				xmlNewTextChild(node,NULL,(const xmlChar *)"VB_Expr",NULL),item);
+				xmlNewTextChild(list_node,NULL,(const xmlChar *)"VB_Expr",NULL),item);
 			item = item->next;
 		}
 
@@ -564,11 +566,11 @@ void VBX_add_for(xmlNodePtr node, struct VB_For_stmt* stmt){
 	
 	char buf[10];
 
-	xmlNewProp(node,(const xmlChar *)"id",(const xmlChar *)stmt->id);
-
 	itoa(stmt->from_val,buf,10);
 
 	xmlNewProp(node,(const xmlChar *)"from_val",(const xmlChar *)buf);
+
+	xmlNewProp(node,(const xmlChar *)"id",(const xmlChar *)stmt->id);
 	
 	itoa(stmt->step_val,buf,10);
 

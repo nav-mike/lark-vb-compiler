@@ -186,12 +186,12 @@ public class JVBArrayExpr implements XMLInterface{
 
         Element node = JLark.doc.createElement("VB_Array_expr");
         node.setAttribute("id", id.toString());
-        node.setAttribute("idType", idType.toString()); 
+        node.setAttribute("id_type", idType.toString()); 
         
         if (isInit == true)
-            node.setAttribute("isInit", "1");
+            node.setAttribute("is_init", "1");
         else
-            node.setAttribute("isInit", "0");
+            node.setAttribute("is_init", "0");
         
         node.setAttribute("size", Integer.toString(size)); 
         
