@@ -32,5 +32,30 @@ public class AbstractStatement {
     public static final int PRINT      = 10;
     /** Оператор - запись в стандартный поток вывода с переводом строки. */
     public static final int PRINTLINE  = 20;
+
+    /**
+     * Конструктор с параметром.
+     * Создает оператор заданного типа.
+     * @param stmtType Тип оператора.
+     */
+    protected AbstractStatement(int stmtType) {
+        this.stmtType = stmtType;
+    }
+
+    /**
+     * Метод получения типа оператора.
+     * @return Тип оператора.
+     */
+    public int getStmtType() {
+        return stmtType;
+    }
+
+    /**
+     * Метод задания типа оператора.
+     * @param stmtType Тип оператора.
+     */
+    public void setStmtType(int stmtType) {
+        this.stmtType = stmtType;
+    }
     
 }
