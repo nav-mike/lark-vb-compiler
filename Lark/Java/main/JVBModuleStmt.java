@@ -18,6 +18,11 @@ public class JVBModuleStmt implements XMLInterface{
     private JVBStmtList m_stmtList;
     /** Список глобальных функций и переменных модуля. */
     private JVBDeclStmtList m_declList;
+    
+    
+    // поля для семантики
+    /** Ссылка на поле константы класса */
+    public SConstant classConst;
 
     /**
      * Конструктор с по умолчанию.

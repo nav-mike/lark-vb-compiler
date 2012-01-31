@@ -42,6 +42,12 @@ public class JLark {
     
     /** Таблицы констант и всего прочего */
     public static SClass m_class;
+    
+    /** Таблицы в окне */
+    public static ArrayList<JTable> tables;
+    
+    /** Наименования таблиц */
+    public static ArrayList<String> titles;
         
     /**
      * Функция считывания XML файла.
@@ -164,15 +170,15 @@ public class JLark {
     
     public static void showTables(){
         TableConstant tc = new TableConstant();
-        JTable[] tables = new JTable[1];
-        String[] titles = new String[1];
+        tables = new ArrayList<JTable>();
+        titles = new ArrayList<String>();
         for (int i = 1; i < m_class.constIndex; i++) {
             tc.addRow(m_class.m_constantsTable.get(Integer.valueOf(i)).getType().toString(),
                     m_class.m_constantsTable.get(Integer.valueOf(i)).getUtfConst());
         }
-        tables[0] = tc.getTable();
+        tables.add(tc.getTable());
 
-        titles[0] = "Таблица констант";
+        titles.add("Таблица констант");
    
         IntFrame intFrame = new IntFrame(tables, titles);
     }
@@ -209,7 +215,7 @@ public class JLark {
         else if (type == JVBIdType.INTEGER_E)
             return "I";
 
-        return "C";
+        return "Ljava/lang/String;";
     }
     
     /**
@@ -229,6 +235,8 @@ public class JLark {
         SConstant classConst = m_class.addNewConstant(ConstantType.CONSTANT_Class,
                 createNumberEnumeration(moduleConst,null), -1, moduleConst, null);
         
+        m_module.classConst = classConst;
+        
         // Создаем конструктор по умолчанию
         SConstant constr = m_class.addNewConstant(ConstantType.CONSTANT_Utf8, "<init>", -1, null, null);
         
@@ -240,13 +248,13 @@ public class JLark {
         m_class.addNewConstant(ConstantType.CONSTANT_Methodref,
                 createNumberEnumeration(classConst,NATConst), -1, classConst, NATConst);
         
-       fillTable(classConst);    // Заполнить таблицу
+       fillTable();    // Заполнить таблицу
     }
     
     /**
      * Заполнить таблицу
      */
-    public static void fillTable(SConstant classConst){
+    public static void fillTable(){
         SConstant main = m_class.addNewConstant(ConstantType.CONSTANT_Utf8, "Main", -1, null, null);
         
         SConstant mainType = m_class.addNewConstant(ConstantType.CONSTANT_Utf8, "()V", -1, null, null);
@@ -255,7 +263,7 @@ public class JLark {
                 createNumberEnumeration(main,mainType), -1, main, mainType);
                 
         m_class.addNewConstant(ConstantType.CONSTANT_Methodref,
-                createNumberEnumeration(classConst,NATConst), -1, classConst, NATConst);
+                createNumberEnumeration(m_module.classConst,NATConst), -1, m_module.classConst, NATConst);
         
         JVBDeclStmtList list = m_module.getDeclStmtList();
         
@@ -266,9 +274,9 @@ public class JLark {
             while (d != null){
                 
                 if (d.getType() == JVBStmtType.FUNC_D)
-                    createFuncRefs(classConst,d.getFuncStmt());
+                    createFuncRefs(d.getFuncStmt());
                 else
-                    createSubRefs(classConst, d.getSubStmt());
+                    createSubRefs(d.getSubStmt());
                 
                 d = d.getNext();
             }
@@ -276,23 +284,53 @@ public class JLark {
     }
 
     /**
+     * Получить коды типов списка параметров
+     * @param params Список параметров
+     * @return Текст колов списка параметров
+     */
+    public static String getParamCodes(JVBParamList params){
+        
+        String result = "";
+        JVBParamStmt buf;
+        
+        if (params != null){
+            buf = params.getFirst();
+            
+            while (buf != null){
+            
+                if (buf.getIsByRef() != 0)
+                    result += "[";
+                
+                result += getTypeCode(buf.getIdType());
+                buf = buf.getNext();
+            }
+        }
+        
+        
+        return result;
+    }
+    
+    /**
      * Добавить методы в таблицу констант
      * @param classConst Ссылка на класс
      * @param decl Определение функции или процедуры
      */
-    public static void createFuncRefs(SConstant classConst, JVBFucnStmt func){
+    public static void createFuncRefs(JVBFucnStmt func){
         
-        String buf = getTypeCode(func.getIdType());
+        String buf1,buf2;
+                
+        buf1 = getTypeCode(func.getIdType());
+        buf2 = getParamCodes(func.getParamList());
         
         SConstant main = m_class.addNewConstant(ConstantType.CONSTANT_Utf8, func.getId(), -1, null, null);
         
-        SConstant mainType = m_class.addNewConstant(ConstantType.CONSTANT_Utf8, "()" + buf, -1, null, null);
+        SConstant mainType = m_class.addNewConstant(ConstantType.CONSTANT_Utf8, "(" + buf2 + ")" + buf1, -1, null, null);
                 
         SConstant NATConst = m_class.addNewConstant(ConstantType.CONSTANT_NameAndType,
                 createNumberEnumeration(main,mainType), -1, main, mainType);
                 
-        m_class.addNewConstant(ConstantType.CONSTANT_Methodref,
-                createNumberEnumeration(classConst,NATConst), -1, classConst, NATConst);
+        func.methRefConst = m_class.addNewConstant(ConstantType.CONSTANT_Methodref,
+                createNumberEnumeration(m_module.classConst,NATConst), -1, m_module.classConst, NATConst);
 
     }
     
@@ -301,19 +339,31 @@ public class JLark {
      * @param classConst Ссылка на класс
      * @param decl Определение функции или процедуры
      */
-    public static void createSubRefs(SConstant classConst, JVBSubStmt sub){
+    public static void createSubRefs(JVBSubStmt sub){
+        
+        String buf = getParamCodes(sub.getParamList());
         
         SConstant main = m_class.addNewConstant(ConstantType.CONSTANT_Utf8, sub.getId(), -1, null, null);
         
-        SConstant mainType = m_class.addNewConstant(ConstantType.CONSTANT_Utf8, "()V", -1, null, null);
+        SConstant mainType = m_class.addNewConstant(ConstantType.CONSTANT_Utf8, "(" + buf + ")V", -1, null, null);
                 
         SConstant NATConst = m_class.addNewConstant(ConstantType.CONSTANT_NameAndType,
                 createNumberEnumeration(main,mainType), -1, main, mainType);
                 
-        m_class.addNewConstant(ConstantType.CONSTANT_Methodref,
-                createNumberEnumeration(classConst,NATConst), -1, classConst, NATConst);
+        sub.methRefConst = m_class.addNewConstant(ConstantType.CONSTANT_Methodref,
+                createNumberEnumeration(m_module.classConst,NATConst), -1, m_module.classConst, NATConst);
 
     }
+    
+    
+    /**
+     * Создать таблицу локальных переменных
+     */
+    public static void createLocalTables(){
+        
+        
+    }
+    
     
     
     /**

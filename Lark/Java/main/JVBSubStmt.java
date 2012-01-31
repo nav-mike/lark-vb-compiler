@@ -21,6 +21,12 @@ public class JVBSubStmt implements XMLInterface {
     /** Следующий оператор. */
     private JVBStmt next;
 
+    
+    // ПОЛЯ ДЛЯ СЕМАНТИКИ
+    /** Ссылка на MethodRef */
+    public SConstant methRefConst;
+    
+    
     /**
      * Конструктор по умолчанию.
      * Инициализирует все null.

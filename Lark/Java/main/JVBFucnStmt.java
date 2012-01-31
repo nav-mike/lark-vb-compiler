@@ -24,6 +24,12 @@ public class JVBFucnStmt implements XMLInterface{
     private JVBParamList paramList;
     /** Следующий оператор. */
     private JVBStmt next;
+   
+    
+    // ПОЛЯ ДЛЯ СЕМАНТИКИ
+    /** Ссылка на MethodRef */
+    public SConstant methRefConst;
+    
     
     /**
      * Метод преобразования строки в тип возрващаемого значения.
