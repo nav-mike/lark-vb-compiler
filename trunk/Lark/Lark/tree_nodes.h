@@ -1417,13 +1417,19 @@ struct VB_As_Expr_list* add_to_as_expr_list(struct VB_As_Expr_list* list, struct
 											struct VB_Array_expr* arr)
 {
 	struct VB_As_Expr_list* new_item = (struct VB_As_Expr_list*)malloc(sizeof(struct VB_As_Expr_list));
-	
+	struct VB_Id_list* lastList = list;
+
 	new_item->as_expr = expr;
 	new_item->arr = arr;
 	new_item->next = NULL;
 	new_item->type = EXPR;
 
-	list->next = new_item;
+	while (lastList->next != NULL){
+		lastList = lastList->next;
+	}
+
+	lastList->next = new_item;
+
 
 	return list;
 }
@@ -1431,6 +1437,7 @@ struct VB_As_Expr_list* add_to_as_expr_list(struct VB_As_Expr_list* list, struct
 struct VB_As_expr* create_as_expr(enum VB_As_expr_type type, struct VB_Id_list* list, char* id, enum VB_Id_type id_type, struct VB_Expr* expr)
 {
 	struct VB_As_expr* as_expr = (struct VB_As_expr*)malloc(sizeof(struct VB_As_expr));
+	
 	list->counter = 1;
 	as_expr->type = type;
 	as_expr->id_type = id_type;
