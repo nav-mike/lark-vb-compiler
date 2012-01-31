@@ -108,7 +108,8 @@
 /* %type <console_read>	console_read_stmt		*/
 /* %type <console_readln>	console_readln_stmt	*/
 
-%token <b_const> BOOLEAN_CONST
+%token <b_const> TRUE
+%token <b_const> FALSE
 %token <i_const> INT_CONST
 %token <s_const> STRING_CONST
 %token <c_const> CHAR_CONST
@@ -167,8 +168,6 @@
 %token READLINE
 %token SYSTEM
 %token FINALLY
-%token TRUE
-%token FALSE
 %token SUB_MAIN
 
 %right '='
@@ -228,7 +227,8 @@
 		| INT_CONST									{$$ = create_int_boolean_char_const_expr(3,$1);}
 		| CHAR_CONST								{$$ = create_int_boolean_char_const_expr(2,$1);}
 		| STRING_CONST								{$$ = create_string_const_expr($1);}
-		| BOOLEAN_CONST								{$$ = create_int_boolean_char_const_expr(5,$1);}
+		| TRUE										{$$ = create_int_boolean_char_const_expr(5,1);}
+		| FALSE										{$$ = create_int_boolean_char_const_expr(5,0);}
         | expr '=' expr								{$$ = create_operator_expr(6,$1,$3);}
 		| expr '+' expr								{$$ = create_operator_expr(7,$1,$3);}
 		| expr '-' expr								{$$ = create_operator_expr(8,$1,$3);}
@@ -366,7 +366,7 @@ int main (int argc, char* argv[])
 	print_tree();		// Вывод дерева
 
 	fclose(file);
-	getchar();
+	getch();
 	return 0;
 }
 

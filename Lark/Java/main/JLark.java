@@ -331,6 +331,8 @@ public class JLark {
                 
         func.methRefConst = m_class.addNewConstant(ConstantType.CONSTANT_Methodref,
                 createNumberEnumeration(m_module.classConst,NATConst), -1, m_module.classConst, NATConst);
+        
+        fillLocalTables(func.getStmtList());
 
     }
     
@@ -353,8 +355,30 @@ public class JLark {
         sub.methRefConst = m_class.addNewConstant(ConstantType.CONSTANT_Methodref,
                 createNumberEnumeration(m_module.classConst,NATConst), -1, m_module.classConst, NATConst);
 
+        fillLocalTables(sub.getStmtList());
     }
     
+    /**
+     * Заполнить таблицы локальных переменных
+     * @param body Тело функции 
+     */
+    public static void fillLocalTables(JVBStmtList body){
+        
+        JVBStmt stmt;
+        
+        if (body != null){
+            
+            stmt = body.getFirst();
+            
+//            while (stmt != null){
+//                
+//                if (stmt.getType() == JVBExprType.INT_CONST_E)
+//                    m_class.addNewConstant(ConstantType.CONSTANT_Integer,  null, null)
+//                stmt = stmt.getNext();
+//            }
+            
+        }
+    }
     
     /**
      * Создать таблицу локальных переменных
