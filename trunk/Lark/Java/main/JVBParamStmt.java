@@ -136,7 +136,7 @@ public class JVBParamStmt implements XMLInterface{
 
     @Override
     public void write(Element parent) {
-        Element node = JLark.doc.createElement("VB_Param_stmt");
+        Element node = JLark.m_doc.createElement("VB_Param_stmt");
 
         node.setAttribute("id", id);
         node.setAttribute("id_type", idType.toString());

@@ -11,11 +11,37 @@ public class SFunction {
     /* Поля класса. */
     /** Ссылка на таблицу констант. */
     private SConstant methodRef;
+    
     /** Локальные переменные. */
     private HashMap<String, SLocalVariable> locals;
+    
     /** Ссылка на функцию (Процедуру). */
     private Object func;
     
+    /** Аргументы функции */
+    private JVBParamList args;
+    
+    /** Тип возвращаемого значения. */
+    private JVBExprType retType;
+    
+    private int localsIndex = 0;
+
+    /** 
+     * Получить тип возвращаемого значения
+     * @return Тип
+     */
+    public JVBExprType getRetType() {
+        return retType;
+    }
+
+    /**
+     * Задать тип возвращаемого значения
+     * @param retType Тип
+     */
+    public void setRetType(JVBExprType retType) {
+        this.retType = retType;
+    }
+     
     /**
      * Метод добавления локальной переменной в функцию.
      * @param name Имя переменной.

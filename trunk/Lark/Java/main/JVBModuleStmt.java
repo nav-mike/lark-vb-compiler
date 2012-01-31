@@ -125,7 +125,7 @@ public class JVBModuleStmt implements XMLInterface{
 
     @Override
     public void write(Element parent) {
-        Element mdlNode = JLark.doc.createElement("VB_Module_stmt");
+        Element mdlNode = JLark.m_doc.createElement("VB_Module_stmt");
         mdlNode.setAttribute("id", getName());
         
         if (m_stmtList!=null)
@@ -134,6 +134,6 @@ public class JVBModuleStmt implements XMLInterface{
         if (m_declList!=null)
             this.m_declList.write(mdlNode);
         
-        JLark.doc.appendChild(mdlNode);
+        JLark.m_doc.appendChild(mdlNode);
     }
 }

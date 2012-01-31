@@ -59,5 +59,7 @@ public enum JVBExprType {
     /** Запись в консоль. */
     PRINT_E,
     /** Запись в консоль с переносом строки. */
-    PRINTLN_E
+    PRINTLN_E,
+    
+    NONE
 }

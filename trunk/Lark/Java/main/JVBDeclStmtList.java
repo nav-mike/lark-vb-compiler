@@ -101,7 +101,7 @@ public class JVBDeclStmtList implements XMLInterface {
 
     @Override
     public void write(Element parent) {
-        Element node = JLark.doc.createElement("VB_Decl_stmt_list");
+        Element node = JLark.m_doc.createElement("VB_Decl_stmt_list");
 
         JVBDeclStmt item = this.m_first;
 

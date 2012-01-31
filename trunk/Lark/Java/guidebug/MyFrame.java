@@ -32,12 +32,13 @@ public class MyFrame {
      * @param title Заголовок.
      */
     public MyFrame(JTable table, String title) {
-        
+       
         this.table = table;
+        
         frame = new JInternalFrame(title, true);
         frame.add(table);
         frame.setResizable(true);
-        frame.setPreferredSize(new Dimension(400, 400));
+        frame.setPreferredSize(new Dimension(500, 400));
         frame.setVisible(true);
     }
     

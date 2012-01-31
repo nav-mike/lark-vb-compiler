@@ -113,7 +113,7 @@ public class JVBWhileStmt implements XMLInterface {
 
     @Override
     public void write(Element parent) {
-        Element node = JLark.doc.createElement("VB_While_stmt");
+        Element node = JLark.m_doc.createElement("VB_While_stmt");
                 
         if (expr != null)
             expr.write(node);

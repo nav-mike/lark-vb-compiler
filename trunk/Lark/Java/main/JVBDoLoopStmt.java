@@ -155,7 +155,7 @@ public class JVBDoLoopStmt implements XMLInterface{
 
     @Override
     public void write(Element parent) {
-        Element node = JLark.doc.createElement("VB_Do_loop_stmt");
+        Element node = JLark.m_doc.createElement("VB_Do_loop_stmt");
         
         node.setAttribute("type", getType().toString());
         

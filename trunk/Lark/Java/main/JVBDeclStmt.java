@@ -214,7 +214,7 @@ public class JVBDeclStmt implements XMLInterface{
     @Override
     public void write(Element parent) {
         
-        Element node = JLark.doc.createElement("VB_Decl_stmt");
+        Element node = JLark.m_doc.createElement("VB_Decl_stmt");
 
         if (m_funcStmt != null){
             node.setAttribute("type", "FUNC_D");

@@ -103,7 +103,7 @@ public class JVBStmtList implements XMLInterface {
     
     public void writeWithName(Element parent, String name) {
         
-        Element node = JLark.doc.createElement(name);
+        Element node = JLark.m_doc.createElement(name);
                         
         parent.appendChild(node);
         

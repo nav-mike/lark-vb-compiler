@@ -134,7 +134,7 @@ public class JVBStmt implements XMLInterface{
     @Override
     public void write(Element parent) {
         
-        Element node = JLark.doc.createElement("VB_Stmt");
+        Element node = JLark.m_doc.createElement("VB_Stmt");
         node.setAttribute("type", getType().toString());
         parent.appendChild(node);
         

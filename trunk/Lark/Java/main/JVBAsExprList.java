@@ -158,7 +158,7 @@ public class JVBAsExprList implements XMLInterface {
     @Override
     public void write(Element parent) {
         
-        Element node = JLark.doc.createElement("VB_As_Expr_list");
+        Element node = JLark.m_doc.createElement("VB_As_Expr_list");
         node.setAttribute("type", type.toString());          
         
         parent.appendChild(node);
