@@ -1,6 +1,7 @@
 package guidebug;
 
 import java.awt.FlowLayout;
+import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JTable;
 
@@ -16,16 +17,16 @@ public class IntFrame extends JFrame {
      * @param tables Массив требуемых таблиц.
      * @param titles Масси заголовков окон.
      */
-    public IntFrame (JTable[] tables, String[] titles){
+    public IntFrame (ArrayList<JTable> tables, ArrayList<String> titles){
         
         
         super("Лабораторная работа №4");
         
         setLayout(new FlowLayout());
         
-        for (int i = 0; i < tables.length; i++) {
+        for (int i = 0; i < tables.size(); i++) {
             
-            MyFrame fr = new MyFrame(tables[i], titles[i]);
+            MyFrame fr = new MyFrame(tables.get(i), titles.get(i));
             
             add(fr.getFrame());
         }
