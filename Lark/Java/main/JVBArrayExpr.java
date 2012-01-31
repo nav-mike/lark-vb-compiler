@@ -184,7 +184,7 @@ public class JVBArrayExpr implements XMLInterface{
     @Override
     public void write(Element parent) {
 
-        Element node = JLark.doc.createElement("VB_Array_expr");
+        Element node = JLark.m_doc.createElement("VB_Array_expr");
         node.setAttribute("id", id.toString());
         node.setAttribute("id_type", idType.toString()); 
         

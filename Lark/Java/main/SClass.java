@@ -9,84 +9,42 @@ import java.util.HashMap;
  */
 public class SClass {
     
-    /* Поля класса. */
-    /** Ссылка на таблицу констант. */
-    private SConstant constClass;
-    /** Таблица констант. */
-    private ArrayList<SConstant> ctable;
-    /** Таблица методов. */
-    HashMap<String, SFunction> mtable;
-
-    /**
-     * Метод задания таблицы методов.
-     * @param mtable Таблица методов.
-     */
-    public void setMtable(HashMap<String, SFunction> mtable) {
-        this.mtable = mtable;
-    }
-
-    /**
-     * Метод задания таблицы констант.
-     * @param ctable Таблица констант.
-     */
-    public void setCtable(ArrayList<SConstant> ctable) {
-        this.ctable = ctable;
-    }
-
-    /**
-     * Метод задания ссылки на таблицу констант.
-     * @param constClass Ссылка на таблицу констант.
-     */
-    public void setConstClass(SConstant constClass) {
-        this.constClass = constClass;
-    }
-
-    /**
-     * Метод получения таблицы методов.
-     * @return Таблица методов.
-     */
-    public HashMap<String, SFunction> getMtable() {
-        return mtable;
-    }
-
-    /**
-     * Метод получения таблицы констант.
-     * @return Таблица констант.
-     */
-    public ArrayList<SConstant> getCtable() {
-        return ctable;
-    }
-
-    /**
-     * Метод получения ссылки на таблицу констант.
-     * @return Ссылка на таблицу констант.
-     */
-    public SConstant getConstClass() {
-        return constClass;
-    }
+    public SConstant constClass; 
+            
+    /** Список элементов таблицы констант. */
+    public HashMap<Integer, SConstant> m_constantsTable;
     
-    /**
-     * Конструктор с параметрами.
-     * Инициализирует объект входными параметрами.
-     * @param constClass Ссылка на таблицу констант.
-     * @param ctable Таблица констант.
-     * @param mtable Таблица методов.
-     */
-    public SClass(SConstant constClass, ArrayList<SConstant> ctable, HashMap<String, SFunction> mtable) {
-        this.constClass = constClass;
-        this.ctable = ctable;
-        this.mtable = mtable;
-    }
+    /** Таблица методов класса. */
+    public HashMap<String, SFunction> m_functionsTable;
+    
+    /** Список ошибок. */
+    public ArrayList<CError> m_errorList;
+    
+    /** Текущий индекс */
+    public int constIndex = 1;
 
-    /**
-     * Конструктор по умолчанию.
-     * Инициализирует null.
-     */
     public SClass() {
-        
-        constClass = null;
-        ctable = null;
-        mtable = null;
+        m_constantsTable = new HashMap<Integer, SConstant>();
     }
     
+    /**
+     * Добавить новую константу в таблицу
+     * @param type Тип конс
+     * @param type Тип константы.
+     * @param utfConst Строковое значение.
+     * @param intConst Целое значение.
+     * @param first Ссылка на другую константу.
+     * @param second Ссылка на другую константу.
+     * @return Ссылка на константу
+     */
+    public SConstant addNewConstant(ConstantType type, String utfConst, int intConst, SConstant first, SConstant second){
+        
+        SConstant newConst = new SConstant(constIndex,type, utfConst, intConst, first, second);
+        
+        m_constantsTable.put(new Integer(constIndex), newConst);
+        
+        constIndex++;
+        
+        return newConst;
+    }
 }

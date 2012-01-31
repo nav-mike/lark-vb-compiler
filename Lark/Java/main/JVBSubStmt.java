@@ -139,11 +139,11 @@ public class JVBSubStmt implements XMLInterface {
 
     @Override
     public void write(Element parent) {
-        Element node = JLark.doc.createElement("VB_Sub_stmt");
+        Element node = JLark.m_doc.createElement("VB_Sub_stmt");
 
         node.setAttribute("id", id);
 
-        Element nodeParam = JLark.doc.createElement("VB_Param_stmt_list");
+        Element nodeParam = JLark.m_doc.createElement("VB_Param_stmt_list");
 
         node.appendChild(nodeParam); 
          

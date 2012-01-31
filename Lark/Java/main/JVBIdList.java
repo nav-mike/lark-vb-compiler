@@ -118,7 +118,7 @@ public class JVBIdList implements XMLInterface{
 
     @Override
     public void write(Element parent) {
-        Element node = JLark.doc.createElement("VB_Id_list");
+        Element node = JLark.m_doc.createElement("VB_Id_list");
 
         node.setAttribute("counter", Integer.toString(counter)); 
 

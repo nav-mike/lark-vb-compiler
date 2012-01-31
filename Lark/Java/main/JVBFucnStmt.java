@@ -203,12 +203,12 @@ public class JVBFucnStmt implements XMLInterface{
 
     @Override
     public void write(Element parent) {
-        Element node = JLark.doc.createElement("VB_Func_stmt");
+        Element node = JLark.m_doc.createElement("VB_Func_stmt");
 
         node.setAttribute("id", id);
         node.setAttribute("id_type", idType.toString());
 
-        Element nodeParam = JLark.doc.createElement("VB_Param_stmt_list");
+        Element nodeParam = JLark.m_doc.createElement("VB_Param_stmt_list");
 
         node.appendChild(nodeParam); 
         

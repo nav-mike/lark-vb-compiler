@@ -184,7 +184,7 @@ public class JVBIfStmt implements XMLInterface{
 
     @Override
     public void write(Element parent) {
-        Element node = JLark.doc.createElement("VB_If_stmt");
+        Element node = JLark.m_doc.createElement("VB_If_stmt");
 
         if (m_type == JVBIfStmtType.IF_THEN)
             node.setAttribute("type", "IF_THEN");

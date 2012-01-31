@@ -148,5 +148,5 @@ public class SConstant {
         this.first = first;
         this.second = second;
     }
-    
+        
 }

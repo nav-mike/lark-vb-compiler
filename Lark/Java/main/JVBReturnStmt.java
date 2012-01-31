@@ -92,7 +92,7 @@ public class JVBReturnStmt implements XMLInterface{
 
     @Override
     public void write(Element parent) {
-        Element node = JLark.doc.createElement("VB_Return_stmt");
+        Element node = JLark.m_doc.createElement("VB_Return_stmt");
                 
         if (m_expr != null)
             m_expr.write(node);

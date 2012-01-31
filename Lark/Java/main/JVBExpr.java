@@ -356,7 +356,7 @@ public class JVBExpr implements XMLInterface {
     
 
     public void writeWithName(Element parent, String name) {
-        Element node = JLark.doc.createElement(name);
+        Element node = JLark.m_doc.createElement(name);
         node.setAttribute("expr_string", m_exprString.toString());
         node.setAttribute("id_type", m_idType.toString());
         node.setAttribute("type", m_type.toString());
@@ -372,7 +372,7 @@ public class JVBExpr implements XMLInterface {
 
         if (m_list != null && m_type == JVBExprType.BRK_EXPR){
             
-            Element listNode = JLark.doc.createElement("VB_Expr_list");
+            Element listNode = JLark.m_doc.createElement("VB_Expr_list");
             
             JVBExpr item = m_list.getFirst();
             
