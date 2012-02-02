@@ -465,10 +465,6 @@ void VBX_add_as_expr_list(xmlNodePtr node,struct VB_As_Expr_list* list){
 
 	xmlNewProp(node,(const xmlChar *)"type",(const xmlChar *)type);
 	
-//	if (list->arr != NULL)
-//		VBX_add_array_expr(
-//			xmlNewTextChild(node,NULL,(const xmlChar *)"VB_Array_expr",NULL),list->arr);
-
 	if (list->as_expr != NULL)
 		VBX_add_as_expr(
 			xmlNewTextChild(node,NULL,(const xmlChar *)"VB_As_expr",NULL),list->as_expr);
@@ -487,7 +483,7 @@ void VBX_add_array_expr(xmlNodePtr node,struct VB_Array_expr * expr){
 
 	xmlNewProp(node,(const xmlChar *)"id_type",(const xmlChar *)VBX_id_type_to_string(expr->id_type));
 
-	if (expr->is_init)
+	if (expr->list != NULL)
 		xmlNewProp(node,(const xmlChar *)"is_init",(const xmlChar *)"1");
 	else
 		xmlNewProp(node,(const xmlChar *)"is_init",(const xmlChar *)"0");
@@ -496,13 +492,14 @@ void VBX_add_array_expr(xmlNodePtr node,struct VB_Array_expr * expr){
 
 	xmlNewProp(node,(const xmlChar *)"size",(const xmlChar *)buf);
 
-	if (expr->list != NULL)
+	if (expr->list != NULL){
 		item = expr->list->first;
 
-	while (item != NULL){
-		VBX_add_expr(
-			xmlNewTextChild(node,NULL,(const xmlChar *)"VB_Expr",NULL),item);
-		item = item->next;
+		while (item != NULL){
+			VBX_add_expr(
+				xmlNewTextChild(node,NULL,(const xmlChar *)"VB_Expr",NULL),item);
+			item = item->next;
+		}
 	}
 }
 
@@ -548,6 +545,10 @@ void VBX_add_as_expr(xmlNodePtr node,struct VB_As_expr * expr){
 		if (list->id != NULL)
 			VBX_add_expr(
 				xmlNewTextChild(listNode,NULL,(const xmlChar *)"VB_Expr",NULL),list->id);
+
+		if (list->arr != NULL)
+			VBX_add_array_expr(
+				xmlNewTextChild(listNode,NULL,(const xmlChar *)"VB_Array_expr",NULL),list->arr);
 	}
 
 	list = list->next;
@@ -560,6 +561,11 @@ void VBX_add_as_expr(xmlNodePtr node,struct VB_As_expr * expr){
 		if (list->id != NULL)
 			VBX_add_expr(
 				xmlNewTextChild(listNode,NULL,(const xmlChar *)"VB_Expr",NULL),list->id);
+
+		if (list->arr != NULL)
+			VBX_add_array_expr(
+				xmlNewTextChild(listNode,NULL,(const xmlChar *)"VB_Array_expr",NULL),list->arr);
+
 		list = list->next;
 	}
 }
