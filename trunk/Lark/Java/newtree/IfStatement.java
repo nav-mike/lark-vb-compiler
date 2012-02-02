@@ -7,7 +7,7 @@ import java.util.Arrays;
  * Класс условного оператора.
  * @version 1.0
  */
-public class IfStatement {
+public class IfStatement extends AbstractStatement {
     
     /* Поля класса. */
     /** Условие условного оператора. */
@@ -52,6 +52,7 @@ public class IfStatement {
     public IfStatement (Expression condition, AbstractStatement itemMain,
             AbstractStatement[] bodyAlter) {
         
+        super(IF);
         this.condition = condition;
         this.bodyMain = new ArrayList<>();
         this.bodyMain.add(itemMain);
@@ -70,6 +71,7 @@ public class IfStatement {
      */
     public IfStatement (Expression condition, AbstractStatement[] bodyMain, AbstractStatement itemAlter) {
         
+        super(IF);
         this.condition = condition;
         this.bodyMain = new ArrayList<>(Arrays.asList(bodyMain));
         this.bodyAlter = new ArrayList<>();
@@ -88,6 +90,7 @@ public class IfStatement {
      */
     public IfStatement (Expression condition, AbstractStatement itemMain, AbstractStatement itemAlter) {
         
+        super(IF);
         this.condition = condition;
         this.bodyMain = new ArrayList<>();
         this.bodyMain.add(itemMain);
@@ -106,6 +109,7 @@ public class IfStatement {
      */
     public IfStatement (Expression condition, AbstractStatement[] bodyMain, AbstractStatement[] bodyAlter) {
         
+        super(IF);
         this.condition = condition;
         this.bodyMain = new ArrayList<>(Arrays.asList(bodyMain));
         this.bodyAlter = new ArrayList<>(Arrays.asList(bodyAlter));
@@ -120,6 +124,8 @@ public class IfStatement {
      * @param bodyAlter Список операторов, выполняемых при ложности условия.
      */
     public IfStatement(Expression condition, ArrayList<AbstractStatement> bodyMain, ArrayList<AbstractStatement> bodyAlter) {
+        
+        super(IF);
         this.condition = condition;
         this.bodyMain = bodyMain;
         this.bodyAlter = bodyAlter;
