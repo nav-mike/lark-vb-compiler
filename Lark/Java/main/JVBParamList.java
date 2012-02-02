@@ -53,8 +53,10 @@ public class JVBParamList implements XMLInterface{
             if (i > 0)
                 stmts[i - 1].setNext(stmts[i]);
         }
-        first = stmts[0];
-        last = stmts[stmts.length - 1];
+        if (stmts.length > 0){
+            first = stmts[0];
+            last = stmts[stmts.length - 1];
+        }
     }
 
     /**

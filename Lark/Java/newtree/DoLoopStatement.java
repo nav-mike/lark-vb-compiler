@@ -26,7 +26,7 @@ public class DoLoopStatement extends AbstractStatement {
         
         super(DO_LOOP);
         this.condition = condition;
-        this.body = new ArrayList<>();
+        this.body = new ArrayList();
         this.body.add(item);
     }
     
@@ -41,7 +41,7 @@ public class DoLoopStatement extends AbstractStatement {
         
         super(DO_LOOP);
         this.condition = condition;
-        this.body = new ArrayList<>(Arrays.asList(body));
+        this.body = new ArrayList(Arrays.asList(body));
     }
 
     /**
