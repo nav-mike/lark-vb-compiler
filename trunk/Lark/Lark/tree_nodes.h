@@ -228,7 +228,6 @@ struct VB_As_Expr_list
 	enum   VB_As_Expr_list_type type;		//!< Тип
 	struct VB_As_expr*			as_expr;	//!< Идентификатор
 	struct VB_As_Expr_list*		next;		//!< Список идентификаторов или массивов
-	struct VB_Array_expr*		arr;		//!< Массив
 };
 
 
@@ -248,13 +247,15 @@ struct VB_As_expr
 	struct	VB_Id_list*		list;		//!< Список идентификаторов
 	enum	VB_Id_type		id_type;	//!< Тип определяемого идентификатора
 	struct	VB_Expr*		expr;		//!< Инициализируемое значение
-	struct 	VB_Expr*		id;			//!< Идентификатор
+	struct  VB_Expr_list*	expr_list;
+	//struct 	VB_Expr*		id;			//!< Идентификатор
 };
 
 enum VB_Id_type return_type(enum VB_Id_type type)
 {
 	return type;
 }
+
 
 /*! \struct VB_Id_list
     Список идентификаторов.
@@ -263,6 +264,7 @@ struct VB_Id_list
 {
 	int counter;
 	struct VB_Expr* id;					//!< Имя текущего идентификатора
+	struct VB_Array_expr * arr;		//!< Массив
 	struct VB_Id_list* next;	//!Б Указатель на следубщий идентификатор
 };
 
@@ -1394,12 +1396,12 @@ struct VB_Dim_stmt* create_dim_stmt(struct VB_As_Expr_list* list)
   \param arr Создается определение массива.
   \return указатель на объект выражения.
 */
-struct VB_As_Expr_list* create_as_expr_list(struct VB_As_expr* expr, struct VB_Array_expr* arr)
+struct VB_As_Expr_list* create_as_expr_list(struct VB_As_expr* expr)
 {
 	struct VB_As_Expr_list* as_list = (struct VB_As_Expr_list*)malloc(sizeof(struct VB_As_Expr_list));
 
 	as_list->as_expr = expr;
-	as_list->arr = arr;
+//	as_list->arr = arr;
 	as_list->next = NULL;
 	as_list->type = EXPR_LIST;
 
@@ -1413,14 +1415,13 @@ struct VB_As_Expr_list* create_as_expr_list(struct VB_As_expr* expr, struct VB_A
   \param arr Добавляемый массив
   \return указатель на объект выражения.
 */
-struct VB_As_Expr_list* add_to_as_expr_list(struct VB_As_Expr_list* list, struct VB_As_expr* expr,
-											struct VB_Array_expr* arr)
+struct VB_As_Expr_list* add_to_as_expr_list(struct VB_As_Expr_list* list, struct VB_As_expr* expr)
 {
 	struct VB_As_Expr_list* new_item = (struct VB_As_Expr_list*)malloc(sizeof(struct VB_As_Expr_list));
-	struct VB_Id_list* lastList = list;
+	struct VB_As_Expr_list* lastList = list;
 
 	new_item->as_expr = expr;
-	new_item->arr = arr;
+//	new_item->arr = arr;
 	new_item->next = NULL;
 	new_item->type = EXPR;
 
@@ -1434,82 +1435,193 @@ struct VB_As_Expr_list* add_to_as_expr_list(struct VB_As_Expr_list* list, struct
 	return list;
 }
 
-struct VB_As_expr* create_as_expr(enum VB_As_expr_type type, struct VB_Id_list* list, char* id, enum VB_Id_type id_type, struct VB_Expr* expr)
+
+struct VB_Expr * create_expr_with_id(char* id) 
 {
-	struct VB_As_expr* as_expr = (struct VB_As_expr*)malloc(sizeof(struct VB_As_expr));
-	
-	list->counter = 1;
-	as_expr->type = type;
-	as_expr->id_type = id_type;
+	struct VB_Expr * result = (struct VB_Expr*)malloc(sizeof(struct VB_Expr));
 
-	if (list->counter>1)
-	{
-		as_expr->list = list;
-		as_expr->expr = NULL;
-		as_expr->id = NULL;
-	}
-	else
-	{
-		as_expr->expr = expr;
-		as_expr->id = NULL; ///////////////////////// ldsjhfb akbf kjabf kjabf kjhdsbf kjasdbf kjhasbf khadfk jhbsdhf bwhf bkasf bsf
-		as_expr->list = list;
-		//strcpy(as_expr->id->expr_string,id);
-	}
+	// Копируем имя
+	result->expr_string = (char*)malloc(sizeof(char)*strlen(id));
+	strcpy(result->expr_string,id);
 
-	return as_expr;
+	// Поля по умолчанию
+	result->type = ID_E;
+	result->int_val = 0;
+	result->left_chld = NULL;
+	result->list = NULL;
+	result->next = NULL;
+	result->right_chld = NULL;
+
+	return result;
 }
+
+
 
 /*!
 	Создание списка идентификаторов.
   \param id Идентификатор
   \return указатель на объект выражения.
 */
-struct VB_Id_list* create_id_list(char* id)
+struct VB_Id_list* create_id_list(char* id, int isArray, int size)
 {
 	struct VB_Id_list* list = (struct VB_Id_list*)malloc(sizeof(struct VB_Id_list));
 
-	list->id = (struct VB_Expr*)malloc(sizeof(struct VB_Expr));
+	if (isArray == NULL) {
 
-	list->id->list = NULL;
-	list->id->next = NULL;
-	list->id->expr_string = (char*)malloc(sizeof(char)*strlen(id));
-	strcpy(list->id->expr_string,id);
+		// Создаем одну переменную
+		list->id = create_expr_with_id(id);
+		
+		list->arr = NULL;
+	}
+	else {
+		// Создаем одну переменную
+		list->arr = (struct VB_Array_expr*)malloc(sizeof(struct VB_Array_expr));
 
+		// Копируем имя
+		list->arr->id = (char*)malloc(sizeof(char)*strlen(id));
+		strcpy(list->arr->id,id);
+
+		list->arr->id_type = INTEGER_E;
+		list->arr->is_init = 0;
+		list->arr->size = size;
+
+		list->id = NULL;
+	}
 
 	list->next = NULL;
-	list->id->left_chld = NULL;
-	list->id->right_chld = NULL;
-	list->id->id_type = INTEGER_E;
-	list->id->type = ID_E;
-	list->id->int_val = 0;
-
-	list->counter = 1; /* change init 0 to 1 */
+	list->counter = 1; /* change init 0 to 1 */	
+	
 	return list;
 }
+
+struct VB_As_Expr* create_as_expr_id(char* id,struct VB_Id_list* list,enum VB_Id_type id_type){
+
+	struct VB_As_expr* as_expr = (struct VB_As_expr*)malloc(sizeof(struct VB_As_expr));
+	
+	as_expr->expr = NULL;
+	as_expr->expr_list = NULL;
+
+	as_expr->list = create_id_list(id,0,0);
+
+	as_expr->list->id->id_type = id_type;
+
+	as_expr->id_type = id_type;
+	
+	as_expr->type = ID_LIST;
+
+	as_expr->list->next = list;
+
+	return as_expr;
+}
+
+
+
+struct VB_As_Expr* create_as_expr_arr(char* id, int size, struct VB_Id_list* list,enum VB_Id_type id_type){
+
+	struct VB_As_expr* as_expr = (struct VB_As_expr*)malloc(sizeof(struct VB_As_expr));
+	
+	as_expr->expr = NULL;
+	as_expr->expr_list = NULL;
+
+	as_expr->list = create_id_list(id,1,size);
+
+	as_expr->list->arr->id_type = id_type;
+
+	as_expr->id_type = id_type;
+	
+	as_expr->type = ID_LIST;
+
+	as_expr->list->next = list;
+
+	return as_expr;
+}
+
+
+
+//struct VB_As_expr* create_as_expr(enum VB_As_expr_type type, struct VB_Id_list* list, char* id, enum VB_Id_type id_type, struct VB_Expr* expr)
+//{
+//	struct VB_As_expr* as_expr = (struct VB_As_expr*)malloc(sizeof(struct VB_As_expr));
+//	
+//	list->counter = 1;
+//	as_expr->type = type;
+//	as_expr->id_type = id_type;
+//
+//	if (list->counter>1)
+//	{
+//		as_expr->list = list;
+//		as_expr->expr = NULL;
+//		as_expr->id = NULL;
+//	}
+//	else
+//	{
+//		as_expr->expr = expr;
+//		as_expr->id = NULL; ///////////////////////// ldsjhfb akbf kjabf kjabf kjhdsbf kjasdbf kjhasbf khadfk jhbsdhf bwhf bkasf bsf
+//		as_expr->list = list;
+//		//strcpy(as_expr->id->expr_string,id);
+//	}
+//
+//	return as_expr;
+//}
+
+
+
+struct VB_As_expr* create_as_expr_init(char* id, enum VB_Id_type id_type, struct VB_Expr* expr)
+{
+	struct VB_As_expr* as_expr = (struct VB_As_expr*)malloc(sizeof(struct VB_As_expr));
+	
+	as_expr->expr = expr;
+	as_expr->expr_list = NULL;
+	as_expr->list = create_id_list(id,0,0);
+	//as_expr->id = create_expr_with_id(id);
+	as_expr->list->id->id_type = id_type;
+
+	as_expr->id_type = id_type;
+	
+	as_expr->type = ID_INIT;
+
+	return as_expr;
+}
+
+struct VB_As_expr* create_as_array_init(char* id, enum VB_Id_type id_type, struct VB_Expr_list* list)
+{
+	int k = 0;
+	struct VB_Expr* buf = list->first;
+	struct VB_As_expr* as_expr = (struct VB_As_expr*)malloc(sizeof(struct VB_As_expr));
+	as_expr->expr = NULL;
+	as_expr->expr_list = list;
+
+	
+	
+
+	while (buf!=NULL){
+		k++;
+		buf = buf->next;
+	}
+
+
+	as_expr->list = create_id_list(id,1,k);
+	as_expr->list->arr->id_type = id_type;
+	as_expr->list->arr->list = list;
+
+	as_expr->id_type = id_type;
+	
+	as_expr->type = ID_INIT;
+
+}
+
+
+
+
 
 /*!
 	Добавить элемент в список идентификаторов.
   \param id Идентификатор
   \return указатель на объект выражения.
 */
-struct VB_Id_list* add_to_id_list(struct VB_Id_list* list,char* id)
+struct VB_Id_list* add_to_id_list(struct VB_Id_list* list, char* id, int isArray, int size)
 {
-
-	struct VB_Id_list* new_list = (struct VB_Id_list*)malloc(sizeof(struct VB_Id_list));
+	struct VB_Id_list* new_list = create_id_list(id,isArray,size);
 	struct VB_Id_list* last_list = list;
-	new_list->next = NULL;
-
-	new_list->id = (struct VB_Expr*)malloc(sizeof(struct VB_Expr*));
-	new_list->id->expr_string = (char*)malloc(sizeof(char)*strlen(id));
-	strcpy(new_list->id->expr_string,id);
-	
-	new_list->id->left_chld = NULL;
-	new_list->id->list = NULL;
-	new_list->id->next = NULL;
-	new_list->id->right_chld = NULL;
-	new_list->id->id_type = INTEGER_E;
-	new_list->id->int_val = 0;
-	new_list->id->type = ID_E;
 
 	do
 	{
@@ -1522,8 +1634,6 @@ struct VB_Id_list* add_to_id_list(struct VB_Id_list* list,char* id)
 		}
 	}
 	while (last_list);
-
-	//list->next = new_list;
 
 	new_list->counter = ++(list->counter);
 

@@ -36,7 +36,7 @@
 	struct VB_As_Expr_list*		As_l;
     struct VB_As_expr*			As_expr_str;
 	struct VB_Id_list*			Id_l;
-	struct VB_Array_expr*		Arr;
+	//struct VB_Array_expr*		Arr;
 	struct VB_For_stmt*			For;
 	struct VB_While_stmt*		While;
 	struct VB_Do_loop_stmt*		Do_loop;
@@ -80,7 +80,7 @@
 %type <As_l>		as_expr_list
 %type <As_expr_str>	as_expr
 %type <Id_l>		id_list_stmt
-%type <Arr>			array_expr
+//%type <Arr>			array_expr
 %type <For>			for_stmt
 %type <While>		while_stmt
 %type <Do_loop> 	do_loop_stmt
@@ -250,32 +250,33 @@
 		   | IF expr THEN ENDL stmt_list ELSE ENDL stmt_list END_IF ENDL	{$$ = create_if_stmt(1,$2,$5,$8);}
 		   ;
 
-	dim_stmt: DIM as_expr_list ENDL				 		{$$ = create_dim_stmt($2);}
+	dim_stmt: DIM as_expr_list ENDL				 			{$$ = create_dim_stmt($2);}
 			;
 
-		as_expr_list: as_expr					 		{$$ = create_as_expr_list($1,NULL);}
-					| array_expr				 		{$$ = create_as_expr_list(NULL,$1);}
-					| as_expr_list',' as_expr	 		{$$ = add_to_as_expr_list($1,$3,NULL);}
-					| as_expr_list',' array_expr 		{$$ = add_to_as_expr_list($1,NULL,$3);}
+		as_expr_list: as_expr					 			{$$ = create_as_expr_list($1);}
+					| as_expr_list',' as_expr	 			{$$ = add_to_as_expr_list($1,$3);}
 					;
 
-		as_expr: id_list_stmt AS param_type				{$$ = create_as_expr(0,$1,NULL,$3,NULL);}
-			   | id_list_stmt AS param_type '=' expr		{$$ = create_as_expr(0,$1,NULL,$3,$5);}
-			   ;
+			as_expr: ID AS param_type										{$$ = create_as_expr_init($1,$3,NULL);}
+				   | ID '('INT_CONST')' AS param_type						{$$ = create_as_expr_init($1,$3,NULL);}
+				   | ID AS param_type '=' expr								{$$ = create_as_expr_init($1,$3,$5);}
+				   | ID '('')' AS param_type '=' '{'expr_list'}'			{$$ = create_as_array_init($1,$5,$8);}
+				   | ID',' id_list_stmt AS param_type						{$$ = create_as_expr_id($1,$3,$5);}	
+				   | ID '(' INT_CONST ')' ',' id_list_stmt AS param_type	{$$ = create_as_expr_arr($1,$3,$6,$8);}
+				   ;
 
-		id_list_stmt: ID								{$$ = create_id_list($1);}
-					| id_list_stmt',' ID				{$$ = add_to_id_list($1,$3);}
-					;
+				id_list_stmt: ID											{$$ = create_id_list($1,0,0);}	
+							| ID '(' INT_CONST ')'							{$$ = create_id_list($1,1,$3);}	
+							| id_list_stmt',' ID							{$$ = add_to_id_list($1,$3,0,0);}
+							| id_list_stmt',' ID '(' INT_CONST ')'			{$$ = add_to_id_list($1,$3,1,$5);}
+							;
 
-		array_expr: ID '(' INT_CONST ')' AS param_type		{$$ = create_Array($1,$3,$6);}
-				  ;
-
-		expr_list_empty: /*empty*/		{$$ = create_Expr_list(NULL);}
+		expr_list_empty: /*empty*/						{$$ = create_Expr_list(NULL);}
 					   | expr_list
 					   ;
 
-		expr_list: expr					{$$ = create_Expr_list($1);}
-				 | expr_list',' expr	{$$ = add_Expr_to_list($1,$3);}
+		expr_list: expr									{$$ = create_Expr_list($1);}
+				 | expr_list',' expr					{$$ = add_Expr_to_list($1,$3);}
 				 ;
 
         for_stmt: FOR ID '=' expr TO expr ENDL stmt_list NEXT ENDL            				{$$ = create_for_stmt($2,$4,$6,$8);}

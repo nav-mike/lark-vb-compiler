@@ -465,9 +465,9 @@ void VBX_add_as_expr_list(xmlNodePtr node,struct VB_As_Expr_list* list){
 
 	xmlNewProp(node,(const xmlChar *)"type",(const xmlChar *)type);
 	
-	if (list->arr != NULL)
-		VBX_add_array_expr(
-			xmlNewTextChild(node,NULL,(const xmlChar *)"VB_Array_expr",NULL),list->arr);
+//	if (list->arr != NULL)
+//		VBX_add_array_expr(
+//			xmlNewTextChild(node,NULL,(const xmlChar *)"VB_Array_expr",NULL),list->arr);
 
 	if (list->as_expr != NULL)
 		VBX_add_as_expr(
@@ -530,9 +530,9 @@ void VBX_add_as_expr(xmlNodePtr node,struct VB_As_expr * expr){
 
 	xmlNewProp(node,(const xmlChar *)"type",(const xmlChar *)type);
 
-	if (expr->id != NULL)
-		VBX_add_expr(
-			xmlNewTextChild(node,NULL,(const xmlChar *)"VB_Expr__id",NULL),expr->id);
+//	if (expr->id != NULL)
+//		VBX_add_expr(
+//			xmlNewTextChild(node,NULL,(const xmlChar *)"VB_Expr__id",NULL),expr->id);
 
 	if (expr->expr != NULL)
 		VBX_add_expr(
@@ -545,8 +545,9 @@ void VBX_add_as_expr(xmlNodePtr node,struct VB_As_expr * expr){
 		itoa(list->counter,type,10);
 		xmlNewProp(listNode,(const xmlChar *)"counter",(const xmlChar *)type);
 
-		VBX_add_expr(
-			xmlNewTextChild(listNode,NULL,(const xmlChar *)"VB_Expr",NULL),list->id);
+		if (list->id != NULL)
+			VBX_add_expr(
+				xmlNewTextChild(listNode,NULL,(const xmlChar *)"VB_Expr",NULL),list->id);
 	}
 
 	list = list->next;
@@ -556,8 +557,9 @@ void VBX_add_as_expr(xmlNodePtr node,struct VB_As_expr * expr){
 		itoa(list->counter,type,10);
 		xmlNewProp(listNode,(const xmlChar *)"counter",(const xmlChar *)type);
 
-		VBX_add_expr(
-			xmlNewTextChild(listNode,NULL,(const xmlChar *)"VB_Expr",NULL),list->id);
+		if (list->id != NULL)
+			VBX_add_expr(
+				xmlNewTextChild(listNode,NULL,(const xmlChar *)"VB_Expr",NULL),list->id);
 		list = list->next;
 	}
 }
