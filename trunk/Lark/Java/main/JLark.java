@@ -134,8 +134,8 @@ public class JLark {
             
             boolean isError = false;
             
-            while((firstBuf != null || secondBuf != null) && isError == false && (firstBuf.equals("</VB_Module_stmt>") == true
-                    || secondBuf.equals("</VB_Module_stmt>") == true)){
+            while((firstBuf != null || secondBuf != null) && isError == false && ((firstBuf.equals("</VB_Module_stmt>") == true
+                    || secondBuf.equals("</VB_Module_stmt>")) == true)){
                 firstBuf = readXMLLine(first);
                 secondBuf = readXMLLine(second);
                                 
@@ -359,16 +359,19 @@ public class JLark {
     }
     
     
-    public static void parseAsExprList(JVBAsExprList list){
-        if (list != null){
+    public static void parseAsExprList(JVBDimStmt dim){
+           
+        JVBAsExprList list = dim.getList();
+        
+        
+//
+//            if (list.getArr() != null)
+//                
+//            if (list.getAsExpr() != null)
+                
+                
+           // parseAsExprList(list.getNext());
 
-            if (list.getArr() != null)
-                
-            if (list.getAsExpr() != null)
-                
-                
-            parseAsExprList(list.getNext());
-        }
     }
     
     
@@ -388,7 +391,7 @@ public class JLark {
                 
                 if (stmt.getType() == JVBStmtType.DIM_E){
                     
-                    parseAsExprList((JVBAsExprList)stmt.getValue());
+                    parseAsExprList((JVBDimStmt)stmt.getValue());
                 }
                     
                 stmt = stmt.getNext();

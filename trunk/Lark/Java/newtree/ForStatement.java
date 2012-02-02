@@ -37,7 +37,7 @@ public class ForStatement extends AbstractStatement {
             int stepValue, AbstractStatement item) {
         
         super(FOR);
-        this.body = new ArrayList<>(); this.body.add(item);
+        this.body = new ArrayList(); this.body.add(item);
         this.endValue = endValue;
         this.existedIterator = existedIterator;
         this.newIterator = null;
@@ -64,7 +64,7 @@ public class ForStatement extends AbstractStatement {
         this.startValue = startValue;
         this.endValue = endValue;
         this.stepValue = stepValue;
-        this.body = new ArrayList<>(Arrays.asList(body));
+        this.body = new ArrayList(Arrays.asList(body));
     }
     
     /**
@@ -102,7 +102,7 @@ public class ForStatement extends AbstractStatement {
             int stepValue, AbstractStatement item) {
         
         super(FOR);
-        this.body = new ArrayList<>(); this.body.add(item);
+        this.body = new ArrayList(); this.body.add(item);
         this.endValue = endValue;
         this.existedIterator = null;
         this.newIterator = newIterator;
@@ -128,7 +128,7 @@ public class ForStatement extends AbstractStatement {
         this.startValue = startValue;
         this.endValue = endValue;
         this.stepValue = stepValue;
-        this.body = new ArrayList<>(Arrays.asList(body));
+        this.body = new ArrayList(Arrays.asList(body));
     }
 
     /**
