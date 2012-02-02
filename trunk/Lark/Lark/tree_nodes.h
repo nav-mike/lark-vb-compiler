@@ -1451,6 +1451,7 @@ struct VB_Expr * create_expr_with_id(char* id)
 	result->list = NULL;
 	result->next = NULL;
 	result->right_chld = NULL;
+	result->id_type = INTEGER_E;
 
 	return result;
 }
@@ -1484,6 +1485,7 @@ struct VB_Id_list* create_id_list(char* id, int isArray, int size)
 		list->arr->id_type = INTEGER_E;
 		list->arr->is_init = 0;
 		list->arr->size = size;
+		list->arr->list = NULL;
 
 		list->id = NULL;
 	}
