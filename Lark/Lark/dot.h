@@ -1179,16 +1179,16 @@ int add_as_expression (FILE* file, struct VB_As_expr* expr)
 			return 1;
 	}
 
-	if (expr->id != NULL)
-	{
-		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
-			number, ++Number);
-		if (error == -1)
-			return 1;
-		error = add_expression(file,expr->id);
-		if (error)
-			return 1;
-	}
+	//if (expr->id != NULL)
+	//{
+	//	error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
+	//		number, ++Number);
+	//	if (error == -1)
+	//		return 1;
+	//	error = add_expression(file,expr->id);
+	//	if (error)
+	//		return 1;
+	//}
 
 	if (expr->list != NULL)
 	{
@@ -1383,16 +1383,16 @@ int add_as_expression_list (FILE* file, struct VB_As_Expr_list* list)
 		if (error)
 			return 1;
 	}
-	if (list->arr != NULL)
-	{
-		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
-			number, ++Number);
-		if (error == -1)
-			return 1;
-		error = add_array_expression(file,list->arr);
-		if (error)
-			return 1;
-	}
+	//if (list->arr != NULL)
+	//{
+	//	error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
+	//		number, ++Number);
+	//	if (error == -1)
+	//		return 1;
+	//	error = add_array_expression(file,list->arr);
+	//	if (error)
+	//		return 1;
+	//}
 
 	return 0;
 }

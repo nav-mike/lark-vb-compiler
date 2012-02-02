@@ -133,7 +133,7 @@ typedef union YYSTYPE
 	struct VB_As_Expr_list*		As_l;
     struct VB_As_expr*			As_expr_str;
 	struct VB_Id_list*			Id_l;
-	struct VB_Array_expr*		Arr;
+	//struct VB_Array_expr*		Arr;
 	struct VB_For_stmt*			For;
 	struct VB_While_stmt*		While;
 	struct VB_Do_loop_stmt*		Do_loop;

@@ -358,6 +358,20 @@ public class JLark {
         fillLocalTables(sub.getStmtList());
     }
     
+    
+    public static void parseAsExprList(JVBAsExprList list){
+        if (list != null){
+
+            if (list.getArr() != null)
+                
+            if (list.getAsExpr() != null)
+                
+                
+            parseAsExprList(list.getNext());
+        }
+    }
+    
+    
     /**
      * Заполнить таблицы локальных переменных
      * @param body Тело функции 
@@ -370,12 +384,15 @@ public class JLark {
             
             stmt = body.getFirst();
             
-//            while (stmt != null){
-//                
-//                if (stmt.getType() == JVBExprType.INT_CONST_E)
-//                    m_class.addNewConstant(ConstantType.CONSTANT_Integer,  null, null)
-//                stmt = stmt.getNext();
-//            }
+            while (stmt != null){
+                
+                if (stmt.getType() == JVBStmtType.DIM_E){
+                    
+                    parseAsExprList((JVBAsExprList)stmt.getValue());
+                }
+                    
+                stmt = stmt.getNext();
+            }
             
         }
     }
