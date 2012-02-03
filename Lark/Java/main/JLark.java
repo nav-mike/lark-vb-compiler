@@ -22,6 +22,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import newtree.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -34,8 +35,8 @@ import org.w3c.dom.Element;
  */
 public class JLark {
     
-    /** Корень получаемого дерева. */
-    static private JVBModuleStmt m_module;
+    /** Корень дерева разбора. */
+    public static Module m_module;
     
     /** Текущий XML документ */
     public static Document m_doc;
@@ -53,9 +54,10 @@ public class JLark {
      * Функция считывания XML файла.
      * @param filename Имя файла.
      */
-    private static JVBModuleStmt readXML (String filename) throws ParserConfigurationException, SAXException, IOException {
+    private static void readXML (String filename) throws ParserConfigurationException, SAXException, IOException {
         
-        JVBModuleStmt result = null;
+        m_module = new Module();
+        
         DocumentBuilderFactory f = DocumentBuilderFactory.newInstance();
         f.setValidating(false);
         DocumentBuilder builder = f.newDocumentBuilder();
@@ -66,112 +68,14 @@ public class JLark {
         for (int i = 0; i < nodes.getLength(); i++) {
             
             if ("VB_Module_stmt".equals(nodes.item(i).getNodeName()))
-                result = new JVBModuleStmt(nodes.item(i));
-        }
-        
-        return result;
-    }
-        
-    /**
-     * Сохраним данные в файл для проверки
-     * @throws ParserConfigurationException
-     * @throws SAXException
-     * @throws IOException
-     * @throws TransformerConfigurationException
-     * @throws TransformerException 
-     */
-    public static void saveToXML() throws ParserConfigurationException, SAXException, IOException, TransformerConfigurationException, TransformerException {
-        DocumentBuilderFactory fact = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = fact.newDocumentBuilder();
-        m_doc = builder.newDocument();
-
-        m_module.write(null);
-        
-        TransformerFactory transformerFactory = TransformerFactory.newInstance();
-        Transformer transformer = transformerFactory.newTransformer();
-        DOMSource source = new DOMSource(m_doc);
-        StreamResult result = new StreamResult(new File("JavaTree.xml"));
-
-        transformer.transform(source, result);
-    }
-    
-    /**
-     * Считать один тэг XML файла
-     * @param buf Читалка из файла
-     * @return Тэг собсно
-     * @throws IOException 
-     */
-    public static String readXMLLine(BufferedReader buf) throws IOException{
-        String result = "";
-        char ch;
-        do{
-            ch = (char)buf.read();
-            
-            if (ch != '\n')
-                result += ch;
-            
-        }while(ch != '>');
-        
-        return result;
-    }
-    
-    /**
-     * Сравнить два файла XML дерева, чтобы проерить что все хорошо считалось.
-     */
-    public static void verifyTree(){
-        
-        try{
-            File qwe = new File("JavaTree.xml");
-            File asd = new File("tree.xml");
-            
-            BufferedReader first = new BufferedReader(new FileReader(qwe.getAbsoluteFile()));
-            BufferedReader second = new BufferedReader(new FileReader(asd.getAbsoluteFile()));
-            
-            String firstBuf = "0";
-            String secondBuf = "0";
-           
-            int i = 1;
-            
-            boolean isError = false;
-            
-            while((firstBuf != null || secondBuf != null) && isError == false && ((firstBuf.equals("</VB_Module_stmt>") == true
-                    || secondBuf.equals("</VB_Module_stmt>")) == true)){
-                firstBuf = readXMLLine(first);
-                secondBuf = readXMLLine(second);
-                                
-                if (i!=1){
-                    if (firstBuf != null && secondBuf != null && firstBuf.equals(secondBuf) == false){
-                        isError = true;
-
-                        System.out.println("\nError on " + Integer.toString(i) + " string!");
-                        System.out.println("Strings:");
-                        System.out.println(firstBuf);
-                        System.out.println(secondBuf);
-                        System.out.println("\n");
-                    }
-                    else
-                        i++;
-                }
-                else
-                    i++;
-            }
-            
-            first.close();
-            second.close();
-            
-            if (isError == false)
-                System.out.println("\nNo errors!\n");
-            
-        } catch (IOException e){
-            throw new RuntimeException(e);
+                m_module.readData(nodes.item(i));
         }
     }
-    
     
     public static void showTables(){
         TableConstant tc = new TableConstant();
-        tables = new ArrayList<JTable>();
-        titles = new ArrayList<String>();
+        tables = new ArrayList<>();
+        titles = new ArrayList<>();
         for (int i = 1; i < m_class.constIndex; i++) {
             tc.addRow(m_class.m_constantsTable.get(Integer.valueOf(i)).getType().toString(),
                     m_class.m_constantsTable.get(Integer.valueOf(i)).getUtfConst());
@@ -230,12 +134,12 @@ public class JLark {
                 "Code", -1, null, null);
         
         SConstant moduleConst = m_class.addNewConstant(ConstantType.CONSTANT_Utf8,
-                m_module.getName(), -1, null, null);
+                m_module.getId(), -1, null, null);
                
         SConstant classConst = m_class.addNewConstant(ConstantType.CONSTANT_Class,
                 createNumberEnumeration(moduleConst,null), -1, moduleConst, null);
         
-        m_module.classConst = classConst;
+       // m_module.classConst = classConst;
         
         // Создаем конструктор по умолчанию
         SConstant constr = m_class.addNewConstant(ConstantType.CONSTANT_Utf8, "<init>", -1, null, null);
@@ -262,25 +166,25 @@ public class JLark {
         SConstant NATConst = m_class.addNewConstant(ConstantType.CONSTANT_NameAndType,
                 createNumberEnumeration(main,mainType), -1, main, mainType);
                 
-        m_class.addNewConstant(ConstantType.CONSTANT_Methodref,
-                createNumberEnumeration(m_module.classConst,NATConst), -1, m_module.classConst, NATConst);
+    //    m_class.addNewConstant(ConstantType.CONSTANT_Methodref,
+    //            createNumberEnumeration(m_module.classConst,NATConst), -1, m_module.classConst, NATConst);
         
-        JVBDeclStmtList list = m_module.getDeclStmtList();
+    //    JVBDeclStmtList list = m_module.getDeclStmtList();
         
-        if (list != null){
-            
-            JVBDeclStmt d = list.getFirst();
-            
-            while (d != null){
-                
-                if (d.getType() == JVBStmtType.FUNC_D)
-                    createFuncRefs(d.getFuncStmt());
-                else
-                    createSubRefs(d.getSubStmt());
-                
-                d = d.getNext();
-            }
-        }
+//        if (list != null){
+//            
+//            JVBDeclStmt d = list.getFirst();
+//            
+//            while (d != null){
+//                
+//                if (d.getType() == JVBStmtType.FUNC_D)
+//                    createFuncRefs(d.getFuncStmt());
+//                else
+//                    createSubRefs(d.getSubStmt());
+//                
+//                d = d.getNext();
+//            }
+//        }
     }
 
     /**
@@ -329,8 +233,8 @@ public class JLark {
         SConstant NATConst = m_class.addNewConstant(ConstantType.CONSTANT_NameAndType,
                 createNumberEnumeration(main,mainType), -1, main, mainType);
                 
-        func.methRefConst = m_class.addNewConstant(ConstantType.CONSTANT_Methodref,
-                createNumberEnumeration(m_module.classConst,NATConst), -1, m_module.classConst, NATConst);
+//        func.methRefConst = m_class.addNewConstant(ConstantType.CONSTANT_Methodref,
+//                createNumberEnumeration(m_module.classConst,NATConst), -1, m_module.classConst, NATConst);
         
         fillLocalTables(func.getStmtList());
 
@@ -352,8 +256,8 @@ public class JLark {
         SConstant NATConst = m_class.addNewConstant(ConstantType.CONSTANT_NameAndType,
                 createNumberEnumeration(main,mainType), -1, main, mainType);
                 
-        sub.methRefConst = m_class.addNewConstant(ConstantType.CONSTANT_Methodref,
-                createNumberEnumeration(m_module.classConst,NATConst), -1, m_module.classConst, NATConst);
+//        sub.methRefConst = m_class.addNewConstant(ConstantType.CONSTANT_Methodref,
+//               createNumberEnumeration(m_module.classConst,NATConst), -1, m_module.classConst, NATConst);
 
         fillLocalTables(sub.getStmtList());
     }
@@ -417,31 +321,11 @@ public class JLark {
         
         // Считываем данные из xml файла
         try {
-            m_module = readXML("tree.xml");
-        } catch (ParserConfigurationException ex) {
-            Logger.getLogger(JLark.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SAXException ex) {
-            Logger.getLogger(JLark.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
+            readXML("tree.xml");
+        } catch (ParserConfigurationException | SAXException | IOException ex) {
             Logger.getLogger(JLark.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        try {
-            saveToXML();
-        } catch (ParserConfigurationException ex){
-            Logger.getLogger(JLark.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SAXException ex){
-            Logger.getLogger(JLark.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex){
-            Logger.getLogger(JLark.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (TransformerConfigurationException ex){
-            Logger.getLogger(JLark.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (TransformerException ex){
-            Logger.getLogger(JLark.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        verifyTree();   // ПРоверить как считалось
-        
+       
         cereateTable(); // Создать аблицу
 
         showTables();   // Отобразить таблицы
