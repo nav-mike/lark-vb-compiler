@@ -2,6 +2,7 @@ package newtree;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import org.w3c.dom.Node;
 
 /**
  * Класс оператора цикла Do...Loop.
@@ -24,7 +25,7 @@ public class DoLoopStatement extends AbstractStatement {
      */
     public DoLoopStatement (Expression condition, AbstractStatement item) {
         
-        super(DO_LOOP);
+        super(SatementType.DO_LOOP);
         this.condition = condition;
         this.body = new ArrayList();
         this.body.add(item);
@@ -39,7 +40,7 @@ public class DoLoopStatement extends AbstractStatement {
      */
     public DoLoopStatement (Expression condition, AbstractStatement[] body) {
         
-        super(DO_LOOP);
+        super(SatementType.DO_LOOP);
         this.condition = condition;
         this.body = new ArrayList(Arrays.asList(body));
     }
@@ -53,7 +54,7 @@ public class DoLoopStatement extends AbstractStatement {
      */
     public DoLoopStatement(Expression condition, ArrayList<AbstractStatement> body) {
         
-        super(DO_LOOP);
+        super(SatementType.DO_LOOP);
         this.condition = condition;
         this.body = body;
     }
@@ -127,6 +128,11 @@ public class DoLoopStatement extends AbstractStatement {
     public AbstractStatement get (int index) {
         
         return body.get(index);
+    }
+
+    @Override
+    public void readData(Node node) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
     
 }

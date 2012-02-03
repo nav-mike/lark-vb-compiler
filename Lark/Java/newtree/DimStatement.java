@@ -2,6 +2,7 @@ package newtree;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import org.w3c.dom.Node;
 
 /**
  * Класс, описыващий блок объявления переменных.
@@ -20,7 +21,7 @@ public class DimStatement extends AbstractStatement {
      */
     public DimStatement(ArrayList<AsExpression> bodyMain) {
         
-        super(DIM);
+        super(SatementType.DIM);
         this.bodyMain = bodyMain;
     }
     
@@ -31,7 +32,7 @@ public class DimStatement extends AbstractStatement {
      */
     public DimStatement (AsExpression[] bodyMain) {
         
-        super(DIM);
+        super(SatementType.DIM);
         this.bodyMain = new ArrayList<>(Arrays.asList(bodyMain));
     }
     
@@ -42,7 +43,7 @@ public class DimStatement extends AbstractStatement {
      */
     public DimStatement (AsExpression item) {
         
-        super(DIM);
+        super(SatementType.DIM);
         this.bodyMain = new ArrayList<>();
         this.bodyMain.add(item);
     }
@@ -90,6 +91,11 @@ public class DimStatement extends AbstractStatement {
         
         this.bodyMain.clear();
         this.bodyMain.add(item);
+    }
+
+    @Override
+    public void readData(Node node) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
     
 }

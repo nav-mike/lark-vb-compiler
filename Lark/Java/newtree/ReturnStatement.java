@@ -1,5 +1,7 @@
 package newtree;
 
+import org.w3c.dom.Node;
+
 /**
  * Класс оператора возврата из функции.
  * @version 1.0
@@ -33,8 +35,13 @@ public class ReturnStatement extends AbstractStatement{
      */
     public ReturnStatement(Expression retData) {
         
-        super(RETURN);
+        super(SatementType.RETURN);
         this.retData = retData;
+    }
+
+    @Override
+    public void readData(Node node) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
     
 }

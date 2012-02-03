@@ -2,6 +2,7 @@ package newtree;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import org.w3c.dom.Node;
 
 /**
  * Класс оператора цикла For.
@@ -36,7 +37,7 @@ public class ForStatement extends AbstractStatement {
     public ForStatement (String existedIterator, int startValue, int endValue,
             int stepValue, AbstractStatement item) {
         
-        super(FOR);
+        super(SatementType.FOR);
         this.body = new ArrayList(); this.body.add(item);
         this.endValue = endValue;
         this.existedIterator = existedIterator;
@@ -58,7 +59,7 @@ public class ForStatement extends AbstractStatement {
     public ForStatement (String existedIterator, int startValue, int endValue,
             int stepValue, AbstractStatement[] body) {
 
-        super(FOR);
+        super(SatementType.FOR);
         this.existedIterator = existedIterator;
         this.newIterator = null;
         this.startValue = startValue;
@@ -80,7 +81,7 @@ public class ForStatement extends AbstractStatement {
     public ForStatement(String existedIterator, int startValue, int endValue,
             int stepValue, ArrayList<AbstractStatement> body) {
         
-        super(FOR);
+        super(SatementType.FOR);
         this.existedIterator = existedIterator;
         this.newIterator = null;
         this.startValue = startValue;
@@ -101,7 +102,7 @@ public class ForStatement extends AbstractStatement {
     public ForStatement (Expression newIterator, int startValue, int endValue,
             int stepValue, AbstractStatement item) {
         
-        super(FOR);
+        super(SatementType.FOR);
         this.body = new ArrayList(); this.body.add(item);
         this.endValue = endValue;
         this.existedIterator = null;
@@ -122,7 +123,7 @@ public class ForStatement extends AbstractStatement {
     public ForStatement (Expression newIterator, int startValue, int endValue,
             int stepValue, AbstractStatement[] body) {
 
-        super(FOR);
+        super(SatementType.FOR);
         this.existedIterator = null;
         this.newIterator = newIterator;
         this.startValue = startValue;
@@ -143,7 +144,7 @@ public class ForStatement extends AbstractStatement {
     public ForStatement(Expression newIterator, int startValue, int endValue,
             int stepValue, ArrayList<AbstractStatement> body) {
 
-        super(FOR);
+        super(SatementType.FOR);
         this.existedIterator = null;
         this.newIterator = newIterator;
         this.startValue = startValue;
@@ -288,6 +289,11 @@ public class ForStatement extends AbstractStatement {
      */
     public int getEndValue() {
         return endValue;
+    }
+
+    @Override
+    public void readData(Node node) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
     
 }
