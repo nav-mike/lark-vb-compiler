@@ -32,8 +32,6 @@ public class AbstractDeclaration implements XMLInterface{
     public AbstractDeclaration(){
         name = null;
         retType = DataType.NONE;
-        paramList = new ArrayList<>();
-        body = new ArrayList<>();
     }
     
     /**
@@ -228,6 +226,145 @@ public class AbstractDeclaration implements XMLInterface{
     }
     
     /**
+     * Считывание параметров процедуры или функции
+     * @param node Узел с параметрами
+     */
+    private void readParameters(Node node) {
+        if (node.getChildNodes().getLength() > 0) {
+            paramList = new ArrayList<>();
+            
+            ParamStatement buf;
+            
+            NodeList nodes = node.getChildNodes();
+            
+            for (int i = 0; i < nodes.getLength(); i++) {
+                buf = new ParamStatement();
+                buf.readData(nodes.item(i));
+                paramList.add(buf);
+            }
+        }
+    }
+    
+    /**
+     * Получить из узла операцию Dim
+     * @param node Исследуемый узел дерева
+     * @return Полученная операция
+     */
+    private AbstractStatement createDimStmt(Node node){
+        return null;
+    }
+    
+    /**
+     * Получить из узла операцию Do .. Loop
+     * @param node Исследуемый узел дерева
+     * @return Полученная операция
+     */
+    private AbstractStatement createDoLoopStmt(Node node){
+        return null;
+    }
+    
+    /**
+     * Получить выражение из узла
+     * @param node Исследуемый узел дерева
+     * @return Полученная операция
+     */   
+    private AbstractStatement createExprStmt(Node node){
+        return null;
+    }
+    
+    /**
+     * Получить из узла операцию FOR
+     * @param node Исследуемый узел дерева
+     * @return Полученная операция
+     */      
+    private AbstractStatement createForStmt(Node node){
+        return null;
+    }
+    
+    /**
+     * Получить из узла операцию IF
+     * @param node Исследуемый узел дерева
+     * @return Полученная операция
+     */          
+    private AbstractStatement createIfStmt(Node node){
+        return null;
+    }
+    
+    /**
+     * Получить из узла операцию Return
+     * @param node Исследуемый узел дерева
+     * @return Полученная операция
+     */              
+    private AbstractStatement createReturnStmt(Node node){
+        return null;
+    }
+    
+    /**
+     * Получить из узла операцию While
+     * @param node Исследуемый узел дерева
+     * @return Полученная операция
+     */                   
+    private AbstractStatement createWhileStmt(Node node){
+        return null;
+    }
+    
+    /**
+     * Считать одну операцию
+     * @param node Узел дерева с операцией 
+     */
+    private void readStatement(Node node) {
+        
+        String buffer;
+        NamedNodeMap attributes = node.getAttributes();
+        
+        // Считывание типа операции.
+        Node attr = attributes.getNamedItem("type");
+        buffer = attr.getNodeValue();
+        SatementType type = SatementType.fromString(buffer);      
+        
+        // Добавляем в тело функции полученную операцию
+        if (type == SatementType.DIM){
+            body.add(createDimStmt(node));
+            
+        } else if (type == SatementType.DO_LOOP){
+            body.add(createDoLoopStmt(node));
+            
+        } else if (type == SatementType.EXPRESSION){
+            body.add(createExprStmt(node));
+            
+        } else if (type == SatementType.FOR){
+            body.add(createForStmt(node));
+            
+        } else if (type == SatementType.IF){
+            body.add(createIfStmt(node));
+            
+        } else if (type == SatementType.RETURN){
+            body.add(createReturnStmt(node));
+            
+        } else if (type == SatementType.WHILE){
+            body.add(createWhileStmt(node));
+        }      
+    }
+    
+    /**
+     * Считывание тела процедуры или функции
+     * @param node Узел с операциями
+     */
+    private void readBody(Node node) {
+        if (node.getChildNodes().getLength() > 0) {
+            body = new ArrayList<>();
+            
+            AbstractStatement buf;
+            
+            NodeList nodes = node.getChildNodes();
+            
+            for (int i = 0; i < nodes.getLength(); i++) {
+                readStatement(nodes.item(i));
+            }
+        }
+    }
+    
+    /**
      * Считать данные для процедуры
      * @param node Узел дерева
      */
@@ -248,15 +385,22 @@ public class AbstractDeclaration implements XMLInterface{
         // Считывание вложенных структур.
         NodeList nodes = node.getChildNodes();
         
-//       for (int i = 0; i < nodes.getLength(); i++) {
-//            
-//            if ("VB_Param_stmt_list".equals(nodes.item(i).getNodeName()))
-//                paramList =  new JVBParamList(nodes.item(i));
-//            else if ("VB_Stmt_list".equals(nodes.item(i).getNodeName()))
-//                stmtList = new JVBStmtList(nodes.item(i));
-//        }
+       for (int i = 0; i < nodes.getLength(); i++) {
+            switch (nodes.item(i).getNodeName()) {
+                case "VB_Param_stmt_list":
+                    readParameters(nodes.item(i));
+                    break;
+                case "VB_Stmt_list":
+                    readBody(nodes.item(i));
+                    break;
+            }
+        }
     }
     
+    /**
+     * Считать данные из узла
+     * @param node Узел дерева
+     */
     @Override
     public void readData(Node node) {
 
