@@ -2,6 +2,10 @@ package newtree;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import main.*;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * Класс описывающий процедуру/функцию.
@@ -10,7 +14,7 @@ import java.util.Arrays;
 /*
  * TODO: Примечание. Список конструкторов, если потребуется можно расширить.
  */
-public class AbstractDeclaration {
+public class AbstractDeclaration implements XMLInterface{
     
     /* Поля класса. */
     /** Имя функции/процедуры. */
@@ -22,6 +26,16 @@ public class AbstractDeclaration {
     /** Тело функции/процедуры. */
     private ArrayList<AbstractStatement> body;
 
+    /**
+     * Конструктор по умолчанию
+     */
+    public AbstractDeclaration(){
+        name = null;
+        retType = DataType.NONE;
+        paramList = new ArrayList<>();
+        body = new ArrayList<>();
+    }
+    
     /**
      * Конструктор с параметрами.
      * Создает функцию/процедуру с заданными параметрами.
@@ -211,6 +225,56 @@ public class AbstractDeclaration {
      */
     public DataType getRetType() {
         return retType;
+    }
+    
+    /**
+     * Считать данные для процедуры
+     * @param node Узел дерева
+     */
+    private void readSubData(Node node, boolean isFunc) {
+        
+        NamedNodeMap attributes = node.getAttributes();
+        
+        // Считывание идентификатора.
+        Node attr = attributes.getNamedItem("id");
+        name = attr.getNodeValue();
+        
+        // Считывание типа возвращаемого значения.
+        if (isFunc == true) {
+            attr = attributes.getNamedItem("id_type");
+            retType = DataType.fromString(attr.getNodeValue());
+        }
+
+        // Считывание вложенных структур.
+        NodeList nodes = node.getChildNodes();
+        
+//       for (int i = 0; i < nodes.getLength(); i++) {
+//            
+//            if ("VB_Param_stmt_list".equals(nodes.item(i).getNodeName()))
+//                paramList =  new JVBParamList(nodes.item(i));
+//            else if ("VB_Stmt_list".equals(nodes.item(i).getNodeName()))
+//                stmtList = new JVBStmtList(nodes.item(i));
+//        }
+    }
+    
+    @Override
+    public void readData(Node node) {
+
+        // Считывание вложенных структур.
+        NodeList nodes = node.getChildNodes();
+        
+        for (int i = 0; i < nodes.getLength(); i++) {
+            
+            switch (nodes.item(i).getNodeName()) {
+                case "VB_Sub_stmt":
+                    readSubData(nodes.item(i),false);
+                    break;
+                case "VB_Func_stmt":
+                    readSubData(nodes.item(i),true);
+                    break;
+            }
+                
+        }
     }
     
 }

@@ -2,7 +2,12 @@ package newtree;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import main.JVBDeclStmt;
+import main.JVBDeclStmtList;
+import main.JVBStmtList;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * Класс описывающий модуль, что по сути является пакетом/пространством имен.
@@ -130,12 +135,51 @@ public class Module implements XMLInterface{
     }
 
     /**
+     * Считывание процедур и функций.
+     * @param node Узел XML Файла
+     */
+    private void getDeclarationList(Node node) {
+                       
+        // Считывание вложенных структур.
+        NodeList nodes = node.getChildNodes();
+
+        AbstractDeclaration buf;
+        for (int i = 0; i < nodes.getLength(); i++) {
+            buf = new AbstractDeclaration();
+            buf.readData(nodes.item(i));
+            declList.add(buf);
+        }
+    }
+    
+    /**
      * Чтение данных о модуле из узла 
      * @param node Узел XML файла
      */
     @Override
     public void readData(Node node) {
+      
+        NamedNodeMap attributes = node.getAttributes();
         
+        // Считывание идентификатора модуля.
+        Node attr = attributes.getNamedItem("id");
+        id = attr.getNodeValue();
+        
+        // Считывание вложенных структур.
+        NodeList nodes = node.getChildNodes();
+        
+        AbstractDeclaration subMain = new AbstractDeclaration();
+        
+        for (int i = 0; i < nodes.getLength(); i++) {
+            switch (nodes.item(i).getNodeName()) {
+                case "VB_Stmt_list":
+                    subMain.readData(nodes.item(i));
+                    declList.add(subMain);
+                    break;
+                case "VB_Decl_stmt_list":
+                    getDeclarationList(nodes.item(i));
+                    break;
+            }
+        }
     }
     
 }

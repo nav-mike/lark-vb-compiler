@@ -15,6 +15,27 @@ public enum DataType {
     /** Строковый тип. */
     STRING,
     /** Логический тип. */
-    BOOLEAN
+    BOOLEAN;
+
+    /**
+     * Преобразовать строку с текстом в тип данных
+     * @param text Преобразуемый текст
+     * @return Полученный тип данных
+     */
+    public static DataType fromString(String text) {
+        
+        switch(text){
+            case "INTEGER_E":
+                return INTEGER;
+            case "CHAR_E":
+                return CHAR;
+            case "STRING_E":
+                return STRING;
+            case "BOOLEAN_E":
+                return BOOLEAN;
+        }
+        
+        return NONE;
+    }
     
 }
