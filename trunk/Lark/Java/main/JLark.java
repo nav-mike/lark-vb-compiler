@@ -326,9 +326,13 @@ public class JLark {
             Logger.getLogger(JLark.class.getName()).log(Level.SEVERE, null, ex);
         }
        
-        cereateTable(); // Создать аблицу
+        
+        m_module = m_module;
+        
+        
+       // cereateTable(); // Создать аблицу
 
-        showTables();   // Отобразить таблицы
+       // showTables();   // Отобразить таблицы
 
     }
 }
