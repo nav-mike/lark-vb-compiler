@@ -8,7 +8,7 @@ import org.w3c.dom.Node;
 
 /**
  * Интерфейс для работы с XML файлом исходного дерева
- * @author Alexander
+ * @version 1.0
  */
 public interface XMLInterface {
     

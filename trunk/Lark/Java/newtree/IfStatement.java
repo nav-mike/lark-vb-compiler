@@ -2,6 +2,7 @@ package newtree;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import org.w3c.dom.Node;
 
 /**
  * Класс условного оператора.
@@ -52,7 +53,7 @@ public class IfStatement extends AbstractStatement {
     public IfStatement (Expression condition, AbstractStatement itemMain,
             AbstractStatement[] bodyAlter) {
         
-        super(IF);
+        super(SatementType.IF);
         this.condition = condition;
         this.bodyMain = new ArrayList();
         this.bodyMain.add(itemMain);
@@ -71,7 +72,7 @@ public class IfStatement extends AbstractStatement {
      */
     public IfStatement (Expression condition, AbstractStatement[] bodyMain, AbstractStatement itemAlter) {
         
-        super(IF);
+        super(SatementType.IF);
         this.condition = condition;
         this.bodyMain = new ArrayList(Arrays.asList(bodyMain));
         this.bodyAlter = new ArrayList();
@@ -90,7 +91,7 @@ public class IfStatement extends AbstractStatement {
      */
     public IfStatement (Expression condition, AbstractStatement itemMain, AbstractStatement itemAlter) {
         
-        super(IF);
+        super(SatementType.IF);
         this.condition = condition;
         this.bodyMain = new ArrayList();
         this.bodyMain.add(itemMain);
@@ -109,7 +110,7 @@ public class IfStatement extends AbstractStatement {
      */
     public IfStatement (Expression condition, AbstractStatement[] bodyMain, AbstractStatement[] bodyAlter) {
         
-        super(IF);
+        super(SatementType.IF);
         this.condition = condition;
         this.bodyMain = new ArrayList(Arrays.asList(bodyMain));
         this.bodyAlter = new ArrayList(Arrays.asList(bodyAlter));
@@ -125,7 +126,7 @@ public class IfStatement extends AbstractStatement {
      */
     public IfStatement(Expression condition, ArrayList<AbstractStatement> bodyMain, ArrayList<AbstractStatement> bodyAlter) {
         
-        super(IF);
+        super(SatementType.IF);
         this.condition = condition;
         this.bodyMain = bodyMain;
         this.bodyAlter = bodyAlter;
@@ -275,6 +276,11 @@ public class IfStatement extends AbstractStatement {
      */
     public Expression getCondition() {
         return condition;
+    }
+
+    @Override
+    public void readData(Node node) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
     
 }
