@@ -167,7 +167,8 @@ public class Module implements XMLInterface{
         // Считывание вложенных структур.
         NodeList nodes = node.getChildNodes();
         
-        AbstractDeclaration subMain = new AbstractDeclaration();
+        ArrayList<AbstractStatement> mainBody = new ArrayList<>();
+        AbstractDeclaration subMain = new AbstractDeclaration("Main", null, mainBody);
         
         for (int i = 0; i < nodes.getLength(); i++) {
             switch (nodes.item(i).getNodeName()) {
