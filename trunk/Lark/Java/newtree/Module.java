@@ -2,12 +2,13 @@ package newtree;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import org.w3c.dom.Node;
 
 /**
  * Класс описывающий модуль, что по сути является пакетом/пространством имен.
  * @version 1.0
  */
-public class Module {
+public class Module implements XMLInterface{
     
     /* Поля класса. */
     /** Имя модуля. */
@@ -15,6 +16,15 @@ public class Module {
     /** Список реализованных функций/процедур. */
     private ArrayList<AbstractDeclaration> declList;
 
+    /**
+     * Конструктор по умолчанию.
+     */
+    public Module(){
+        this.id = "";
+        this.declList = new ArrayList<>();
+    }
+    
+    
     /**
      * Конструктор с параметрами.
      * Создает модуль с заданными параметрами.
@@ -117,6 +127,15 @@ public class Module {
     public AbstractDeclaration get (int index) {
         
         return declList.get(index);
+    }
+
+    /**
+     * Чтение данных о модуле из узла 
+     * @param node Узел XML файла
+     */
+    @Override
+    public void readData(Node node) {
+        
     }
     
 }
