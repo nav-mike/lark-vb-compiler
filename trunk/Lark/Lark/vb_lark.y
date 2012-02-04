@@ -258,7 +258,7 @@
 					;
 
 			as_expr: ID AS param_type										{$$ = create_as_expr_init($1,$3,NULL);}
-				   | ID '('INT_CONST')' AS param_type						{$$ = create_as_expr_init($1,$3,NULL);}
+				   | ID '('INT_CONST')' AS param_type						{$$ = create_as_array($1,$3,$6);}
 				   | ID AS param_type '=' expr								{$$ = create_as_expr_init($1,$3,$5);}
 				   | ID '('')' AS param_type '=' '{'expr_list'}'			{$$ = create_as_array_init($1,$5,$8);}
 				   | ID',' id_list_stmt AS param_type						{$$ = create_as_expr_id($1,$3,$5);}	

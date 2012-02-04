@@ -1390,52 +1390,10 @@ struct VB_Dim_stmt* create_dim_stmt(struct VB_As_Expr_list* list)
 	return dim_stmt;
 }
 
-/*!
-	Функция создания списка последовательности определения переменныхх.
-  \param expr Создается определение переменной.
-  \param arr Создается определение массива.
-  \return указатель на объект выражения.
-*/
-struct VB_As_Expr_list* create_as_expr_list(struct VB_As_expr* expr)
-{
-	struct VB_As_Expr_list* as_list = (struct VB_As_Expr_list*)malloc(sizeof(struct VB_As_Expr_list));
-
-	as_list->as_expr = expr;
-//	as_list->arr = arr;
-	as_list->next = NULL;
-	as_list->type = EXPR_LIST;
-
-	return as_list;
-}
 
 /*!
-	Функция добавление переменной в список последовательности определения переменныхх.
-  \param list Текущий список
-  \param expr Доавляемое выражение
-  \param arr Добавляемый массив
-  \return указатель на объект выражения.
-*/
-struct VB_As_Expr_list* add_to_as_expr_list(struct VB_As_Expr_list* list, struct VB_As_expr* expr)
-{
-	struct VB_As_Expr_list* new_item = (struct VB_As_Expr_list*)malloc(sizeof(struct VB_As_Expr_list));
-	struct VB_As_Expr_list* lastList = list;
-
-	new_item->as_expr = expr;
-//	new_item->arr = arr;
-	new_item->next = NULL;
-	new_item->type = EXPR;
-
-	while (lastList->next != NULL){
-		lastList = lastList->next;
-	}
-
-	lastList->next = new_item;
-
-
-	return list;
-}
-
-
+ * Создать объект Expr, зная его имя
+ */
 struct VB_Expr * create_expr_with_id(char* id) 
 {
 	struct VB_Expr * result = (struct VB_Expr*)malloc(sizeof(struct VB_Expr));
@@ -1457,6 +1415,50 @@ struct VB_Expr * create_expr_with_id(char* id)
 }
 
 
+/*!
+	Функция создания списка последовательности определения переменныхх.
+  \param expr Создается определение переменной.
+  \param arr Создается определение массива.
+  \return указатель на объект выражения.
+*/
+struct VB_As_Expr_list* create_as_expr_list(struct VB_As_expr* expr)
+{
+	struct VB_As_Expr_list* as_list = (struct VB_As_Expr_list*)malloc(sizeof(struct VB_As_Expr_list));
+
+	as_list->as_expr = expr;
+	as_list->next = NULL;
+	as_list->type = EXPR;
+
+	return as_list;
+}
+
+/*!
+	Функция добавление переменной в список последовательности определения переменныхх.
+  \param list Текущий список
+  \param expr Доавляемое выражение
+  \param arr Добавляемый массив
+  \return указатель на объект выражения.
+*/
+struct VB_As_Expr_list* add_to_as_expr_list(struct VB_As_Expr_list* list, struct VB_As_expr* expr)
+{
+	struct VB_As_Expr_list* new_item = (struct VB_As_Expr_list*)malloc(sizeof(struct VB_As_Expr_list));
+	struct VB_As_Expr_list* lastList = list;
+
+	new_item->as_expr = expr;
+	new_item->next = NULL;
+	new_item->type = EXPR_LIST;
+
+	list->type = EXPR_LIST;
+
+	while (lastList->next != NULL){
+		lastList = lastList->next;
+	}
+
+	lastList->next = new_item;
+
+
+	return list;
+}
 
 /*!
 	Создание списка идентификаторов.
@@ -1579,9 +1581,28 @@ struct VB_As_expr* create_as_expr_init(char* id, enum VB_Id_type id_type, struct
 
 	as_expr->id_type = id_type;
 	
-	as_expr->type = ID_INIT;
+	if (expr != NULL)
+		as_expr->type = ID_INIT;
+	else
+		as_expr->type = ONE_ID;
 
 	return as_expr;
+}
+
+struct VB_As_expr* create_as_array(char* id, int size, enum VB_Id_type id_type)
+{
+	struct VB_As_expr* as_expr = (struct VB_As_expr*)malloc(sizeof(struct VB_As_expr));
+	as_expr->expr = NULL;
+	as_expr->expr_list = NULL;
+
+	as_expr->list = create_id_list(id,1,size);
+	as_expr->list->arr->id_type = id_type;
+	as_expr->list->arr->list = NULL;
+
+	as_expr->id_type = id_type;
+	
+	as_expr->type = ONE_ID;
+
 }
 
 struct VB_As_expr* create_as_array_init(char* id, enum VB_Id_type id_type, struct VB_Expr_list* list)
@@ -1590,7 +1611,8 @@ struct VB_As_expr* create_as_array_init(char* id, enum VB_Id_type id_type, struc
 	struct VB_Expr* buf = list->first;
 	struct VB_As_expr* as_expr = (struct VB_As_expr*)malloc(sizeof(struct VB_As_expr));
 	as_expr->expr = NULL;
-	as_expr->expr_list = list;
+	//as_expr->expr_list = list;
+as_expr->expr_list = NULL;
 
 	
 	
