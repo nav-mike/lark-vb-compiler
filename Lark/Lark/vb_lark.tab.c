@@ -2186,7 +2186,7 @@ yyreduce:
 
 /* Line 1455 of yacc.c  */
 #line 261 "vb_lark.y"
-    {(yyval.As_expr_str) = create_as_expr_init((yyvsp[(1) - (6)].Id),(yyvsp[(3) - (6)].i_const),NULL);;}
+    {(yyval.As_expr_str) = create_as_array((yyvsp[(1) - (6)].Id),(yyvsp[(3) - (6)].i_const),(yyvsp[(6) - (6)].Id_type));;}
     break;
 
   case 59:
