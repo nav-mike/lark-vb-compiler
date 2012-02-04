@@ -243,7 +243,7 @@ public class AbstractDeclaration implements XMLInterface{
                 paramList.add(buf);
             }
         }
-    }
+    }   
     
     /**
      * Получить из узла операцию Dim
@@ -251,7 +251,14 @@ public class AbstractDeclaration implements XMLInterface{
      * @return Полученная операция
      */
     private AbstractStatement createDimStmt(Node node){
-        return null;
+        
+        ArrayList<AsExpression> asExprList = new ArrayList<>();
+                
+        DimStatement dim = new DimStatement(asExprList);
+        
+        dim.readData(node);
+        
+        return dim;
     }
     
     /**
@@ -322,30 +329,37 @@ public class AbstractDeclaration implements XMLInterface{
         buffer = attr.getNodeValue();
         SatementType type = SatementType.fromString(buffer);      
         
-        // Добавляем в тело функции полученную операцию
-        if (type == SatementType.DIM){
-            body.add(createDimStmt(node));
-            
-        } else if (type == SatementType.DO_LOOP){
-            body.add(createDoLoopStmt(node));
-            
-        } else if (type == SatementType.EXPRESSION){
-            body.add(createExprStmt(node));
-            
-        } else if (type == SatementType.FOR){
-            body.add(createForStmt(node));
-            
-        } else if (type == SatementType.IF){
-            body.add(createIfStmt(node));
-            
-        } else if (type == SatementType.RETURN){
-            body.add(createReturnStmt(node));
-            
-        } else if (type == SatementType.WHILE){
-            body.add(createWhileStmt(node));
-        }      
+        NodeList nodes = node.getChildNodes();
+        
+        for (int i = 0; i < nodes.getLength(); i++) {
+                        
+            // Добавляем в тело функции полученную операцию
+            if (type == SatementType.DIM && "VB_Dim_stmt".equals(nodes.item(i).getNodeName())){
+                
+                DimStatement newDim = new DimStatement();
+                newDim.readData(nodes.item(i));
+                body.add(newDim);
+
+            } else if (type == SatementType.DO_LOOP){
+                body.add(createDoLoopStmt(nodes.item(i)));
+
+            } else if (type == SatementType.EXPRESSION){
+                body.add(createExprStmt(nodes.item(i)));
+
+            } else if (type == SatementType.FOR){
+                body.add(createForStmt(nodes.item(i)));
+
+            } else if (type == SatementType.IF){
+                body.add(createIfStmt(nodes.item(i)));
+
+            } else if (type == SatementType.RETURN){
+                body.add(createReturnStmt(nodes.item(i)));
+
+            } else if (type == SatementType.WHILE){
+                body.add(createWhileStmt(nodes.item(i)));
+            }      
+        }
     }
-    
     /**
      * Считывание тела процедуры или функции
      * @param node Узел с операциями

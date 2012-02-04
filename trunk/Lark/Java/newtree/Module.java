@@ -168,6 +168,7 @@ public class Module implements XMLInterface{
         NodeList nodes = node.getChildNodes();
         
         ArrayList<AbstractStatement> mainBody = new ArrayList<>();
+        
         AbstractDeclaration subMain = new AbstractDeclaration("Main", null, mainBody);
         
         for (int i = 0; i < nodes.getLength(); i++) {
