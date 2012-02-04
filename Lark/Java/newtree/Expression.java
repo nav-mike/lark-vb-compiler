@@ -1,10 +1,12 @@
 package newtree;
 
+import org.w3c.dom.Node;
+
 /**
  * Новый класс выражения в дереве.
  * @version 1.0
  */
-public class Expression {
+public class Expression implements XMLInterface{
     
     /* Поля класса. */
     /** Тип выражения. */
@@ -49,6 +51,11 @@ public class Expression {
     protected Expression(int type) {
         
         this.type = type;
+    }
+
+    @Override
+    public void readData(Node node) {
+        
     }
     
 }

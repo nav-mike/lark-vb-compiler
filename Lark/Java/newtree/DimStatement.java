@@ -2,7 +2,11 @@ package newtree;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import javax.xml.crypto.dsig.spec.ExcC14NParameterSpec;
+import main.*;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * Класс, описыващий блок объявления переменных.
@@ -14,6 +18,12 @@ public class DimStatement extends AbstractStatement {
     /** Список объявлений переменных. */
     private ArrayList<AsExpression> bodyMain;
 
+    public DimStatement(){
+        super(SatementType.DIM);
+        
+        bodyMain = new ArrayList<>();
+    }
+    
     /**
      * Конструктор с параметрами.
      * Создает объект класса с заданным списком объявлений переменных.
@@ -93,9 +103,34 @@ public class DimStatement extends AbstractStatement {
         this.bodyMain.add(item);
     }
 
-    @Override
-    public void readData(Node node) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void getAsExprList(Node node) {
+        
+        // Считывание списка объявляемых переменных.
+        NodeList nodes = node.getChildNodes();
+        
+        for (int i = 0; i < nodes.getLength(); i++) {
+            
+           if ("VB_As_expr".equals(nodes.item(i).getNodeName())){
+               AsExpression newAsExpr = new AsExpression();
+               newAsExpr.readData(nodes.item(i));
+               bodyMain.add(newAsExpr);
+           }
+           
+           if ("VB_As_Expr_list".equals(nodes.item(i).getNodeName()))
+               getAsExprList(nodes.item(i));
+        }
     }
     
+    @Override
+    public void readData(Node node) {
+        
+        // Считывание списка объявляемых переменных.
+        NodeList nodes = node.getChildNodes();
+        
+        for (int i = 0; i < nodes.getLength(); i++) {
+            
+           if ("VB_As_Expr_list".equals(nodes.item(i).getNodeName()))
+               getAsExprList(nodes.item(i));
+        }
+    }
 }
