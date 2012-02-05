@@ -541,8 +541,8 @@ static const yytype_uint16 yyprhs[] =
 {
        0,     0,     3,    15,    28,    29,    31,    33,    36,    39,
       41,    43,    45,    47,    49,    51,    53,    55,    56,    58,
-      60,    63,    65,    67,    69,    71,    76,    82,    88,    95,
-     101,   108,   114,   116,   118,   120,   122,   124,   128,   132,
+      60,    63,    65,    67,    69,    71,    73,    75,    80,    86,
+      92,    99,   105,   112,   118,   120,   122,   124,   128,   132,
      136,   140,   144,   148,   152,   156,   160,   164,   168,   172,
      176,   180,   183,   191,   202,   206,   208,   212,   216,   223,
      229,   239,   245,   254,   256,   261,   265,   272,   273,   275,
@@ -561,13 +561,13 @@ static const yytype_int8 yyrhs[] =
       -1,    86,    -1,    85,    86,    -1,    90,     9,    -1,    91,
       -1,    92,    -1,    98,    -1,    99,    -1,   100,    -1,   110,
       -1,   113,    -1,   108,    -1,    -1,    88,    -1,    89,    -1,
-      88,    89,    -1,   101,    -1,   104,    -1,   109,    -1,     8,
-      -1,     8,    77,    96,    76,    -1,    54,    78,    57,    77,
-      76,    -1,    54,    78,    58,    77,    76,    -1,    54,    78,
-      55,    77,    90,    76,    -1,    54,    78,    55,    77,    76,
-      -1,    54,    78,    56,    77,    90,    76,    -1,    54,    78,
-      56,    77,    76,    -1,     5,    -1,     7,    -1,     6,    -1,
-       3,    -1,     4,    -1,    90,    62,    90,    -1,    90,    69,
+      88,    89,    -1,   101,    -1,   104,    -1,   109,    -1,     3,
+      -1,     4,    -1,     8,    -1,     8,    77,    96,    76,    -1,
+      54,    78,    57,    77,    76,    -1,    54,    78,    58,    77,
+      76,    -1,    54,    78,    55,    77,    90,    76,    -1,    54,
+      78,    55,    77,    76,    -1,    54,    78,    56,    77,    90,
+      76,    -1,    54,    78,    56,    77,    76,    -1,     5,    -1,
+       7,    -1,     6,    -1,    90,    62,    90,    -1,    90,    69,
       90,    -1,    90,    70,    90,    -1,    90,    71,    90,    -1,
       90,    72,    90,    -1,    90,    73,    90,    -1,    90,    74,
       90,    -1,    90,    63,    90,    -1,    90,    64,    90,    -1,
@@ -691,8 +691,8 @@ static const yytype_uint8 yyr2[] =
 {
        0,     2,    11,    12,     0,     1,     1,     2,     2,     1,
        1,     1,     1,     1,     1,     1,     1,     0,     1,     1,
-       2,     1,     1,     1,     1,     4,     5,     5,     6,     5,
-       6,     5,     1,     1,     1,     1,     1,     3,     3,     3,
+       2,     1,     1,     1,     1,     1,     1,     4,     5,     5,
+       6,     5,     6,     5,     1,     1,     1,     3,     3,     3,
        3,     3,     3,     3,     3,     3,     3,     3,     3,     3,
        3,     2,     7,    10,     3,     1,     3,     3,     6,     5,
        9,     5,     8,     1,     4,     3,     6,     0,     1,     1,
@@ -710,7 +710,7 @@ static const yytype_uint8 yydefact[] =
        0,     0,     0,     0,     1,    17,     0,     0,     0,     0,
       18,    19,    21,    22,    23,     0,     0,     0,     0,    20,
        0,     0,     0,     4,     0,     0,     0,     0,    87,     0,
-       0,    83,     0,     0,    35,    36,    32,    34,    33,    24,
+       0,    83,     0,     0,    24,    25,    34,    36,    35,    26,
        0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
        0,     0,     5,     6,     0,     9,    10,    11,    12,    13,
       16,    14,    15,     0,     0,     0,     0,     0,     4,     0,
@@ -723,15 +723,15 @@ static const yytype_uint8 yydefact[] =
        0,     0,     4,     0,     0,     0,     0,     0,     0,     0,
        0,     0,    50,    17,    37,    44,    45,    49,    48,    47,
       46,    38,    39,    40,    41,    42,    43,    89,     0,     4,
-       0,     0,     0,     0,    25,     0,    57,     0,     0,    63,
+       0,     0,     0,     0,    27,     0,    57,     0,     0,    63,
        0,    56,     4,     0,     0,   101,     0,     0,     0,     4,
        4,     0,     0,     0,     0,     0,     0,     0,     0,     0,
        0,     4,     0,    85,     0,    70,     0,     0,     0,     0,
        0,     0,     0,     0,     0,   102,     0,     0,     0,     0,
-       0,     0,     0,     0,    29,     0,    31,     0,    26,    27,
+       0,     0,     0,     0,    31,     0,    33,     0,    28,    29,
        2,    90,     0,     4,     0,     0,    86,    59,     0,     0,
        0,     0,    61,    65,     0,     0,     0,     4,     0,    75,
-       0,     0,     0,     0,     0,     0,    28,    30,     3,    96,
+       0,     0,     0,     0,     0,     0,    30,    32,     3,    96,
        0,     0,     4,    58,     0,     0,    64,     0,     4,    52,
        0,     0,     0,    78,    79,    76,    77,     0,     4,     0,
        0,    97,     0,     0,     0,     0,     0,     4,     0,     0,
@@ -1948,91 +1948,91 @@ yyreduce:
 
 /* Line 1455 of yacc.c  */
 #line 219 "vb_lark.y"
-    {(yyval.Expr) = create_id_expr((yyvsp[(1) - (1)].Id));;}
+    {(yyval.Expr) = create_int_boolean_char_const_expr(5,1);;}
     break;
 
   case 25:
 
 /* Line 1455 of yacc.c  */
 #line 220 "vb_lark.y"
-    {(yyval.Expr) = create_brackets_actions((yyvsp[(1) - (4)].Id),(yyvsp[(3) - (4)].Expr_l));;}
+    {(yyval.Expr) = create_int_boolean_char_const_expr(5,0);;}
     break;
 
   case 26:
 
 /* Line 1455 of yacc.c  */
 #line 221 "vb_lark.y"
-    {(yyval.Expr) = create_Read();;}
+    {(yyval.Expr) = create_id_expr((yyvsp[(1) - (1)].Id));;}
     break;
 
   case 27:
 
 /* Line 1455 of yacc.c  */
 #line 222 "vb_lark.y"
-    {(yyval.Expr) = create_Readln();;}
+    {(yyval.Expr) = create_brackets_actions((yyvsp[(1) - (4)].Id),(yyvsp[(3) - (4)].Expr_l));;}
     break;
 
   case 28:
 
 /* Line 1455 of yacc.c  */
 #line 223 "vb_lark.y"
-    {(yyval.Expr) = create_Print((yyvsp[(5) - (6)].Expr));;}
+    {(yyval.Expr) = create_Read();;}
     break;
 
   case 29:
 
 /* Line 1455 of yacc.c  */
 #line 224 "vb_lark.y"
-    {(yyval.Expr) = create_Print(NULL);;}
+    {(yyval.Expr) = create_Readln();;}
     break;
 
   case 30:
 
 /* Line 1455 of yacc.c  */
 #line 225 "vb_lark.y"
-    {(yyval.Expr) = create_Println((yyvsp[(5) - (6)].Expr));;}
+    {(yyval.Expr) = create_Print((yyvsp[(5) - (6)].Expr));;}
     break;
 
   case 31:
 
 /* Line 1455 of yacc.c  */
 #line 226 "vb_lark.y"
-    {(yyval.Expr) = create_Println(NULL);;}
+    {(yyval.Expr) = create_Print(NULL);;}
     break;
 
   case 32:
 
 /* Line 1455 of yacc.c  */
 #line 227 "vb_lark.y"
-    {(yyval.Expr) = create_int_boolean_char_const_expr(3,(yyvsp[(1) - (1)].i_const));;}
+    {(yyval.Expr) = create_Println((yyvsp[(5) - (6)].Expr));;}
     break;
 
   case 33:
 
 /* Line 1455 of yacc.c  */
 #line 228 "vb_lark.y"
-    {(yyval.Expr) = create_int_boolean_char_const_expr(2,(yyvsp[(1) - (1)].c_const));;}
+    {(yyval.Expr) = create_Println(NULL);;}
     break;
 
   case 34:
 
 /* Line 1455 of yacc.c  */
 #line 229 "vb_lark.y"
-    {(yyval.Expr) = create_string_const_expr((yyvsp[(1) - (1)].s_const));;}
+    {(yyval.Expr) = create_int_boolean_char_const_expr(3,(yyvsp[(1) - (1)].i_const));;}
     break;
 
   case 35:
 
 /* Line 1455 of yacc.c  */
 #line 230 "vb_lark.y"
-    {(yyval.Expr) = create_int_boolean_char_const_expr(5,1);;}
+    {(yyval.Expr) = create_int_boolean_char_const_expr(2,(yyvsp[(1) - (1)].c_const));;}
     break;
 
   case 36:
 
 /* Line 1455 of yacc.c  */
 #line 231 "vb_lark.y"
-    {(yyval.Expr) = create_int_boolean_char_const_expr(5,0);;}
+    {(yyval.Expr) = create_string_const_expr((yyvsp[(1) - (1)].s_const));;}
     break;
 
   case 37:

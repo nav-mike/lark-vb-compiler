@@ -1315,9 +1315,21 @@ struct VB_Expr* create_int_boolean_char_const_expr(enum VB_Expr_type type, int v
 	struct VB_Expr* result = (struct VB_Expr*)malloc(sizeof(struct VB_Expr));
 	printf("Create Expr %d", value);
 
+	if (type == BOOLEAN_CONST_E) {
+		if (value == 1)
+			result->expr_string = "true";
+		else
+			result->expr_string = "false";
+	}
+	else if (type == CHAR_CONST_E)
+		result->expr_string = "char";
+
+	else
+		result->expr_string = "int";
+
 	result->type = type;
 	result->int_val = value;
-	result->expr_string = "int";
+	
 	result->left_chld = NULL;
 	result->list = NULL;
 	result->next = NULL;
