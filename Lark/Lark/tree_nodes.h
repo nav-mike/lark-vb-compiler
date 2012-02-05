@@ -142,6 +142,9 @@ struct VB_Expr
 	struct VB_Expr*      next;           //!< Указатель на следующего, для Expr_list.
 
 	enum VB_Id_type		id_type;		//!< Тип идентификатора 	????
+
+	// Поля для семантики	
+	char* string_val;			//!< Значение строковой переменной 
 };
 
 struct VB_Return_stmt
@@ -1362,6 +1365,37 @@ struct VB_Expr* create_string_const_expr(char* string)
 }
 
 /*!
+ * Функция реализации присваивания
+ */
+void solve_assign(struct VB_Expr* result, struct VB_Expr* left, struct VB_Expr* right){
+	
+	// Проверим l-value
+	if (left->type != ID_E && left->type != BRK_EXPR)
+		yyerror("There must be left-value!");
+
+	// Проверим типы
+	else if (left->id_type != right->id_type)
+		yyerror("Unequal types!");
+
+	// Если правая часть - идентификатор строкового типа
+	else if (left->id_type == STRING_E){
+
+		if (right->type == STRING_CONST_E){
+			strcpy(left->string_val, right->expr_string);
+			strcpy(result->string_val, right->expr_string);
+		}
+		else if (right->type == ID_E || right->type == BRK_EXPR){
+			strcpy(left->string_val, right->string_val);
+			strcpy(result->string_val, right->string_val);
+		}
+	}
+	else{
+		left->int_val = right->int_val;
+		result->int_val = right->int_val;
+	}
+}
+
+/*!
 	Функция создания выражения операции.
   \param type Тип операции.
   \param left Левый операнд.
@@ -1383,6 +1417,9 @@ struct VB_Expr* create_operator_expr(enum VB_Expr_type type,
 	result->next = NULL;
 	result->id_type = INTEGER_E;
 	result->int_val = 0;
+
+	if (type == ASSIGN)
+		solve_assign(result,left,right);
 
 	return result;
 }

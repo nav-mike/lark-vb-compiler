@@ -216,8 +216,8 @@
 					 | func_stmt				{$$ = create_VB_Decl_Func($1);}
 					 ;
 						
-	expr: TRUE										{$$ = create_int_boolean_char_const_expr(5,1);}
-		| FALSE										{$$ = create_int_boolean_char_const_expr(5,0);}
+	expr: TRUE										{$$ = create_int_boolean_char_const_expr(BOOLEAN_CONST_E,1);}
+		| FALSE										{$$ = create_int_boolean_char_const_expr(BOOLEAN_CONST_E,0);}
 		| ID										{$$ = create_id_expr($1);}
 		| ID'('expr_list_empty')'					{$$ = create_brackets_actions($1,$3);}
 		| CONSOLE '.' READ '('')'					{$$ = create_Read();}
@@ -226,24 +226,24 @@
 		| CONSOLE '.' WRITE '('')' 		  			{$$ = create_Print(NULL);}
 		| CONSOLE '.' WRITELINE '(' expr ')'  		{$$ = create_Println($5);}
 		| CONSOLE '.' WRITELINE '('')'  			{$$ = create_Println(NULL);}
-		| INT_CONST									{$$ = create_int_boolean_char_const_expr(3,$1);}
-		| CHAR_CONST								{$$ = create_int_boolean_char_const_expr(2,$1);}
+		| INT_CONST									{$$ = create_int_boolean_char_const_expr(INT_CONST_E,$1);}
+		| CHAR_CONST								{$$ = create_int_boolean_char_const_expr(CHAR_CONST_E,$1);}
 		| STRING_CONST								{$$ = create_string_const_expr($1);}
-        | expr '=' expr								{$$ = create_operator_expr(6,$1,$3);}
-		| expr '+' expr								{$$ = create_operator_expr(7,$1,$3);}
-		| expr '-' expr								{$$ = create_operator_expr(8,$1,$3);}
-		| expr '*' expr								{$$ = create_operator_expr(9,$1,$3);}
-		| expr '/' expr								{$$ = create_operator_expr(11,$1,$3);}
-		| expr '\\' expr							{$$ = create_operator_expr(10,$1,$3);}
-		| expr '^' expr								{$$ = create_operator_expr(12,$1,$3);}
-		| expr '>' expr								{$$ = create_operator_expr(13,$1,$3);}
-		| expr '<' expr								{$$ = create_operator_expr(14,$1,$3);}
-		| expr MORE_OR_EQUAL expr					{$$ = create_operator_expr(15,$1,$3);}
-		| expr LESS_OR_EQUAL expr					{$$ = create_operator_expr(16,$1,$3);}
-		| expr NONEQUAL	expr						{$$ = create_operator_expr(17,$1,$3);}
-		| expr EQUAL	expr						{$$ = create_operator_expr(18,$1,$3);}
+        | expr '=' expr								{$$ = create_operator_expr(ASSIGN,$1,$3);}
+		| expr '+' expr								{$$ = create_operator_expr(PLUS,$1,$3);}
+		| expr '-' expr								{$$ = create_operator_expr(MINUS,$1,$3);}
+		| expr '*' expr								{$$ = create_operator_expr(MUL,$1,$3);}
+		| expr '/' expr								{$$ = create_operator_expr(DIV,$1,$3);}
+		| expr '\\' expr							{$$ = create_operator_expr(INT_DIV,$1,$3);}
+		| expr '^' expr								{$$ = create_operator_expr(POWER,$1,$3);}
+		| expr '>' expr								{$$ = create_operator_expr(MORE,$1,$3);}
+		| expr '<' expr								{$$ = create_operator_expr(LESS,$1,$3);}
+		| expr MORE_OR_EQUAL expr					{$$ = create_operator_expr(MORE_OR_EQUAL_E,$1,$3);}
+		| expr LESS_OR_EQUAL expr					{$$ = create_operator_expr(LESS_OR_EQUAL_E,$1,$3);}
+		| expr NONEQUAL	expr						{$$ = create_operator_expr(NONEQUAL_E,$1,$3);}
+		| expr EQUAL	expr						{$$ = create_operator_expr(EQUAL_E,$1,$3);}
 		| '('expr')'								{$$ = $2;}
-		| '-' expr %prec UMINUS						{$$ = create_operator_expr(19,$2,0);}
+		| '-' expr %prec UMINUS						{$$ = create_operator_expr(UMINUS_E,$2,0);}
 		;
 
 	if_stmt: IF expr THEN ENDL stmt_list END_IF ENDL						{$$ = create_if_stmt(0,$2,$5,NULL);}

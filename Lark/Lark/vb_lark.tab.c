@@ -1948,14 +1948,14 @@ yyreduce:
 
 /* Line 1455 of yacc.c  */
 #line 219 "vb_lark.y"
-    {(yyval.Expr) = create_int_boolean_char_const_expr(5,1);;}
+    {(yyval.Expr) = create_int_boolean_char_const_expr(BOOLEAN_CONST_E,1);;}
     break;
 
   case 25:
 
 /* Line 1455 of yacc.c  */
 #line 220 "vb_lark.y"
-    {(yyval.Expr) = create_int_boolean_char_const_expr(5,0);;}
+    {(yyval.Expr) = create_int_boolean_char_const_expr(BOOLEAN_CONST_E,0);;}
     break;
 
   case 26:
@@ -2018,14 +2018,14 @@ yyreduce:
 
 /* Line 1455 of yacc.c  */
 #line 229 "vb_lark.y"
-    {(yyval.Expr) = create_int_boolean_char_const_expr(3,(yyvsp[(1) - (1)].i_const));;}
+    {(yyval.Expr) = create_int_boolean_char_const_expr(INT_CONST_E,(yyvsp[(1) - (1)].i_const));;}
     break;
 
   case 35:
 
 /* Line 1455 of yacc.c  */
 #line 230 "vb_lark.y"
-    {(yyval.Expr) = create_int_boolean_char_const_expr(2,(yyvsp[(1) - (1)].c_const));;}
+    {(yyval.Expr) = create_int_boolean_char_const_expr(CHAR_CONST_E,(yyvsp[(1) - (1)].c_const));;}
     break;
 
   case 36:
@@ -2039,91 +2039,91 @@ yyreduce:
 
 /* Line 1455 of yacc.c  */
 #line 232 "vb_lark.y"
-    {(yyval.Expr) = create_operator_expr(6,(yyvsp[(1) - (3)].Expr),(yyvsp[(3) - (3)].Expr));;}
+    {(yyval.Expr) = create_operator_expr(ASSIGN,(yyvsp[(1) - (3)].Expr),(yyvsp[(3) - (3)].Expr));;}
     break;
 
   case 38:
 
 /* Line 1455 of yacc.c  */
 #line 233 "vb_lark.y"
-    {(yyval.Expr) = create_operator_expr(7,(yyvsp[(1) - (3)].Expr),(yyvsp[(3) - (3)].Expr));;}
+    {(yyval.Expr) = create_operator_expr(PLUS,(yyvsp[(1) - (3)].Expr),(yyvsp[(3) - (3)].Expr));;}
     break;
 
   case 39:
 
 /* Line 1455 of yacc.c  */
 #line 234 "vb_lark.y"
-    {(yyval.Expr) = create_operator_expr(8,(yyvsp[(1) - (3)].Expr),(yyvsp[(3) - (3)].Expr));;}
+    {(yyval.Expr) = create_operator_expr(MINUS,(yyvsp[(1) - (3)].Expr),(yyvsp[(3) - (3)].Expr));;}
     break;
 
   case 40:
 
 /* Line 1455 of yacc.c  */
 #line 235 "vb_lark.y"
-    {(yyval.Expr) = create_operator_expr(9,(yyvsp[(1) - (3)].Expr),(yyvsp[(3) - (3)].Expr));;}
+    {(yyval.Expr) = create_operator_expr(MUL,(yyvsp[(1) - (3)].Expr),(yyvsp[(3) - (3)].Expr));;}
     break;
 
   case 41:
 
 /* Line 1455 of yacc.c  */
 #line 236 "vb_lark.y"
-    {(yyval.Expr) = create_operator_expr(11,(yyvsp[(1) - (3)].Expr),(yyvsp[(3) - (3)].Expr));;}
+    {(yyval.Expr) = create_operator_expr(DIV,(yyvsp[(1) - (3)].Expr),(yyvsp[(3) - (3)].Expr));;}
     break;
 
   case 42:
 
 /* Line 1455 of yacc.c  */
 #line 237 "vb_lark.y"
-    {(yyval.Expr) = create_operator_expr(10,(yyvsp[(1) - (3)].Expr),(yyvsp[(3) - (3)].Expr));;}
+    {(yyval.Expr) = create_operator_expr(INT_DIV,(yyvsp[(1) - (3)].Expr),(yyvsp[(3) - (3)].Expr));;}
     break;
 
   case 43:
 
 /* Line 1455 of yacc.c  */
 #line 238 "vb_lark.y"
-    {(yyval.Expr) = create_operator_expr(12,(yyvsp[(1) - (3)].Expr),(yyvsp[(3) - (3)].Expr));;}
+    {(yyval.Expr) = create_operator_expr(POWER,(yyvsp[(1) - (3)].Expr),(yyvsp[(3) - (3)].Expr));;}
     break;
 
   case 44:
 
 /* Line 1455 of yacc.c  */
 #line 239 "vb_lark.y"
-    {(yyval.Expr) = create_operator_expr(13,(yyvsp[(1) - (3)].Expr),(yyvsp[(3) - (3)].Expr));;}
+    {(yyval.Expr) = create_operator_expr(MORE,(yyvsp[(1) - (3)].Expr),(yyvsp[(3) - (3)].Expr));;}
     break;
 
   case 45:
 
 /* Line 1455 of yacc.c  */
 #line 240 "vb_lark.y"
-    {(yyval.Expr) = create_operator_expr(14,(yyvsp[(1) - (3)].Expr),(yyvsp[(3) - (3)].Expr));;}
+    {(yyval.Expr) = create_operator_expr(LESS,(yyvsp[(1) - (3)].Expr),(yyvsp[(3) - (3)].Expr));;}
     break;
 
   case 46:
 
 /* Line 1455 of yacc.c  */
 #line 241 "vb_lark.y"
-    {(yyval.Expr) = create_operator_expr(15,(yyvsp[(1) - (3)].Expr),(yyvsp[(3) - (3)].Expr));;}
+    {(yyval.Expr) = create_operator_expr(MORE_OR_EQUAL_E,(yyvsp[(1) - (3)].Expr),(yyvsp[(3) - (3)].Expr));;}
     break;
 
   case 47:
 
 /* Line 1455 of yacc.c  */
 #line 242 "vb_lark.y"
-    {(yyval.Expr) = create_operator_expr(16,(yyvsp[(1) - (3)].Expr),(yyvsp[(3) - (3)].Expr));;}
+    {(yyval.Expr) = create_operator_expr(LESS_OR_EQUAL_E,(yyvsp[(1) - (3)].Expr),(yyvsp[(3) - (3)].Expr));;}
     break;
 
   case 48:
 
 /* Line 1455 of yacc.c  */
 #line 243 "vb_lark.y"
-    {(yyval.Expr) = create_operator_expr(17,(yyvsp[(1) - (3)].Expr),(yyvsp[(3) - (3)].Expr));;}
+    {(yyval.Expr) = create_operator_expr(NONEQUAL_E,(yyvsp[(1) - (3)].Expr),(yyvsp[(3) - (3)].Expr));;}
     break;
 
   case 49:
 
 /* Line 1455 of yacc.c  */
 #line 244 "vb_lark.y"
-    {(yyval.Expr) = create_operator_expr(18,(yyvsp[(1) - (3)].Expr),(yyvsp[(3) - (3)].Expr));;}
+    {(yyval.Expr) = create_operator_expr(EQUAL_E,(yyvsp[(1) - (3)].Expr),(yyvsp[(3) - (3)].Expr));;}
     break;
 
   case 50:
@@ -2137,7 +2137,7 @@ yyreduce:
 
 /* Line 1455 of yacc.c  */
 #line 246 "vb_lark.y"
-    {(yyval.Expr) = create_operator_expr(19,(yyvsp[(2) - (2)].Expr),0);;}
+    {(yyval.Expr) = create_operator_expr(UMINUS_E,(yyvsp[(2) - (2)].Expr),0);;}
     break;
 
   case 52:
