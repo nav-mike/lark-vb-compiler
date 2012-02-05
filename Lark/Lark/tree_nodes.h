@@ -1382,17 +1382,49 @@ void solve_assign(struct VB_Expr* result, struct VB_Expr* left, struct VB_Expr* 
 
 		if (right->type == STRING_CONST_E){
 			strcpy(left->string_val, right->expr_string);
-			strcpy(result->string_val, right->expr_string);
+			strcpy(result->expr_string, right->expr_string);
 		}
 		else if (right->type == ID_E || right->type == BRK_EXPR){
 			strcpy(left->string_val, right->string_val);
-			strcpy(result->string_val, right->string_val);
+			strcpy(result->expr_string, right->string_val);
 		}
 	}
 	else{
 		left->int_val = right->int_val;
 		result->int_val = right->int_val;
 	}
+}
+
+/*!
+ * Функция интерпретации сложения
+ */
+void solve_plus(struct VB_Expr* result, struct VB_Expr* left, struct VB_Expr* right){
+	
+	char * buf1, buf2;
+	// Проверим типы
+	if (left->id_type != right->id_type)
+		yyerror("Unequal types!");
+
+	// Если тип строковый, то складываем строки
+	if (left->id_type == STRING_E){
+		if (left->type == ID_E)
+			buf1 = left->string_val;
+		else
+			buf1 = left->expr_string;
+
+		if (right->type == ID_E)
+			buf1 = right->string_val;
+		else
+			buf1 = right->expr_string;
+		
+		result->expr_string = (char*)malloc(sizeof(char) * (strlen(buf1) + strlen(buf2)) + 1);
+		strcpy(result->expr_string,buf1);
+		strcat(result->expr_string,buf2);
+	}
+
+	// Иначе складываем числа
+	else 
+		result->int_val = left->int_val + right->int_val;
 }
 
 /*!
@@ -1420,6 +1452,9 @@ struct VB_Expr* create_operator_expr(enum VB_Expr_type type,
 
 	if (type == ASSIGN)
 		solve_assign(result,left,right);
+
+	else if (type ==PLUS)
+		solve_plus(result,left,right);
 
 	return result;
 }
