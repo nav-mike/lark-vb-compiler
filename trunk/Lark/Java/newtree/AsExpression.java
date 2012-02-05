@@ -3,10 +3,6 @@ package newtree;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import main.JVBAsExprType;
-import main.JVBExpr;
-import main.JVBIdList;
-import main.JVBIdType;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -29,7 +25,7 @@ public class AsExpression implements XMLInterface{
     /** Хэш массивов. */
     private HashMap<String, Integer> arrays;
     
-    private ArrayList<Expression> arrayInit;
+    private ArrayList<ConstantExpression> arrayInit;
     
     private DataType type;
 
@@ -96,7 +92,7 @@ public class AsExpression implements XMLInterface{
     }
 
     
-    public AsExpression (DataType type,HashMap<String, Integer> arrays, ArrayList<Expression> arrayInit) {
+    public AsExpression (DataType type,HashMap<String, Integer> arrays, ArrayList<ConstantExpression> arrayInit) {
         
         this.type = type;
         this.arrays = arrays;
@@ -184,21 +180,35 @@ public class AsExpression implements XMLInterface{
         
         // Считывание вложенных структур.
         NodeList nodes = node.getChildNodes();
-        
+        NamedNodeMap attributes;
+        Node attr;
+                
         for (int i = 0; i < nodes.getLength(); i++) {
             // Если это список идентификаторов.
             switch (nodes.item(i).getNodeName()) {
-                case "VB_Expr__expr":
-//                    Expression expr = new Expression();
-//                    expr.readData(nodes.item(i));
-//                    variables.add(expr.);
+                case "VB_Expr":
+                    
+                    if (variables == null)
+                        variables = new ArrayList<>();
+                    
+                    
+                    attributes = nodes.item(i).getAttributes();
+                    attr = attributes.getNamedItem("expr_string");
+                    variables.add(attr.getNodeValue());
                     break;
                     
                case "VB_Array_expr":
-//                    Expression expr = new Expression();
-//                    expr.readData(nodes.item(i));
-//                    variables.add(expr);
-                    break;
+                   
+                if (arrays == null)
+                    arrays = new HashMap<>();
+                
+                attributes = nodes.item(i).getAttributes();
+                attr = attributes.getNamedItem("id");
+                String name = attr.getNodeValue();
+                attr = attributes.getNamedItem("size");
+                int size = Integer.parseInt(attr.getNodeValue());
+                arrays.put(name, size);
+                break;
                     
                 case "VB_Id_list":
                     readFromIdList(nodes.item(i));
@@ -206,7 +216,7 @@ public class AsExpression implements XMLInterface{
             }
         }
     }
-
+        
     public void readFromExpr(Node node){
 //        
         
