@@ -176,6 +176,10 @@ public class AsExpression implements XMLInterface{
         this.variables.add(variable);
     }
     
+    /**
+     * Чтение данных из списка операторов
+     * @param node Узел. из которого читаем
+     */
     public void readFromIdList(Node node){
         
         // Считывание вложенных структур.
@@ -191,7 +195,6 @@ public class AsExpression implements XMLInterface{
                     if (variables == null)
                         variables = new ArrayList<>();
                     
-                    
                     attributes = nodes.item(i).getAttributes();
                     attr = attributes.getNamedItem("expr_string");
                     variables.add(attr.getNodeValue());
@@ -199,16 +202,18 @@ public class AsExpression implements XMLInterface{
                     
                case "VB_Array_expr":
                    
-                if (arrays == null)
-                    arrays = new HashMap<>();
-                
-                attributes = nodes.item(i).getAttributes();
-                attr = attributes.getNamedItem("id");
-                String name = attr.getNodeValue();
-                attr = attributes.getNamedItem("size");
-                int size = Integer.parseInt(attr.getNodeValue());
-                arrays.put(name, size);
-                break;
+                    if (arrays == null)
+                        arrays = new HashMap<>();
+
+                    attributes = nodes.item(i).getAttributes();
+                    attr = attributes.getNamedItem("id");
+                    String name = attr.getNodeValue();
+
+                    attr = attributes.getNamedItem("size");
+                    int size = Integer.parseInt(attr.getNodeValue());
+
+                    arrays.put(name, size);
+                    break;
                     
                 case "VB_Id_list":
                     readFromIdList(nodes.item(i));
@@ -217,74 +222,53 @@ public class AsExpression implements XMLInterface{
         }
     }
         
+    /**
+     * Чтение данных из выражения
+     * @param node Узел с выражением
+     */
     public void readFromExpr(Node node){
-//        
-        
-        
-        
-        // ВСЕ НЕ ПРАВИЛЬНО!!!!!!!!!!!
-        
-        
-        
-        
-//        String buffer;
-//        NamedNodeMap attributes = node.getAttributes();
-//        
-//        // Считывание типа идентификатора.
-//        Node attr = attributes.getNamedItem("id_type");
-//        buffer = attr.getNodeValue();
-//        DataType idType = DataType.fromString(buffer);
-//        
-//        
-//        if (idType == DataType.INTEGER){
-//            // Считывание значения выражения.
-//            attr = attributes.getNamedItem("int_val");
-//            buffer = attr.getNodeValue();
-//            initData = new ConstantExpression(Integer.parseInt(buffer));
-//        }
-//        else if (idType == DataType.STRING){
-//            // Считывание имени идентификатора или строки.
-//            attr = attributes.getNamedItem("expr_string");
-//            initData = new ConstantExpression(attr.getNodeValue());
-//        }
-//        else if (idType == DataType.CHAR){
-//            // Считывание имени идентификатора или строки.
-//            attr = attributes.getNamedItem("expr_string");
-//            initData = new ConstantExpression(attr.getNodeValue().charAt(0));
-//        }
-//        else if (idType == DataType.BOOLEAN){
-//            // Считывание имени идентификатора или строки.
-//            attr = attributes.getNamedItem("int_val");
-//            buffer = attr.getNodeValue();
-//            if (Integer.parseInt(buffer) == 0)
-//                initData = new ConstantExpression(false);
-//            else
-//                initData = new ConstantExpression(true);
-//        }
-//
-//        // Считывание вложенных структур.
-//        NodeList nodes = node.getChildNodes();
-//        for (int i = 0; i < nodes.getLength(); i++) {
-//            switch (nodes.item(i).getNodeName()) {
-//                case "VB_Expr__left_chld":
-//                    m_leftChld = new JVBExpr(nodes.item(i));
-//                    break;
-//                case "VB_Expr__right_chld":
-//                    m_rightChld = new JVBExpr(nodes.item(i));
-//                    break;
-//                case "VB_Expr_list":
-//                    m_list = new JVBExprList(nodes.item(i));
-//                    break;
-//            }
-//                   
-//        }
-
+        // Разберемся с аттрибутами
+        NamedNodeMap attributes = node.getAttributes();
+        Node attr = attributes.getNamedItem("type");
+        String buffer = attr.getNodeValue();
+        switch (buffer) {
+            case "INT_CONST_E":
+                attr = attributes.getNamedItem("int_val");
+                buffer = attr.getNodeValue();
+                initData = new ConstantExpression(Integer.parseInt(buffer));
+                initData.setDtype(DataType.INTEGER);
+                break;
+            case "CHAR_CONST_E":
+                attr = attributes.getNamedItem("expr_string");
+                buffer = attr.getNodeValue();
+                initData = new ConstantExpression(buffer.charAt(0));
+                initData.setDtype(DataType.CHAR);
+                break;
+            case "STRING_CONST_E":
+                attr = attributes.getNamedItem("expr_string");
+                buffer = attr.getNodeValue();
+                initData = new ConstantExpression(buffer);
+                initData.setDtype(DataType.STRING);
+                break;
+            case "BOOLEAN_CONST_E":
+                attr = attributes.getNamedItem("expr_string");
+                buffer = attr.getNodeValue();
+                if (buffer.equals("true"))
+                    initData = new ConstantExpression(true);
+                else
+                    initData = new ConstantExpression(false);
+                
+                initData.setDtype(DataType.BOOLEAN);
+                break;
+        }
     }
     
+    /**
+     * Чтение данных из узла
+     * @param node 
+     */
     @Override
     public void readData(Node node) {
-                
-
         NamedNodeMap attributes = node.getAttributes();
        
         // Считывание типа.

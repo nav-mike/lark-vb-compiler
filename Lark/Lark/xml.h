@@ -717,11 +717,11 @@ char* VBX_expression_type_to_string (enum VB_Expr_type type)
 	case (ASSIGN):
 		return "ASSIGN";
 	case (BOOLEAN_CONST_E):
-		return "BOOLEAN CONST";
+		return "BOOLEAN_CONST_E";
 	case (BRK_EXPR):
 		return "BRK_EXPR";
 	case (CHAR_CONST_E):
-		return "CHAR CONST";
+		return "CHAR_CONST_E";
 	case (DIV):
 		return "DIV";
 	case (EQUAL_E):

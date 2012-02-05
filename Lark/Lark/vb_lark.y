@@ -216,7 +216,9 @@
 					 | func_stmt				{$$ = create_VB_Decl_Func($1);}
 					 ;
 						
-	expr: ID										{$$ = create_id_expr($1);}
+	expr: TRUE										{$$ = create_int_boolean_char_const_expr(5,1);}
+		| FALSE										{$$ = create_int_boolean_char_const_expr(5,0);}
+		| ID										{$$ = create_id_expr($1);}
 		| ID'('expr_list_empty')'					{$$ = create_brackets_actions($1,$3);}
 		| CONSOLE '.' READ '('')'					{$$ = create_Read();}
 		| CONSOLE '.' READLINE '('')'				{$$ = create_Readln();}
@@ -227,8 +229,6 @@
 		| INT_CONST									{$$ = create_int_boolean_char_const_expr(3,$1);}
 		| CHAR_CONST								{$$ = create_int_boolean_char_const_expr(2,$1);}
 		| STRING_CONST								{$$ = create_string_const_expr($1);}
-		| TRUE										{$$ = create_int_boolean_char_const_expr(5,1);}
-		| FALSE										{$$ = create_int_boolean_char_const_expr(5,0);}
         | expr '=' expr								{$$ = create_operator_expr(6,$1,$3);}
 		| expr '+' expr								{$$ = create_operator_expr(7,$1,$3);}
 		| expr '-' expr								{$$ = create_operator_expr(8,$1,$3);}
