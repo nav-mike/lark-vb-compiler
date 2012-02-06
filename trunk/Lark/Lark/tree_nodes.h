@@ -1377,8 +1377,10 @@ struct VB_Expr* create_string_const_expr(char* string)
 void solve_assign(struct VB_Expr* result, struct VB_Expr* left, struct VB_Expr* right){
 	
 	// Проверим l-value
-	if (left->type != ID_E && left->type != BRK_EXPR)
-		yyerror("\nThere must be left-value!");
+
+	// ЭТО НАДО ПРОВЕРЯТЬ НА СЕМАНТИКЕ, ТУТ НЕ ПРОКАТИТ
+	//if (left->type != ID_E && left->type != BRK_EXPR)
+	//	yyerror("\nThere must be left-value!");
 
 	// Проверим типы
 	else if (left->id_type != right->id_type)
