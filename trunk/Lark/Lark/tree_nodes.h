@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 
 void yyerror (char const* s);
 
@@ -971,6 +972,12 @@ struct VB_If_stmt* create_if_inline(enum VB_If_stmt_type type, struct VB_Expr* e
 struct VB_If_stmt* create_if_stmt(int hasElse,struct VB_Expr* expr,struct VB_Stmt_list* if_list, struct VB_Stmt_list* else_list) {
 	struct VB_If_stmt* if_stmt = NULL;
 
+	if (expr->type == ASSIGN){
+		expr->type = EQUAL_E;
+		expr->expr_string = "EQUAL_E";
+	}
+
+
 	if_stmt = (struct VB_If_stmt*)malloc(sizeof(struct VB_If_stmt));
 
 	if_stmt->type = hasElse;
@@ -1371,11 +1378,11 @@ void solve_assign(struct VB_Expr* result, struct VB_Expr* left, struct VB_Expr* 
 	
 	// Проверим l-value
 	if (left->type != ID_E && left->type != BRK_EXPR)
-		yyerror("There must be left-value!");
+		yyerror("\nThere must be left-value!");
 
 	// Проверим типы
 	else if (left->id_type != right->id_type)
-		yyerror("Unequal types!");
+		yyerror("\nUnequal types!");
 
 	// Если правая часть - идентификатор строкового типа
 	else if (left->id_type == STRING_E){
@@ -1392,6 +1399,7 @@ void solve_assign(struct VB_Expr* result, struct VB_Expr* left, struct VB_Expr* 
 	else{
 		left->int_val = right->int_val;
 		result->int_val = right->int_val;
+		result->id_type = left->id_type;
 	}
 }
 
@@ -1403,7 +1411,7 @@ void solve_plus(struct VB_Expr* result, struct VB_Expr* left, struct VB_Expr* ri
 	char * buf1, buf2;
 	// Проверим типы
 	if (left->id_type != right->id_type)
-		yyerror("Unequal types!");
+		yyerror("\nUnequal types!");
 
 	// Если тип строковый, то складываем строки
 	if (left->id_type == STRING_E){
@@ -1425,6 +1433,143 @@ void solve_plus(struct VB_Expr* result, struct VB_Expr* left, struct VB_Expr* ri
 	// Иначе складываем числа
 	else 
 		result->int_val = left->int_val + right->int_val;
+
+	result->id_type = left->id_type;
+}
+
+/*!
+ * Функция интерпретации вычетания
+ */
+void solve_minus(struct VB_Expr* result, struct VB_Expr* left, struct VB_Expr* right){
+	
+	// Проверим типы
+	if (left->id_type != right->id_type)
+		yyerror("\nUnequal types!");
+
+	// Строки вычитать нельзя
+	if (left->id_type == STRING_E)
+		yyerror("\nIncorrect type!");
+
+	result->int_val = left->int_val - right->int_val;
+
+	result->id_type = left->id_type;
+}
+
+
+/*!
+ * Функция интерпретации умножения
+ */
+void solve_mul(struct VB_Expr* result, struct VB_Expr* left, struct VB_Expr* right){
+	
+	// Проверим типы
+	if (left->id_type != right->id_type)
+		yyerror("\nUnequal types!");
+
+	// Строки умножать нельзя
+	if (left->id_type == STRING_E)
+		yyerror("\nIncorrect type!");
+
+	result->int_val = left->int_val * right->int_val;
+
+	result->id_type = left->id_type;
+}
+
+/*!
+ * Функция интерпретации деления
+ */
+void solve_div(struct VB_Expr* result, struct VB_Expr* left, struct VB_Expr* right){
+	
+	// Проверим типы
+	if (left->id_type != right->id_type)
+		yyerror("\nUnequal types!");
+
+	// Строки делить нельзя
+	if (left->id_type == STRING_E)
+		yyerror("\nIncorrect type!");
+
+	// Если деление на 0
+	if (right->int_val == 0)
+		yyerror("\nDivision by zero!");
+
+	result->int_val = left->int_val / right->int_val;
+
+	result->id_type = left->id_type;
+}
+
+/*!
+ * Функция интерпретации возведения в степень
+ */
+void solve_pow(struct VB_Expr* result, struct VB_Expr* left, struct VB_Expr* right){
+	
+	// Проверим типы
+	if (left->id_type != right->id_type)
+		yyerror("\nUnequal types!");
+
+	// Строки нельзя возводить в степень
+	if (left->id_type == STRING_E)
+		yyerror("\nIncorrect type!");
+
+	result->int_val = (int)pow(left->int_val,right->int_val);
+
+	result->id_type = left->id_type;
+}
+
+/*!
+ * Функция интерпретации операции "больше"
+ */
+void solve_more(struct VB_Expr* result, struct VB_Expr* left, struct VB_Expr* right){
+	
+	char* buf1, buf2;
+	// Проверим типы
+	if (left->id_type != right->id_type)
+		yyerror("\nUnequal types!");
+
+	// Строки нельзя возводить в степень
+	if (left->id_type == STRING_E){
+		if (left->type == ID_E)
+			buf1 = left->string_val;
+		else
+			buf1 = left->expr_string;
+
+		if (right->type == ID_E)
+			buf1 = right->string_val;
+		else
+			buf1 = right->expr_string;
+
+		result->int_val = strlen(buf1) > strlen(buf2);
+	}
+		
+	result->int_val = left->int_val > right->int_val;
+	result->id_type = BOOLEAN_E;
+}
+
+/*!
+ * Функция интерпретации операции "меньше"
+ */
+void solve_less(struct VB_Expr* result, struct VB_Expr* left, struct VB_Expr* right){
+	
+	char* buf1, buf2;
+	// Проверим типы
+	if (left->id_type != right->id_type)
+		yyerror("\nUnequal types!");
+
+	// Строки нельзя возводить в степень
+	if (left->id_type == STRING_E){
+		if (left->type == ID_E)
+			buf1 = left->string_val;
+		else
+			buf1 = left->expr_string;
+
+		if (right->type == ID_E)
+			buf1 = right->string_val;
+		else
+			buf1 = right->expr_string;
+
+		result->int_val = strlen(buf1) < strlen(buf2);
+	}
+		
+	result->int_val = left->int_val < right->int_val;
+	result->id_type = BOOLEAN_E;
 }
 
 /*!
@@ -1453,11 +1598,31 @@ struct VB_Expr* create_operator_expr(enum VB_Expr_type type,
 	if (type == ASSIGN)
 		solve_assign(result,left,right);
 
-	else if (type ==PLUS)
+	else if (type == PLUS)
 		solve_plus(result,left,right);
+
+	else if (type == MINUS)
+		solve_minus(result,left,right);
+
+	else if (type == MUL)
+		solve_mul(result,left,right);
+
+	else if (type == DIV)
+		solve_div(result,left,right);
+
+	else if (type == POWER)
+		solve_pow(result,left,right);
+
+	else if (type == MORE)
+		solve_more(result,left,right);
+
+	else if (type == LESS)
+		solve_less(result,left,right);
 
 	return result;
 }
+
+
 
 /*!
 	Функция создания выражения объявления переменных.
