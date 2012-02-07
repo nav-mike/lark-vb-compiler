@@ -545,7 +545,7 @@ int add_expression (FILE* file, struct VB_Expr* expr)
 {
 	int error, number = Number;
 
-	printf("\nadd_expression. expr: %d\n",expr->int_val);
+	//printf("\nadd_expression. expr: %d\n",expr->int_val);
 
 	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> Expression\
 						 | <f1> str: %s | <f2> int: %d | <f3> type: %s \

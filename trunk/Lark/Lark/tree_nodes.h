@@ -1376,15 +1376,11 @@ struct VB_Expr* create_string_const_expr(char* string)
  */
 void solve_assign(struct VB_Expr* result, struct VB_Expr* left, struct VB_Expr* right){
 	
-	// Проверим l-value
+	printf("\n = \n");
 
-	// ЭТО НАДО ПРОВЕРЯТЬ НА СЕМАНТИКЕ, ТУТ НЕ ПРОКАТИТ
-	//if (left->type != ID_E && left->type != BRK_EXPR)
-	//	yyerror("\nThere must be left-value!");
-
-	// Проверим типы
-	else if (left->id_type != right->id_type)
-		yyerror("\nUnequal types!");
+	// Проверим типы, если кто-то из детей строкового типа и типы не равны, то ошибка
+	if ((left->id_type == STRING_E || right->id_type == STRING_E) && left->id_type != right->id_type)
+		yyerror("\nIncorrect types!");
 
 	// Если правая часть - идентификатор строкового типа
 	else if (left->id_type == STRING_E){
@@ -1398,11 +1394,28 @@ void solve_assign(struct VB_Expr* result, struct VB_Expr* left, struct VB_Expr* 
 			strcpy(result->expr_string, right->string_val);
 		}
 	}
-	else{
+	else if (left->id_type == BOOLEAN_E && right->int_val != 0)
+		left->int_val = 1;
+	
+	else {
 		left->int_val = right->int_val;
 		result->int_val = right->int_val;
 		result->id_type = left->id_type;
 	}
+}
+
+/*!
+ * Функция определения того, куда нужно записывать строковую информацию и откуда ее брать
+ */
+char * get_string_pointer(struct VB_Expr* expr){
+	char * buf;
+
+	if (expr->type == ID_E)
+		buf = expr->string_val;
+	else
+		buf = expr->expr_string;
+
+	return buf;
 }
 
 /*!
@@ -1411,21 +1424,18 @@ void solve_assign(struct VB_Expr* result, struct VB_Expr* left, struct VB_Expr* 
 void solve_plus(struct VB_Expr* result, struct VB_Expr* left, struct VB_Expr* right){
 	
 	char * buf1, buf2;
-	// Проверим типы
-	if (left->id_type != right->id_type)
-		yyerror("\nUnequal types!");
+
+	printf("\n + \n");
+
+	// Проверим типы, если кто-то из детей строкового типа и типы не равны, то ошибка
+	if ((left->id_type == STRING_E || right->id_type == STRING_E) && left->id_type != right->id_type)
+		yyerror("\nIncorrect types!");
 
 	// Если тип строковый, то складываем строки
 	if (left->id_type == STRING_E){
-		if (left->type == ID_E)
-			buf1 = left->string_val;
-		else
-			buf1 = left->expr_string;
+		buf1 = get_string_pointer(left);
 
-		if (right->type == ID_E)
-			buf1 = right->string_val;
-		else
-			buf1 = right->expr_string;
+		buf2 = get_string_pointer(right);
 		
 		result->expr_string = (char*)malloc(sizeof(char) * (strlen(buf1) + strlen(buf2)) + 1);
 		strcpy(result->expr_string,buf1);
@@ -1433,7 +1443,9 @@ void solve_plus(struct VB_Expr* result, struct VB_Expr* left, struct VB_Expr* ri
 	}
 
 	// Иначе складываем числа
-	else 
+	else if (left->id_type == BOOLEAN_E)
+		left->int_val = left->int_val || right->int_val;
+	else
 		result->int_val = left->int_val + right->int_val;
 
 	result->id_type = left->id_type;
@@ -1444,17 +1456,17 @@ void solve_plus(struct VB_Expr* result, struct VB_Expr* left, struct VB_Expr* ri
  */
 void solve_minus(struct VB_Expr* result, struct VB_Expr* left, struct VB_Expr* right){
 	
-	// Проверим типы
-	if (left->id_type != right->id_type)
-		yyerror("\nUnequal types!");
+	printf("\n - \n");
 
-	// Строки вычитать нельзя
-	if (left->id_type == STRING_E)
-		yyerror("\nIncorrect type!");
+	// Строки вычитать нельзя и из логического типа вычитать нельзя
+	if (left->id_type == STRING_E || right->id_type == STRING_E || left->id_type == BOOLEAN_E)
+		yyerror("\nIncorrect types!");
 
-	result->int_val = left->int_val - right->int_val;
+	else{
+		result->int_val = left->int_val - right->int_val;
 
-	result->id_type = left->id_type;
+		result->id_type = left->id_type;
+	}
 }
 
 
@@ -1463,17 +1475,21 @@ void solve_minus(struct VB_Expr* result, struct VB_Expr* left, struct VB_Expr* r
  */
 void solve_mul(struct VB_Expr* result, struct VB_Expr* left, struct VB_Expr* right){
 	
-	// Проверим типы
-	if (left->id_type != right->id_type)
-		yyerror("\nUnequal types!");
+	printf("\n * \n");
 
-	// Строки умножать нельзя
-	if (left->id_type == STRING_E)
-		yyerror("\nIncorrect type!");
+	// Строки вычитать нельзя и из логического типа вычитать нельзя
+	if (left->id_type == STRING_E || right->id_type == STRING_E)
+		yyerror("\nIncorrect types!");
 
-	result->int_val = left->int_val * right->int_val;
+	// Иначе складываем числа
+	else if (left->id_type == BOOLEAN_E)
+		left->int_val = left->int_val && right->int_val;
 
-	result->id_type = left->id_type;
+	else{
+		result->int_val = left->int_val * right->int_val;
+
+		result->id_type = left->id_type;
+	}
 }
 
 /*!
@@ -1481,13 +1497,11 @@ void solve_mul(struct VB_Expr* result, struct VB_Expr* left, struct VB_Expr* rig
  */
 void solve_div(struct VB_Expr* result, struct VB_Expr* left, struct VB_Expr* right){
 	
-	// Проверим типы
-	if (left->id_type != right->id_type)
-		yyerror("\nUnequal types!");
+	printf("\n / \n");
 
-	// Строки делить нельзя
-	if (left->id_type == STRING_E)
-		yyerror("\nIncorrect type!");
+	// Строки делить нельзя и логический тип
+	if (left->id_type == STRING_E || right->id_type == STRING_E || left->id_type == BOOLEAN_E)
+		yyerror("\nIncorrect types!");
 
 	// Если деление на 0
 	if (right->int_val == 0)
@@ -1503,13 +1517,11 @@ void solve_div(struct VB_Expr* result, struct VB_Expr* left, struct VB_Expr* rig
  */
 void solve_pow(struct VB_Expr* result, struct VB_Expr* left, struct VB_Expr* right){
 	
-	// Проверим типы
-	if (left->id_type != right->id_type)
-		yyerror("\nUnequal types!");
+	printf("\n ^ \n");
 
-	// Строки нельзя возводить в степень
-	if (left->id_type == STRING_E)
-		yyerror("\nIncorrect type!");
+	// Строки возводить в степень нельзя
+	if (left->id_type == STRING_E || right->id_type == STRING_E)
+		yyerror("\nIncorrect types!");
 
 	result->int_val = (int)pow(left->int_val,right->int_val);
 
@@ -1522,26 +1534,24 @@ void solve_pow(struct VB_Expr* result, struct VB_Expr* left, struct VB_Expr* rig
 void solve_more(struct VB_Expr* result, struct VB_Expr* left, struct VB_Expr* right){
 	
 	char* buf1, buf2;
-	// Проверим типы
-	if (left->id_type != right->id_type)
-		yyerror("\nUnequal types!");
+
+	printf("\n > \n");
+
+	// Проверим типы, если кто-то из детей строкового типа и типы не равны, то ошибка
+	if ((left->id_type == STRING_E || right->id_type == STRING_E) && left->id_type != right->id_type)
+		yyerror("\nIncorrect types!");
 
 	// Строки нельзя возводить в степень
 	if (left->id_type == STRING_E){
-		if (left->type == ID_E)
-			buf1 = left->string_val;
-		else
-			buf1 = left->expr_string;
+		buf1 = get_string_pointer(left);
 
-		if (right->type == ID_E)
-			buf1 = right->string_val;
-		else
-			buf1 = right->expr_string;
+		buf2 = get_string_pointer(right);
 
 		result->int_val = strlen(buf1) > strlen(buf2);
 	}
-		
-	result->int_val = left->int_val > right->int_val;
+	else
+		result->int_val = left->int_val > right->int_val;
+	
 	result->id_type = BOOLEAN_E;
 }
 
@@ -1551,27 +1561,119 @@ void solve_more(struct VB_Expr* result, struct VB_Expr* left, struct VB_Expr* ri
 void solve_less(struct VB_Expr* result, struct VB_Expr* left, struct VB_Expr* right){
 	
 	char* buf1, buf2;
-	// Проверим типы
-	if (left->id_type != right->id_type)
-		yyerror("\nUnequal types!");
+
+	printf("\n < \n");
+
+	// Проверим типы, если кто-то из детей строкового типа и типы не равны, то ошибка
+	if ((left->id_type == STRING_E || right->id_type == STRING_E) && left->id_type != right->id_type)
+		yyerror("\nIncorrect types!");
 
 	// Строки нельзя возводить в степень
 	if (left->id_type == STRING_E){
-		if (left->type == ID_E)
-			buf1 = left->string_val;
-		else
-			buf1 = left->expr_string;
+		buf1 = get_string_pointer(left);
 
-		if (right->type == ID_E)
-			buf1 = right->string_val;
-		else
-			buf1 = right->expr_string;
+		buf2 = get_string_pointer(right);
 
 		result->int_val = strlen(buf1) < strlen(buf2);
 	}
-		
-	result->int_val = left->int_val < right->int_val;
+	else	
+		result->int_val = left->int_val < right->int_val;
+
 	result->id_type = BOOLEAN_E;
+}
+
+/*!
+ * Функция интерпретации операции "больше или равно""
+ */
+void solve_more_or_equal(struct VB_Expr* result, struct VB_Expr* left, struct VB_Expr* right){
+	char* buf1, buf2;
+
+	printf("\n >= \n");
+
+	// Проверим типы, если кто-то из детей строкового типа и типы не равны, то ошибка
+	if ((left->id_type == STRING_E || right->id_type == STRING_E) && left->id_type != right->id_type)
+		yyerror("\nIncorrect types!");
+
+	// Строки нельзя возводить в степень
+	if (left->id_type == STRING_E){
+		buf1 = get_string_pointer(left);
+
+		buf2 = get_string_pointer(right);
+
+		result->int_val = strlen(buf1) >= strlen(buf2);
+	}
+	else
+		result->int_val = left->int_val >= right->int_val;
+
+	result->id_type = BOOLEAN_E;
+}
+
+/*!
+ * Функция интерпретации операции "меньше или равно"
+ */
+void solve_less_or_equal(struct VB_Expr* result, struct VB_Expr* left, struct VB_Expr* right){
+	char* buf1, buf2;
+
+	printf("\n >= \n");
+
+	// Проверим типы, если кто-то из детей строкового типа и типы не равны, то ошибка
+	if ((left->id_type == STRING_E || right->id_type == STRING_E) && left->id_type != right->id_type)
+		yyerror("\nIncorrect types!");
+
+	// Строки нельзя возводить в степень
+	if (left->id_type == STRING_E){
+		buf1 = get_string_pointer(left);
+
+		buf2 = get_string_pointer(right);
+
+		result->int_val = strlen(buf1) >= strlen(buf2);
+	}
+	else	
+		result->int_val = left->int_val >= right->int_val;
+
+	result->id_type = BOOLEAN_E;
+}
+
+/*!
+ * Функция интерпретации операции "неравно"
+ */
+void solve_nonqeual(struct VB_Expr* result, struct VB_Expr* left, struct VB_Expr* right){
+	char* buf1, buf2;
+
+	printf("\n <> \n");
+
+	// Проверим типы, если кто-то из детей строкового типа и типы не равны, то ошибка
+	if ((left->id_type == STRING_E || right->id_type == STRING_E) && left->id_type != right->id_type)
+		yyerror("\nIncorrect types!");
+
+	// Строки нельзя возводить в степень
+	if (left->id_type == STRING_E){
+		buf1 = get_string_pointer(left);
+
+		buf2 = get_string_pointer(right);
+
+		result->int_val = strlen(buf1) != strlen(buf2);
+	}
+	else
+		result->int_val = left->int_val != right->int_val;
+
+	result->id_type = BOOLEAN_E;
+}
+
+/*!
+ * Функция интерпретации операции "унарный минус"
+ */
+void solve_uminus(struct VB_Expr* result, struct VB_Expr* left){
+	char* buf1, buf2;
+
+	printf("\n U- \n");
+
+	// Строки нельзя возводить в степень
+	if (left->id_type == STRING_E)
+		yyerror("\nIncorrect type!");
+	
+	left->int_val = -left->int_val;
+	result->int_val = -left->int_val;
 }
 
 /*!
@@ -1621,10 +1723,21 @@ struct VB_Expr* create_operator_expr(enum VB_Expr_type type,
 	else if (type == LESS)
 		solve_less(result,left,right);
 
+	else if (type == MORE_OR_EQUAL_E)
+		solve_more_or_equal(result,left,right);
+
+	else if (type == LESS_OR_EQUAL_E)
+		solve_less_or_equal(result,left,right);
+
+	else if (type == NONEQUAL_E)
+		solve_nonqeual(result,left,right);
+
+	else if (type == UMINUS_E)
+		solve_uminus(result,left);
+
+
 	return result;
 }
-
-
 
 /*!
 	Функция создания выражения объявления переменных.
