@@ -229,19 +229,20 @@ public class AsExpression implements XMLInterface{
     public void readFromExpr(Node node){
         // Разберемся с аттрибутами
         NamedNodeMap attributes = node.getAttributes();
-        Node attr = attributes.getNamedItem("type");
+        Node attr = attributes.getNamedItem("id_type");
         String buffer = attr.getNodeValue();
+        
         switch (buffer) {
-            case "INT_CONST_E":
+            case "INTEGER_E":
                 attr = attributes.getNamedItem("int_val");
                 buffer = attr.getNodeValue();
                 initData = new ConstantExpression(Integer.parseInt(buffer));
                 initData.setDtype(DataType.INTEGER);
                 break;
-            case "CHAR_CONST_E":
-                attr = attributes.getNamedItem("expr_string");
+            case "CHAR_E":
+                attr = attributes.getNamedItem("int_val");
                 buffer = attr.getNodeValue();
-                initData = new ConstantExpression(buffer.charAt(0));
+                initData = new ConstantExpression((char)Integer.parseInt(buffer));
                 initData.setDtype(DataType.CHAR);
                 break;
             case "STRING_CONST_E":
