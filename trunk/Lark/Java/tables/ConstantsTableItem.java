@@ -38,9 +38,15 @@ public class ConstantsTableItem {
      * @param cClass Ссылка на константу Class.
      * @param nameAndType Ссылка на константу NameAndType.
      * @return Константа типа MethodRef.
+     * @throws InvalidParametersException Исключение возникает если константы
+     * имеют неверные типы.
      */
     public static ConstantsTableItem CreateMethodRefConst (int number,
-            ConstantsTableItem cClass, ConstantsTableItem nameAndType) {
+            ConstantsTableItem cClass, ConstantsTableItem nameAndType) throws InvalidParametersException {
+        
+        if (cClass.getType() != CONSTANT_Class ||
+                nameAndType.getType() != CONSTANT_NameAndType)
+            throw new InvalidParametersException("Неверные константы!");
         
         ConstantsTableItem item = new ConstantsTableItem(number, CONSTANT_MethodRef,
                 Integer.toString(cClass.number) + ", " +
@@ -55,9 +61,15 @@ public class ConstantsTableItem {
      * @param cClass Ссылка на константу Class.
      * @param nameAndType Ссылка на константу NameAndType.
      * @return Константа типа FieldRef.
+     * @throws InvalidParametersException Исключение возникает если константы
+     * имеют неверные типы.
      */
     public static ConstantsTableItem CreateFiedlRefConst (int number, 
-            ConstantsTableItem cClass, ConstantsTableItem nameAndType) {
+            ConstantsTableItem cClass, ConstantsTableItem nameAndType) throws InvalidParametersException {
+        
+        if (cClass.getType() != CONSTANT_Class ||
+                nameAndType.getType() != CONSTANT_NameAndType)
+            throw new InvalidParametersException("Неверные константы!");
         
         ConstantsTableItem item = new ConstantsTableItem(number, CONSTANT_FieldRef,
                 Integer.toString(cClass.number) + ", " +
@@ -71,8 +83,13 @@ public class ConstantsTableItem {
      * @param number Номер константы в таблице констант.
      * @param utf8 Ссылка на константу utf8.
      * @return Константа типа Class.
+     * @throws InvalidParametersException Исключение возникает если константы
+     * имеют неверные типы.
      */
-    public static ConstantsTableItem CreateClassConst (int number, ConstantsTableItem utf8) {
+    public static ConstantsTableItem CreateClassConst (int number, ConstantsTableItem utf8) throws InvalidParametersException {
+        
+        if (utf8.getType() != CONSTANT_UTF8)
+            throw new InvalidParametersException("Неверные константы!");
         
         ConstantsTableItem result = new ConstantsTableItem(number, 
                 CONSTANT_Class, Integer.toString(utf8.number), utf8, null);
@@ -86,8 +103,14 @@ public class ConstantsTableItem {
      * @param number Номер константы в таблице констант.
      * @param first Ссылка на другую константу (UTF8).
      * @param second Ссылка на другую константу (UTF8).
+     * @throws InvalidParametersException Исключение возникает если константы
+     * имеют неверные типы.
      */
-    public ConstantsTableItem (int number, ConstantsTableItem first, ConstantsTableItem second) {
+    public ConstantsTableItem (int number, ConstantsTableItem first, ConstantsTableItem second) throws InvalidParametersException {
+        
+        if (first.getType() != CONSTANT_UTF8 ||
+                second.getType() != CONSTANT_UTF8)
+            throw new InvalidParametersException("Неверные константы!");
         
         this.first = first;
         this.ifirst = first.number;
@@ -104,8 +127,13 @@ public class ConstantsTableItem {
      * Создает константу типа String.
      * @param number Номер константы в таблице констант.
      * @param value Значение константы.
+     * @throws InvalidParametersException Исключение возникает если константы
+     * имеют неверные типы.
      */
-    public ConstantsTableItem (int number, ConstantsTableItem value) {
+    public ConstantsTableItem (int number, ConstantsTableItem value) throws InvalidParametersException {
+        
+        if (value.getType() != CONSTANT_UTF8)
+            throw new InvalidParametersException("Неверные константы!");
         
         this.first = value;
         this.ifirst = value.number;
