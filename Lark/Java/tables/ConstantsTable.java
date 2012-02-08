@@ -12,6 +12,8 @@ public class ConstantsTable {
     /* Поля класса. */
     /** Карта всех констант класса. */
     private HashMap<Integer, ConstantsTableItem> items;
+    /** Текущий индекс локальной переменной. */
+    private int gIndex;
 
     /**
      * Конструктор по умолчанию.
@@ -20,6 +22,7 @@ public class ConstantsTable {
     public ConstantsTable() {
         
         this.items = new HashMap<>();
+        gIndex = 0;
     }
     
     /**
@@ -38,6 +41,7 @@ public class ConstantsTable {
      */
     public void add (ConstantsTableItem item) {
         
+        item.setNumber(++gIndex);
         this.items.put(items.size() - 1, item);
     }
     
@@ -56,6 +60,7 @@ public class ConstantsTable {
     public void clear () {
         
         this.items.clear();
+        gIndex = 0;
     }
     
     /**
