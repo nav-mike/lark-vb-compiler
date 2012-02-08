@@ -42,7 +42,7 @@ public class ConstantsTable {
     public void add (ConstantsTableItem item) {
         
         item.setNumber(++gIndex);
-        this.items.put(items.size() - 1, item);
+        this.items.put(gIndex, item);
     }
     
     /**
