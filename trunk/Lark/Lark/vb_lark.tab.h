@@ -128,7 +128,7 @@ typedef union YYSTYPE
 	struct VB_Expr*				Expr;
 	struct VB_Expr_list*		Expr_l;
 	struct VB_If_stmt*			If_stmt;
-	struct VB_End_if_stmt*		End_if;
+//	struct VB_End_if_stmt*		End_if;
 	struct VB_Dim_stmt*			Dim;
 	struct VB_As_Expr_list*		As_l;
     struct VB_As_expr*			As_expr_str;
@@ -137,17 +137,17 @@ typedef union YYSTYPE
 	struct VB_For_stmt*			For;
 	struct VB_While_stmt*		While;
 	struct VB_Do_loop_stmt*		Do_loop;
-	struct VB_Enum_stmt*		Enum;
-	struct VB_Enum_expr_list*	Enum_l;
-	struct VB_Enum_expr*		Enum_e;
+//	struct VB_Enum_stmt*		Enum;
+//	struct VB_Enum_expr_list*	Enum_l;
+//	struct VB_Enum_expr*		Enum_e;
 	struct VB_Sub_stmt*			Sub;
 	struct VB_Param_list*		Param_l;
 	struct VB_Param_stmt*		Param;
-	struct VB_Func_stmt*		Func;
-	struct VB_Try_catch_stmt*	Try_catch;
-	struct VB_Catch_stmt_list*	Catch_l;
-	struct VB_Catch_stmt*		Catch;
-	struct VB_Throw_stmt*		Throw;
+//	struct VB_Func_stmt*		Func;
+//	struct VB_Try_catch_stmt*	Try_catch;
+//	struct VB_Catch_stmt_list*	Catch_l;
+//	struct VB_Catch_stmt*		Catch;
+//	struct VB_Throw_stmt*		Throw;
 	struct VB_Return_stmt*		Ret;
 
 	struct VB_Decl_stmt_list*	Decl_l;
@@ -155,10 +155,10 @@ typedef union YYSTYPE
 
 	enum VB_Id_type				Id_type;
 
-	struct VB_Print_stmt*			console_print;
-	struct VB_Println_stmt*			console_println;
-	struct VB_Read_stmt*			console_read;
-	struct VB_Readln_stmt*			console_readln;
+//	struct VB_Print_stmt*			console_print;
+//	struct VB_Println_stmt*			console_println;
+//	struct VB_Read_stmt*			console_read;
+//	struct VB_Readln_stmt*			console_readln;
 
 
 
