@@ -15,13 +15,30 @@ public class MethodsTable {
     private int gIndex;
 
     /**
+     * Метод преобразования таблицы методов класса в строку.
+     * @return Строка - таблица методов класса.
+     */
+    @Override
+    public String toString() {
+        
+        String result = "";
+        
+        for (int i = 0; i < items.size(); i++) {
+            
+            result += Integer.toString(i) + "\t" + items.get(i).toString() + "\n";
+        }
+        
+        return result;
+    }
+
+    /**
      * Конструктор по умолчанию.
      * Создает пустую таблицу.
      */
     public MethodsTable() {
         
         gIndex = 0;
-        this.items = new HashMap<>();
+        this.items = new HashMap();
     }
     
     /**
