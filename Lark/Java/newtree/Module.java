@@ -26,7 +26,7 @@ public class Module implements XMLInterface{
      */
     public Module(){
         this.id = "";
-        this.declList = new ArrayList<>();
+        this.declList = new ArrayList();
     }
     
     
@@ -50,7 +50,7 @@ public class Module implements XMLInterface{
     public Module(String id, AbstractDeclaration item) {
         
         this.id = id;
-        this.declList = new ArrayList<>();
+        this.declList = new ArrayList();
         this.declList.add(item);
     }
     
@@ -167,19 +167,28 @@ public class Module implements XMLInterface{
         // Считывание вложенных структур.
         NodeList nodes = node.getChildNodes();
         
-        ArrayList<AbstractStatement> mainBody = new ArrayList<>();
+        ArrayList<AbstractStatement> mainBody = new ArrayList();
         
         AbstractDeclaration subMain = new AbstractDeclaration("Main", null, mainBody);
         
         for (int i = 0; i < nodes.getLength(); i++) {
-            switch (nodes.item(i).getNodeName()) {
-                case "VB_Stmt_list":
-                    subMain.readData(nodes.item(i));
-                    declList.add(subMain);
-                    break;
-                case "VB_Decl_stmt_list":
-                    getDeclarationList(nodes.item(i));
-                    break;
+//            switch (nodes.item(i).getNodeName()) {
+//                case "VB_Stmt_list":
+//                    subMain.readData(nodes.item(i));
+//                    declList.add(subMain);
+//                    break;
+//                case "VB_Decl_stmt_list":
+//                    getDeclarationList(nodes.item(i));
+//                    break;
+//            }
+            if ("VB_Stmt_list".equals(nodes.item(i).getNodeName())) {
+                
+                subMain.readData(nodes.item(i));
+                declList.add(subMain);
+                
+            } else if ("VB_Decl_stmt_list".equals(nodes.item(i).getNodeName())) {
+                
+                getDeclarationList(nodes.item(i));
             }
         }
     }
