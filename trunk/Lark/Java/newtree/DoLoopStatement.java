@@ -25,7 +25,7 @@ public class DoLoopStatement extends AbstractStatement {
      */
     public DoLoopStatement (Expression condition, AbstractStatement item) {
         
-        super(SatementType.DO_LOOP);
+        super(StatementType.DO_LOOP);
         this.condition = condition;
         this.body = new ArrayList();
         this.body.add(item);
@@ -40,7 +40,7 @@ public class DoLoopStatement extends AbstractStatement {
      */
     public DoLoopStatement (Expression condition, AbstractStatement[] body) {
         
-        super(SatementType.DO_LOOP);
+        super(StatementType.DO_LOOP);
         this.condition = condition;
         this.body = new ArrayList(Arrays.asList(body));
     }
@@ -54,7 +54,7 @@ public class DoLoopStatement extends AbstractStatement {
      */
     public DoLoopStatement(Expression condition, ArrayList<AbstractStatement> body) {
         
-        super(SatementType.DO_LOOP);
+        super(StatementType.DO_LOOP);
         this.condition = condition;
         this.body = body;
     }
