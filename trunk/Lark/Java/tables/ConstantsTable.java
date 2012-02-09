@@ -15,13 +15,30 @@ public class ConstantsTable {
     /** Текущий индекс локальной переменной. */
     private int gIndex;
 
+    /** 
+     * Метод преобразования информации из объекта класса в строку.
+     * @return Строка с всей таблицей констант.
+     */
+    @Override
+    public String toString() {
+        
+        String result = "";
+        
+        for (int i = 0; i < items.size(); i++) {
+            
+            result += Integer.toString(i) + "\t" + items.get(i).toString() + "\n";
+        }
+        
+        return result;
+    }
+
     /**
      * Конструктор по умолчанию.
      * Создает пустую таблицу констант.
      */
     public ConstantsTable() {
         
-        this.items = new HashMap<>();
+        this.items = new HashMap();
         gIndex = 0;
     }
     

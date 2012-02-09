@@ -33,6 +33,54 @@ public class ConstantsTableItem {
     private static final int CONSTANT_MethodRef   = 0xA;
     
     /**
+     * Метод преобразования типа в строку.
+     * @param type Тип константы.
+     * @return Тип константы в виде строки.
+     */
+    private static String convertTypeToString (int type) {
+        
+        switch (type)
+        {
+            case(CONSTANT_Class):
+                return "CONSTANT_Class";
+                
+            case(CONSTANT_FieldRef):
+                return "CONSTANT_FieldRef";
+                
+            case(CONSTANT_Integer):
+                return "CONSTANT_Integer";
+                
+            case(CONSTANT_MethodRef):
+                return "CONSTANT_MethodRef";
+                
+            case(CONSTANT_NameAndType):
+                return "CONSTANT_NameAndType";
+                
+            case(CONSTANT_String):
+                return "CONSTANT_String";
+                
+            case(CONSTANT_UTF8):
+                return "CONSTANT_UTF8";
+        }
+        
+        return "-1";
+    }
+
+    /**
+     * Метод перевода объекта в строку.
+     * @return Объект в виде строку.
+     */
+    @Override
+    public String toString() {
+        
+        String result = "";
+        
+        result = convertTypeToString(type) + "\t" + value.toString();
+        
+        return result;
+    }
+    
+    /**
      * Статический метод создания константы типа MethodRef.
      * @param number Номер константы в таблице констант.
      * @param cClass Ссылка на константу Class.

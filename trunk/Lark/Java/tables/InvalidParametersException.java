@@ -12,7 +12,7 @@ public class InvalidParametersException extends Exception {
      * Конструктор с параметром.
      * @param string Сообщение исключения.
      */
-    InvalidParametersException(String string) {
+    public InvalidParametersException(String string) {
         super(string);
     }
     
