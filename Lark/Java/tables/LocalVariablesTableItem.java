@@ -18,6 +18,20 @@ public class LocalVariablesTableItem {
     private int number;
 
     /**
+     * Метод преобразования информации о классе в строку.
+     * @return Строка с информацией о классе.
+     */
+    @Override
+    public String toString() {
+        
+        String result = "";
+        
+        result = name + "\t" + type.toString();
+        
+        return result;
+    }
+
+    /**
      * Метод задания типа локальной переменной.
      * @param type Тип локальной переменной.
      * @throws InvalidParametersException Исключение вызываемое когда тип переменной
