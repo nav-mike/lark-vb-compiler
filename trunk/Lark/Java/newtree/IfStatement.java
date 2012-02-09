@@ -53,7 +53,7 @@ public class IfStatement extends AbstractStatement {
     public IfStatement (Expression condition, AbstractStatement itemMain,
             AbstractStatement[] bodyAlter) {
         
-        super(StatementType.IF);
+        super(SatementType.IF);
         this.condition = condition;
         this.bodyMain = new ArrayList();
         this.bodyMain.add(itemMain);
@@ -72,7 +72,7 @@ public class IfStatement extends AbstractStatement {
      */
     public IfStatement (Expression condition, AbstractStatement[] bodyMain, AbstractStatement itemAlter) {
         
-        super(StatementType.IF);
+        super(SatementType.IF);
         this.condition = condition;
         this.bodyMain = new ArrayList(Arrays.asList(bodyMain));
         this.bodyAlter = new ArrayList();
@@ -91,7 +91,7 @@ public class IfStatement extends AbstractStatement {
      */
     public IfStatement (Expression condition, AbstractStatement itemMain, AbstractStatement itemAlter) {
         
-        super(StatementType.IF);
+        super(SatementType.IF);
         this.condition = condition;
         this.bodyMain = new ArrayList();
         this.bodyMain.add(itemMain);
@@ -110,7 +110,7 @@ public class IfStatement extends AbstractStatement {
      */
     public IfStatement (Expression condition, AbstractStatement[] bodyMain, AbstractStatement[] bodyAlter) {
         
-        super(StatementType.IF);
+        super(SatementType.IF);
         this.condition = condition;
         this.bodyMain = new ArrayList(Arrays.asList(bodyMain));
         this.bodyAlter = new ArrayList(Arrays.asList(bodyAlter));
@@ -126,7 +126,7 @@ public class IfStatement extends AbstractStatement {
      */
     public IfStatement(Expression condition, ArrayList<AbstractStatement> bodyMain, ArrayList<AbstractStatement> bodyAlter) {
         
-        super(StatementType.IF);
+        super(SatementType.IF);
         this.condition = condition;
         this.bodyMain = bodyMain;
         this.bodyAlter = bodyAlter;

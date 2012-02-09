@@ -35,7 +35,7 @@ public class ReturnStatement extends AbstractStatement{
      */
     public ReturnStatement(Expression retData) {
         
-        super(StatementType.RETURN);
+        super(SatementType.RETURN);
         this.retData = retData;
     }
 

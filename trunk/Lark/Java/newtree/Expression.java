@@ -11,30 +11,12 @@ public class Expression implements XMLInterface{
     /* Поля класса. */
     /** Тип выражения. */
     protected int type;
-    /** Тип выражения константы. */
-    protected DataType dtype;
     /** Выражение - константа. */
     public final static int CONST = 1;
     /** Выражение - идентификатор. */
     public final static int ID = 2;
     /** Выражение - математическая операция. */
     public final static int MATH = 3;
-    
-    /**
-     * Метод получения типа выражения константы.
-     * @return Тип выражения константы.
-     */
-    public DataType getDtype() {
-        return dtype;
-    }
-    
-    /**
-     * Метод задания типа выражения константы.
-     * @param dtype Тип выражения константы.
-     */
-    public void setDtype(DataType dtype) {
-        this.dtype = dtype;
-    }
 
     /**
      * Метод получения типа выражения.
