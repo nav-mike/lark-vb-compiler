@@ -16,12 +16,29 @@ public class LocalVariablesTable {
     private int gIndex;
 
     /**
+     * Метод преобразования таблицы локальных переменных в строку.
+     * @return Строка - таблица локальных переменных.
+     */
+    @Override
+    public String toString() {
+        
+        String result = "";
+        
+        for (int i = 0; i < items.size(); i++) {
+            
+            result += Integer.toString(i) + "\t" + items.get(i).toString() + "\n";
+        }
+        
+        return result;
+    }
+
+    /**
      * Конструктор по умолчанию.
      * Создает пустую таблицу.
      */
     public LocalVariablesTable() {
         
-        this.items = new HashMap<>();
+        this.items = new HashMap();
         gIndex = 0;
     }
     
