@@ -104,7 +104,7 @@ void VBX_add_declaration(xmlNodePtr parentList, struct VB_Decl_stmt* stmt);
 char* VBX_expression_type_to_string (enum VB_Expr_type type);
 
 
-char* statement_type_to_string (enum VB_Stmt_type type);
+
 
 /**
  * Получить строку с типом идентификатора
@@ -203,41 +203,33 @@ void VBX_add_statement(xmlNodePtr parentList, struct VB_Stmt* stmt){
 
 	switch(stmt->type)
 	{
-	case (STMT_EXPR_E):
+	case (STMT_EXPR):
 		VBX_add_expr(
 			xmlNewTextChild(stmt_node,NULL,(const xmlChar *)"VB_Expr",NULL),
 			(struct VB_Expr*)stmt->value);
 		break;
-	case(IF_E):
+	case(STMT_IF):
 		VBX_add_if(
 			xmlNewTextChild(stmt_node,NULL,(const xmlChar *)"VB_If_stmt",NULL),
 			(struct VB_If_stmt*)stmt->value);
 		break;
-	case(DIM_E):
+	case(STMT_DIM):
 		VBX_add_dim(xmlNewTextChild(stmt_node,NULL,(const xmlChar *)"VB_Dim_stmt",NULL),
 			(struct VB_Dim_stmt*)stmt->value);
 		break;
-	case(FOR_E):
+	case(STMT_FOR):
 		VBX_add_for(xmlNewTextChild(stmt_node,NULL,(const xmlChar *)"VB_For_stmt",NULL),
 			(struct VB_For_stmt*)stmt->value);
 		break;
-	case(WHILE_E):
+	case(STMT_WHILE):
 		VBX_add_while(xmlNewTextChild(stmt_node,NULL,(const xmlChar *)"VB_While_stmt",NULL),
 			(struct VB_While_stmt*)stmt->value);
 		break;
-	case(DO_LOOP_E):
+	case(STMT_DO_LOOP):
 		VBX_add_do_loop(xmlNewTextChild(stmt_node,NULL,(const xmlChar *)"VB_Do_loop_stmt",NULL),
 			(struct VB_Do_loop_stmt*)stmt->value);
 		break;
-	case(TRY_CATCH_E):
-		VBX_add_try_catch(xmlNewTextChild(stmt_node,NULL,(const xmlChar *)"VB_Try_catch_stmt",NULL),
-			(struct VB_Try_catch_stmt*)stmt->value);
-		break;
-	case(THROW_E):
-		VBX_add_throw(xmlNewTextChild(stmt_node,NULL,(const xmlChar *)"VB_Throw_stmt",NULL),
-			(struct VB_Throw_stmt*)stmt->value);
-		break;
-	case(RETURN_E):
+	case(STMT_RETURN):
 		VBX_add_return(xmlNewTextChild(stmt_node,NULL,(const xmlChar *)"VB_Return_stmt",NULL),
 			(struct VB_Throw_stmt*)stmt->value);
 		break;
@@ -253,17 +245,12 @@ void VBX_add_declaration(xmlNodePtr parentList, struct VB_Decl_stmt* stmt){
 	
 	switch(stmt->type)
 	{
-	case(ENUM_D):
-//		VBX_add_enum(
-//			xmlNewTextChild(parentList,NULL,(const xmlChar *)"VB_Enum_expr",NULL),
-//			(struct VB_Enum_expr*)stmt->value);
-		break;
-	case(SUB_D):
+	case(DECL_SUB): 
 		VBX_add_sub(
 			xmlNewTextChild(parentList,NULL,(const xmlChar *)"VB_Sub_stmt",NULL),
 			stmt->sub_stmt);
 		break;
-	case(FUNC_D):
+	case(DECL_FUNC): 
 		VBX_add_func(
 			xmlNewTextChild(parentList,NULL,(const xmlChar *)"VB_Func_stmt",NULL),
 			stmt->func_stmt);
@@ -301,7 +288,7 @@ void VBX_add_expr(xmlNodePtr node, struct VB_Expr* expr) {
 			expr->right_chld);
 	}
 
-	if (expr->list != NULL && expr->type == BRK_EXPR){
+	if (expr->list != NULL && expr->type == EXPR_BRK){
 
 		struct VB_Expr * item = expr->list->first;
 
@@ -417,10 +404,6 @@ void VBX_add_if(xmlNodePtr node, struct VB_If_stmt* stmt){
 	if (stmt->else_list != NULL)
 		VBX_add_statement_list(
 			xmlNewTextChild(node,NULL,(const xmlChar *)"VB_Stmt_list__else_list",NULL),stmt->else_list);
-
-	if (stmt->end_stmt != NULL)
-		VBX_add_end_if(
-			xmlNewTextChild(node,NULL,(const xmlChar *)"VB_End_if_stmt",NULL),stmt->end_stmt);
 
 	if (stmt->expr != NULL)
 		VBX_add_expr(
@@ -572,7 +555,7 @@ void VBX_add_as_expr(xmlNodePtr node,struct VB_As_expr * expr){
 
 void VBX_add_for(xmlNodePtr node, struct VB_For_stmt* stmt){
 	
-	char buf[10];
+	char * buf;
 
 	itoa(stmt->from_val,buf,10);
 
@@ -588,21 +571,7 @@ void VBX_add_for(xmlNodePtr node, struct VB_For_stmt* stmt){
 
 	xmlNewProp(node,(const xmlChar *)"to_val",(const xmlChar *)buf);
 		
-	switch(stmt->type)
-	{
-	case (SIMPLE):
-		strcpy(buf,"SIMPLE\0");
-		break;
-	case (WITH_DECL):
-		strcpy(buf,"WITH_DECL\0");
-		break;
-	case (WITH_STEP):
-		strcpy(buf,"WITH_STEP\0");
-		break;
-	case (WITH_DECL_AND_STEP):
-		strcpy(buf,"WITH_DECL_AND_STEP\0");
-		break;
-	}
+	buf = VBX_for_type_to_string(stmt->type);
 
 	xmlNewProp(node,(const xmlChar *)"type",(const xmlChar *)buf);
 
@@ -628,23 +597,9 @@ void VBX_add_while(xmlNodePtr node, struct VB_While_stmt* stmt){
 
 void VBX_add_do_loop(xmlNodePtr node, struct VB_Do_loop_stmt* stmt){
 	
-	char buf[12];
+	char * buf;
 
-	switch(stmt->type)
-	{
-	case (DO_WHILE):
-		strcpy(buf,"DO_WHILE\0");
-		break;
-	case (DO_UNTIL):
-		strcpy(buf,"DO_UNTIL\0");
-		break;
-	case (LOOP_WHILE):
-		strcpy(buf,"LOOP_WHILE\0");
-		break;
-	case (LOOP_UNTIL):
-		strcpy(buf,"LOOP_UNTIL\0");
-		break;
-	}
+	buf = VBX_do_loop_type_to_string(stmt->type);
 
 	xmlNewProp(node,(const xmlChar *)"type",(const xmlChar *)buf);
 
@@ -657,134 +612,9 @@ void VBX_add_do_loop(xmlNodePtr node, struct VB_Do_loop_stmt* stmt){
 			xmlNewTextChild(node,NULL,(const xmlChar *)"VB_Stmt_list",NULL),stmt->stmt_list);
 }
 
-void VBX_add_try_catch(xmlNodePtr node, struct VB_Try_catch_stmt* stmt){
-
-	struct VB_Catch_stmt* ct_stmt = NULL;
-
-	xmlNodePtr ct_list_node,ct_stmt_node;
-
-	if (stmt->fin_stmt_list != NULL)
-		VBX_add_statement_list(
-			xmlNewTextChild(node,NULL,(const xmlChar *)"VB_Stmt_list__fin_stmt_list",NULL),stmt->fin_stmt_list);
-
-	if (stmt->stmt_list != NULL)
-		VBX_add_statement_list(
-			xmlNewTextChild(node,NULL,(const xmlChar *)"VB_Stmt_list__stmt_list",NULL),stmt->stmt_list);
-
-
-	if (stmt->catch_list != NULL){
-		ct_stmt = stmt->catch_list->first;
-
-		ct_list_node = xmlNewTextChild(node,NULL,(const xmlChar *)"VB_Catch_stmt_list",NULL);
-
-		while(ct_stmt !=NULL){
-
-			ct_stmt_node = xmlNewTextChild(ct_list_node,NULL,(const xmlChar *)"VB_Catch_stmt",NULL);
-
-			xmlNewProp(ct_stmt_node,(const xmlChar *)"id",(const xmlChar *)ct_stmt->id);
-
-			if (ct_stmt->stmt_list != NULL)
-				VBX_add_statement_list(
-					xmlNewTextChild(ct_stmt_node,NULL,(const xmlChar *)"VB_Stmt_list",NULL),ct_stmt->stmt_list);
-
-			ct_stmt = ct_stmt->next;
-		}
-	}
-}
-
-void VBX_add_throw(xmlNodePtr node, struct VB_Throw_stmt* stmt){
-	
-	xmlNewProp(node,(const xmlChar *)"string",(const xmlChar *)stmt->string);
-}
-
-
 void VBX_add_return(xmlNodePtr node, struct VB_Return_stmt* stmt){
 	
 	if (stmt->expr != NULL)
 		VBX_add_expr(
 			xmlNewTextChild(node,NULL,(const xmlChar *)"VB_Expr",NULL),stmt->expr);
-}
-
-/**
- * Получить строку с типом выражения
- */
-char* VBX_expression_type_to_string (enum VB_Expr_type type)
-{
-	switch(type)
-	{
-    case (EXPR_FUNC):
-        return "EXPR FUNC";
-	case (ASSIGN):
-		return "ASSIGN";
-	case (BOOLEAN_CONST_E):
-		return "BOOLEAN_CONST_E";
-	case (BRK_EXPR):
-		return "BRK_EXPR";
-	case (CHAR_CONST_E):
-		return "CHAR_CONST_E";
-	case (DIV):
-		return "DIV";
-	case (EQUAL_E):
-		return "EQUAL_E";
-	case (GET_ITEM):
-		return "GET_ITEM";
-	case (ID_E):
-		return "ID_E";
-	case (INT_CONST_E):
-		return "INT_CONST_E";
-	case (INT_DIV):
-		return ("INT_DIV");
-	case (LESS):
-		return "LESS";
-	case (LESS_OR_EQUAL_E):
-		return "LESS_OR_EQUAL_E";
-	case (MINUS):
-		return "MINUS";
-	case (MORE):
-		return "MORE";
-	case (MORE_OR_EQUAL_E):
-		return "MORE_OR_EQUAL_E";
-	case (MUL):
-		return "MUL";
-	case (NONEQUAL_E):
-		return "NONEQUAL_E";
-	case (PLUS):
-		return "PLUS";
-	case (POWER):
-		return "^";
-	case (STRING_CONST_E):
-		return "STRING_CONST_E";
-	case (UMINUS_E):
-		return "UMINUS_E";
-	case (READ_E):
-		return "READ_E";
-	case (READLN_E):
-		return "READLN_E";
-	case (PRINT_E):
-		return "PRINT_E";
-	case (PRINTLN_E):
-		return "PRINTLN_E";
-	}
-
-	return "";
-}
-
-/**
- * Получить строку с типом идентификатора
- */
-char* VBX_id_type_to_string (enum VB_Id_type type)
-{
-	switch (type)
-	{
-	case (BOOLEAN_E):
-		return "BOOLEAN_E";
-	case (CHAR_E):
-		return "CHAR_E";
-	case (INTEGER_E):
-		return "INTEGER_E";
-	case (STRING_E):
-		return "STRING_E";
-	}
-
-	return "";
 }

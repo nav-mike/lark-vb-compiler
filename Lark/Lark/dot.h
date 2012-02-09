@@ -22,9 +22,9 @@ int Number = 0;
 struct VB_Module_stmt * root;
 
 
-char* statement_type_to_string (enum VB_Stmt_type type);
+//char* statement_type_to_string (enum VB_Stmt_type type);
 char* id_type_to_string (enum VB_Id_type type);
-char* expression_type_to_string (enum VB_Expr_type type);
+//char* expression_type_to_string (enum VB_Expr_type type);
 int add_expression_list (FILE* file, struct VB_Expr_list* list);
 int add_expression (FILE* file, struct VB_Expr* expr);
 int add_param_list (FILE* file, struct VB_Param_list* list);
@@ -175,45 +175,45 @@ int add_func_statement (FILE* file, struct VB_Func_stmt* stmt)
 	\param stmt Обработка исключения.
 	\return 0 если ошибок нет.
 */
-int add_try_catch_stmt (FILE* file, struct VB_Try_catch_stmt* stmt)
-{
-	int error, number = Number;
-
-	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> Try...Catch", number);
-
-	if (error == -1)
-		return 1;
-
-	if (stmt->stmt_list != NULL)
-	{
-		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0", number, ++Number);
-		if (error == -1)
-			return 1;
-		error = add_statement_list(file,stmt->stmt_list);
-		if (error)
-			return 1;
-	}
-	if (stmt->fin_stmt_list != NULL)
-	{
-		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0", number, ++Number);
-		if (error == -1)
-			return 1;
-		error = add_statement_list(file,stmt->fin_stmt_list);
-		if (error)
-			return 1;
-	}
-	if (stmt->catch_list != NULL)
-	{
-		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0", number, ++Number);
-		if (error == -1)
-			return 1;
-		error = add_catch_statement_list(file,stmt->catch_list);
-		if (error)
-			return 1;
-	}
-
-	return 0;
-}
+//int add_try_catch_stmt (FILE* file, struct VB_Try_catch_stmt* stmt)
+//{
+//	int error, number = Number;
+//
+//	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> Try...Catch", number);
+//
+//	if (error == -1)
+//		return 1;
+//
+//	if (stmt->stmt_list != NULL)
+//	{
+//		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0", number, ++Number);
+//		if (error == -1)
+//			return 1;
+//		error = add_statement_list(file,stmt->stmt_list);
+//		if (error)
+//			return 1;
+//	}
+//	if (stmt->fin_stmt_list != NULL)
+//	{
+//		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0", number, ++Number);
+//		if (error == -1)
+//			return 1;
+//		error = add_statement_list(file,stmt->fin_stmt_list);
+//		if (error)
+//			return 1;
+//	}
+//	if (stmt->catch_list != NULL)
+//	{
+//		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0", number, ++Number);
+//		if (error == -1)
+//			return 1;
+//		error = add_catch_statement_list(file,stmt->catch_list);
+//		if (error)
+//			return 1;
+//	}
+//
+//	return 0;
+//}
 
 /*!
 	\brief Функция добавления обработки исключений.
@@ -221,26 +221,26 @@ int add_try_catch_stmt (FILE* file, struct VB_Try_catch_stmt* stmt)
 	\param stmt Обработка исключений.
 	\return 0 если ошибок нет.
 */
-int add_catch_statement (FILE* file, struct VB_Catch_stmt* stmt)
-{
-	int error, number = Number;
-
-	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> Catch stmt\
-						 | <f1> id: %s \"\n\t\tshape = \"record\"\n\t];", number,stmt->id);
-	if (error == -1)
-		return 1;
-	if (stmt->stmt_list != NULL)
-	{
-		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0", number, ++Number);
-		if (error == -1)
-			return 1;
-		error = add_statement_list(file,stmt->stmt_list);
-		if (error)
-			return 1;
-	}
-
-	return 0;
-}
+//int add_catch_statement (FILE* file, struct VB_Catch_stmt* stmt)
+//{
+//	int error, number = Number;
+//
+//	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> Catch stmt\
+//						 | <f1> id: %s \"\n\t\tshape = \"record\"\n\t];", number,stmt->id);
+//	if (error == -1)
+//		return 1;
+//	if (stmt->stmt_list != NULL)
+//	{
+//		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0", number, ++Number);
+//		if (error == -1)
+//			return 1;
+//		error = add_statement_list(file,stmt->stmt_list);
+//		if (error)
+//			return 1;
+//	}
+//
+//	return 0;
+//}
 
 /*!
 	\brief Функция добавления в файл инициализации массива.
@@ -322,18 +322,18 @@ int add_id_list (FILE* file, struct VB_Id_list* list)
 	\param stmt Выброс исключения.
 	\return 0 если ошибок нет.
 */
-int add_throw_stmt (FILE* file, struct VB_Throw_stmt* stmt)
-{
-	int error;
-
-	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> Throw \
-						 | <f1> %s \"\n\t\tshape = \"record\"\n\t];", Number, stmt->string);
-	if (error == -1)
-		return 1;
-	Number++;
-
-	return 0;
-}
+//int add_throw_stmt (FILE* file, struct VB_Throw_stmt* stmt)
+//{
+//	int error;
+//
+//	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> Throw \
+//						 | <f1> %s \"\n\t\tshape = \"record\"\n\t];", Number, stmt->string);
+//	if (error == -1)
+//		return 1;
+//	Number++;
+//
+//	return 0;
+//}
 
 /*!
 	\brief Функция добавляет в файл вывод в стандартный поток вывода.
@@ -341,18 +341,18 @@ int add_throw_stmt (FILE* file, struct VB_Throw_stmt* stmt)
 	\param stmt Вывод в стандартный поток вывода.
 	\return 0, если ошибок нет.
 */
-int add_print_stmt (FILE* file, struct VB_Print_stmt* stmt)
-{
-	int error;
-
-	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> Console.Print \
-						 | <f1> %s \"\n\t\tshape = \"record\"\n\t];", Number, stmt->expr->expr_string);
-	if (error == -1)
-		return 1;
-	Number++;
-
-	return 0;
-}
+//int add_print_stmt (FILE* file, struct VB_Print_stmt* stmt)
+//{
+//	int error;
+//
+//	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> Console.Print \
+//						 | <f1> %s \"\n\t\tshape = \"record\"\n\t];", Number, stmt->expr->expr_string);
+//	if (error == -1)
+//		return 1;
+//	Number++;
+//
+//	return 0;
+//}
 
 /*!
 	\brief Функция добавляет в файл ввод с стандартного потока ввода.
@@ -360,18 +360,18 @@ int add_print_stmt (FILE* file, struct VB_Print_stmt* stmt)
 	\param stmt Ввод с стандарнтый поток ввода.
 	\return 0 если ошибок нет.
 */
-int add_read_stmt (FILE* file, struct VB_Read_stmt* stmt)
-{
-	int error;
-
-	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> Console.Read \
-						 \"\n\t\tshape = \"record\"\n\t];", Number);
-	if (error == -1)
-		return 1;
-	Number++;
-
-	return 0;
-}
+//int add_read_stmt (FILE* file, struct VB_Read_stmt* stmt)
+//{
+//	int error;
+//
+//	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> Console.Read \
+//						 \"\n\t\tshape = \"record\"\n\t];", Number);
+//	if (error == -1)
+//		return 1;
+//	Number++;
+//
+//	return 0;
+//}
 
 /*!
 	\brief Функция добавляет в файл ввод строки с стандартного потока ввода.
@@ -379,18 +379,18 @@ int add_read_stmt (FILE* file, struct VB_Read_stmt* stmt)
 	\param stmt Ввод строки с стандартного потока ввода.
 	\return 0 если ошибок нет.
 */
-int add_readln_stmt (FILE* file, struct VB_Readln_stmt* stmt)
-{
-	int error;
-
-	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> Console.Readln\
-						 \"\n\t\tshape = \"record\"\n\t];", Number);
-	if (error == -1)
-		return 1;
-	Number++;
-
-	return 0;
-}
+//int add_readln_stmt (FILE* file, struct VB_Readln_stmt* stmt)
+//{
+//	int error;
+//
+//	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> Console.Readln\
+//						 \"\n\t\tshape = \"record\"\n\t];", Number);
+//	if (error == -1)
+//		return 1;
+//	Number++;
+//
+//	return 0;
+//}
 
 /*!
 	\brief Функция добавляет в файл элемент перечисления.
@@ -398,20 +398,20 @@ int add_readln_stmt (FILE* file, struct VB_Readln_stmt* stmt)
 	\param expr Элемент перечисления.
 	\return 0 если нет ошибок.
 */
-int add_enum_expression (FILE* file, struct VB_Enum_expr* expr)
-{
-	int error;
-
-	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> Enum Expr\
-						 | <f1> is init: %d | <f2> id: %s | <f3>value: %d\
-						 \"\n\t\tshape = \"record\"\n\t];", Number,
-						 expr->is_init, expr->id, expr->value);
-	if (error == -1)
-		return 1;
-	Number++;
-
-	return 0;
-}
+//int add_enum_expression (FILE* file, struct VB_Enum_expr* expr)
+//{
+//	int error;
+//
+//	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> Enum Expr\
+//						 | <f1> is init: %d | <f2> id: %s | <f3>value: %d\
+//						 \"\n\t\tshape = \"record\"\n\t];", Number,
+//						 expr->is_init, expr->id, expr->value);
+//	if (error == -1)
+//		return 1;
+//	Number++;
+//
+//	return 0;
+//}
 
 /*!
 	\brief Функция добавления параметра функции в файл.
@@ -439,18 +439,18 @@ int add_param_statement (FILE* file, struct VB_Param_stmt* stmt)
 	\param stmt Вывод в стандартный поток с переносом строки.
 	\return 0 если ошибок нет.
 */
-int add_println_stmt (FILE* file, struct VB_Println_stmt* stmt)
-{
-	int error;
-
-	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> Console.Println \
-						 | <f1> %s \"\n\t\tshape = \"record\"\n\t];", Number, stmt->expr->expr_string);
-	if (error == -1)
-		return 1;
-	Number++;
-
-	return 0;
-}
+//int add_println_stmt (FILE* file, struct VB_Println_stmt* stmt)
+//{
+//	int error;
+//
+//	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> Console.Println \
+//						 | <f1> %s \"\n\t\tshape = \"record\"\n\t];", Number, stmt->expr->expr_string);
+//	if (error == -1)
+//		return 1;
+//	Number++;
+//
+//	return 0;
+//}
 
 /*!
 	\brief Функция добавления оператора объявления.
@@ -463,22 +463,22 @@ int add_declaration_statement (FILE* file, struct VB_Decl_stmt* stmt)
 	int error, number = Number;
 
 	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> Declaration \
-						 \\nstaement| <f1> %s \"\n\t\tshape = \"record\"\n\t];", number,statement_type_to_string(stmt->type));
+						 \\nstaement| <f1> %s \"\n\t\tshape = \"record\"\n\t];", number,VBX_decl_type_to_string(stmt->type)); 
 	if (error == -1)
 		return 1;
 
-	if (stmt->enum_stmt != NULL)
-	{
-		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0;",
-			Number, Number + 1);
-		if (error == -1)
-			return 1;
-		number = Number;
-		Number++;
-		error = add_enum_statement (file, stmt->enum_stmt);
-		if (error)
-			return 1;
-	}
+	//if (stmt->enum_stmt != NULL)
+	//{
+	//	error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0;",
+	//		Number, Number + 1);
+	//	if (error == -1)
+	//		return 1;
+	//	number = Number;
+	//	Number++;
+	//	error = add_enum_statement (file, stmt->enum_stmt);
+	//	if (error)
+	//		return 1;
+	//}
 
 	if (stmt->sub_stmt != NULL)
 	{
@@ -578,7 +578,7 @@ int add_expression (FILE* file, struct VB_Expr* expr)
 		if (error)
 			return 1;
 	}
-	if (expr->type == BRK_EXPR && expr->list != NULL)
+	if (expr->type == EXPR_BRK && expr->list != NULL)
 	{
 		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
 			number, ++Number);
@@ -633,14 +633,14 @@ char* id_type_to_string (enum VB_Id_type type)
 {
 	switch (type)
 	{
-	case (BOOLEAN_E):
-		return "BOOLEAN_E";
-	case (CHAR_E):
-		return "CHAR_E";
-	case (INTEGER_E):
-		return "INTEGER_E";
-	case (STRING_E):
-		return "STRING_E";
+	case (DATA_BOOLEAN):
+		return "DATA_BOOLEAN";
+	case (DATA_CHAR):
+		return "DATA_CHAR";
+	case (DATA_INTEGER):
+		return "DATA_INTEGER";
+	case (DATA_STRING):
+		return "DATA_STRING";
 	}
 
 	return "";
@@ -655,106 +655,59 @@ char* expression_type_to_string (enum VB_Expr_type type)
 {
 	switch(type)
 	{
-	case (ID_E):
-		return "ID_E";
-	case (EXPR_FUNC):
-		return "EXPR_FUNC";
-	case (CHAR_CONST_E):
-		return "CHAR_CONST_E";
-	case (INT_CONST_E):
-		return "INT_CONST_E";
-	case (STRING_CONST_E):
-		return "STRING_CONST_E";
-	case (BOOLEAN_CONST_E):
-		return "BOOLEAN_CONST_E";
-	case (ASSIGN):
-		return "ASSIGN";
-	case (PLUS):
-		return "PLUS";
-	case (MINUS):
-		return "MINUS";
-	case (MUL):
-		return "MUL";
-	case (INT_DIV):
-		return "INT_DIV";
-	case (DIV):
-		return "DIV";
-	case (POWER):
-		return "POWER";
-	case (MORE):
-		return "MORE";
-	case (LESS):
-		return "LESS";
-	case (MORE_OR_EQUAL_E):
-		return "MORE_OR_EQUAL_E";
-	case (LESS_OR_EQUAL_E):
-		return "LESS_OR_EQUAL_E";
-	case (NONEQUAL_E):
-		return "NONEQUAL_E";
-	case (EQUAL_E):
-		return "EQUAL_E";
-	case (UMINUS_E):
-		return "UMINUS_E";
-	case (UPLUS):
-		return "UPLUS";
-	case (GET_ITEM):
-		return "GET_ITEM";
-	case (BRK_EXPR):
-		return "BRK_EXPR";
-	case (READ_E):
-		return "READ_E";
-	case (READLN_E):
-		return "READLN_E";
-	case (PRINT_E):
-		return "PRINT_E";
-	case (PRINTLN_E):
-		return "PRINTLN_E";
+	case (EXPR_ID):
+		return "EXPR_ID";
+
+	case (EXPR_CHAR_CONST):
+		return "EXPR_CHAR_CONST";
+	case (EXPR_INT_CONST):
+		return "EXPR_INT_CONST";
+	case (EXPR_STRING_CONST):
+		return "EXPR_STRING_CONST";
+	case (EXPR_BOOLEAN_CONST):
+		return "EXPR_BOOLEAN_CONST";
+	case (EXPR_ASSIGN):
+		return "EXPR_ASSIGN";
+	case (EXPR_PLUS):
+		return "EXPR_PLUS";
+	case (EXPR_MINUS):
+		return "EXPR_MINUS";
+	case (EXPR_MUL):
+		return "EXPR_MUL";
+	case (EXPR_DIV):
+		return "EXPR_DIV";
+	case (EXPR_POWER):
+		return "EXPR_POWER";
+	case (EXPR_MORE):
+		return "EXPR_MORE";
+	case (EXPR_LESS):
+		return "EXPR_LESS";
+	case (EXPR_MORE_OR_EQUAL):
+		return "EXPR_MORE_OR_EQUAL";
+	case (EXPR_LESS_OR_EQUAL):
+		return "EXPR_LESS_OR_EQUAL";
+	case (EXPR_NONEQUAL):
+		return "EXPR_NONEQUAL";
+	case (EXPR_EQUAL):
+		return "EXPR_EQUAL";
+	case (EXPR_UMINUS):
+		return "EXPR_UMINUS";
+	case (EXPR_BRK):
+		return "EXPR_BRK";
+	case (EXPR_READ):
+		return "EXPR_READ";
+	case (EXPR_READLN):
+		return "EXPR_READLN";
+	case (EXPR_PRINT):
+		return "EXPR_PRINT";
+	case (EXPR_PRINTLN):
+		return "EXPR_PRINTLN";
 	}
 
 	return "";
 }
 
-/*!
-	\brief Функция преобразует тип Stmt в строку.
-	\param type - Тип Stmt.
-	\return Строка - тип Stmt.
-*/
-char* statement_type_to_string (enum VB_Stmt_type type)
-{
-	switch (type)
-	{
-	case (ENDL_E):
-		return "ENDL_E";
-	case (STMT_EXPR_E):
-		return "STMT_EXPR_E";
-	case (IF_E):
-		return "IF_E";
-	case (DIM_E):
-		return "DIM_E";
-	case (FOR_E):
-		return "FOR_E";
-	case (WHILE_E):
-		return "WHILE_E";
-	case (DO_LOOP_E):
-		return "DO_LOOP_E";
-	case (ENUM_D):
-		return "ENUM_D";
-	case (SUB_D):
-		return "SUB_D";
-	case (FUNC_D):
-		return "FUNC_D";
-	case (TRY_CATCH_E):
-		return "TRY_CATCH_E";
-	case (THROW_E):
-		return "THROW_E";
-	case (READKEY_E):
-		return "READKEY_E";
-	case (RETURN_E):
-		return "RETURN_E";
-	}
 
-	return "";
-}
 
 /*!
 	\brief Фукнкция преобразрвания типа списка инициализации в строку.
@@ -847,22 +800,22 @@ char* do_loop_type_to_string (enum VB_Do_loop_type type)
 	\param type Тип окончания If.
 	\return Строка - тип окончания If.
 */
-char* end_if_statement_type_to_string (enum VB_End_if_stmt_type type)
-{
-	switch (type)
-	{
-	case (ELSE_E):
-		return "ELSE_E";
-	case (ELSE_IF_ENDL_E):
-		return "ELSE_IF_ENDL_E";
-	case (ELSE_IF_THEN_E):
-		return "ELSE_IF_THEN_E";
-	case (ENDIF_E):
-		return "ENDIF_E";
-	}
-
-	return "";
-}
+//char* end_if_statement_type_to_string (enum VB_End_if_stmt_type type)
+//{
+//	switch (type)
+//	{
+//	case (ELSE_E):
+//		return "ELSE_E";
+//	case (ELSE_IF_ENDL_E):
+//		return "ELSE_IF_ENDL_E";
+//	case (ELSE_IF_THEN_E):
+//		return "ELSE_IF_THEN_E";
+//	case (ENDIF_E):
+//		return "ENDIF_E";
+//	}
+//
+//	return "";
+//}
 
 /*!
 	\brief Функция преобразования типа If в строку.
@@ -873,12 +826,12 @@ char* if_statement_type_to_string (enum VB_If_stmt_type type)
 {
 	switch (type)
 	{
-	case (IF_ELSE_INLINE):
-		return "IF_ELSE_INLINE";
-	case (IF_ENDL):
-		return "IF_ENDL";
-	case (IF_INLINE):
-		return "IF_INLINE";
+	//case (IF_ELSE_INLINE):
+	//	return "IF_ELSE_INLINE";
+	//case (IF_ENDL):
+	//	return "IF_ENDL";
+	//case (IF_INLINE):
+	//	return "IF_INLINE";
 	case (IF_THEN):
 		return "IF_THEN";
 	case (IF_THEN_ELSE):
@@ -903,38 +856,36 @@ int add_statement (FILE* file, struct VB_Stmt* stmt)
 
 	switch (stmt->type)
 	{
-    case (READKEY_E):
-        break;
-    case (RETURN_E):
+    case (STMT_RETURN):
          error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
 			number, ++Number);
 		if (error == -1)
 			return 1;
 		error = add_return_statement(file,(struct VB_Return_stmt*)stmt->value);
         break;
-    case (ENDL_E):
+    case (STMT_ENDL):
         break;
-    case (ENUM_D):
-        error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
-			number, ++Number);
-		if (error == -1)
-			return 1;
-		error = add_enum_statement(file,(struct VB_Enum_stmt*)stmt->value);
-        break;
-    case (SUB_D):
-        error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
-			number, ++Number);
-		if (error == -1)
-			return 1;
-		error = add_sub_statement(file,(struct VB_Sub_stmt*)stmt->value);
-        break;
-    case (FUNC_D):
-        error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
-			number, ++Number);
-		if (error == -1)
-			return 1;
-		error = add_func_statement(file,(struct VB_Func_stmt*)stmt->value);
-        break;
+  //  case (ENUM_D):
+  //      error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
+		//	number, ++Number);
+		//if (error == -1)
+		//	return 1;
+		//error = add_enum_statement(file,(struct VB_Enum_stmt*)stmt->value);
+  //      break;
+  //  case (SUB_D):
+  //      error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
+		//	number, ++Number);
+		//if (error == -1)
+		//	return 1;
+		//error = add_sub_statement(file,(struct VB_Sub_stmt*)stmt->value);
+  //      break;
+  //  case (FUNC_D):
+  //      error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
+		//	number, ++Number);
+		//if (error == -1)
+		//	return 1;
+		//error = add_func_statement(file,(struct VB_Func_stmt*)stmt->value);
+  //      break;
 	case(1):
         error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
 			number, ++Number);
@@ -977,20 +928,20 @@ int add_statement (FILE* file, struct VB_Stmt* stmt)
 			return 1;
 		error = add_do_loop_statement(file,(struct VB_Do_loop_stmt*)stmt->value);
         break;
-	case(10):
-        error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
-			number, ++Number);
-		if (error == -1)
-			return 1;
-		error = add_try_catch_stmt(file,(struct VB_Try_catch_stmt*)stmt->value);
-        break;;
-	case(11):
-        error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
-			number, ++Number);
-		if (error == -1)
-			return 1;
-		error = add_throw_stmt(file,(struct VB_Throw_stmt*)stmt->value);
-        break;
+	//case(10):
+ //       error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
+	//		number, ++Number);
+	//	if (error == -1)
+	//		return 1;
+	//	error = add_try_catch_stmt(file,(struct VB_Try_catch_stmt*)stmt->value);
+ //       break;;
+	//case(11):
+ //       error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
+	//		number, ++Number);
+	//	if (error == -1)
+	//		return 1;
+	//	error = add_throw_stmt(file,(struct VB_Throw_stmt*)stmt->value);
+ //       break;
 	//case(12):
  //       error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
 	//		number, ++Number);
@@ -1076,16 +1027,16 @@ int add_if_statement (FILE* file, struct VB_If_stmt* stmt)
 			return 1;
 	}
 
-	if (stmt->end_stmt != NULL)
-	{
-		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
-			number, ++Number);
-		if (error == -1)
-			return 1;
-		error = add_end_if_statement(file,stmt->end_stmt);
-		if (error)
-			return 1;
-	}
+	//if (stmt->end_stmt != NULL)
+	//{
+	//	error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
+	//		number, ++Number);
+	//	if (error == -1)
+	//		return 1;
+	//	error = add_end_if_statement(file,stmt->end_stmt);
+	//	if (error)
+	//		return 1;
+	//}
 
 	return 0;
 }
@@ -1128,27 +1079,27 @@ int add_statement_list (FILE* file, struct VB_Stmt_list* list)
 	\param stmt Оператор перечисления.
 	\return 0 если нет ошибок.
 */
-int add_enum_statement (FILE* file, struct VB_Enum_stmt* stmt)
-{
-	int error, number = Number;
-
-	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> Enum Stmt\
-						 | <f1> id: %s \"\n\t\tshape = \"record\"\n\t];", number, stmt->id);
-	if (error == -1)
-		return 1;
-
-	if (stmt->list != NULL)
-	{
-		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0", number, ++Number);
-		if (error == -1)
-			return 1;
-		error = add_enum_expression_list(file,stmt->list);
-		if (error)
-			return 1;
-	}
-
-	return 0;
-}
+//int add_enum_statement (FILE* file, struct VB_Enum_stmt* stmt)
+//{
+//	int error, number = Number;
+//
+//	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> Enum Stmt\
+//						 | <f1> id: %s \"\n\t\tshape = \"record\"\n\t];", number, stmt->id);
+//	if (error == -1)
+//		return 1;
+//
+//	if (stmt->list != NULL)
+//	{
+//		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0", number, ++Number);
+//		if (error == -1)
+//			return 1;
+//		error = add_enum_expression_list(file,stmt->list);
+//		if (error)
+//			return 1;
+//	}
+//
+//	return 0;
+//}
 
 /*!
 	\brief Функция добавления инициализации в файл.
@@ -1252,29 +1203,29 @@ int add_for_statement (FILE* file, struct VB_For_stmt* stmt)
 	\param stmt Конец If.
 	\return 0 если ошибок нет.
 */
-int add_end_if_statement (FILE* file, struct VB_End_if_stmt* stmt)
-{
-	int error, number = Number;
-
-	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> End If\
-						 |<f1> %s \"\t\tshape = \"record\"\n\t];", number,
-						 end_if_statement_type_to_string(stmt->type));
-	if (error == -1)
-		return 1;
-
-	if (stmt->stmt_list == NULL)
-	{
-		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
-			number, ++Number);
-		if (error == -1)
-			return 1;
-		error = add_statement_list(file,stmt->stmt_list);
-		if (error)
-			return 1;
-	}
-
-	return 0;
-}
+//int add_end_if_statement (FILE* file, struct VB_End_if_stmt* stmt)
+//{
+//	int error, number = Number;
+//
+//	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> End If\
+//						 |<f1>  \"\t\tshape = \"record\"\n\t];", number
+//						/* end_if_statement_type_to_string(stmt->type)*/);
+//	if (error == -1)
+//		return 1;
+//
+//	if (stmt->stmt_list == NULL)
+//	{
+//		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
+//			number, ++Number);
+//		if (error == -1)
+//			return 1;
+//		error = add_statement_list(file,stmt->stmt_list);
+//		if (error)
+//			return 1;
+//	}
+//
+//	return 0;
+//}
 
 /*!
 	\brief Функция  добавления цикла Do...Loop в файл.
@@ -1463,31 +1414,31 @@ int add_expression_list (FILE* file, struct VB_Expr_list* list)
 	\param list Список обработки исключений.
 	\return 0 если ошибок нет.
 */
-int add_catch_statement_list (FILE* file, struct VB_Catch_stmt_list* list)
-{
-	int error, number = Number;
-	struct VB_Catch_stmt* item = list->first;
-
-	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> Catch stmt list\"\n\t\tshape = \"record\"\n\t];",
-						 number);
-	if (error == -1)
-		return 1;
-
-	while (item)
-	{
-		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
-			number, ++Number);
-		if (error == -1)
-			return 1;
-		error = add_catch_statement(file,item);
-		if (error)
-			return 1;
-
-		item = item->next;
-	}
-
-	return 0;
-}
+//int add_catch_statement_list (FILE* file, struct VB_Catch_stmt_list* list)
+//{
+//	int error, number = Number;
+//	struct VB_Catch_stmt* item = list->first;
+//
+//	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> Catch stmt list\"\n\t\tshape = \"record\"\n\t];",
+//						 number);
+//	if (error == -1)
+//		return 1;
+//
+//	while (item)
+//	{
+//		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
+//			number, ++Number);
+//		if (error == -1)
+//			return 1;
+//		error = add_catch_statement(file,item);
+//		if (error)
+//			return 1;
+//
+//		item = item->next;
+//	}
+//
+//	return 0;
+//}
 
 /*!
 	\brief Функция добавления в файл списка перечисления.
@@ -1495,31 +1446,31 @@ int add_catch_statement_list (FILE* file, struct VB_Catch_stmt_list* list)
 	\param list Список перечисления.
 	\return 0 если ошибок нет.
 */
-int add_enum_expression_list (FILE* file, struct VB_Enum_expr_list* list)
-{
-	int error, number = Number;
-	struct VB_Enum_expr* item = list->first;
-
-	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> Enum expr list\"\n\t\tshape = \"record\"\n\t];",
-						 number);
-	if (error == -1)
-		return 1;
-
-	while (item)
-	{
-		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
-			number, ++Number);
-		if (error == -1)
-			return 1;
-		error = add_enum_expression(file,item);
-		if (error)
-			return 1;
-
-		item = item->next;
-	}
-
-	return 0;
-}
+//int add_enum_expression_list (FILE* file, struct VB_Enum_expr_list* list)
+//{
+//	int error, number = Number;
+//	struct VB_Enum_expr* item = list->first;
+//
+//	error = fprintf(file,"\n\t\"node%d\" [\n\t\tlabel = \"<f0> Enum expr list\"\n\t\tshape = \"record\"\n\t];",
+//						 number);
+//	if (error == -1)
+//		return 1;
+//
+//	while (item)
+//	{
+//		error = fprintf(file,"\n\t\"node%d\":f0 -> \"node%d\":f0",
+//			number, ++Number);
+//		if (error == -1)
+//			return 1;
+//		error = add_enum_expression(file,item);
+//		if (error)
+//			return 1;
+//
+//		item = item->next;
+//	}
+//
+//	return 0;
+//}
 
 /*!
 	\brief Функция добавления списка параметров в файл.
