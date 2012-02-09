@@ -19,6 +19,20 @@ public class MethodsTableItem {
     private LocalVariablesTable localVariables;
 
     /**
+     * Метод преобразования объекта в строку.
+     * @return Строка с объектом.
+     */
+    @Override
+    public String toString() {
+        
+        String result = "";
+        
+        result = name + "\t" + type.toString();
+        
+        return result;
+    }
+
+    /**
      * Конструктор с параметрами.
      * Создает объект по заданным параметрам.
      * @param name Имя метода.
