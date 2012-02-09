@@ -19,9 +19,9 @@ public class DimStatement extends AbstractStatement {
     private ArrayList<AsExpression> bodyMain;
 
     public DimStatement(){
-        super(StatementType.DIM);
+        super(SatementType.DIM);
         
-        bodyMain = new ArrayList();
+        bodyMain = new ArrayList<>();
     }
     
     /**
@@ -31,7 +31,7 @@ public class DimStatement extends AbstractStatement {
      */
     public DimStatement(ArrayList<AsExpression> bodyMain) {
         
-        super(StatementType.DIM);
+        super(SatementType.DIM);
         this.bodyMain = bodyMain;
     }
     
@@ -42,8 +42,8 @@ public class DimStatement extends AbstractStatement {
      */
     public DimStatement (AsExpression[] bodyMain) {
         
-        super(StatementType.DIM);
-        this.bodyMain = new ArrayList(Arrays.asList(bodyMain));
+        super(SatementType.DIM);
+        this.bodyMain = new ArrayList<>(Arrays.asList(bodyMain));
     }
     
     /**
@@ -53,8 +53,8 @@ public class DimStatement extends AbstractStatement {
      */
     public DimStatement (AsExpression item) {
         
-        super(StatementType.DIM);
-        this.bodyMain = new ArrayList();
+        super(SatementType.DIM);
+        this.bodyMain = new ArrayList<>();
         this.bodyMain.add(item);
     }
 
@@ -98,7 +98,7 @@ public class DimStatement extends AbstractStatement {
      * @param item Список объявлений в виде одного оператора.
      */
     public void setBodyMain (AsExpression item) {
-        
+
         this.bodyMain.clear();
         this.bodyMain.add(item);
     }

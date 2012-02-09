@@ -73,7 +73,7 @@ public class AsExpression implements XMLInterface{
     public AsExpression (DataType type, String variable, ConstantExpression initData) {
         
         this.type = type;
-        this.variables = new ArrayList();
+        this.variables = new ArrayList<>();
         this.variables.add(variable);
         this.initData = initData;
         this.arrays = null;
@@ -86,7 +86,7 @@ public class AsExpression implements XMLInterface{
      */
     public AsExpression (String[] variables) {
         
-        this.variables = new ArrayList(Arrays.asList(variables));
+        this.variables = new ArrayList<>(Arrays.asList(variables));
         this.arrays = null;
         this.initData = null;
     }
@@ -189,138 +189,117 @@ public class AsExpression implements XMLInterface{
                 
         for (int i = 0; i < nodes.getLength(); i++) {
             // Если это список идентификаторов.
-//            switch (nodes.item(i).getNodeName()) {
-//                case "VB_Expr":
-//                    
-//                    if (variables == null)
-//                        variables = new ArrayList();
-//                    
-//                    attributes = nodes.item(i).getAttributes();
-//                    attr = attributes.getNamedItem("expr_string");
-//                    variables.add(attr.getNodeValue());
-//                    break;
-//                    
-//               case "VB_Array_expr":
-//                   
-//                    if (arrays == null)
-//                        arrays = new HashMap();
-//
-//                    attributes = nodes.item(i).getAttributes();
-//                    attr = attributes.getNamedItem("id");
-//                    String name = attr.getNodeValue();
-//
-//                    attr = attributes.getNamedItem("size");
-//                    int size = Integer.parseInt(attr.getNodeValue());
-//
-//                    arrays.put(name, size);
-//                    break;
-//                    
-//                case "VB_Id_list":
-//                    readFromIdList(nodes.item(i));
-//                    break;
-//            }
-            if ("VB_Expr".equals(nodes.item(i).getNodeName())) {
-                
-                if (variables == null)
-                    variables = new ArrayList();
-                
-                attributes = nodes.item(i).getAttributes();
-                attr = attributes.getNamedItem("expr_string");
-                variables.add(attr.getNodeValue());
-                
-            } else if ("VB_Array_expr".equals(nodes.item(i).getNodeName())) {
-                
-                if (arrays == null)
-                    arrays = new HashMap();
-                
-                attributes = nodes.item(i).getAttributes();
-                attr = attributes.getNamedItem("id");
-                String name = attr.getNodeValue();
-                
-                attr = attributes.getNamedItem("size");
-                int size = Integer.parseInt(attr.getNodeValue());
-                
-                arrays.put(name, size);
-                
-            } else if ("VB_Id_list".equals(nodes.item(i).getNodeName())) {
-                
-                readFromIdList(nodes.item(i));
-                
+            switch (nodes.item(i).getNodeName()) {
+                case "VB_Expr":
+                    
+                    if (variables == null)
+                        variables = new ArrayList<>();
+                    
+                    attributes = nodes.item(i).getAttributes();
+                    attr = attributes.getNamedItem("expr_string");
+                    variables.add(attr.getNodeValue());
+                    break;
+                    
+               case "VB_Array_expr":
+                   
+                    if (arrays == null)
+                        arrays = new HashMap<>();
+
+                    attributes = nodes.item(i).getAttributes();
+                    attr = attributes.getNamedItem("id");
+                    String name = attr.getNodeValue();
+
+                    attr = attributes.getNamedItem("size");
+                    int size = Integer.parseInt(attr.getNodeValue());
+
+                    arrays.put(name, size);
+                    
+                    getArrayInitData(nodes.item(i));
+                    break;
+                    
+                case "VB_Id_list":
+                    readFromIdList(nodes.item(i));
+                    break;
             }
         }
-    }
         
+    }
+     
+    public void getArrayInitData(Node node){
+        NodeList nodes = node.getChildNodes();
+                    
+        if (arrayInit == null)
+            arrayInit = new ArrayList<>();
+            
+        for (int i = 0; i < nodes.getLength(); i++) {
+            this.arrayInit.add(readFromExpr(nodes.item(i)));
+        }
+    }
+
     /**
      * Чтение данных из выражения
      * @param node Узел с выражением
      */
-    public void readFromExpr(Node node){
+    public ConstantExpression readFromExpr(Node node){
+
+        ConstantExpression result = null;
+        
         // Разберемся с аттрибутами
         NamedNodeMap attributes = node.getAttributes();
-        Node attr = attributes.getNamedItem("id_type");
-        String buffer = attr.getNodeValue();
+        Node attr = attributes.getNamedItem("type");
+        String buffer = attr.getNodeValue();        
         
-//        switch (buffer) {
-//            case "INTEGER_E":
-//                attr = attributes.getNamedItem("int_val");
-//                buffer = attr.getNodeValue();
-//                initData = new ConstantExpression(Integer.parseInt(buffer));
-//                initData.setDtype(DataType.INTEGER);
-//                break;
-//            case "CHAR_E":
-//                attr = attributes.getNamedItem("int_val");
-//                buffer = attr.getNodeValue();
-//                initData = new ConstantExpression((char)Integer.parseInt(buffer));
-//                initData.setDtype(DataType.CHAR);
-//                break;
-//            case "STRING_CONST_E":
-//                attr = attributes.getNamedItem("expr_string");
-//                buffer = attr.getNodeValue();
-//                initData = new ConstantExpression(buffer);
-//                initData.setDtype(DataType.STRING);
-//                break;
-//            case "BOOLEAN_CONST_E":
-//                attr = attributes.getNamedItem("expr_string");
-//                buffer = attr.getNodeValue();
-//                if (buffer.equals("true"))
-//                    initData = new ConstantExpression(true);
-//                else
-//                    initData = new ConstantExpression(false);
-//                
-//                initData.setDtype(DataType.BOOLEAN);
-//                break;
-//        }
-        if ("INTEGER_E".equals(buffer)) {
-            
-            attr = attributes.getNamedItem("int_val");
-            buffer = attr.getNodeValue();
-            initData = new ConstantExpression(Integer.parseInt(buffer));
-            initData.setDtype(DataType.INTEGER);
-            
-        } else if ("CHAR_E".equals(buffer)) {
-            
-            attr = attributes.getNamedItem("int_val");
-            buffer = attr.getNodeValue();
-            initData = new ConstantExpression((char)Integer.parseInt(buffer));
-            initData.setDtype(DataType.CHAR);
-            
-        } else if ("STRING_CONST_E".equals(buffer)) {
-            
-            attr = attributes.getNamedItem("expr_string");
-            buffer = attr.getNodeValue();
-            initData = new ConstantExpression(buffer);
-            initData.setDtype(DataType.STRING);
-            
-        } else if ("BOOLEAN_CONST_E".equals(buffer)) {
-            
-            attr = attributes.getNamedItem("expr_struing");
-            buffer = attr.getNodeValue();
-            if ("true".equals(buffer)) 
-                initData = new ConstantExpression(true);
-            else
-                initData = new ConstantExpression(false);
-            initData.setDtype(DataType.BOOLEAN);
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        //attr = attributes.getNamedItem("id_type");
+      
+        switch (buffer) {
+            case "DATA_INTEGER":
+                attr = attributes.getNamedItem("int_val");
+                buffer = attr.getNodeValue();
+                result = new ConstantExpression(Integer.parseInt(buffer));
+                result.setDtype(DataType.INTEGER);
+                break;
+            case "DATA_STRING":
+                attr = attributes.getNamedItem("expr_string");
+                buffer = attr.getNodeValue();
+                result = new ConstantExpression(buffer);
+                result.setDtype(DataType.STRING);
+                break;
+            case "DATA_BOOLEAN":
+                attr = attributes.getNamedItem("expr_string");
+                buffer = attr.getNodeValue();
+                if (buffer.equals("true"))
+                    result = new ConstantExpression(true);
+                else
+                    result = new ConstantExpression(false);
+                
+                result.setDtype(DataType.BOOLEAN);
+                break;
         }
+        
+        return result;
     }
     
     /**
@@ -334,28 +313,20 @@ public class AsExpression implements XMLInterface{
         // Считывание типа.
         Node attr = attributes.getNamedItem("id_type");
         type = DataType.fromString(attr.getNodeValue());
-        
+
         // Считывание вложенных структур.
         NodeList nodes = node.getChildNodes();
-        
+
         for (int i = 0; i < nodes.getLength(); i++) {
             // Если это список идентификаторов.
-//            switch (nodes.item(i).getNodeName()) {
-//                case "VB_Expr__expr":
-//                    readFromExpr(nodes.item(i));
-//                    break;
-//                    
-//                case "VB_Id_list":
-//                    readFromIdList(nodes.item(i));
-//                    break;
-//            }
-            if ("VB_Expr__expr".equals(nodes.item(i).getNodeName())) {
-                
-                readFromExpr(nodes.item(i));
-                
-            } else if ("VB_Id_list".equals(nodes.item(i).getNodeName())) {
-                
-                readFromIdList(nodes.item(i));
+            switch (nodes.item(i).getNodeName()) {
+                case "VB_Expr__expr":
+                    initData = readFromExpr(nodes.item(i));
+                    break;
+
+                case "VB_Id_list":
+                    readFromIdList(nodes.item(i));
+                    break;
             }
         }
     }

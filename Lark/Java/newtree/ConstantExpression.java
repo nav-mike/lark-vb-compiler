@@ -15,6 +15,8 @@ public class ConstantExpression extends Expression {
     private char charValue;
     /** Значение логической константы. */
     private boolean booleanValue;
+    /** Тип выражения константы. */
+    private DataType dtype;
     
     /**
      * Конструктор с параметром.
@@ -93,6 +95,14 @@ public class ConstantExpression extends Expression {
     }
 
     /**
+     * Метод задания типа выражения константы.
+     * @param dtype Тип выражения константы.
+     */
+    public void setDtype(DataType dtype) {
+        this.dtype = dtype;
+    }
+
+    /**
      * Метод задания символьной константы.
      * @param charValue Символьная константа.
      */
@@ -138,6 +148,14 @@ public class ConstantExpression extends Expression {
      */
     public char getCharValue() {
         return charValue;
+    }
+
+    /**
+     * Метод получения типа выражения константы.
+     * @return Тип выражения константы.
+     */
+    public DataType getDtype() {
+        return dtype;
     }
     
 }

@@ -32,25 +32,25 @@ public enum SatementType {
     public static SatementType fromString(String text){
 
         switch (text){
-            case "STMT_EXPR_E":
+            case "STMT_EXPR":
                 return EXPRESSION;
                 
-            case "IF_E":
+            case "STMT_IF":
                 return IF;
                 
-            case "DIM_E":
+            case "STMT_DIM":
                 return DIM;
                 
-            case "FOR_E":
+            case "STMT_FOR":
                 return FOR;
                 
-            case "WHILE_E":
+            case "STMT_WHILE":
                 return WHILE;
                 
-            case "DO_LOOP_E":
+            case "STMT_DO_LOOP":
                 return DO_LOOP;
                 
-            case "RETURN_E":
+            case "STMT_RETURN":
                 return RETURN;
         }
         

@@ -11,14 +11,14 @@ public abstract class AbstractStatement implements XMLInterface{
     
     /* Поля класса. */
     /** Тип оператора. */
-    protected StatementType stmtType;
+    protected SatementType stmtType;
 
     /**
      * Конструктор с параметром.
      * Создает оператор заданного типа.
      * @param stmtType Тип оператора.
      */
-    protected AbstractStatement(StatementType stmtType) {
+    protected AbstractStatement(SatementType stmtType) {
         this.stmtType = stmtType;
     }
 
@@ -26,7 +26,7 @@ public abstract class AbstractStatement implements XMLInterface{
      * Метод получения типа оператора.
      * @return Тип оператора.
      */
-    public StatementType getStmtType() {
+    public SatementType getStmtType() {
         return stmtType;
     }
 
@@ -34,7 +34,7 @@ public abstract class AbstractStatement implements XMLInterface{
      * Метод задания типа оператора.
      * @param stmtType Тип оператора.
      */
-    public void setStmtType(StatementType stmtType) {
+    public void setStmtType(SatementType stmtType) {
         this.stmtType = stmtType;
     }
 

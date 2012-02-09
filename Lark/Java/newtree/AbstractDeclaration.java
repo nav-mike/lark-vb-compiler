@@ -231,7 +231,7 @@ public class AbstractDeclaration implements XMLInterface{
      */
     private void readParameters(Node node) {
         if (node.getChildNodes().getLength() > 0) {
-            paramList = new ArrayList();
+            paramList = new ArrayList<>();
             
             ParamStatement buf;
             
@@ -252,7 +252,7 @@ public class AbstractDeclaration implements XMLInterface{
      */
     private AbstractStatement createDimStmt(Node node){
         
-        ArrayList<AsExpression> asExprList = new ArrayList();
+        ArrayList<AsExpression> asExprList = new ArrayList<>();
                 
         DimStatement dim = new DimStatement(asExprList);
         
@@ -327,35 +327,35 @@ public class AbstractDeclaration implements XMLInterface{
         // Считывание типа операции.
         Node attr = attributes.getNamedItem("type");
         buffer = attr.getNodeValue();
-        StatementType type = StatementType.fromString(buffer);      
+        SatementType type = SatementType.fromString(buffer);      
         
         NodeList nodes = node.getChildNodes();
         
         for (int i = 0; i < nodes.getLength(); i++) {
                         
             // Добавляем в тело функции полученную операцию
-            if (type == StatementType.DIM && "VB_Dim_stmt".equals(nodes.item(i).getNodeName())){
+            if (type == SatementType.DIM && "VB_Dim_stmt".equals(nodes.item(i).getNodeName())){
                 
                 DimStatement newDim = new DimStatement();
                 newDim.readData(nodes.item(i));
                 body.add(newDim);
 
-            } else if (type == StatementType.DO_LOOP){
+            } else if (type == SatementType.DO_LOOP){
                 body.add(createDoLoopStmt(nodes.item(i)));
 
-            } else if (type == StatementType.EXPRESSION){
+            } else if (type == SatementType.EXPRESSION){
                 body.add(createExprStmt(nodes.item(i)));
 
-            } else if (type == StatementType.FOR){
+            } else if (type == SatementType.FOR){
                 body.add(createForStmt(nodes.item(i)));
 
-            } else if (type == StatementType.IF){
+            } else if (type == SatementType.IF){
                 body.add(createIfStmt(nodes.item(i)));
 
-            } else if (type == StatementType.RETURN){
+            } else if (type == SatementType.RETURN){
                 body.add(createReturnStmt(nodes.item(i)));
 
-            } else if (type == StatementType.WHILE){
+            } else if (type == SatementType.WHILE){
                 body.add(createWhileStmt(nodes.item(i)));
             }      
         }
@@ -366,7 +366,7 @@ public class AbstractDeclaration implements XMLInterface{
      */
     private void readBody(Node node) {
         if (node.getChildNodes().getLength() > 0) {
-            body = new ArrayList();
+            body = new ArrayList<>();
             
             AbstractStatement buf;
             
@@ -400,22 +400,14 @@ public class AbstractDeclaration implements XMLInterface{
         NodeList nodes = node.getChildNodes();
         
        for (int i = 0; i < nodes.getLength(); i++) {
-//            switch (nodes.item(i).getNodeName()) {
-//                case "VB_Param_stmt_list":
-//                    readParameters(nodes.item(i));
-//                    break;
-//                case "VB_Stmt_list":
-//                    readBody(nodes.item(i));
-//                    break;
-//            }
-           if ("VB_Param_stmt_list".equals(nodes.item(i).getNodeName())) {
-               
-               readParameters(nodes.item(i));
-               
-           } else if ("VB_Stmt_list".equals(nodes.item(i))) {
-               
-               readBody(nodes.item(i));
-           }
+            switch (nodes.item(i).getNodeName()) {
+                case "VB_Param_stmt_list":
+                    readParameters(nodes.item(i));
+                    break;
+                case "VB_Stmt_list":
+                    readBody(nodes.item(i));
+                    break;
+            }
         }
     }
     
@@ -431,21 +423,13 @@ public class AbstractDeclaration implements XMLInterface{
         
         for (int i = 0; i < nodes.getLength(); i++) {
             
-//            switch (nodes.item(i).getNodeName()) {
-//                case "VB_Sub_stmt":
-//                    readSubData(nodes.item(i),false);
-//                    break;
-//                case "VB_Func_stmt":
-//                    readSubData(nodes.item(i),true);
-//                    break;
-//            }
-            if ("VB_Sub_stmt".equals(nodes.item(i).getNodeName())) {
-                
-                readSubData(nodes.item(i), false);
-                
-            } else if ("VB_Func_stmt".equals(nodes.item(i).getNodeName())) {
-                
-                readSubData(nodes.item(i), true);
+            switch (nodes.item(i).getNodeName()) {
+                case "VB_Sub_stmt":
+                    readSubData(nodes.item(i),false);
+                    break;
+                case "VB_Func_stmt":
+                    readSubData(nodes.item(i),true);
+                    break;
             }
                 
         }
