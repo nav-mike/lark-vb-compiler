@@ -13,6 +13,7 @@ import newtree.Module;
 import tables.InvalidParametersException;
 import tables.ProgramsClass;
 import tables.gui.GuiConstantsTable;
+import tables.gui.GuiMethodsTable;
 
 /**
  * Класс главного окна.
@@ -39,7 +40,8 @@ public class MainDebugWindow extends JFrame {
         super("Отладочная печать");
         try {
             rtlClass = new ProgramsClass(FillTables.fillConsoleConstantsTable(), null, null);
-            mainClass = new ProgramsClass(FillTables.fillMainClassConstatntsTable(item), null, null);
+            mainClass = new ProgramsClass(FillTables.fillMainClassConstatntsTable(item),
+                    FillTables.fillModulesMethodsTable(item.getDeclList()), null);
         } catch (InvalidParametersException ex) {
             Logger.getLogger(MainDebugWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -51,6 +53,9 @@ public class MainDebugWindow extends JFrame {
         
         jtp.add(item.getId() + ":constants table",
                 new JScrollPane((new GuiConstantsTable(mainClass.getConstTable()).getTable())));
+        
+        jtp.add(item.getId() + ":methods table",
+                new JScrollPane((new GuiMethodsTable(mainClass.getMethodTable()).getTable())));
         
         this.add(jtp, BorderLayout.CENTER);
         
