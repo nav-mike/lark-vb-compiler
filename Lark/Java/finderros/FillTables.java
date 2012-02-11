@@ -15,103 +15,118 @@ public class FillTables {
     
     public static void fillConstantTable (Module item) throws InvalidParametersException {
         
-        writeStartConstatntsToTable(item);
+        //writeStartConstatntsToTable(item);
         
     }
     
     /**
+     * Метод заполнения таблицы констант для RTL класса Console.
+     * @return Заполненная таблица констант.
+     * @throws InvalidParametersException 
+     */
+    public static ConstantsTable fillConsoleConstantsTable () throws InvalidParametersException {
+        
+        ConstantsTable ct = new ConstantsTable();
+        
+        writeStartConstatntsToTable(ct);
+        
+        return ct;
+    }
+    
+    /**
      * Метод записи стандартного начала таблицы констант.
-     * @param item Ссылка на модуль.
+     * @param ct Ссылка на таблицу констант.
      * @throws InvalidParametersException Исключение выбрасывается при неверном
      * создании констант.
      */
-    private static void writeStartConstatntsToTable (Module item) throws InvalidParametersException {
+    private static void writeStartConstatntsToTable (ConstantsTable ct) throws InvalidParametersException {
         
-        cTable.add(new ConstantsTableItem(1, "Code"));
+        ct.add(new ConstantsTableItem(1, "Code"));
 
-        writeConsoleClassToConstantTable(); // INDEX 58
+        writeConsoleClassToConstantTable(ct);
         
     }
     
     /**
      * Метод заполнения таблицы констант RTL классом Console.
+     * @param ct Ссылка на таблицу констант.
      * @throws InvalidParametersException Исключение выбрасывается при неверном
      * создании констант.
      */
-    private static void writeConsoleClassToConstantTable () throws InvalidParametersException {
+    private static void writeConsoleClassToConstantTable (ConstantsTable ct) throws InvalidParametersException {
         
-        cTable.add(new ConstantsTableItem(2, "Console"));
-        cTable.add(ConstantsTableItem.CreateClassConst(3, cTable.get(2)));
+        ct.add(new ConstantsTableItem(2, "Console"));
+        ct.add(ConstantsTableItem.CreateClassConst(3, ct.get(2)));
         
-        cTable.add(new ConstantsTableItem(4, "ReadLine"));
-        cTable.add(new ConstantsTableItem(5, "()Ljava/lang/String;"));
-        cTable.add(new ConstantsTableItem(6, cTable.get(4), cTable.get(5)));
-        cTable.add(ConstantsTableItem.CreateMethodRefConst(7, cTable.get(3), cTable.get(6)));
+        ct.add(new ConstantsTableItem(4, "ReadLine"));
+        ct.add(new ConstantsTableItem(5, "()Ljava/lang/String;"));
+        ct.add(new ConstantsTableItem(6, ct.get(4), ct.get(5)));
+        ct.add(ConstantsTableItem.CreateMethodRefConst(7, ct.get(3), ct.get(6)));
         
-        cTable.add(new ConstantsTableItem(8, "StringToInteger"));
-        cTable.add(new ConstantsTableItem(9, "(Ljava/lang/String)I;"));
-        cTable.add(new ConstantsTableItem(10, cTable.get(8), cTable.get(9)));
-        cTable.add(ConstantsTableItem.CreateMethodRefConst(11, cTable.get(3), cTable.get(10)));
+        ct.add(new ConstantsTableItem(8, "StringToInteger"));
+        ct.add(new ConstantsTableItem(9, "(Ljava/lang/String)I;"));
+        ct.add(new ConstantsTableItem(10, ct.get(8), ct.get(9)));
+        ct.add(ConstantsTableItem.CreateMethodRefConst(11, ct.get(3), ct.get(10)));
         
-        cTable.add(new ConstantsTableItem(12, "StringToChar"));
-        cTable.add(new ConstantsTableItem(13, "(Ljava/lang/String)C;"));
-        cTable.add(new ConstantsTableItem(14, cTable.get(12), cTable.get(13)));
-        cTable.add(ConstantsTableItem.CreateMethodRefConst(15, cTable.get(3), cTable.get(14)));
+        ct.add(new ConstantsTableItem(12, "StringToChar"));
+        ct.add(new ConstantsTableItem(13, "(Ljava/lang/String)C;"));
+        ct.add(new ConstantsTableItem(14, ct.get(12), ct.get(13)));
+        ct.add(ConstantsTableItem.CreateMethodRefConst(15, ct.get(3), ct.get(14)));
         
-        cTable.add(new ConstantsTableItem(16, "StringToBoolean"));
-        cTable.add(new ConstantsTableItem(17, "(Ljava/lang/String)Z;"));
-        cTable.add(new ConstantsTableItem(18, cTable.get(16), cTable.get(17)));
-        cTable.add(ConstantsTableItem.CreateMethodRefConst(19, cTable.get(3), cTable.get(18)));
+        ct.add(new ConstantsTableItem(16, "StringToBoolean"));
+        ct.add(new ConstantsTableItem(17, "(Ljava/lang/String)Z;"));
+        ct.add(new ConstantsTableItem(18, ct.get(16), ct.get(17)));
+        ct.add(ConstantsTableItem.CreateMethodRefConst(19, ct.get(3), ct.get(18)));
         
-        cTable.add(new ConstantsTableItem(20, "WriteLine"));
-        cTable.add(new ConstantsTableItem(21, "(Ljava/lang/String)V;"));
-        cTable.add(new ConstantsTableItem(22, cTable.get(20), cTable.get(21)));
-        cTable.add(ConstantsTableItem.CreateMethodRefConst(23, cTable.get(3), cTable.get(22)));
+        ct.add(new ConstantsTableItem(20, "WriteLine"));
+        ct.add(new ConstantsTableItem(21, "(Ljava/lang/String)V;"));
+        ct.add(new ConstantsTableItem(22, ct.get(20), ct.get(21)));
+        ct.add(ConstantsTableItem.CreateMethodRefConst(23, ct.get(3), ct.get(22)));
         
-        cTable.add(new ConstantsTableItem(24, "IntegerToString"));
-        cTable.add(new ConstantsTableItem(25, "(I)Ljava/lang/String;"));
-        cTable.add(new ConstantsTableItem(26, cTable.get(24), cTable.get(25)));
-        cTable.add(ConstantsTableItem.CreateMethodRefConst(27, cTable.get(3), cTable.get(26)));
+        ct.add(new ConstantsTableItem(24, "IntegerToString"));
+        ct.add(new ConstantsTableItem(25, "(I)Ljava/lang/String;"));
+        ct.add(new ConstantsTableItem(26, ct.get(24), ct.get(25)));
+        ct.add(ConstantsTableItem.CreateMethodRefConst(27, ct.get(3), ct.get(26)));
         
-        cTable.add(new ConstantsTableItem(28, "CharToString"));
-        cTable.add(new ConstantsTableItem(29, "(C)Ljava/lang/String;"));
-        cTable.add(new ConstantsTableItem(30, cTable.get(28), cTable.get(29)));
-        cTable.add(ConstantsTableItem.CreateMethodRefConst(31, cTable.get(3), cTable.get(30)));
+        ct.add(new ConstantsTableItem(28, "CharToString"));
+        ct.add(new ConstantsTableItem(29, "(C)Ljava/lang/String;"));
+        ct.add(new ConstantsTableItem(30, ct.get(28), ct.get(29)));
+        ct.add(ConstantsTableItem.CreateMethodRefConst(31, ct.get(3), ct.get(30)));
         
-        cTable.add(new ConstantsTableItem(32, "BooleanToString"));
-        cTable.add(new ConstantsTableItem(33, "(Z)Ljava/lang/String;"));
-        cTable.add(new ConstantsTableItem(34, cTable.get(32), cTable.get(33)));
-        cTable.add(ConstantsTableItem.CreateMethodRefConst(35, cTable.get(3), cTable.get(34)));
+        ct.add(new ConstantsTableItem(32, "BooleanToString"));
+        ct.add(new ConstantsTableItem(33, "(Z)Ljava/lang/String;"));
+        ct.add(new ConstantsTableItem(34, ct.get(32), ct.get(33)));
+        ct.add(ConstantsTableItem.CreateMethodRefConst(35, ct.get(3), ct.get(34)));
         
-        cTable.add(new ConstantsTableItem(36, "Write"));
-        cTable.add(new ConstantsTableItem(37, "(Ljava/lang/String)V;"));
-        cTable.add(new ConstantsTableItem(38, cTable.get(36), cTable.get(37)));
-        cTable.add(ConstantsTableItem.CreateMethodRefConst(39, cTable.get(3), cTable.get(38)));
+        ct.add(new ConstantsTableItem(36, "Write"));
+        ct.add(new ConstantsTableItem(37, "(Ljava/lang/String)V;"));
+        ct.add(new ConstantsTableItem(38, ct.get(36), ct.get(37)));
+        ct.add(ConstantsTableItem.CreateMethodRefConst(39, ct.get(3), ct.get(38)));
         
-        cTable.add(new ConstantsTableItem(39, "Read"));
-        cTable.add(new ConstantsTableItem(40, "()C;"));
-        cTable.add(new ConstantsTableItem(41, cTable.get(39), cTable.get(40)));
-        cTable.add(ConstantsTableItem.CreateMethodRefConst(42, cTable.get(3), cTable.get(41)));
+        ct.add(new ConstantsTableItem(39+1, "Read"));
+        ct.add(new ConstantsTableItem(40+1, "()C;"));
+        ct.add(new ConstantsTableItem(41+1, ct.get(39+1), ct.get(40+1)));
+        ct.add(ConstantsTableItem.CreateMethodRefConst(42+1, ct.get(3), ct.get(41+1)));
         
-        cTable.add(new ConstantsTableItem(43, "CharToInteger"));
-        cTable.add(new ConstantsTableItem(44, "(C)I;"));
-        cTable.add(new ConstantsTableItem(45, cTable.get(43), cTable.get(44)));
-        cTable.add(ConstantsTableItem.CreateMethodRefConst(46, cTable.get(3), cTable.get(45)));
+        ct.add(new ConstantsTableItem(43+1, "CharToInteger"));
+        ct.add(new ConstantsTableItem(44+1, "(C)I;"));
+        ct.add(new ConstantsTableItem(45+1, ct.get(43+1), ct.get(44+1)));
+        ct.add(ConstantsTableItem.CreateMethodRefConst(46+1, ct.get(3), ct.get(45+1)));
         
-        cTable.add(new ConstantsTableItem(47, "IntegerToChar"));
-        cTable.add(new ConstantsTableItem(48, "(I)C;"));
-        cTable.add(new ConstantsTableItem(49, cTable.get(47), cTable.get(48)));
-        cTable.add(ConstantsTableItem.CreateMethodRefConst(50, cTable.get(3), cTable.get(49)));
+        ct.add(new ConstantsTableItem(47+1, "IntegerToChar"));
+        ct.add(new ConstantsTableItem(48+1, "(I)C;"));
+        ct.add(new ConstantsTableItem(49+1, ct.get(47+1), ct.get(48+1)));
+        ct.add(ConstantsTableItem.CreateMethodRefConst(50+1, ct.get(3), ct.get(49+1)));
         
-        cTable.add(new ConstantsTableItem(51, "CharToBoolean"));
-        cTable.add(new ConstantsTableItem(52, "(C)Z;"));
-        cTable.add(new ConstantsTableItem(53, cTable.get(51), cTable.get(52)));
-        cTable.add(ConstantsTableItem.CreateMethodRefConst(54, cTable.get(3), cTable.get(53)));
+        ct.add(new ConstantsTableItem(51+1, "CharToBoolean"));
+        ct.add(new ConstantsTableItem(52+1, "(C)Z;"));
+        ct.add(new ConstantsTableItem(53+1, ct.get(51+1), ct.get(52+1)));
+        ct.add(ConstantsTableItem.CreateMethodRefConst(54+1, ct.get(3), ct.get(53+1)));
         
-        cTable.add(new ConstantsTableItem(55, "BooleanToChar"));
-        cTable.add(new ConstantsTableItem(56, "(Z)C;"));
-        cTable.add(new ConstantsTableItem(57, cTable.get(55), cTable.get(56)));
-        cTable.add(ConstantsTableItem.CreateMethodRefConst(58, cTable.get(3), cTable.get(57)));
+        ct.add(new ConstantsTableItem(55+1, "BooleanToChar"));
+        ct.add(new ConstantsTableItem(56+1, "(Z)C;"));
+        ct.add(new ConstantsTableItem(57+1, ct.get(55+1), ct.get(56+1)));
+        ct.add(ConstantsTableItem.CreateMethodRefConst(58+1, ct.get(3), ct.get(57+1)));
         
     }
 }

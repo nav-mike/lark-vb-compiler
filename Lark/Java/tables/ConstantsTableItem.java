@@ -24,20 +24,20 @@ public class ConstantsTableItem {
     private int isecond;
     
     /* Типы констант. */
-    private static final int CONSTANT_UTF8        = 0x1;
-    private static final int CONSTANT_Integer     = 0x3;
-    private static final int CONSTANT_String      = 0x8;
-    private static final int CONSTANT_NameAndType = 0xC;
-    private static final int CONSTANT_Class       = 0x7;
-    private static final int CONSTANT_FieldRef    = 0x9;
-    private static final int CONSTANT_MethodRef   = 0xA;
+    public static final int CONSTANT_UTF8        = 0x1;
+    public static final int CONSTANT_Integer     = 0x3;
+    public static final int CONSTANT_String      = 0x8;
+    public static final int CONSTANT_NameAndType = 0xC;
+    public static final int CONSTANT_Class       = 0x7;
+    public static final int CONSTANT_FieldRef    = 0x9;
+    public static final int CONSTANT_MethodRef   = 0xA;
     
     /**
      * Метод преобразования типа в строку.
      * @param type Тип константы.
      * @return Тип константы в виде строки.
      */
-    private static String convertTypeToString (int type) {
+    public static String convertTypeToString (int type) {
         
         switch (type)
         {
@@ -260,7 +260,8 @@ public class ConstantsTableItem {
         
         this.first = first;
         this.ifirst = first.ifirst;
-        this.isecond = second.isecond;
+        if (second != null)
+            this.isecond = second.isecond;
         this.number = number;
         this.second = second;
         this.type = type;
