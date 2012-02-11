@@ -3,6 +3,7 @@ package tables.gui;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import tables.ConstantsTable;
+import tables.ConstantsTableItem;
 
 /**
  * Класс графического отображения таблицы констант.
@@ -62,7 +63,9 @@ public class GuiConstantsTable {
         
         for (int i = 0; i < ctable.size(); i++) {
             
-            this.model.addRow(new Object[]{i + 1,ctable.get(i).getType(),ctable.get(i).getValue()});
+            this.model.addRow(new Object[]{i + 1,
+                ConstantsTableItem.convertTypeToString(ctable.get(i + 1).getType()),
+                ctable.get(i + 1).getValue()});
         }
         
     }
