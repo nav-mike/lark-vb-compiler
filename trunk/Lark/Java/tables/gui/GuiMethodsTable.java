@@ -63,7 +63,7 @@ public class GuiMethodsTable {
         
         for (int i = 0; i < mtable.size(); i++) {
             
-            this.model.addRow(new Object[]{i + 1,mtable.get(i).getName(),mtable.get(i).getType()});
+            this.model.addRow(new Object[]{i + 1,mtable.get(i + 1).getName(),mtable.get(i + 1).getType()});
         }
         
     }

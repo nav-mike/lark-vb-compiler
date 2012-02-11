@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import newtree.AbstractDeclaration;
 import newtree.DataType;
 import newtree.Module;
-import tables.ConstantsTable;
-import tables.ConstantsTableItem;
-import tables.InvalidParametersException;
+import tables.*;
 
 /**
  * Класс заполнения таблиц.
@@ -205,5 +203,22 @@ public class FillTables {
         ct.add(new ConstantsTableItem(57+1, ct.get(55+1), ct.get(56+1)));
         ct.add(ConstantsTableItem.CreateMethodRefConst(58+1, ct.get(3), ct.get(57+1)));
         
+    }
+    
+    /**
+     * Метод заполнения таблицы методов главного модуля.
+     * @param items Список функций/процедур методов.
+     * @return Заполненная таблица методов главного модуля.
+     */
+    public static MethodsTable fillModulesMethodsTable (ArrayList<AbstractDeclaration> items) {
+        
+        MethodsTable mt = new MethodsTable();
+        
+        for (int i = 0; i < items.size(); i++) {
+            
+            mt.add(new MethodsTableItem(items.get(i).getName(), items.get(i).getRetType(), i + 1, null));
+        }
+        
+        return mt;
     }
 }
