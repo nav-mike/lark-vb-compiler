@@ -1,9 +1,7 @@
 package finderros;
 
 import java.util.ArrayList;
-import newtree.AbstractDeclaration;
-import newtree.DataType;
-import newtree.Module;
+import newtree.*;
 import tables.*;
 
 /**
@@ -210,15 +208,111 @@ public class FillTables {
      * @param items Список функций/процедур методов.
      * @return Заполненная таблица методов главного модуля.
      */
-    public static MethodsTable fillModulesMethodsTable (ArrayList<AbstractDeclaration> items) {
+    public static MethodsTable fillModulesMethodsTable (ArrayList<AbstractDeclaration> items) throws InvalidParametersException {
         
         MethodsTable mt = new MethodsTable();
         
         for (int i = 0; i < items.size(); i++) {
             
-            mt.add(new MethodsTableItem(items.get(i).getName(), items.get(i).getRetType(), i + 1, null));
+            mt.add(new MethodsTableItem(items.get(i).getName(),
+                    items.get(i).getRetType(), i + 1,
+                    fillLocalVariablesTable(items.get(i).getParamList(),items.get(i).getBody())));
         }
         
         return mt;
+    }
+    
+    /**
+     * Метод заполнения таблицы локальных переменных.
+     * @param paramList Входные параметры в функцию/процедуру.
+     * @param body Тело функции/процедуры.
+     * @return Таблица локальных переменных.
+     * @throws InvalidParametersException Исключение выбрасывается при неверном
+     * создании констант.
+     */
+    private static LocalVariablesTable fillLocalVariablesTable (ArrayList<ParamStatement> paramList,
+            ArrayList<AbstractStatement> body) throws InvalidParametersException {
+        
+        LocalVariablesTable lvt = new LocalVariablesTable();
+        
+        if (paramList != null) {
+            
+            for (int i = 0; i < paramList.size(); i++) {
+
+                lvt.add(new LocalVariablesTableItem(paramList.get(i).getName(),
+                        paramList.get(i).getType(), i));
+            }
+        }
+        
+        for (int i = 0; i < body.size(); i++) {
+            
+            if (body.get(i) != null) {
+                
+                if (body.get(i).getStmtType() == StatementType.DIM) {
+
+                    findLocalVariableInDim((DimStatement)body.get(i), lvt);
+                } else if (body.get(i).getStmtType() == StatementType.DO_LOOP) {
+                    
+                    fillLocalVariablesTable(null,
+                            ((DoLoopStatement)body.get(i)).getBody());
+                } else if (body.get(i).getStmtType() == StatementType.FOR) {
+                    
+                    fillLocalVariablesTable(null,
+                            ((ForStatement)body.get(i)).getBody());
+                } else if (body.get(i).getStmtType() == StatementType.WHILE) {
+                    
+                    fillLocalVariablesTable(null,
+                            ((WhileStatement)body.get(i)).getBody());
+                } else if (body.get(i).getStmtType() == StatementType.IF) {
+                    
+                    fillLocalVariablesTable(null,
+                            ((IfStatement)body.get(i)).getBodyMain());
+                    fillLocalVariablesTable(null,
+                            ((IfStatement)body.get(i)).getBodyAlter());
+                }
+            }
+            
+        }
+        
+        return lvt;
+    }
+    
+    /**
+     * Функция заполнения таблицы локальных переменных.
+     * @param item Строка объявления переменных.
+     * @param lvt Таблица локальных переменных.
+     * @throws InvalidParametersException Исключение выбрасывается при неверном
+     * создании констант.
+     */
+    private static void findLocalVariableInDim (DimStatement item, LocalVariablesTable lvt) throws InvalidParametersException {
+        
+        for (int i = 0; i < item.getBodyMain().size(); i++) {
+            
+            findLocalVariableInAsExpression(item.getBodyMain().get(i), lvt);
+        }
+        
+    }
+    
+    /**
+     * Метод заполнения таблицы локальных переменных.
+     * Заполняет таблицу объявленными внутри функции переменными. (недописана)
+     * @param item Строка объявления переменных.
+     * @param lvt Таблица локальных переменных.
+     * @throws InvalidParametersException Исключение выбрасывается при неверном
+     * создании констант.
+     */
+    private static void findLocalVariableInAsExpression (AsExpression item, LocalVariablesTable lvt) throws InvalidParametersException {
+        
+        if (!item.getVariables().isEmpty()) {
+            
+            for (int i = 0; i < item.getVariables().size(); i++) {
+                
+                lvt.add(new LocalVariablesTableItem(item.getVariables().get(i),
+                        item.getType(), i));
+            }
+        } else if (!item.getArrays().isEmpty()) {
+            
+        }
+        
     }
 }

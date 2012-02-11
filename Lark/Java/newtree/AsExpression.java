@@ -29,6 +29,14 @@ public class AsExpression implements XMLInterface{
     
     private DataType type;
 
+    public void setType(DataType type) {
+        this.type = type;
+    }
+
+    public DataType getType() {
+        return type;
+    }
+
     AsExpression(){
         variables = null;
         initData = null;

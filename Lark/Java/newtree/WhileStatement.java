@@ -1,18 +1,26 @@
 package newtree;
 
 import java.util.ArrayList;
+import org.w3c.dom.Node;
 
 /**
  * Класс, описывающий оператор цикла while.
  * @version 1.0
  */
-public class WhileStatement {
+public class WhileStatement extends AbstractStatement{
     
     /* Поля класса. */
     /** Условие выполнения цикла. */
     private Expression condition;
     /** Тело цикла. */
     private ArrayList<AbstractStatement> body;
+
+    public WhileStatement(Expression condition, ArrayList<AbstractStatement> body) {
+        
+        super(StatementType.WHILE);
+        this.condition = condition;
+        this.body = body;
+    }
 
     /**
      * Метод получения условия выполнения цикла.
@@ -76,6 +84,11 @@ public class WhileStatement {
     public AbstractStatement getItem (int index) {
         
         return this.body.get(index);
+    }
+
+    @Override
+    public void readData(Node node) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
     
 }
