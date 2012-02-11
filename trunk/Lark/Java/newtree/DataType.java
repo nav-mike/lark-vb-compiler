@@ -38,4 +38,23 @@ public enum DataType {
         return NONE;
     }
     
+    /**
+     * Метод преобразования типа данных в строку для таблицы констант.
+     * @return Строка в формате удобном для таблицы констант.
+     */
+    public String convertToConstantsTablesString () {
+        
+        if (this == INTEGER)
+            return "I";
+        else if (this == CHAR)
+            return "C";
+        else if (this == BOOLEAN)
+            return "Z";
+        else if (this == STRING)
+            return "Ljava/lang/String";
+        
+        return "V";
+        
+    }
+    
 }
