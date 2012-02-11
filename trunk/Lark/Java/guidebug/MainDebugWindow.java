@@ -9,6 +9,7 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
+import newtree.Module;
 import tables.InvalidParametersException;
 import tables.ProgramsClass;
 import tables.gui.GuiConstantsTable;
@@ -23,6 +24,8 @@ public class MainDebugWindow extends JFrame {
     /* Поля класса. */
     /** RTL класс Console. */
     private ProgramsClass rtlClass;
+    /** Главный класс компилируемой программы. */
+    private ProgramsClass mainClass;
     
     /** Панель с вкладками. */
     private JTabbedPane jtp;
@@ -31,11 +34,12 @@ public class MainDebugWindow extends JFrame {
      * Конструктор по умолчанию.
      * Создает окно с таблицами.
      */
-    public MainDebugWindow() {
+    public MainDebugWindow(Module item) {
         
         super("Отладочная печать");
         try {
             rtlClass = new ProgramsClass(FillTables.fillConsoleConstantsTable(), null, null);
+            mainClass = new ProgramsClass(FillTables.fillMainClassConstatntsTable(item), null, null);
         } catch (InvalidParametersException ex) {
             Logger.getLogger(MainDebugWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -44,6 +48,9 @@ public class MainDebugWindow extends JFrame {
         
         JScrollPane scroll = new JScrollPane(new GuiConstantsTable(rtlClass.getConstTable()).getTable());
         jtp.add("RTL:constants table", scroll);
+        
+        jtp.add(item.getId() + ":constants table",
+                new JScrollPane((new GuiConstantsTable(mainClass.getConstTable()).getTable())));
         
         this.add(jtp, BorderLayout.CENTER);
         

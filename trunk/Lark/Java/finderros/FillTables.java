@@ -10,21 +10,22 @@ import tables.InvalidParametersException;
  * @version 1.0
  */
 public class FillTables {
-    
-    static ConstantsTable cTable = new ConstantsTable();
-    
-    public static void fillConstantTable (Module item) throws InvalidParametersException {
         
-        //writeStartConstatntsToTable(item);
-        
-    }
-    
     /**
      * Метод заполнения таблицы констант для RTL класса Console.
      * @return Заполненная таблица констант.
      * @throws InvalidParametersException 
      */
     public static ConstantsTable fillConsoleConstantsTable () throws InvalidParametersException {
+        
+        ConstantsTable ct = new ConstantsTable();
+        
+        writeStartConstatntsToTable(ct);
+        
+        return ct;
+    }
+    
+    public static ConstantsTable fillMainClassConstatntsTable (Module item) throws InvalidParametersException {
         
         ConstantsTable ct = new ConstantsTable();
         
