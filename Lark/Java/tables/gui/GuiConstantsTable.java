@@ -20,7 +20,19 @@ public class GuiConstantsTable {
     /** Ссылка на таблицу констант. */
     private ConstantsTable ctable;
 
-    
+    /**
+     * Метод получения графическое таблицы.
+     * @return Графическая таблица констант.
+     */
+    public JTable getTable() {
+        return table;
+    }
+
+    /**
+     * Конструктор с параметром.
+     * Создает графическое представление таблицы констант.
+     * @param ctable Таблица констант.
+     */
     public GuiConstantsTable(ConstantsTable ctable) {
         
         this.model = new DefaultTableModel();
@@ -28,6 +40,7 @@ public class GuiConstantsTable {
         this.ctable = ctable;
 
         fillTableTitle();
+        fillTable();
         
     }
   
@@ -40,6 +53,18 @@ public class GuiConstantsTable {
             
             model.addColumn(colNames[i]);
         }
+    }
+    
+    /**
+     * Метод заполнения таблицы данными.
+     */
+    private void fillTable () {
+        
+        for (int i = 0; i < ctable.size(); i++) {
+            
+            this.model.addRow(new Object[]{i + 1,ctable.get(i).getType(),ctable.get(i).getValue()});
+        }
+        
     }
     
 }
