@@ -327,35 +327,35 @@ public class AbstractDeclaration implements XMLInterface{
         // Считывание типа операции.
         Node attr = attributes.getNamedItem("type");
         buffer = attr.getNodeValue();
-        SatementType type = SatementType.fromString(buffer);      
+        StatementType type = StatementType.fromString(buffer);      
         
         NodeList nodes = node.getChildNodes();
         
         for (int i = 0; i < nodes.getLength(); i++) {
                         
             // Добавляем в тело функции полученную операцию
-            if (type == SatementType.DIM && "VB_Dim_stmt".equals(nodes.item(i).getNodeName())){
+            if (type == StatementType.DIM && "VB_Dim_stmt".equals(nodes.item(i).getNodeName())){
                 
                 DimStatement newDim = new DimStatement();
                 newDim.readData(nodes.item(i));
                 body.add(newDim);
 
-            } else if (type == SatementType.DO_LOOP){
+            } else if (type == StatementType.DO_LOOP){
                 body.add(createDoLoopStmt(nodes.item(i)));
 
-            } else if (type == SatementType.EXPRESSION){
+            } else if (type == StatementType.EXPRESSION){
                 body.add(createExprStmt(nodes.item(i)));
 
-            } else if (type == SatementType.FOR){
+            } else if (type == StatementType.FOR){
                 body.add(createForStmt(nodes.item(i)));
 
-            } else if (type == SatementType.IF){
+            } else if (type == StatementType.IF){
                 body.add(createIfStmt(nodes.item(i)));
 
-            } else if (type == SatementType.RETURN){
+            } else if (type == StatementType.RETURN){
                 body.add(createReturnStmt(nodes.item(i)));
 
-            } else if (type == SatementType.WHILE){
+            } else if (type == StatementType.WHILE){
                 body.add(createWhileStmt(nodes.item(i)));
             }      
         }

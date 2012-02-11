@@ -19,7 +19,7 @@ public class DimStatement extends AbstractStatement {
     private ArrayList<AsExpression> bodyMain;
 
     public DimStatement(){
-        super(SatementType.DIM);
+        super(StatementType.DIM);
         
         bodyMain = new ArrayList<>();
     }
@@ -31,7 +31,7 @@ public class DimStatement extends AbstractStatement {
      */
     public DimStatement(ArrayList<AsExpression> bodyMain) {
         
-        super(SatementType.DIM);
+        super(StatementType.DIM);
         this.bodyMain = bodyMain;
     }
     
@@ -42,7 +42,7 @@ public class DimStatement extends AbstractStatement {
      */
     public DimStatement (AsExpression[] bodyMain) {
         
-        super(SatementType.DIM);
+        super(StatementType.DIM);
         this.bodyMain = new ArrayList<>(Arrays.asList(bodyMain));
     }
     
@@ -53,7 +53,7 @@ public class DimStatement extends AbstractStatement {
      */
     public DimStatement (AsExpression item) {
         
-        super(SatementType.DIM);
+        super(StatementType.DIM);
         this.bodyMain = new ArrayList<>();
         this.bodyMain.add(item);
     }

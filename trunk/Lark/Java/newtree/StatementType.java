@@ -31,57 +31,27 @@ public enum StatementType {
      */
     public static StatementType fromString(String text){
 
-//        switch (text){
-//            case "STMT_EXPR_E":
-//                return EXPRESSION;
-//                
-//            case "IF_E":
-//                return IF;
-//                
-//            case "DIM_E":
-//                return DIM;
-//                
-//            case "FOR_E":
-//                return FOR;
-//                
-//            case "WHILE_E":
-//                return WHILE;
-//                
-//            case "DO_LOOP_E":
-//                return DO_LOOP;
-//                
-//            case "RETURN_E":
-//                return RETURN;
-//        }
-        
-        if ("STMT_EXPR_E".equals(text)) {
-            
-            return EXPRESSION;
-            
-        } else if ("IF_E".equals(text)) {
-            
-            return IF;
-            
-        } else if ("DIM_E".equals(text)) {
-            
-            return DIM;
-            
-        } else if ("FOR_E".equals(text)) {
-            
-            return FOR;
-            
-        } else if ("WHILE_E".equals(text)) {
-            
-            return WHILE;
-            
-        } else if ("DO_LOOP_E".equals(text)) {
-            
-            return DO_LOOP;
-            
-        } else if ("RETURN_E".equals(text)) {
-            
-            return RETURN;
-            
+        switch (text){
+            case "STMT_EXPR":
+                return EXPRESSION;
+                
+            case "STMT_IF":
+                return IF;
+                
+            case "STMT_DIM":
+                return DIM;
+                
+            case "STMT_FOR":
+                return FOR;
+                
+            case "STMT_WHILE":
+                return WHILE;
+                
+            case "STMT_DO_LOOP":
+                return DO_LOOP;
+                
+            case "STMT_RETURN":
+                return RETURN;
         }
         
         return null;
