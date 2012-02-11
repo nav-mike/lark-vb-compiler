@@ -62,7 +62,7 @@ public class GuiLocalVariablesTable {
         
         for (int i = 0; i < lvtable.size(); i++) {
             
-            this.model.addRow(new Object[]{i + 1,lvtable.get(i).getName(),lvtable.get(i).getType()});
+            this.model.addRow(new Object[]{i + 1,lvtable.get(i + 1).getName(),lvtable.get(i + 1).getType()});
         }
         
     }

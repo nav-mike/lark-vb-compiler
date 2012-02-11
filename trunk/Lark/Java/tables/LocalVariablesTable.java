@@ -59,7 +59,7 @@ public class LocalVariablesTable {
      */
     public LocalVariablesTableItem get (int index) {
         
-        return this.get(index);
+        return this.items.get(index);
     }
     
     /**

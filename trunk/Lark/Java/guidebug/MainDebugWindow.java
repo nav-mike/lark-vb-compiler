@@ -13,6 +13,7 @@ import newtree.Module;
 import tables.InvalidParametersException;
 import tables.ProgramsClass;
 import tables.gui.GuiConstantsTable;
+import tables.gui.GuiLocalVariablesTable;
 import tables.gui.GuiMethodsTable;
 
 /**
@@ -56,6 +57,14 @@ public class MainDebugWindow extends JFrame {
         
         jtp.add(item.getId() + ":methods table",
                 new JScrollPane((new GuiMethodsTable(mainClass.getMethodTable()).getTable())));
+        
+        for (int i = 0; i < mainClass.getMethodTable().size(); i++) {
+            
+            jtp.add(item.getId() + "." +
+                    mainClass.getMethodTable().get(i + 1).getName() + 
+                    "local variables table",
+                    (new GuiLocalVariablesTable(mainClass.getMethodTable().get(i + 1).getLocalVariables()).getTable()));
+        }
         
         this.add(jtp, BorderLayout.CENTER);
         
