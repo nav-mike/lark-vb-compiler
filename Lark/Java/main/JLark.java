@@ -321,16 +321,16 @@ public class JLark {
     public static void main(String[] args) {
         
         // Считываем данные из xml файла
-//        try {
-//            readXML("tree.xml");
-//        } catch (ParserConfigurationException | SAXException | IOException ex) {
-//            Logger.getLogger(JLark.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//       
-//        
+        try {
+            readXML("tree.xml");
+        } catch (ParserConfigurationException | SAXException | IOException ex) {
+            Logger.getLogger(JLark.class.getName()).log(Level.SEVERE, null, ex);
+        }
+       
+        
 //        m_module = m_module;
         
-        new MainDebugWindow();
+        new MainDebugWindow(m_module);
         
         
        // cereateTable(); // Создать аблицу
