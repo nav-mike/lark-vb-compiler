@@ -275,7 +275,7 @@ public class AbstractDeclaration implements XMLInterface{
     private AbstractStatement createExprStmt(Node node){
         
         ExprStatement expr = new ExprStatement();
-        expr.readData(node);
+        expr.setExpr(Expression.createExpr(node));
         return expr;
 
     }
