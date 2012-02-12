@@ -16,7 +16,9 @@ struct VB_For_stmt
 	int 				 step_val;		//!< Шаг
 	struct VB_Stmt_list* stmt_list;		//!< Тело цикла
 	struct VB_Stmt*		 next;			//!< Следующий оператор
-	struct VB_Expr*		 new_id;		//!< Если переменная создается для цикла
+
+	char*			new_id;				//!< Если переменная создается для цикла
+	enum VB_Id_type new_id_type;
 };
 /*!
 
@@ -109,22 +111,17 @@ struct VB_For_stmt * create_for_with_decl_stmt(char* id, enum VB_Id_type type, s
 	struct VB_For_stmt* result = (struct VB_For_stmt*)malloc(sizeof(struct VB_For_stmt));
 
 	result->type = WITH_DECL;
-	result->new_id = (struct VB_Expr*)malloc(sizeof(struct VB_Expr));
-	result->id = (char*)malloc(sizeof(char)*2);
-	strcpy(id,"!\0");
+	result->new_id = (char*)malloc(sizeof(char)*strlen(id));
+	strcpy(result->new_id,id);
+	result->new_id_type = type;
 
-	result->new_id->list = NULL;
-	result->new_id->expr_string = (char*)malloc(sizeof(char)*strlen(id));
-	strcpy(result->new_id->expr_string,id);
-	result->new_id->left_chld = NULL;
-	result->new_id->right_chld = NULL;
-	result->new_id->next = NULL;
-	result->new_id->id_type = type;
 	result->from_val = start_expr->int_val;
 	result->to_val = end_expr->int_val;
 	result->step_val = 1;
 	result->stmt_list = body;
 	result->next = NULL;
+
+	result->id = result->new_id;
 
     return result;
 }
@@ -152,18 +149,20 @@ struct VB_For_stmt * create_for_with_decl_with_step_stmt(char* id, enum VB_Id_ty
 	struct VB_For_stmt* result = (struct VB_For_stmt*)malloc(sizeof(struct VB_For_stmt));
 
 	result->type = WITH_DECL_AND_STEP;
-	result->new_id = (struct VB_Expr*)malloc(sizeof(struct VB_Expr));
+
+	result->new_id = (char*)malloc(sizeof(char)*strlen(id));
+	result->new_id_type = type;
 
 
-	result->new_id->list =NULL;
-	strcpy(result->new_id->expr_string,id);
-	result->new_id->type = type;
+	strcpy(result->new_id,id);
+	
 	result->from_val = start_expr->int_val;
 	result->to_val = end_expr->int_val;
 	result->step_val = step_expr->int_val;
 	result->stmt_list = body;
 	result->next = NULL;
-	result->new_id->left_chld = NULL;
+	
+	result->id = result->new_id;
 
 
     return result;

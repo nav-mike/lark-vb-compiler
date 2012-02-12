@@ -1189,7 +1189,7 @@ int add_for_statement (FILE* file, struct VB_For_stmt* stmt)
 			number, ++Number);
 		if (error == -1)
 			return 1;
-		error = add_expression(file,stmt->new_id);
+		//error = add_expression(file,stmt->new_id);
 		if (error)
 			return 1;
 	}
