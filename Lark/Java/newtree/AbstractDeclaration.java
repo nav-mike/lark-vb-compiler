@@ -284,7 +284,9 @@ public class AbstractDeclaration implements XMLInterface{
      * @return Полученная операция
      */      
     private static AbstractStatement createForStmt(Node node){
-        return null;
+        ForStatement forStmt = new ForStatement();
+        forStmt.readData(node);
+        return forStmt;
     }
     
     /**
@@ -293,9 +295,9 @@ public class AbstractDeclaration implements XMLInterface{
      * @return Полученная операция
      */          
     private static AbstractStatement createIfStmt(Node node){
-        IfStatement stmt_if = new IfStatement();
-        stmt_if.readData(node);
-        return stmt_if;
+        IfStatement stmtIf = new IfStatement();
+        stmtIf.readData(node);
+        return stmtIf;
     }
     
     /**
@@ -313,7 +315,9 @@ public class AbstractDeclaration implements XMLInterface{
      * @return Полученная операция
      */                   
     private static AbstractStatement createWhileStmt(Node node){
-        return null;
+        WhileStatement whileStmt = new WhileStatement();
+        whileStmt.readData(node);
+        return whileStmt;
     }
     
     /**
@@ -336,22 +340,18 @@ public class AbstractDeclaration implements XMLInterface{
                         
             // Добавляем в тело функции полученную операцию
             if (type == StatementType.DIM && "VB_Dim_stmt".equals(nodes.item(i).getNodeName())){
-                
                 body.add(createDimStmt(nodes.item(i)));
 
             } else if (type == StatementType.DO_LOOP){
-                
                 body.add(createDoLoopStmt(nodes.item(i)));
 
             } else if (type == StatementType.EXPRESSION){
-                
                 body.add(createExprStmt(nodes.item(i)));
 
             } else if (type == StatementType.FOR){
                 body.add(createForStmt(nodes.item(i)));
 
             } else if (type == StatementType.IF){
-                
                 body.add(createIfStmt(nodes.item(i)));
 
             } else if (type == StatementType.RETURN){
