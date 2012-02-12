@@ -306,7 +306,9 @@ public class AbstractDeclaration implements XMLInterface{
      * @return Полученная операция
      */              
     private static AbstractStatement createReturnStmt(Node node){
-        return null;
+        ReturnStatement retStmt = new ReturnStatement();
+        retStmt.readData(node);
+        return retStmt;
     }
     
     /**
