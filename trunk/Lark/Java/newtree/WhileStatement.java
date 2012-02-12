@@ -1,7 +1,9 @@
 package newtree;
 
 import java.util.ArrayList;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * Класс, описывающий оператор цикла while.
@@ -15,6 +17,16 @@ public class WhileStatement extends AbstractStatement{
     /** Тело цикла. */
     private ArrayList<AbstractStatement> body;
 
+    /**
+     * Конструктор по умолчанию
+     */
+    public WhileStatement(){
+        super(StatementType.WHILE);
+        condition = null;
+        body = null;
+    }
+    
+    
     public WhileStatement(Expression condition, ArrayList<AbstractStatement> body) {
         
         super(StatementType.WHILE);
@@ -88,7 +100,22 @@ public class WhileStatement extends AbstractStatement{
 
     @Override
     public void readData(Node node) {
-        throw new UnsupportedOperationException("Not supported yet.");
+
+        // Берем все подузлы дерева if и считываем данные 
+        NodeList nodes = node.getChildNodes();
+        
+        for (int i = 0; i < nodes.getLength(); i++) {
+            switch (nodes.item(i).getNodeName()) {
+                case "VB_Expr":
+                    this.condition = Expression.createExpr(nodes.item(i));
+                    break;
+                    
+                case "VB_Stmt_list":
+                    this.body = new ArrayList<>();
+                    AbstractDeclaration.readBody(this.body, nodes.item(i));
+                    break;
+            }
+        }
     }
     
 }

@@ -25,6 +25,13 @@ public class ForStatement extends AbstractStatement {
     private ArrayList<AbstractStatement> body;
     
     /**
+     * Консртруктор по умолчанию.
+     */
+    public ForStatement(){
+        super(StatementType.FOR);
+    }
+    
+    /**
      * Конструктор с параметрами.
      * Создает цикл с заданными параметрами и счетчик не создается в заголовке
      * цикла.
@@ -293,7 +300,7 @@ public class ForStatement extends AbstractStatement {
 
     @Override
     public void readData(Node node) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        
     }
     
 }
