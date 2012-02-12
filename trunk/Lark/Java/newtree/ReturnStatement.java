@@ -1,6 +1,8 @@
 package newtree;
 
+import java.util.ArrayList;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * Класс оператора возврата из функции.
@@ -12,6 +14,14 @@ public class ReturnStatement extends AbstractStatement{
     /** Выражение возврата из функции. */
     private Expression retData;
 
+    /**
+     * Конструктор по умолчанию.
+     */
+    public ReturnStatement(){
+        super(StatementType.RETURN);
+        retData = null;
+    }
+    
     /**
      * Метод получения выражения возврата.
      * @return Выражение возврата.
@@ -39,9 +49,21 @@ public class ReturnStatement extends AbstractStatement{
         this.retData = retData;
     }
 
+    /**
+     * Считать данные из XML файла.
+     * @param node Узел XML дерева.
+     */
     @Override
     public void readData(Node node) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        
+        // Берем подузел с выражением
+        NodeList nodes = node.getChildNodes();
+        
+        for (int i = 0; i < nodes.getLength(); i++) {
+            if (nodes.item(i).getNodeName().equals("VB_Expr")) {                    
+                this.retData = Expression.createExpr(nodes.item(i));
+            }
+        }
     }
     
 }
