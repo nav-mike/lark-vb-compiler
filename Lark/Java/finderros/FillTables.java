@@ -303,14 +303,15 @@ public class FillTables {
      */
     private static void findLocalVariableInAsExpression (AsExpression item, LocalVariablesTable lvt) throws InvalidParametersException {
         
-        if (!item.getVariables().isEmpty()) {
+        if (item.getVariables() != null ) {
             
             for (int i = 0; i < item.getVariables().size(); i++) {
                 
                 lvt.add(new LocalVariablesTableItem(item.getVariables().get(i),
                         item.getType(), i));
+
             }
-        } else if (!item.getArrays().isEmpty()) {
+        } else if (item.getArrays() != null ) {
             
         }
         
