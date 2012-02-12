@@ -149,19 +149,25 @@ public class Expression implements XMLInterface{
             }
         }
         else if (buffer.equals("EXPR_READ")){
-            result = new ReadExpression('0');
+            result = new ReadExpression('-');
         }
         else if (buffer.equals("EXPR_READLN")){
-            result = new ReadLineExpression("0");
+            result = new ReadLineExpression("-");
         }
-        else if (buffer.equals("EXPR_READLN")){
-            result = new PrintExpression(null);
-        }
-        else if (buffer.equals("EXPR_PRINTLN")){
-            result = new PrintLineExpression(null);
-        }
-        else if (buffer.equals("EXPR_BRK")){
-            result = new IdExpression();
+        else if (buffer.equals("EXPR_PRINT") || buffer.equals("EXPR_PRINTLN")){
+
+            NodeList nodes = node.getChildNodes();
+            Expression left = null;
+            
+            for (int i=0; i < nodes.getLength(); i++){
+                if (nodes.item(i).getNodeName().equals("VB_Expr__left_chld"))
+                    left = Expression.createExpr(nodes.item(i));
+            }
+            
+            if (buffer.equals("EXPR_PRINT"))
+                result = new PrintExpression(left);
+            else
+                result = new PrintLineExpression(left);
         }
         else{
             Expression left = null, right = null;
