@@ -1,7 +1,9 @@
 package newtree;
 
+import java.util.ArrayList;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * Новый класс выражения в дереве.
@@ -99,8 +101,24 @@ public class Expression implements XMLInterface{
             
             result = id;
         }
-        else if (buffer.equals("BRK_EXPR")){
+        else if (buffer.equals("EXPR_BRK")){
+            IdExpression id = new IdExpression();
+            attr = attributes.getNamedItem("expr_string");
+            buffer = attr.getNodeValue();
+            id.setName(buffer);
             
+            NodeList nodes = node.getChildNodes();
+            ArrayList<Expression> params = new ArrayList<>();
+            
+            Node list_node = nodes.item(0);
+            NodeList list_items = list_node.getChildNodes();
+            
+            for (int i = 0; i < list_items.getLength(); i++) {
+                params.add(createExpr(list_items.item(i)));
+            }
+            id.setBody(params);
+            
+            result = id;
         }
         else if (buffer.contains("CONST")){
             switch (buffer) {
@@ -146,7 +164,22 @@ public class Expression implements XMLInterface{
             result = new IdExpression();
         }
         else{
-            result = new MathExpression(null, null, 0);
+            Expression left = null, right = null;
+            
+            NodeList nodes = node.getChildNodes();
+            
+            for (int i=0; i < nodes.getLength(); i++){
+                if (nodes.item(i).getNodeName().equals("VB_Expr__right_chld"))
+                    left = Expression.createExpr(nodes.item(i));
+                
+                if (nodes.item(i).getNodeName().equals("VB_Expr__left_chld"))
+                    right = Expression.createExpr(nodes.item(i));
+            }            
+            
+            attr = attributes.getNamedItem("expr_string");
+            buffer = attr.getNodeValue();
+                    
+            result = new MathExpression(left, right, MathExprType.fromString(buffer));
         }
                 
         return result;
