@@ -17,6 +17,14 @@ public class IfStatement extends AbstractStatement {
     private ArrayList<AbstractStatement> bodyMain;
     /** Операторы выполняемые при ложном условии. */
     private ArrayList<AbstractStatement> bodyAlter;
+
+    
+    /**
+     * Конструктор по умолчанию.
+     */
+    public IfStatement() {
+        super(StatementType.IF);
+    }
     
     /**
      * Метод получения оператора зи спика операторов, выполняемых при ложности
@@ -280,7 +288,7 @@ public class IfStatement extends AbstractStatement {
 
     @Override
     public void readData(Node node) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        
     }
     
 }

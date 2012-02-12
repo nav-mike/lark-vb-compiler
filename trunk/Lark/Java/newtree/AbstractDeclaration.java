@@ -251,10 +251,8 @@ public class AbstractDeclaration implements XMLInterface{
      * @return Полученная операция
      */
     private AbstractStatement createDimStmt(Node node){
-        
         DimStatement newDim = new DimStatement();
         newDim.readData(node);
-
         return newDim;
     }
     
@@ -273,11 +271,9 @@ public class AbstractDeclaration implements XMLInterface{
      * @return Полученная операция
      */   
     private AbstractStatement createExprStmt(Node node){
-        
         ExprStatement expr = new ExprStatement();
         expr.setExpr(Expression.createExpr(node));
         return expr;
-
     }
     
     /**
@@ -295,7 +291,9 @@ public class AbstractDeclaration implements XMLInterface{
      * @return Полученная операция
      */          
     private AbstractStatement createIfStmt(Node node){
-        return null;
+        IfStatement stmt_if = new IfStatement();
+        stmt_if.readData(node);
+        return stmt_if;
     }
     
     /**
