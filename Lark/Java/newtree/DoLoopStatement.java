@@ -2,19 +2,48 @@ package newtree;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * Класс оператора цикла Do...Loop.
  * @version 1.0
  */
 public class DoLoopStatement extends AbstractStatement {
-    
+        
     /* Поля класса. */
     /** Условие выполнения цикла. */
     private Expression condition;
     /** Тело цикла. */
     private ArrayList<AbstractStatement> body;
+    /** Тип цикла. */
+    private DoLoopType type;
+
+    /**
+     * Получить тип цикла
+     * @return Тип
+     */
+    public DoLoopType getType() {
+        return type;
+    }
+
+    /**
+     * Задать тип циклу.
+     * @param type Новый тип.
+     */
+    public void setType(DoLoopType type) {
+        this.type = type;
+    }
+
+    /**
+     * Конструктор по умолчанию.
+     */
+    public DoLoopStatement(){
+        super(StatementType.DO_LOOP);
+        condition = null;
+        body = null;
+    }
     
     /**
      * Конструктор с параметрами.
@@ -132,7 +161,26 @@ public class DoLoopStatement extends AbstractStatement {
 
     @Override
     public void readData(Node node) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        
+        NamedNodeMap attributes = node.getAttributes();
+        Node attr = attributes.getNamedItem("type");
+        this.setType(DoLoopType.fromString(attr.getNodeValue()));
+                
+        // Берем все подузлы дерева if и считываем данные 
+        NodeList nodes = node.getChildNodes();
+        
+        for (int i = 0; i < nodes.getLength(); i++) {
+            switch (nodes.item(i).getNodeName()) {
+                case "VB_Expr":
+                    this.condition = Expression.createExpr(nodes.item(i));
+                    break;
+                    
+                case "VB_Stmt_list":
+                    this.body = new ArrayList<>();
+                    AbstractDeclaration.readBody(this.body, nodes.item(i));
+                    break;
+            }
+        }
     }
     
 }
