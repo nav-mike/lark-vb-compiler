@@ -252,13 +252,10 @@ public class AbstractDeclaration implements XMLInterface{
      */
     private AbstractStatement createDimStmt(Node node){
         
-        ArrayList<AsExpression> asExprList = new ArrayList<>();
-                
-        DimStatement dim = new DimStatement(asExprList);
-        
-        dim.readData(node);
-        
-        return dim;
+        DimStatement newDim = new DimStatement();
+        newDim.readData(node);
+
+        return newDim;
     }
     
     /**
@@ -276,7 +273,11 @@ public class AbstractDeclaration implements XMLInterface{
      * @return Полученная операция
      */   
     private AbstractStatement createExprStmt(Node node){
-        return null;
+        
+        ExprStatement expr = new ExprStatement();
+        expr.readData(node);
+        return expr;
+
     }
     
     /**
@@ -336,14 +337,14 @@ public class AbstractDeclaration implements XMLInterface{
             // Добавляем в тело функции полученную операцию
             if (type == StatementType.DIM && "VB_Dim_stmt".equals(nodes.item(i).getNodeName())){
                 
-                DimStatement newDim = new DimStatement();
-                newDim.readData(nodes.item(i));
-                body.add(newDim);
+                body.add(createDimStmt(nodes.item(i)));
 
             } else if (type == StatementType.DO_LOOP){
+                
                 body.add(createDoLoopStmt(nodes.item(i)));
 
             } else if (type == StatementType.EXPRESSION){
+                
                 body.add(createExprStmt(nodes.item(i)));
 
             } else if (type == StatementType.FOR){
@@ -364,7 +365,7 @@ public class AbstractDeclaration implements XMLInterface{
      * Считывание тела процедуры или функции
      * @param node Узел с операциями
      */
-    private void readBody(Node node) {
+    public void readBody(Node node) {
         if (node.getChildNodes().getLength() > 0) {
             body = new ArrayList<>();
             

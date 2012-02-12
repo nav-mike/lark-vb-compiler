@@ -328,7 +328,7 @@ public class JLark {
         }
        
         
-//        m_module = m_module;
+        m_module = m_module;
         
         new MainDebugWindow(m_module);
         

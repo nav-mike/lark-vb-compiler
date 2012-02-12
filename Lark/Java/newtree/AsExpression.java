@@ -20,12 +20,12 @@ public class AsExpression implements XMLInterface{
     private ArrayList<String> variables;
     
     /** Инициализирующее значение. */
-    private ConstantExpression initData;
+    private Expression initData;
     
     /** Хэш массивов. */
     private HashMap<String, Integer> arrays;
     
-    private ArrayList<ConstantExpression> arrayInit;
+    private ArrayList<Expression> arrayInit;
     
     private DataType type;
 
@@ -78,7 +78,7 @@ public class AsExpression implements XMLInterface{
      * @param variable Объявленная переменная.
      * @param initData Инициализирующее значение.
      */
-    public AsExpression (DataType type, String variable, ConstantExpression initData) {
+    public AsExpression (DataType type, String variable, Expression initData) {
         
         this.type = type;
         this.variables = new ArrayList<>();
@@ -100,7 +100,7 @@ public class AsExpression implements XMLInterface{
     }
 
     
-    public AsExpression (DataType type,HashMap<String, Integer> arrays, ArrayList<ConstantExpression> arrayInit) {
+    public AsExpression (DataType type,HashMap<String, Integer> arrays, ArrayList<Expression> arrayInit) {
         
         this.type = type;
         this.arrays = arrays;
@@ -152,7 +152,7 @@ public class AsExpression implements XMLInterface{
      * Метод задания инициализируещего значения.
      * @param initData Инициализирующее значение.
      */
-    public void setInitData(ConstantExpression initData) {
+    public void setInitData(Expression initData) {
         this.initData = initData;
     }
 
@@ -240,76 +240,10 @@ public class AsExpression implements XMLInterface{
             arrayInit = new ArrayList<>();
             
         for (int i = 0; i < nodes.getLength(); i++) {
-            this.arrayInit.add(readFromExpr(nodes.item(i)));
+            this.arrayInit.add(Expression.createExpr(nodes.item(i)));
         }
     }
 
-    /**
-     * Чтение данных из выражения
-     * @param node Узел с выражением
-     */
-    public ConstantExpression readFromExpr(Node node){
-
-        ConstantExpression result = null;
-        
-        // Разберемся с аттрибутами
-        NamedNodeMap attributes = node.getAttributes();
-        Node attr = attributes.getNamedItem("type");
-        String buffer = attr.getNodeValue();        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        //attr = attributes.getNamedItem("id_type");
-      
-        switch (buffer) {
-            case "DATA_INTEGER":
-                attr = attributes.getNamedItem("int_val");
-                buffer = attr.getNodeValue();
-                result = new ConstantExpression(Integer.parseInt(buffer));
-                result.setDtype(DataType.INTEGER);
-                break;
-            case "DATA_STRING":
-                attr = attributes.getNamedItem("expr_string");
-                buffer = attr.getNodeValue();
-                result = new ConstantExpression(buffer);
-                result.setDtype(DataType.STRING);
-                break;
-            case "DATA_BOOLEAN":
-                attr = attributes.getNamedItem("expr_string");
-                buffer = attr.getNodeValue();
-                if (buffer.equals("true"))
-                    result = new ConstantExpression(true);
-                else
-                    result = new ConstantExpression(false);
-                
-                result.setDtype(DataType.BOOLEAN);
-                break;
-        }
-        
-        return result;
-    }
-    
     /**
      * Чтение данных из узла
      * @param node 
@@ -329,7 +263,7 @@ public class AsExpression implements XMLInterface{
             // Если это список идентификаторов.
             switch (nodes.item(i).getNodeName()) {
                 case "VB_Expr__expr":
-                    initData = readFromExpr(nodes.item(i));
+                    initData = Expression.createExpr(nodes.item(i));
                     break;
 
                 case "VB_Id_list":
