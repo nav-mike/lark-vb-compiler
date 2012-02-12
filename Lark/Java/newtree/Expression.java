@@ -93,7 +93,32 @@ public class Expression implements XMLInterface{
             result = new IdExpression();
         }
         else if (buffer.contains("CONST")){
-            result = new ConstantExpression(0);
+            switch (buffer) {
+                case "EXPR_INT_CONST":
+                    attr = attributes.getNamedItem("int_val");
+                    buffer = attr.getNodeValue();
+                    result = new ConstantExpression(Integer.parseInt(buffer));
+                    result.setDtype(DataType.INTEGER);
+                    break;
+                    
+                case "EXPR_BOOLEAN_CONST":
+                    attr = attributes.getNamedItem("expr_string");
+                    buffer = attr.getNodeValue();
+                    if (buffer.equals("true"))
+                        result = new ConstantExpression(true);
+                    else
+                        result = new ConstantExpression(false);
+
+                    result.setDtype(DataType.BOOLEAN);
+                    break;
+                    
+                case "EXPR_STRING_CONST":
+                    attr = attributes.getNamedItem("expr_string");
+                    buffer = attr.getNodeValue();
+                    result = new ConstantExpression(buffer);
+                    result.setDtype(DataType.STRING);                    
+                    break;
+            }
         }
         else if (buffer.equals("EXPR_READ")){
             result = new ReadExpression('0');
@@ -117,33 +142,3 @@ public class Expression implements XMLInterface{
         return result;
     }
 }
-
-
-
-        
-//attr = attributes.getNamedItem("id_type");
-      
-//        switch (buffer) {
-//            case "DATA_INTEGER":
-//                attr = attributes.getNamedItem("int_val");
-//                buffer = attr.getNodeValue();
-//                result = new ConstantExpression(Integer.parseInt(buffer));
-//                result.setDtype(DataType.INTEGER);
-//                break;
-//            case "DATA_STRING":
-//                attr = attributes.getNamedItem("expr_string");
-//                buffer = attr.getNodeValue();
-//                result = new ConstantExpression(buffer);
-//                result.setDtype(DataType.STRING);
-//                break;
-//            case "DATA_BOOLEAN":
-//                attr = attributes.getNamedItem("expr_string");
-//                buffer = attr.getNodeValue();
-//                if (buffer.equals("true"))
-//                    result = new ConstantExpression(true);
-//                else
-//                    result = new ConstantExpression(false);
-//                
-//                result.setDtype(DataType.BOOLEAN);
-//                break;
-//        }
