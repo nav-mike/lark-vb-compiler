@@ -2,7 +2,9 @@ package newtree;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * Класс оператора цикла For.
@@ -23,6 +25,26 @@ public class ForStatement extends AbstractStatement {
     private int stepValue;
     /** Тело цикла. */
     private ArrayList<AbstractStatement> body;
+    /** Тип цикла. */
+    private ForStmtType type;
+
+    /**
+     * Получить тип цикла.
+     * @return Тип.
+     */
+    public ForStmtType getType() {
+        return type;
+    }
+
+    /**
+     * Задать тип циклу.
+     * @param type Тип цикла.
+     */
+    public void setType(ForStmtType type) {
+        this.type = type;
+    }
+    
+    
     
     /**
      * Консртруктор по умолчанию.
@@ -298,9 +320,56 @@ public class ForStatement extends AbstractStatement {
         return endValue;
     }
 
+    /**
+     * Считать данные из XML файла.
+     * @param node 
+     */
     @Override
     public void readData(Node node) {
         
+        NamedNodeMap attributes = node.getAttributes();
+        Node attr = attributes.getNamedItem("type");
+        this.setType(ForStmtType.fromString(attr.getNodeValue()));
+         
+        attr = attributes.getNamedItem("id");
+        this.existedIterator = attr.getNodeValue();
+        
+        attr = attributes.getNamedItem("to_val");
+        this.endValue = Integer.parseInt(attr.getNodeValue());
+                
+        attr = attributes.getNamedItem("from_val");
+        this.startValue = Integer.parseInt(attr.getNodeValue());
+        
+        attr = attributes.getNamedItem("step_val");
+        this.stepValue = Integer.parseInt(attr.getNodeValue());
+        
+        if (getType() == ForStmtType.WITH_DECL || getType() == ForStmtType.WITH_DECL_AND_STEP){
+            IdExpression newId = new IdExpression();
+            
+            attr = attributes.getNamedItem("new_id");
+            newId.setName(attr.getNodeValue());
+            
+            attr = attributes.getNamedItem("new_id_type");
+            newId.setDtype(DataType.fromString(attr.getNodeValue()));
+            
+            this.newIterator = newId;
+        }
+        else{
+            this.newIterator = null;
+        }
+            
+            
+        // Берем все подузлы дерева if и считываем данные 
+        NodeList nodes = node.getChildNodes();
+        
+        for (int i = 0; i < nodes.getLength(); i++) {
+            switch (nodes.item(i).getNodeName()) {                    
+                case "VB_Stmt_list":
+                    this.body = new ArrayList<>();
+                    AbstractDeclaration.readBody(this.body, nodes.item(i));
+                    break;
+            }
+        }
     }
     
 }
