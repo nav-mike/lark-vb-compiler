@@ -6,6 +6,8 @@
 #include <stdio.h>
 #include "tree_nodes.h"
 
+char* id_type_to_string (enum VB_Id_type type);
+
 /**
  * Добавить узел - список операций.
  */
@@ -578,9 +580,14 @@ void VBX_add_for(xmlNodePtr node, struct VB_For_stmt* stmt){
 
 	xmlNewProp(node,(const xmlChar *)"type",(const xmlChar *)buf);
 
-	if (stmt->new_id != NULL)
-		VBX_add_expr(
-			xmlNewTextChild(node,NULL,(const xmlChar *)"VB_Expr",NULL),stmt->new_id);
+	if (stmt->new_id != NULL){
+		//VBX_add_expr(
+		//	xmlNewTextChild(node,NULL,(const xmlChar *)"VB_Expr",NULL),stmt->new_id);
+
+		xmlNewProp(node,(const xmlChar *)"new_id",(const xmlChar *)stmt->new_id);
+
+		xmlNewProp(node,(const xmlChar *)"new_id_type",(const xmlChar *)id_type_to_string(stmt->new_id_type));  
+	}
 	
 	if (stmt->stmt_list != NULL)
 		VBX_add_statement_list(
