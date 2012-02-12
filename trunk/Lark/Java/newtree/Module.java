@@ -174,7 +174,7 @@ public class Module implements XMLInterface{
         for (int i = 0; i < nodes.getLength(); i++) {
             switch (nodes.item(i).getNodeName()) {
                 case "VB_Stmt_list":
-                    subMain.readData(nodes.item(i));
+                    subMain.readBody(nodes.item(i));
                     declList.add(subMain);
                     break;
                 case "VB_Decl_stmt_list":
