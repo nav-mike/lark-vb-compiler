@@ -262,7 +262,9 @@ public class AbstractDeclaration implements XMLInterface{
      * @return Полученная операция
      */
     private static AbstractStatement createDoLoopStmt(Node node){
-        return null;
+        DoLoopStatement newDoLoop = new DoLoopStatement();
+        newDoLoop.readData(node);
+        return newDoLoop;
     }
     
     /**
@@ -349,6 +351,7 @@ public class AbstractDeclaration implements XMLInterface{
                 body.add(createForStmt(nodes.item(i)));
 
             } else if (type == StatementType.IF){
+                
                 body.add(createIfStmt(nodes.item(i)));
 
             } else if (type == StatementType.RETURN){
