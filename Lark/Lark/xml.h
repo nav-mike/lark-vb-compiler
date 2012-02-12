@@ -276,6 +276,9 @@ void VBX_add_expr(xmlNodePtr node, struct VB_Expr* expr) {
 
 	xmlNewProp(node,(const xmlChar *)"type",(const xmlChar *)VBX_expression_type_to_string(expr->type));
 	
+//	if (expr->type == EXPR_ID)
+//		xmlNewProp(node,(const xmlChar *)"string_val",(const xmlChar *)expr->string_val);
+
 	if (expr->left_chld != NULL){
 		VBX_add_expr(
 			xmlNewTextChild(node,NULL,(const xmlChar *)"VB_Expr__left_chld",NULL),
@@ -555,7 +558,7 @@ void VBX_add_as_expr(xmlNodePtr node,struct VB_As_expr * expr){
 
 void VBX_add_for(xmlNodePtr node, struct VB_For_stmt* stmt){
 	
-	char * buf;
+	char * buf = (char*)malloc(sizeof(char)*10);
 
 	itoa(stmt->from_val,buf,10);
 

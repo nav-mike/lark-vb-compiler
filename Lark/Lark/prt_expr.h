@@ -136,6 +136,7 @@ struct VB_Expr* create_id_expr(char* name)
 	result->right_chld = NULL;
 	result->id_type = DATA_INTEGER;
 	result->int_val = 0;
+	result->string_val = "";
 
 	return result;
 }
@@ -231,11 +232,11 @@ void solve_assign(struct VB_Expr* result, struct VB_Expr* left, struct VB_Expr* 
 	printf("\n = \n");
 
 	// Проверим типы, если кто-то из детей строкового типа и типы не равны, то ошибка
-	if ((left->id_type == DATA_STRING || right->id_type == DATA_STRING) && left->id_type != right->id_type)
-		yyerror("\nIncorrect types!");
+	//if ((left->id_type == DATA_STRING || right->id_type == DATA_STRING) && left->id_type != right->id_type)
+	//	yyerror("\nIncorrect types!");
 
 	// Если правая часть - идентификатор строкового типа
-	else if (left->id_type == DATA_STRING){
+	if (left->id_type == DATA_STRING){
 
 		if (right->type == EXPR_STRING_CONST){
 			strcpy(left->string_val, right->expr_string);
@@ -617,6 +618,7 @@ struct VB_Expr * create_expr_with_id(char* id)
 	result->next = NULL;
 	result->right_chld = NULL;
 	result->id_type = DATA_INTEGER;
+	result->string_val = "";
 
 	return result;
 }

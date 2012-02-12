@@ -31,7 +31,7 @@
 	struct VB_Expr*				Expr;
 	struct VB_Expr_list*		Expr_l;
 	struct VB_If_stmt*			If_stmt;
-	struct VB_End_if_stmt*		End_if;
+//	struct VB_End_if_stmt*		End_if;
 	struct VB_Dim_stmt*			Dim;
 	struct VB_As_Expr_list*		As_l;
     struct VB_As_expr*			As_expr_str;
@@ -40,17 +40,17 @@
 	struct VB_For_stmt*			For;
 	struct VB_While_stmt*		While;
 	struct VB_Do_loop_stmt*		Do_loop;
-	struct VB_Enum_stmt*		Enum;
-	struct VB_Enum_expr_list*	Enum_l;
-	struct VB_Enum_expr*		Enum_e;
+//	struct VB_Enum_stmt*		Enum;
+//	struct VB_Enum_expr_list*	Enum_l;
+//	struct VB_Enum_expr*		Enum_e;
 	struct VB_Sub_stmt*			Sub;
 	struct VB_Param_list*		Param_l;
 	struct VB_Param_stmt*		Param;
 	struct VB_Func_stmt*		Func;
-	struct VB_Try_catch_stmt*	Try_catch;
-	struct VB_Catch_stmt_list*	Catch_l;
-	struct VB_Catch_stmt*		Catch;
-	struct VB_Throw_stmt*		Throw;
+//	struct VB_Try_catch_stmt*	Try_catch;
+//	struct VB_Catch_stmt_list*	Catch_l;
+//	struct VB_Catch_stmt*		Catch;
+//	struct VB_Throw_stmt*		Throw;
 	struct VB_Return_stmt*		Ret;
 
 	struct VB_Decl_stmt_list*	Decl_l;
@@ -58,10 +58,10 @@
 
 	enum VB_Id_type				Id_type;
 
-	struct VB_Print_stmt*			console_print;
-	struct VB_Println_stmt*			console_println;
-	struct VB_Read_stmt*			console_read;
-	struct VB_Readln_stmt*			console_readln;
+//	struct VB_Print_stmt*			console_print;
+//	struct VB_Println_stmt*			console_println;
+//	struct VB_Read_stmt*			console_read;
+//	struct VB_Readln_stmt*			console_readln;
 }
 
 
@@ -84,17 +84,17 @@
 %type <For>			for_stmt
 %type <While>		while_stmt
 %type <Do_loop> 	do_loop_stmt
-%type <Enum>		enum_stmt
-%type <Enum_l>  	enum_expr_list
-%type <Enum_e>		enum_expr
+//%type <Enum>		enum_stmt
+//%type <Enum_l>  	enum_expr_list
+//%type <Enum_e>		enum_expr
 %type <Sub>			sub_stmt
 %type <Param_l> 	param_list
 %type <Param>		param_stmt
 %type <Func>		func_stmt
-%type <Try_catch>	try_catch_stmt
-%type <Catch_l>		catch_stmt_list
-%type <Catch>		catch_stmt
-%type <Throw>		throw_stmt
+//%type <Try_catch>	try_catch_stmt
+//%type <Catch_l>		catch_stmt_list
+//%type <Catch>		catch_stmt
+//%type <Throw>		throw_stmt
 
 %type <Decl_l>		decl_stmt_listE
 %type <Decl_l>		decl_stmt_list
@@ -198,8 +198,6 @@
 		    | for_stmt				{$$ = create_VB_Stmt_For($1);}
 		    | while_stmt			{$$ = create_VB_Stmt_While($1);}
 		    | do_loop_stmt			{$$ = create_VB_Stmt_Do_Loop($1);}
-		    | try_catch_stmt		{$$ = create_VB_Stmt_Try_Catch($1);}
-		    | throw_stmt			{$$ = create_VB_Stmt_Throw($1);}
 		    | return_stmt			{$$ = create_VB_Stmt_Return($1);}
 		    ;
 
@@ -211,13 +209,12 @@
 				   | decl_stmt_listE decl_stmt	{$$ = edit_VB_Decl_stmt_list($1,$2);}
 				   ;
 
-			decl_stmt: enum_stmt				{$$ = create_VB_Decl_Enum($1);}
-					 | sub_stmt					{$$ = create_VB_Decl_Sub($1);}
+			decl_stmt: sub_stmt					{$$ = create_VB_Decl_Sub($1);}
 					 | func_stmt				{$$ = create_VB_Decl_Func($1);}
 					 ;
 						
-	expr: TRUE										{$$ = create_int_boolean_char_const_expr(BOOLEAN_CONST_E,1);}
-		| FALSE										{$$ = create_int_boolean_char_const_expr(BOOLEAN_CONST_E,0);}
+	expr: TRUE										{$$ = create_int_boolean_char_const_expr(EXPR_BOOLEAN_CONST,1);}
+		| FALSE										{$$ = create_int_boolean_char_const_expr(EXPR_BOOLEAN_CONST,0);}
 		| ID										{$$ = create_id_expr($1);}
 		| ID'('expr_list_empty')'					{$$ = create_brackets_actions($1,$3);}
 		| CONSOLE '.' READ '('')'					{$$ = create_Read();}
@@ -226,24 +223,23 @@
 		| CONSOLE '.' WRITE '('')' 		  			{$$ = create_Print(NULL);}
 		| CONSOLE '.' WRITELINE '(' expr ')'  		{$$ = create_Println($5);}
 		| CONSOLE '.' WRITELINE '('')'  			{$$ = create_Println(NULL);}
-		| INT_CONST									{$$ = create_int_boolean_char_const_expr(INT_CONST_E,$1);}
-		| CHAR_CONST								{$$ = create_int_boolean_char_const_expr(CHAR_CONST_E,$1);}
+		| INT_CONST									{$$ = create_int_boolean_char_const_expr(EXPR_INT_CONST,$1);}
+		| CHAR_CONST								{$$ = create_int_boolean_char_const_expr(EXPR_CHAR_CONST,$1);}
 		| STRING_CONST								{$$ = create_string_const_expr($1);}
-        | expr '=' expr								{$$ = create_operator_expr(ASSIGN,$1,$3);}
-		| expr '+' expr								{$$ = create_operator_expr(PLUS,$1,$3);}
-		| expr '-' expr								{$$ = create_operator_expr(MINUS,$1,$3);}
-		| expr '*' expr								{$$ = create_operator_expr(MUL,$1,$3);}
-		| expr '/' expr								{$$ = create_operator_expr(DIV,$1,$3);}
-		| expr '\\' expr							{$$ = create_operator_expr(INT_DIV,$1,$3);}
-		| expr '^' expr								{$$ = create_operator_expr(POWER,$1,$3);}
-		| expr '>' expr								{$$ = create_operator_expr(MORE,$1,$3);}
-		| expr '<' expr								{$$ = create_operator_expr(LESS,$1,$3);}
-		| expr MORE_OR_EQUAL expr					{$$ = create_operator_expr(MORE_OR_EQUAL_E,$1,$3);}
-		| expr LESS_OR_EQUAL expr					{$$ = create_operator_expr(LESS_OR_EQUAL_E,$1,$3);}
-		| expr NONEQUAL	expr						{$$ = create_operator_expr(NONEQUAL_E,$1,$3);}
-		| expr EQUAL	expr						{$$ = create_operator_expr(EQUAL_E,$1,$3);}
+        | expr '=' expr								{$$ = create_operator_expr(EXPR_ASSIGN,$1,$3);}
+		| expr '+' expr								{$$ = create_operator_expr(EXPR_PLUS,$1,$3);}
+		| expr '-' expr								{$$ = create_operator_expr(EXPR_MINUS,$1,$3);}
+		| expr '*' expr								{$$ = create_operator_expr(EXPR_MUL,$1,$3);}
+		| expr '/' expr								{$$ = create_operator_expr(EXPR_DIV,$1,$3);}
+		| expr '^' expr								{$$ = create_operator_expr(EXPR_POWER,$1,$3);}
+		| expr '>' expr								{$$ = create_operator_expr(EXPR_MORE,$1,$3);}
+		| expr '<' expr								{$$ = create_operator_expr(EXPR_LESS,$1,$3);}
+		| expr MORE_OR_EQUAL expr					{$$ = create_operator_expr(EXPR_MORE_OR_EQUAL,$1,$3);}
+		| expr LESS_OR_EQUAL expr					{$$ = create_operator_expr(EXPR_LESS_OR_EQUAL,$1,$3);}
+		| expr NONEQUAL	expr						{$$ = create_operator_expr(EXPR_NONEQUAL,$1,$3);}
+		| expr EQUAL	expr						{$$ = create_operator_expr(EXPR_EQUAL,$1,$3);}
 		| '('expr')'								{$$ = $2;}
-		| '-' expr %prec UMINUS						{$$ = create_operator_expr(UMINUS_E,$2,0);}
+		| '-' expr %prec UMINUS						{$$ = create_operator_expr(EXPR_UMINUS,$2,0);}
 		;
 
 	if_stmt: IF expr THEN ENDL stmt_list END_IF ENDL						{$$ = create_if_stmt(0,$2,$5,NULL);}
@@ -281,8 +277,8 @@
 
         for_stmt: FOR ID '=' expr TO expr ENDL stmt_list NEXT ENDL            				{$$ = create_for_stmt($2,$4,$6,$8);}
                 | FOR ID '=' expr TO expr STEP expr ENDL stmt_list NEXT ENDL 				{$$ = create_for_with_step_stmt($2,$4,$6,$8,$10);}
-                | FOR ID AS param_type '=' expr TO expr ENDL stmt_list NEXT ENDL 			{$$ = create_for_with_decl_stmt($2,INTEGER_E,$6,$8,$10);}
-                | FOR ID AS param_type '=' expr TO expr STEP expr ENDL stmt_list NEXT ENDL 	{$$ = create_for_with_decl_with_step_stmt($2,INTEGER_E,$6,$8,$10,$12);}
+                | FOR ID AS param_type '=' expr TO expr ENDL stmt_list NEXT ENDL 			{$$ = create_for_with_decl_stmt($2,DATA_INTEGER,$6,$8,$10);}
+                | FOR ID AS param_type '=' expr TO expr STEP expr ENDL stmt_list NEXT ENDL 	{$$ = create_for_with_decl_with_step_stmt($2,DATA_INTEGER,$6,$8,$10,$12);}
 				;
 
         while_stmt: WHILE expr ENDL stmt_list END_WHILE ENDL 	 {$$ = create_while_stmt($2,$4);}
@@ -293,17 +289,6 @@
                     | DO ENDL stmt_list LOOP WHILE expr ENDL     {$$ = create_do_loop_stmt(2,$6,$3);}
                     | DO ENDL stmt_list LOOP UNTIL expr ENDL     {$$ = create_do_loop_stmt(3,$6,$3);}
                     ;
-
-        enum_stmt: ENUM ID ENDL enum_expr_list END_ENUM ENDL    {$$ = create_enum_stmt($2,$4);}
-				 ;
-
-                enum_expr_list: enum_expr ENDL                  {$$ = create_enum_list($1);}
-                              | enum_expr_list enum_expr ENDL   {$$ = add_to_enum_list($1,$2);}
-							  ;
-
-                enum_expr: ID                          			{$$ = create_enum_expr($1,-1);}
-                         | ID '=' INT_CONST     				{$$ = create_enum_expr($1,$3);}
-						 ;
 
         sub_stmt: SUB ID '('')' ENDL stmt_list END_SUB ENDL             {$$ = create_sub_stmt($2,NULL,$6);}
                 | SUB ID '('param_list')' ENDL stmt_list END_SUB ENDL   {$$ = create_sub_stmt($2,$4,$7);}
@@ -317,10 +302,10 @@
 						  | BYREF ID'('')' AS param_type       {$$ = create_param_stmt(1,$2,$6);}
 						  ;
 
-				param_type: INTEGER        {$$ = INTEGER_E;}
-                          | BOOLEAN        {$$ = BOOLEAN_E;}
-                          | CHAR           {$$ = CHAR_E;}
-                          | STRING_T       {$$ = STRING_E;}
+				param_type: INTEGER        {$$ = DATA_INTEGER;}
+                          | BOOLEAN        {$$ = DATA_BOOLEAN;}
+                          | CHAR           {$$ = DATA_CHAR;}
+                          | STRING_T       {$$ = DATA_STRING;}
                           ;
 
 	return_stmt: RETURN expr ENDL   {$$ = create_return_stmt($2);}
@@ -331,18 +316,6 @@
 				 | FUNCTION ID '('param_list')' AS param_type'('')' ENDL stmt_list END_FUNCTION ENDL  {$$ = create_func_stmt($2,$4,$7,$11);}
 				 ;
 
-	try_catch_stmt: TRY ENDL stmt_list catch_stmt_list FINALLY ENDL stmt_list ENDL END_TRY ENDL {$$ = create_Try_Catch($3,$4,$7);}
-				  ;
-
-		catch_stmt_list: catch_stmt						{$$ = create_Catch_stmt_list($1);}
-					   | catch_stmt_list catch_stmt		{$$ = add_new_Catch_stmt($1,$2);}
-					   ;
-
-		catch_stmt: CATCH ID AS EXCEPTION ENDL stmt_list					{$$ = create_Catch_stmt($2,$6);}
-				  ;
-
-	throw_stmt: THROW NEW SYSTEM '.' EXCEPTION '(' STRING_CONST ')' ENDL  	{$$ = create_Throw($7);}
-			  ;
 %%
 
 void yyerror (char const* s)
@@ -359,8 +332,6 @@ int main (int argc, char* argv[])
 
 	file = fopen("result.txt", "wt");
 	yyin = fopen(argv[1], "r");
-
-	//yylex();	// гюлемемемн
 
 	yyparse();
 
