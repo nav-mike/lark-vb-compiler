@@ -182,7 +182,7 @@ public class Expression implements XMLInterface{
                     right = Expression.createExpr(nodes.item(i));
             }            
             
-            attr = attributes.getNamedItem("expr_string");
+            attr = attributes.getNamedItem("type");
             buffer = attr.getNodeValue();
                     
             result = new MathExpression(left, right, MathExprType.fromString(buffer));

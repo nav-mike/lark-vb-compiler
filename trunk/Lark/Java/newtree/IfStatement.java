@@ -3,6 +3,7 @@ package newtree;
 import java.util.ArrayList;
 import java.util.Arrays;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * Класс условного оператора.
@@ -286,9 +287,33 @@ public class IfStatement extends AbstractStatement {
         return condition;
     }
 
+    /**
+     * Чтение данных из XML файла.
+     * @param node Узел XML дерева.
+     */
     @Override
     public void readData(Node node) {
         
+        // Берем все подузлы дерева if и считываем данные 
+        NodeList nodes = node.getChildNodes();
+        
+        for (int i = 0; i < nodes.getLength(); i++) {
+            switch (nodes.item(i).getNodeName()) {
+                case "VB_Expr":
+                    this.condition = Expression.createExpr(nodes.item(i));
+                    break;
+                    
+                case "VB_Stmt_list__stmt_list":
+                    this.bodyMain = new ArrayList<>();
+                    AbstractDeclaration.readBody(bodyMain, nodes.item(i));
+                    break;
+                    
+                case "VB_Stmt_list__else_list":
+                    this.bodyAlter = new ArrayList<>();
+                    AbstractDeclaration.readBody(bodyAlter, nodes.item(i));
+                    break;
+            }
+        }
     }
     
 }

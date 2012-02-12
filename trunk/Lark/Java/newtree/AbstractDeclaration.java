@@ -250,7 +250,7 @@ public class AbstractDeclaration implements XMLInterface{
      * @param node Исследуемый узел дерева
      * @return Полученная операция
      */
-    private AbstractStatement createDimStmt(Node node){
+    private static AbstractStatement createDimStmt(Node node){
         DimStatement newDim = new DimStatement();
         newDim.readData(node);
         return newDim;
@@ -261,7 +261,7 @@ public class AbstractDeclaration implements XMLInterface{
      * @param node Исследуемый узел дерева
      * @return Полученная операция
      */
-    private AbstractStatement createDoLoopStmt(Node node){
+    private static AbstractStatement createDoLoopStmt(Node node){
         return null;
     }
     
@@ -270,7 +270,7 @@ public class AbstractDeclaration implements XMLInterface{
      * @param node Исследуемый узел дерева
      * @return Полученная операция
      */   
-    private AbstractStatement createExprStmt(Node node){
+    private static AbstractStatement createExprStmt(Node node){
         ExprStatement expr = new ExprStatement();
         expr.setExpr(Expression.createExpr(node));
         return expr;
@@ -281,7 +281,7 @@ public class AbstractDeclaration implements XMLInterface{
      * @param node Исследуемый узел дерева
      * @return Полученная операция
      */      
-    private AbstractStatement createForStmt(Node node){
+    private static AbstractStatement createForStmt(Node node){
         return null;
     }
     
@@ -290,7 +290,7 @@ public class AbstractDeclaration implements XMLInterface{
      * @param node Исследуемый узел дерева
      * @return Полученная операция
      */          
-    private AbstractStatement createIfStmt(Node node){
+    private static AbstractStatement createIfStmt(Node node){
         IfStatement stmt_if = new IfStatement();
         stmt_if.readData(node);
         return stmt_if;
@@ -301,7 +301,7 @@ public class AbstractDeclaration implements XMLInterface{
      * @param node Исследуемый узел дерева
      * @return Полученная операция
      */              
-    private AbstractStatement createReturnStmt(Node node){
+    private static AbstractStatement createReturnStmt(Node node){
         return null;
     }
     
@@ -310,7 +310,7 @@ public class AbstractDeclaration implements XMLInterface{
      * @param node Исследуемый узел дерева
      * @return Полученная операция
      */                   
-    private AbstractStatement createWhileStmt(Node node){
+    private static AbstractStatement createWhileStmt(Node node){
         return null;
     }
     
@@ -318,7 +318,7 @@ public class AbstractDeclaration implements XMLInterface{
      * Считать одну операцию
      * @param node Узел дерева с операцией 
      */
-    private void readStatement(Node node) {
+    private static void readStatement(ArrayList<AbstractStatement> body, Node node) {
         
         String buffer;
         NamedNodeMap attributes = node.getAttributes();
@@ -363,16 +363,15 @@ public class AbstractDeclaration implements XMLInterface{
      * Считывание тела процедуры или функции
      * @param node Узел с операциями
      */
-    public void readBody(Node node) {
+    public static void readBody(ArrayList<AbstractStatement> body, Node node) {
         if (node.getChildNodes().getLength() > 0) {
-            body = new ArrayList<>();
             
             AbstractStatement buf;
             
             NodeList nodes = node.getChildNodes();
             
             for (int i = 0; i < nodes.getLength(); i++) {
-                readStatement(nodes.item(i));
+                readStatement(body, nodes.item(i));
             }
         }
     }
@@ -404,7 +403,8 @@ public class AbstractDeclaration implements XMLInterface{
                     readParameters(nodes.item(i));
                     break;
                 case "VB_Stmt_list":
-                    readBody(nodes.item(i));
+                    this.body = new ArrayList<>();
+                    readBody(body, nodes.item(i));
                     break;
             }
         }
