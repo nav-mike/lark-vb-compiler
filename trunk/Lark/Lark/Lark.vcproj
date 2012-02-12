@@ -212,7 +212,67 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath=".\data_types.h"
+				>
+			</File>
+			<File
 				RelativePath=".\dot.h"
+				>
+			</File>
+			<File
+				RelativePath=".\prt_decl.h"
+				>
+			</File>
+			<File
+				RelativePath=".\prt_decl_list.h"
+				>
+			</File>
+			<File
+				RelativePath=".\prt_dim.h"
+				>
+			</File>
+			<File
+				RelativePath=".\prt_do_loop.h"
+				>
+			</File>
+			<File
+				RelativePath=".\prt_expr.h"
+				>
+			</File>
+			<File
+				RelativePath=".\prt_expr_list.h"
+				>
+			</File>
+			<File
+				RelativePath=".\prt_for.h"
+				>
+			</File>
+			<File
+				RelativePath=".\prt_if.h"
+				>
+			</File>
+			<File
+				RelativePath=".\prt_module.h"
+				>
+			</File>
+			<File
+				RelativePath=".\prt_return.h"
+				>
+			</File>
+			<File
+				RelativePath=".\prt_stmt.h"
+				>
+			</File>
+			<File
+				RelativePath=".\prt_stmt_list.h"
+				>
+			</File>
+			<File
+				RelativePath=".\prt_sub.h"
+				>
+			</File>
+			<File
+				RelativePath=".\prt_while.h"
 				>
 			</File>
 			<File
