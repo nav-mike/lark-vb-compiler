@@ -76,7 +76,8 @@ public class Expression implements XMLInterface{
     public void readData(Node node) {
         
     }
-        /**
+    
+    /**
      * Чтение данных из выражения
      * @param node Узел с выражением
      */
@@ -90,7 +91,16 @@ public class Expression implements XMLInterface{
         String buffer = attr.getNodeValue();        
         
         if (buffer.equals("EXPR_ID")){
-            result = new IdExpression();
+            
+            IdExpression id = new IdExpression();
+            attr = attributes.getNamedItem("expr_string");
+            buffer = attr.getNodeValue();
+            id.setName(buffer);
+            
+            result = id;
+        }
+        else if (buffer.equals("BRK_EXPR")){
+            
         }
         else if (buffer.contains("CONST")){
             switch (buffer) {

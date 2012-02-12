@@ -12,6 +12,25 @@ public class IdExpression extends Expression {
     /* Поля класса. */
     /** Передаваемые параметры функции/процедуры или индекс массива. */
     private ArrayList<Expression> body;
+    
+    /** Имя идентификатора. */
+    private String name;
+
+    /**
+     * Получить имя идентификатора.
+     * @return Строка с именем.
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Задать имя идентификатора.
+     * @param name Строка с новым именем
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
 
     /**
      * Конструктор по умолчанию.
