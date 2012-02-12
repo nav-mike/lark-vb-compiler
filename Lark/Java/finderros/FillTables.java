@@ -244,34 +244,37 @@ public class FillTables {
             }
         }
         
-        for (int i = 0; i < body.size(); i++) {
+        if (body != null){
             
-            if (body.get(i) != null) {
-                
-                if (body.get(i).getStmtType() == StatementType.DIM) {
+            for (int i = 0; i < body.size(); i++) {
 
-                    findLocalVariableInDim((DimStatement)body.get(i), lvt);
-                } else if (body.get(i).getStmtType() == StatementType.DO_LOOP) {
-                    
-                    fillLocalVariablesTable(null,
-                            ((DoLoopStatement)body.get(i)).getBody());
-                } else if (body.get(i).getStmtType() == StatementType.FOR) {
-                    
-                    fillLocalVariablesTable(null,
-                            ((ForStatement)body.get(i)).getBody());
-                } else if (body.get(i).getStmtType() == StatementType.WHILE) {
-                    
-                    fillLocalVariablesTable(null,
-                            ((WhileStatement)body.get(i)).getBody());
-                } else if (body.get(i).getStmtType() == StatementType.IF) {
-                    
-                    fillLocalVariablesTable(null,
-                            ((IfStatement)body.get(i)).getBodyMain());
-                    fillLocalVariablesTable(null,
-                            ((IfStatement)body.get(i)).getBodyAlter());
+                if (body.get(i) != null) {
+
+                    if (body.get(i).getStmtType() == StatementType.DIM) {
+
+                        findLocalVariableInDim((DimStatement)body.get(i), lvt);
+                    } else if (body.get(i).getStmtType() == StatementType.DO_LOOP) {
+
+                        fillLocalVariablesTable(null,
+                                ((DoLoopStatement)body.get(i)).getBody());
+                    } else if (body.get(i).getStmtType() == StatementType.FOR) {
+
+                        fillLocalVariablesTable(null,
+                                ((ForStatement)body.get(i)).getBody());
+                    } else if (body.get(i).getStmtType() == StatementType.WHILE) {
+
+                        fillLocalVariablesTable(null,
+                                ((WhileStatement)body.get(i)).getBody());
+                    } else if (body.get(i).getStmtType() == StatementType.IF) {
+
+                        fillLocalVariablesTable(null,
+                                ((IfStatement)body.get(i)).getBodyMain());
+                        fillLocalVariablesTable(null,
+                                ((IfStatement)body.get(i)).getBodyAlter());
+                    }
                 }
+
             }
-            
         }
         
         return lvt;
