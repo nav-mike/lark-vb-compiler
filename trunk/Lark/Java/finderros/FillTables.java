@@ -1,6 +1,8 @@
 package finderros;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Set;
 import newtree.*;
 import tables.*;
 
@@ -214,9 +216,10 @@ public class FillTables {
         
         for (int i = 0; i < items.size(); i++) {
             
+            LocalVariablesTable lvt = new LocalVariablesTable();
             mt.add(new MethodsTableItem(items.get(i).getName(),
                     items.get(i).getRetType(), i + 1,
-                    fillLocalVariablesTable(items.get(i).getParamList(),items.get(i).getBody())));
+                    fillLocalVariablesTable(items.get(i).getParamList(),items.get(i).getBody(),lvt)));
         }
         
         return mt;
@@ -231,9 +234,7 @@ public class FillTables {
      * создании констант.
      */
     private static LocalVariablesTable fillLocalVariablesTable (ArrayList<ParamStatement> paramList,
-            ArrayList<AbstractStatement> body) throws InvalidParametersException {
-        
-        LocalVariablesTable lvt = new LocalVariablesTable();
+            ArrayList<AbstractStatement> body, LocalVariablesTable lvt) throws InvalidParametersException {
         
         if (paramList != null) {
             
@@ -256,21 +257,21 @@ public class FillTables {
                     } else if (body.get(i).getStmtType() == StatementType.DO_LOOP) {
 
                         fillLocalVariablesTable(null,
-                                ((DoLoopStatement)body.get(i)).getBody());
+                                ((DoLoopStatement)body.get(i)).getBody(),lvt);
                     } else if (body.get(i).getStmtType() == StatementType.FOR) {
 
                         fillLocalVariablesTable(null,
-                                ((ForStatement)body.get(i)).getBody());
+                                ((ForStatement)body.get(i)).getBody(),lvt);
                     } else if (body.get(i).getStmtType() == StatementType.WHILE) {
 
                         fillLocalVariablesTable(null,
-                                ((WhileStatement)body.get(i)).getBody());
+                                ((WhileStatement)body.get(i)).getBody(),lvt);
                     } else if (body.get(i).getStmtType() == StatementType.IF) {
 
                         fillLocalVariablesTable(null,
-                                ((IfStatement)body.get(i)).getBodyMain());
+                                ((IfStatement)body.get(i)).getBodyMain(),lvt);
                         fillLocalVariablesTable(null,
-                                ((IfStatement)body.get(i)).getBodyAlter());
+                                ((IfStatement)body.get(i)).getBodyAlter(),lvt);
                     }
                 }
 
@@ -316,6 +317,14 @@ public class FillTables {
             }
         } else if (item.getArrays() != null ) {
             
+            Set<String> keys = item.getArrays().keySet();
+            Iterator<String> it = keys.iterator();
+            
+            while (it.hasNext()) {
+                
+                String str = it.next();
+                lvt.add(new LocalVariablesTableItem(str, item.getType(), 0));
+            }
         }
         
     }
