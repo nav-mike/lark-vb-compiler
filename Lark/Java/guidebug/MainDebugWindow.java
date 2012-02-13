@@ -62,7 +62,7 @@ public class MainDebugWindow extends JFrame {
             
             jtp.add(item.getId() + "." +
                     mainClass.getMethodTable().get(i + 1).getName() + 
-                    "local variables table",
+                    ":local variables table",
                     (new GuiLocalVariablesTable(mainClass.getMethodTable().get(i + 1).getLocalVariables()).getTable()));
         }
         
