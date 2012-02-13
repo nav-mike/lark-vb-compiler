@@ -1,6 +1,8 @@
 package tables;
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * Класс таблицы локальных переменных.
@@ -14,6 +16,32 @@ public class LocalVariablesTable {
     private HashMap<Integer,LocalVariablesTableItem> items;
     /** Индекс новой локальной переменной. */
     private int gIndex;
+    
+    /**
+     * Метод проверки наличия локальной переменной в таблице.
+     * @param item Проверяемая локальная переменная.
+     * @return true, если локальная переменная присутствует.
+     */
+    public boolean contains (LocalVariablesTableItem item) {
+        
+        boolean flag = false;
+        
+        Set<Integer> set = items.keySet();
+        Iterator<Integer> it = set.iterator();
+        
+        while (it.hasNext()) {
+            
+            Integer i = it.next();
+            
+            if (items.get(i).getName().equals(item.getName())) {
+                
+                flag = true;
+                break;
+            }
+        }
+        
+        return flag;
+    }
 
     /**
      * Метод преобразования таблицы локальных переменных в строку.

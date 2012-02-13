@@ -1,6 +1,8 @@
 package tables;
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * Класс таблица методов класса.
@@ -13,6 +15,32 @@ public class MethodsTable {
     private HashMap<Integer,MethodsTableItem> items;
     /** Количество методов в классе. */
     private int gIndex;
+    
+    /**
+     * Метод проверки наличия метода в таблице.
+     * @param item Проверяемый метод.
+     * @return true, если метод присутствует.
+     */
+    public boolean contains (MethodsTableItem item) {
+        
+        boolean flag = false;
+        
+        Set<Integer> set = items.keySet();
+        Iterator<Integer> it = set.iterator();
+        
+        while (it.hasNext()) {
+            
+            Integer i = it.next();
+            
+            if (items.get(i).getName().equals(item.getName())) {
+                
+                flag = true;
+                break;
+            }
+        }
+        
+        return flag;
+    }
 
     /**
      * Метод преобразования таблицы методов класса в строку.
