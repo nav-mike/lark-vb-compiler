@@ -4,6 +4,7 @@
  */
 package main;
 
+import codegen.CodeGenerator;
 import guidebug.IntFrame;
 import guidebug.MainDebugWindow;
 import guidebug.TableConstant;
@@ -329,13 +330,14 @@ public class JLark {
        
         
         m_module = m_module;
-        
-        new MainDebugWindow(m_module);
-        
-        
-       // cereateTable(); // Создать аблицу
 
-       // showTables();   // Отобразить таблицы
+        new MainDebugWindow(m_module);
+
+        new CodeGenerator(m_module);
+
+        // cereateTable(); // Создать аблицу
+
+        // showTables();   // Отобразить таблицы
 
     }
 }
