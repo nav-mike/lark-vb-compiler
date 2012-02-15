@@ -24,16 +24,24 @@ public enum DataType {
      */
     public static DataType fromString(String text) {
         
-        switch(text){
-            case "DATA_INTEGER":
-                return INTEGER;
-            case "DATA_CHAR":
-                return CHAR;
-            case "DATA_STRING":
-                return STRING;
-            case "DATA_BOOLEAN":
-                return BOOLEAN;
-        }
+//        switch(text){
+//            case "DATA_INTEGER":
+//                return INTEGER;
+//            case "DATA_CHAR":
+//                return CHAR;
+//            case "DATA_STRING":
+//                return STRING;
+//            case "DATA_BOOLEAN":
+//                return BOOLEAN;
+//        }
+        if ("DATA_INTEGER".equals(text))
+            return INTEGER;
+        else if ("DATA_CHAR".equals(text))
+            return CHAR;
+        else if ("DATA_STRING".equals(text))
+            return STRING;
+        else if ("DATA_BOOLEAN".equals(text))
+            return BOOLEAN;
         
         return NONE;
     }

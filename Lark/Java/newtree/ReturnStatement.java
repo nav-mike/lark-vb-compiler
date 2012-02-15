@@ -1,6 +1,7 @@
 package newtree;
 
 import java.util.ArrayList;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -55,6 +56,10 @@ public class ReturnStatement extends AbstractStatement{
      */
     @Override
     public void readData(Node node) {
+        
+        NamedNodeMap attributes = node.getAttributes();
+        Node attr = attributes.getNamedItem("line_number");
+        lineNumber = Integer.parseInt(attr.getNodeValue());
         
         // Берем подузел с выражением
         NodeList nodes = node.getChildNodes();

@@ -21,7 +21,7 @@ public class DimStatement extends AbstractStatement {
     public DimStatement(){
         super(StatementType.DIM);
         
-        bodyMain = new ArrayList<>();
+        bodyMain = new ArrayList();
     }
     
     /**
@@ -43,7 +43,7 @@ public class DimStatement extends AbstractStatement {
     public DimStatement (AsExpression[] bodyMain) {
         
         super(StatementType.DIM);
-        this.bodyMain = new ArrayList<>(Arrays.asList(bodyMain));
+        this.bodyMain = new ArrayList(Arrays.asList(bodyMain));
     }
     
     /**
@@ -54,7 +54,7 @@ public class DimStatement extends AbstractStatement {
     public DimStatement (AsExpression item) {
         
         super(StatementType.DIM);
-        this.bodyMain = new ArrayList<>();
+        this.bodyMain = new ArrayList();
         this.bodyMain.add(item);
     }
 
@@ -123,6 +123,10 @@ public class DimStatement extends AbstractStatement {
     
     @Override
     public void readData(Node node) {
+        
+        NamedNodeMap attributes = node.getAttributes();
+        Node attr = attributes.getNamedItem("line_number");
+        lineNumber = Integer.parseInt(attr.getNodeValue());
         
         // Считывание списка объявляемых переменных.
         NodeList nodes = node.getChildNodes();

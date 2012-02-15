@@ -2,6 +2,7 @@ package newtree;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -294,24 +295,40 @@ public class IfStatement extends AbstractStatement {
     @Override
     public void readData(Node node) {
         
+        NamedNodeMap attributes = node.getAttributes();
+        Node attr = attributes.getNamedItem("line_number");
+        lineNumber = Integer.parseInt(attr.getNodeValue());
+        
         // Берем все подузлы дерева if и считываем данные 
         NodeList nodes = node.getChildNodes();
         
         for (int i = 0; i < nodes.getLength(); i++) {
-            switch (nodes.item(i).getNodeName()) {
-                case "VB_Expr":
-                    this.condition = Expression.createExpr(nodes.item(i));
-                    break;
-                    
-                case "VB_Stmt_list__stmt_list":
-                    this.bodyMain = new ArrayList<>();
-                    AbstractDeclaration.readBody(bodyMain, nodes.item(i));
-                    break;
-                    
-                case "VB_Stmt_list__else_list":
-                    this.bodyAlter = new ArrayList<>();
-                    AbstractDeclaration.readBody(bodyAlter, nodes.item(i));
-                    break;
+//            switch (nodes.item(i).getNodeName()) {
+//                case "VB_Expr":
+//                    this.condition = Expression.createExpr(nodes.item(i));
+//                    break;
+//                    
+//                case "VB_Stmt_list__stmt_list":
+//                    this.bodyMain = new ArrayList();
+//                    AbstractDeclaration.readBody(bodyMain, nodes.item(i));
+//                    break;
+//                    
+//                case "VB_Stmt_list__else_list":
+//                    this.bodyAlter = new ArrayList();
+//                    AbstractDeclaration.readBody(bodyAlter, nodes.item(i));
+//                    break;
+//            }
+            if ("VB_Expr".equals(nodes.item(i).getNodeName())) {
+                
+                this.condition = Expression.createExpr(nodes.item(i));
+            } else if ("VB_Stmt_list__stmt_list".equals(nodes.item(i).getNodeName())) {
+                
+                this.bodyMain = new ArrayList<AbstractStatement>();
+                AbstractDeclaration.readBody(bodyMain, nodes.item(i));
+            } else if ("VB_Stmt_list__else_list".equals(nodes.item(i).getNodeName())) {
+                
+                this.bodyAlter = new ArrayList<AbstractStatement>();
+                AbstractDeclaration.readBody(bodyAlter, nodes.item(i));
             }
         }
     }

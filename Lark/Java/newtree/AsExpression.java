@@ -81,7 +81,7 @@ public class AsExpression implements XMLInterface{
     public AsExpression (DataType type, String variable, Expression initData) {
         
         this.type = type;
-        this.variables = new ArrayList<>();
+        this.variables = new ArrayList();
         this.variables.add(variable);
         this.initData = initData;
         this.arrays = null;
@@ -94,7 +94,7 @@ public class AsExpression implements XMLInterface{
      */
     public AsExpression (String[] variables) {
         
-        this.variables = new ArrayList<>(Arrays.asList(variables));
+        this.variables = new ArrayList(Arrays.asList(variables));
         this.arrays = null;
         this.initData = null;
     }
@@ -197,37 +197,64 @@ public class AsExpression implements XMLInterface{
                 
         for (int i = 0; i < nodes.getLength(); i++) {
             // Если это список идентификаторов.
-            switch (nodes.item(i).getNodeName()) {
-                case "VB_Expr":
-                    
-                    if (variables == null)
-                        variables = new ArrayList<>();
-                    
-                    attributes = nodes.item(i).getAttributes();
-                    attr = attributes.getNamedItem("expr_string");
-                    variables.add(attr.getNodeValue());
-                    break;
-                    
-               case "VB_Array_expr":
-                   
-                    if (arrays == null)
-                        arrays = new HashMap<>();
+//            switch (nodes.item(i).getNodeName()) {
+//                case "VB_Expr":
+//                    
+//                    if (variables == null)
+//                        variables = new ArrayList();
+//                    
+//                    attributes = nodes.item(i).getAttributes();
+//                    attr = attributes.getNamedItem("expr_string");
+//                    variables.add(attr.getNodeValue());
+//                    break;
+//                    
+//               case "VB_Array_expr":
+//                   
+//                    if (arrays == null)
+//                        arrays = new HashMap();
+//
+//                    attributes = nodes.item(i).getAttributes();
+//                    attr = attributes.getNamedItem("id");
+//                    String name = attr.getNodeValue();
+//
+//                    attr = attributes.getNamedItem("size");
+//                    int size = Integer.parseInt(attr.getNodeValue());
+//
+//                    arrays.put(name, size);
+//                    
+//                    getArrayInitData(nodes.item(i));
+//                    break;
+//                    
+//                case "VB_Id_list":
+//                    readFromIdList(nodes.item(i));
+//                    break;
+//            }
+            if ("VB_Expr".equals(nodes.item(i).getNodeName())) {
+                
+                if (variables == null)
+                    variables = new ArrayList();
 
-                    attributes = nodes.item(i).getAttributes();
-                    attr = attributes.getNamedItem("id");
-                    String name = attr.getNodeValue();
+                attributes = nodes.item(i).getAttributes();
+                attr = attributes.getNamedItem("expr_string");
+                variables.add(attr.getNodeValue());
+            } else if ("VB_Array_expr".equals(nodes.item(i).getNodeName())) {
+                
+                if (arrays == null)
+                    arrays = new HashMap();
 
-                    attr = attributes.getNamedItem("size");
-                    int size = Integer.parseInt(attr.getNodeValue());
+                attributes = nodes.item(i).getAttributes();
+                attr = attributes.getNamedItem("id");
+                String name = attr.getNodeValue();
 
-                    arrays.put(name, size);
-                    
-                    getArrayInitData(nodes.item(i));
-                    break;
-                    
-                case "VB_Id_list":
-                    readFromIdList(nodes.item(i));
-                    break;
+                attr = attributes.getNamedItem("size");
+                int size = Integer.parseInt(attr.getNodeValue());
+
+                arrays.put(name, size);
+
+                getArrayInitData(nodes.item(i));
+            } else if ("VB_Id_list".equals(nodes.item(i).getNodeName())) {
+                
+                readFromIdList(nodes.item(i));
             }
         }
         
@@ -237,7 +264,7 @@ public class AsExpression implements XMLInterface{
         NodeList nodes = node.getChildNodes();
                     
         if (arrayInit == null)
-            arrayInit = new ArrayList<>();
+            arrayInit = new ArrayList();
             
         for (int i = 0; i < nodes.getLength(); i++) {
             this.arrayInit.add(Expression.createExpr(nodes.item(i)));
@@ -261,14 +288,21 @@ public class AsExpression implements XMLInterface{
 
         for (int i = 0; i < nodes.getLength(); i++) {
             // Если это список идентификаторов.
-            switch (nodes.item(i).getNodeName()) {
-                case "VB_Expr__expr":
-                    initData = Expression.createExpr(nodes.item(i));
-                    break;
-
-                case "VB_Id_list":
-                    readFromIdList(nodes.item(i));
-                    break;
+//            switch (nodes.item(i).getNodeName()) {
+//                case "VB_Expr__expr":
+//                    initData = Expression.createExpr(nodes.item(i));
+//                    break;
+//
+//                case "VB_Id_list":
+//                    readFromIdList(nodes.item(i));
+//                    break;
+//            }
+            if ("VB_Expr__expr".equals(nodes.item(i).getNodeName())) {
+                
+                initData = Expression.createExpr(nodes.item(i));
+            } else if ("VB_Id_list".equals(nodes.item(i).getNodeName())) {
+                
+                readFromIdList(nodes.item(i));
             }
         }
     }

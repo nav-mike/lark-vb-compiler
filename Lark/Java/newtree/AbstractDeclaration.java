@@ -25,6 +25,24 @@ public class AbstractDeclaration implements XMLInterface{
     private ArrayList<ParamStatement> paramList;
     /** Тело функции/процедуры. */
     private ArrayList<AbstractStatement> body;
+    /** Номер строки в коде пользователя. */
+    private int lineNumber;
+
+    /**
+     * Метод получения номера строки в коде пользователя.
+     * @return Номер строки в коде пользователя.
+     */
+    public Integer getLineNumber() {
+        return lineNumber;
+    }
+
+    /**
+     * Метод задания номера строки в коде пользователя.
+     * @param lineNumber Строка в коде пользователя.
+     */
+    public void setLineNumber(Integer lineNumber) {
+        this.lineNumber = lineNumber;
+    }
 
     /**
      * Конструктор по умолчанию
@@ -231,7 +249,7 @@ public class AbstractDeclaration implements XMLInterface{
      */
     private void readParameters(Node node) {
         if (node.getChildNodes().getLength() > 0) {
-            paramList = new ArrayList<>();
+            paramList = new ArrayList();
             
             ParamStatement buf;
             
@@ -403,15 +421,23 @@ public class AbstractDeclaration implements XMLInterface{
         NodeList nodes = node.getChildNodes();
         
        for (int i = 0; i < nodes.getLength(); i++) {
-            switch (nodes.item(i).getNodeName()) {
-                case "VB_Param_stmt_list":
-                    readParameters(nodes.item(i));
-                    break;
-                case "VB_Stmt_list":
-                    this.body = new ArrayList<>();
-                    readBody(body, nodes.item(i));
-                    break;
-            }
+//            switch (nodes.item(i).getNodeName()) {
+//                case "VB_Param_stmt_list":
+//                    readParameters(nodes.item(i));
+//                    break;
+//                case "VB_Stmt_list":
+//                    this.body = new ArrayList();
+//                    readBody(body, nodes.item(i));
+//                    break;
+//            }
+           if ("VB_Param_stmt_list".equals(nodes.item(i).getNodeName())) {
+               
+               readParameters(nodes.item(i));
+           } else if ("VB_Stmt_list".equals(nodes.item(i).getNodeName())) {
+               
+               this.body = new ArrayList<AbstractStatement>();
+               readBody(body, nodes.item(i));
+           }
         }
     }
     
@@ -421,19 +447,30 @@ public class AbstractDeclaration implements XMLInterface{
      */
     @Override
     public void readData(Node node) {
+        
+        NamedNodeMap attributes = node.getAttributes();
+        Node attr = attributes.getNamedItem("line_number");
+        lineNumber = Integer.parseInt(attr.getNodeValue());
 
         // Считывание вложенных структур.
         NodeList nodes = node.getChildNodes();
         
         for (int i = 0; i < nodes.getLength(); i++) {
             
-            switch (nodes.item(i).getNodeName()) {
-                case "VB_Sub_stmt":
-                    readSubData(nodes.item(i),false);
-                    break;
-                case "VB_Func_stmt":
-                    readSubData(nodes.item(i),true);
-                    break;
+//            switch (nodes.item(i).getNodeName()) {
+//                case "VB_Sub_stmt":
+//                    readSubData(nodes.item(i),false);
+//                    break;
+//                case "VB_Func_stmt":
+//                    readSubData(nodes.item(i),true);
+//                    break;
+//            }
+            if ("VB_Sub_stmt".equals(nodes.item(i).getNodeName())) {
+                
+                readSubData(nodes.item(i), false);
+            } else if ("VB_Func_stmt".equals(nodes.item(i).getNodeName())) {
+                
+                readSubData(nodes.item(i), true);
             }
                 
         }
