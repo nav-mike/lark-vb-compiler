@@ -12,6 +12,7 @@ struct VB_Module_stmt
 	char* id;								//!< Идентификатор модуля
 	struct VB_Stmt_list*		stmt_list;	//!< Список операций модуля
 	struct VB_Decl_stmt_list*	decl_list;  //!< Список объявлений процедур и функий
+	       int                  line_number; //!< Line of this statement.
 };
 
 /*!
@@ -48,6 +49,8 @@ struct VB_Module_stmt* create_VB_Module_stmt(char* id, struct VB_Stmt_list* list
 
 	else if (post_decl != NULL)
 		module->decl_list = post_decl;
+
+	module->line_number = get_location();
 	
 	return module;
 }

@@ -81,6 +81,8 @@
 
 	void yyerror (char const* s);
 
+	int get_location ();
+
 	extern FILE* yyin;
 
 
@@ -2605,6 +2607,11 @@ void yyerror (char const* s)
 	printf("ERROR on line: %d and column: %d", yylloc.first_line,yylloc.last_column);
 	getchar();
 	exit(0);
+}
+
+int get_location()
+{
+	return yylloc.first_line;
 }
 
 int main (int argc, char* argv[])

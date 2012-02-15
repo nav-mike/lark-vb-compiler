@@ -12,6 +12,7 @@ struct VB_Expr_list
 {
 	struct VB_Expr* first;  //!< ”казатель на первый элемент списка
 	struct VB_Expr* last;   //!< ”казатель на последний элемент списка
+	       int      line_number; //!< Line of this expression list.
 };
 
 
@@ -30,6 +31,7 @@ struct VB_Expr_list* create_Expr_list (struct VB_Expr* expr)
 
 	list->first = expr;
 	list->last = expr;
+	list->line_number = get_location();
 
 	return list;
 }

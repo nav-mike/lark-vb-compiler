@@ -14,6 +14,7 @@ struct VB_Sub_stmt
 	struct VB_Param_list*	param_list;	//!< Список параметров
 	struct VB_Stmt_list* 	stmt_list;	//!< Тело процедуры
 	struct VB_Stmt*			next;		//!< Следующий оператор
+	       int              line_number; //!< Line of this statement.
 };
 
 /*! \struct VB_Param_list
@@ -23,6 +24,7 @@ struct VB_Param_list
 {
 	struct VB_Param_stmt* first;	//!< Указатель на первый элемент списка
 	struct VB_Param_stmt* last;		//!< Указатель на последний элемент списка
+	       int            line_number; //! Line of this statement.
 };
 
 /*! \struct VB_Param_stmt
@@ -34,6 +36,7 @@ struct VB_Param_stmt
 	char* id;					//!< Имя парметра
 	enum VB_Id_type	id_type;	//!< Тип параметра
 	struct VB_Param_stmt* next;	//!< Следующий
+	       int            line_number; //!< Line of this statement.
 };
 
 /*! \struct VB_Func_stmt
@@ -47,6 +50,7 @@ struct VB_Func_stmt
 	struct VB_Expr*	expr;			//!< Возвращаемое значение
 	struct VB_Param_list*	param_list;	//!< Список параметров
 	struct VB_Stmt*			next;		//!< Следующий оператор
+	       int              line_number; //!< Line of this statement.
 };
 
 
@@ -62,6 +66,7 @@ struct VB_Func_stmt * create_func_stmt(char* id, struct VB_Param_list* params, e
 	result->stmt_list = body;
 	result->next = NULL;
 	result->expr = NULL;
+	result->line_number = get_location();
 
     return result;
 }
@@ -81,6 +86,7 @@ struct VB_Sub_stmt * create_sub_stmt(char * id, struct VB_Param_list * params, s
 	result->next = NULL;
 	result->param_list = params;
 	result->stmt_list = body;
+	result->line_number = get_location();
 
     return result;
 }
@@ -96,6 +102,7 @@ struct VB_Param_list * create_param_list(struct VB_Param_stmt* first_param)
 
 	result->first = first_param;
 	result->last = first_param;
+	result->line_number = get_location();
 
     return result;
 }
@@ -128,6 +135,7 @@ struct VB_Param_stmt* create_param_stmt(int is_by_ref, char* id, enum VB_Id_type
 	result->id_type = type;
 	result->next = NULL;
 	result->is_by_ref = is_by_ref;
+	result->line_number = get_location();
 
     return result;
 }

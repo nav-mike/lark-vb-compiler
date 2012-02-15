@@ -23,6 +23,7 @@ struct VB_If_stmt
 	struct VB_Stmt_list*	stmt_list;	//!< ”казатель на список операций при истинном условии.
 	struct VB_Stmt_list*	else_list;	//!< ”казатель на список операций при ложном условии (только если в 1 строку).
 	struct VB_Stmt*			next;		//!< ”казатель на следующий элемент последовательности операторов.
+	       int              line_number; //!< Line of this statement.
 };
 
 /* »нициализаци€ условного выражени€:
@@ -112,7 +113,7 @@ struct VB_If_stmt* create_if_stmt(int hasElse,struct VB_Expr* expr,struct VB_Stm
 	if_stmt->stmt_list = if_list;
 	if_stmt->else_list = else_list;
 	if_stmt->next = NULL;
-
+	if_stmt->line_number = get_location();
 
 	return if_stmt;
 }

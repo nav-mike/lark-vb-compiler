@@ -12,6 +12,7 @@ struct VB_While_stmt
 	struct VB_Stmt_list* stmt_list;	//!< Тело цикла
 	struct VB_Expr*		 expr;		//!< Условие
 	struct VB_Stmt*		 next;		//!< Следующий оператор
+	       int           line_number; //!< Line of this statement.
 };
 
 /*!
@@ -30,6 +31,7 @@ struct VB_While_stmt * create_while_stmt(struct VB_Expr* expr, struct VB_Stmt_li
 	result->expr = expr;
 	result->stmt_list = body;
 	result->next = NULL;
+	result->line_number = get_location();
 
     return result;
 }

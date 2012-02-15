@@ -22,6 +22,7 @@ struct VB_Expr
 
 	// Поля для семантики	
 	char* string_val;			//!< Значение строковой переменной 
+	int   line_number; //!< Line of this expression.
 };
 
 /*!
@@ -42,6 +43,7 @@ struct VB_Expr* create_Print (struct VB_Expr* expr)
 	print->next = NULL;
 	print->right_chld = NULL;
 	print->type = EXPR_PRINT;
+	print->line_number = get_location();
 
 	return print;
 }
@@ -64,6 +66,7 @@ struct VB_Expr* create_Println (struct VB_Expr* expr)
 	println->next = NULL;
 	println->right_chld = NULL;
 	println->type = EXPR_PRINTLN;
+	println->line_number = get_location();
 
 	return println;
 }
@@ -89,6 +92,7 @@ struct VB_Expr* create_Read ()
 	//struct VB_Read_stmt* read = NULL;
 
 	//read = (struct VB_Read_stmt*)malloc(sizeof(struct VB_Read_stmt));
+	read->line_number = get_location();
 
 	return read;
 }
@@ -115,6 +119,8 @@ struct VB_Expr* create_Readln ()
 
 	//readln = (struct VB_Readln_stmt*)malloc(sizeof(struct VB_Readln_stmt));
 
+	readln->line_number = get_location();
+
 	return readln;
 }
 
@@ -137,6 +143,7 @@ struct VB_Expr* create_id_expr(char* name)
 	result->id_type = DATA_INTEGER;
 	result->int_val = 0;
 	result->string_val = "";
+	result->line_number = get_location();
 
 	return result;
 }
@@ -156,6 +163,7 @@ struct VB_Expr* create_brackets_actions(char* name, struct VB_Expr_list* params)
 	result->right_chld = NULL;
 	result->int_val = 0;
 	result->id_type = DATA_INTEGER;
+	result->line_number = get_location();
 
 	return result;
 }
@@ -198,6 +206,7 @@ struct VB_Expr* create_int_boolean_char_const_expr(enum VB_Expr_type type, int v
 	result->list = NULL;
 	result->next = NULL;
 	result->right_chld = NULL;
+	result->line_number = get_location();
 
 	return result;
 }
@@ -220,6 +229,7 @@ struct VB_Expr* create_string_const_expr(char* string)
 	result->right_chld = NULL;
 	result->id_type = DATA_STRING;
 	result->int_val = 0;
+	result->line_number = get_location();
 
 	return result;
 }
@@ -595,6 +605,8 @@ struct VB_Expr* create_operator_expr(enum VB_Expr_type type,
 	else if (type == EXPR_UMINUS)
 		solve_uminus(result,left);
 
+	result->line_number = get_location();
+
 
 	return result;
 }
@@ -619,6 +631,7 @@ struct VB_Expr * create_expr_with_id(char* id)
 	result->right_chld = NULL;
 	result->id_type = DATA_INTEGER;
 	result->string_val = "";
+	result->line_number = get_location();
 
 	return result;
 }

@@ -8,6 +8,7 @@
 #include "data_types.h"
 
 void yyerror (char const* s);
+int get_location();
 
 #include "prt_decl.h"
 #include "prt_decl_list.h"

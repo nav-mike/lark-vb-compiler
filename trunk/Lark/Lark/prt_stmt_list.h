@@ -11,6 +11,7 @@ struct VB_Stmt_list
 {
 	struct VB_Stmt* first;		//!< ”казатель на первый элемент списка
 	struct VB_Stmt* last;		//!< ”казатель на последний элемент списка
+	       int      line_number; //!< Line of this statement.
 };
 
 
@@ -30,6 +31,7 @@ struct VB_Stmt_list* create_VB_Stmt_list (struct VB_Stmt* stmt)
 
 	list->first = stmt;
 	list->last = stmt;
+	list->line_number = get_location();
 
 	return list;
 }

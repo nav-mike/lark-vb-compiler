@@ -11,10 +11,11 @@
  */
 struct VB_Decl_stmt
 {
-	enum   VB_Decl_type	    type;	    //!< Тип операции.
-	struct VB_Sub_stmt*     sub_stmt;   //!< Указатель на содержащуюся в операции процедуру.
-	struct VB_Func_stmt*    func_stmt;  //!< Указатель на содержащуюся в операции функцию.
-	struct VB_Decl_stmt*	next;		//!< Следующий элемент в списке
+	enum   VB_Decl_type	    type;	     //!< Тип операции.
+	struct VB_Sub_stmt*     sub_stmt;    //!< Указатель на содержащуюся в операции процедуру.
+	struct VB_Func_stmt*    func_stmt;   //!< Указатель на содержащуюся в операции функцию.
+	struct VB_Decl_stmt*	next;		 //!< Следующий элемент в списке
+	       int              line_number; //!< Line of this statement.
 };
 
 /*!
@@ -44,6 +45,7 @@ struct VB_Decl_stmt* fill_decl_stmt(enum VB_Decl_type type, void* data)
 				break;
 		}
 	}
+	stmt->line_number = get_location();
 	return stmt;
 }
 

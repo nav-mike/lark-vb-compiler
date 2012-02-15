@@ -126,6 +126,7 @@ void VBX_createXML (struct VB_Module_stmt* module){
 
 	xmlDocPtr doc;				// Объект XML файла
 	xmlNodePtr mdlNode;			// Корневой узел и узел модуля
+	char buf[10];
 	
 	doc = xmlNewDoc((const xmlChar *)"1.0");	// Создаем документ
 
@@ -135,6 +136,9 @@ void VBX_createXML (struct VB_Module_stmt* module){
 		xmlDocSetRootElement(doc,mdlNode);															// Задаем корень файлу
 		
 		xmlNewProp(mdlNode,(const xmlChar *)"id",(const xmlChar *)module->id);				// Задаем ему свойства
+
+		itoa(module->line_number,buf,10);
+		xmlNewProp(mdlNode,(const xmlChar *)"line_number",(const xmlChar *)buf);
 
 		if (module->stmt_list != NULL)
 			VBX_add_statement_list(
@@ -172,6 +176,8 @@ void VBX_add_statement_list(xmlNodePtr parent, struct VB_Stmt_list* list){
  * Добавить узел - список объявлений.
  */
 void VBX_add_decl_list(xmlNodePtr parent, struct VB_Decl_stmt_list* list){
+
+	char buf[15];
 	
 	if (list != NULL){
 		struct VB_Decl_stmt * item = list->first;
@@ -185,6 +191,9 @@ void VBX_add_decl_list(xmlNodePtr parent, struct VB_Decl_stmt_list* list){
 
 			xmlNewProp(decl_node,(const xmlChar *)"type",(const xmlChar *)statement_type_to_string(item->type));
 
+			itoa(item->line_number,buf,10);
+			xmlNewProp(decl_node,(const xmlChar *)"line_number",(const xmlChar*)buf);
+
 			VBX_add_declaration(decl_node,item);
 
 			item = item->next;
@@ -197,43 +206,66 @@ void VBX_add_decl_list(xmlNodePtr parent, struct VB_Decl_stmt_list* list){
  */
 void VBX_add_statement(xmlNodePtr parentList, struct VB_Stmt* stmt){
 
-	xmlNodePtr stmt_node;
+	xmlNodePtr stmt_node, buf_node;
+	char buf[15];
 
 	stmt_node = xmlNewTextChild(parentList,NULL,(const xmlChar *)"VB_Stmt",NULL);
 
 	xmlNewProp(stmt_node,(const xmlChar *)"type",(const xmlChar *)statement_type_to_string(stmt->type));
+	
+	itoa(stmt->line_number,buf,10);
+	xmlNewProp(stmt_node,(const xmlChar *)"line_number",(const xmlChar *)buf);
 
 	switch(stmt->type)
 	{
 	case (STMT_EXPR):
-		VBX_add_expr(
-			xmlNewTextChild(stmt_node,NULL,(const xmlChar *)"VB_Expr",NULL),
-			(struct VB_Expr*)stmt->value);
+		buf_node = xmlNewTextChild(stmt_node,NULL,(const xmlChar *)"VB_Expr",NULL);
+		/*itoa(((struct VB_Expr*)stmt->value)->line_number,buf,10);
+		xmlNewProp(buf_node,(const xmlChar *)"line_number",(const xmlChar *)buf);*/
+		VBX_add_expr(buf_node,(struct VB_Expr*)stmt->value);
 		break;
 	case(STMT_IF):
-		VBX_add_if(
-			xmlNewTextChild(stmt_node,NULL,(const xmlChar *)"VB_If_stmt",NULL),
+		buf_node = xmlNewTextChild(stmt_node,NULL,(const xmlChar *)"VB_If_stmt",NULL);
+		//itoa(((struct VB_If_stmt*)stmt->value)->line_number,buf,10);
+		//xmlNewProp(buf_node,(const xmlChar *)"line_number",(const xmlChar *)buf);
+		VBX_add_if(buf_node
+			,
 			(struct VB_If_stmt*)stmt->value);
 		break;
 	case(STMT_DIM):
-		VBX_add_dim(xmlNewTextChild(stmt_node,NULL,(const xmlChar *)"VB_Dim_stmt",NULL),
+		buf_node = xmlNewTextChild(stmt_node,NULL,(const xmlChar *)"VB_Dim_stmt",NULL);
+		itoa(((struct VB_Dim_stmt*)stmt->value)->line_number,buf,10);
+		xmlNewProp(buf_node,(const xmlChar *)"line_number",(const xmlChar *)buf);
+		VBX_add_dim(buf_node,
 			(struct VB_Dim_stmt*)stmt->value);
 		break;
 	case(STMT_FOR):
-		VBX_add_for(xmlNewTextChild(stmt_node,NULL,(const xmlChar *)"VB_For_stmt",NULL),
+		buf_node = xmlNewTextChild(stmt_node,NULL,(const xmlChar *)"VB_For_stmt",NULL);
+		/*itoa(((struct VB_For_stmt*)stmt->value)->line_number,buf,10);
+		xmlNewProp(buf_node,(const xmlChar *)"line_number",(const xmlChar *)buf);*/
+		VBX_add_for(buf_node,
 			(struct VB_For_stmt*)stmt->value);
 		break;
 	case(STMT_WHILE):
-		VBX_add_while(xmlNewTextChild(stmt_node,NULL,(const xmlChar *)"VB_While_stmt",NULL),
+		buf_node = xmlNewTextChild(stmt_node,NULL,(const xmlChar *)"VB_While_stmt",NULL);
+		itoa(((struct VB_While_stmt*)stmt->value)->line_number,buf,10);
+		xmlNewProp(buf_node,(const xmlChar *)"line_number",(const xmlChar *)buf);
+		VBX_add_while(buf_node,
 			(struct VB_While_stmt*)stmt->value);
 		break;
 	case(STMT_DO_LOOP):
-		VBX_add_do_loop(xmlNewTextChild(stmt_node,NULL,(const xmlChar *)"VB_Do_loop_stmt",NULL),
+		buf_node = xmlNewTextChild(stmt_node,NULL,(const xmlChar *)"VB_Do_loop_stmt",NULL);
+		//itoa(((struct VB_Do_loop_stmt*)stmt->value)->line_number,buf,10);
+		//xmlNewProp(buf_node,(const xmlChar *)"line_number",(const xmlChar *)buf);
+		VBX_add_do_loop(buf_node,
 			(struct VB_Do_loop_stmt*)stmt->value);
 		break;
 	case(STMT_RETURN):
-		VBX_add_return(xmlNewTextChild(stmt_node,NULL,(const xmlChar *)"VB_Return_stmt",NULL),
-			(struct VB_Throw_stmt*)stmt->value);
+		buf_node = xmlNewTextChild(stmt_node,NULL,(const xmlChar *)"VB_Return_stmt",NULL);
+		itoa(((struct VB_Return_stmt*)stmt->value)->line_number,buf,10);
+		xmlNewProp(buf_node,(const xmlChar *)"line_number",(const xmlChar *)buf);
+		VBX_add_return(buf_node,
+			(struct VB_Return_stmt*)stmt->value);
 		break;
 	}
 
@@ -277,6 +309,9 @@ void VBX_add_expr(xmlNodePtr node, struct VB_Expr* expr) {
 	xmlNewProp(node,(const xmlChar *)"int_val",(const xmlChar *)buf);
 
 	xmlNewProp(node,(const xmlChar *)"type",(const xmlChar *)VBX_expression_type_to_string(expr->type));
+
+	itoa(expr->line_number,buf,10);
+	xmlNewProp(node,(const xmlChar *)"line_number",(const xmlChar*)buf);
 	
 //	if (expr->type == EXPR_ID)
 //		xmlNewProp(node,(const xmlChar *)"string_val",(const xmlChar *)expr->string_val);
@@ -317,6 +352,7 @@ void VBX_add_sub(xmlNodePtr node, struct VB_Sub_stmt* stmt){
 	struct VB_Stmt * stmt_item = NULL;
 	xmlNodePtr param_node;
 	xmlNodePtr stmt_node;
+	char buf[15];
 
 	if (stmt->param_list != NULL)
 		param_stmt = stmt->param_list->first;
@@ -325,6 +361,9 @@ void VBX_add_sub(xmlNodePtr node, struct VB_Sub_stmt* stmt){
 		stmt_item = stmt->stmt_list->first;
 
 	xmlNewProp(node,(const xmlChar *)"id",(const xmlChar *)stmt->id);
+
+	itoa(stmt->line_number,buf,10);
+	xmlNewProp(node,(const xmlChar *)"line_number",(const xmlChar *)buf);
 
 	param_node = xmlNewTextChild(node,NULL,(const xmlChar *)"VB_Param_stmt_list",NULL);
 
@@ -347,6 +386,8 @@ void VBX_add_sub(xmlNodePtr node, struct VB_Sub_stmt* stmt){
  */
 void VBX_add_param(xmlNodePtr node, struct VB_Param_stmt * stmt){
 
+	char buf[15];
+
 	xmlNewProp(node,(const xmlChar *)"id",(const xmlChar *)stmt->id);
 
 	xmlNewProp(node,(const xmlChar *)"id_type",(const xmlChar *)VBX_id_type_to_string(stmt->id_type));
@@ -355,6 +396,9 @@ void VBX_add_param(xmlNodePtr node, struct VB_Param_stmt * stmt){
 		xmlNewProp(node,(const xmlChar *)"is_by_ref",(const xmlChar *)"1");
 	else
 		xmlNewProp(node,(const xmlChar *)"is_by_ref",(const xmlChar *)"0");
+
+	itoa(stmt->line_number,buf,10);
+	xmlNewProp(node,(const xmlChar *)"line_number",(const xmlChar *)buf);
 }
 
 
@@ -364,6 +408,7 @@ void VBX_add_func(xmlNodePtr node, struct VB_Func_stmt* stmt){
 	struct VB_Stmt * stmt_item = NULL;
 	xmlNodePtr param_node;
 	xmlNodePtr stmt_node;
+	char buf[15];
 
 	if (stmt->param_list != NULL)
 		param_stmt = stmt->param_list->first;
@@ -375,6 +420,9 @@ void VBX_add_func(xmlNodePtr node, struct VB_Func_stmt* stmt){
 	xmlNewProp(node,(const xmlChar *)"id",(const xmlChar *)stmt->id);
 
 	xmlNewProp(node,(const xmlChar *)"id_type",(const xmlChar *)VBX_id_type_to_string(stmt->id_type));
+
+	itoa(stmt->line_number,buf,10);
+	xmlNewProp(node,(const xmlChar *)"line_number",(const xmlChar *)buf);
 	
 	param_node = xmlNewTextChild(node,NULL,(const xmlChar *)"VB_Param_stmt_list",NULL);
 
@@ -401,10 +449,15 @@ void VBX_add_func(xmlNodePtr node, struct VB_Func_stmt* stmt){
  */
 void VBX_add_if(xmlNodePtr node, struct VB_If_stmt* stmt){
 	
+	char buf[15];
+
 	if (stmt->type == IF_THEN)
 		xmlNewProp(node,(const xmlChar *)"type",(const xmlChar *)"IF_THEN");
 	else
 		xmlNewProp(node,(const xmlChar *)"type",(const xmlChar *)"IF_THEN_ELSE");
+
+	itoa(stmt->line_number,buf,10);
+	xmlNewProp(node,(const xmlChar *)"line_number",(const xmlChar *)buf);
 
 	if (stmt->else_list != NULL)
 		VBX_add_statement_list(
@@ -419,7 +472,7 @@ void VBX_add_if(xmlNodePtr node, struct VB_If_stmt* stmt){
 			xmlNewTextChild(node,NULL,(const xmlChar *)"VB_Stmt_list__stmt_list",NULL),stmt->stmt_list);
 }
 
-
+//! \depricated
 void VBX_add_end_if(xmlNodePtr node, struct VB_End_if_stmt* stmt){
 
 }
@@ -452,6 +505,10 @@ void VBX_add_as_expr_list(xmlNodePtr node,struct VB_As_Expr_list* list){
 	}
 
 	xmlNewProp(node,(const xmlChar *)"type",(const xmlChar *)type);
+
+	strcpy(type,"");
+	itoa(list->line_number,type,10);
+	xmlNewProp(node,(const xmlChar *)"line_number",(const xmlChar*)type);
 	
 	if (list->as_expr != NULL)
 		VBX_add_as_expr(
@@ -464,7 +521,7 @@ void VBX_add_as_expr_list(xmlNodePtr node,struct VB_As_Expr_list* list){
 
 void VBX_add_array_expr(xmlNodePtr node,struct VB_Array_expr * expr){
 
-	char buf[10];
+	char buf[100];
 	struct VB_Expr * item = NULL;
 
 	xmlNewProp(node,(const xmlChar *)"id",(const xmlChar *)expr->id);
@@ -479,6 +536,9 @@ void VBX_add_array_expr(xmlNodePtr node,struct VB_Array_expr * expr){
 	itoa(expr->size,buf,10);
 
 	xmlNewProp(node,(const xmlChar *)"size",(const xmlChar *)buf);
+
+	itoa(expr->line_number,buf,10);
+	xmlNewProp(node,(const xmlChar *)"line_number",(const xmlChar *)buf);
 
 	if (expr->list != NULL){
 		item = expr->list->first;
@@ -514,6 +574,9 @@ void VBX_add_as_expr(xmlNodePtr node,struct VB_As_expr * expr){
 	}
 
 	xmlNewProp(node,(const xmlChar *)"type",(const xmlChar *)type);
+
+	itoa(expr->line_number,type,10);
+	xmlNewProp(node,(const xmlChar *)"line_number",(const xmlChar *)type);
 
 //	if (expr->id != NULL)
 //		VBX_add_expr(
@@ -560,7 +623,7 @@ void VBX_add_as_expr(xmlNodePtr node,struct VB_As_expr * expr){
 
 void VBX_add_for(xmlNodePtr node, struct VB_For_stmt* stmt){
 	
-	char * buf = (char*)malloc(sizeof(char)*10);
+	char * buf = (char*)malloc(sizeof(char)*15);
 
 	itoa(stmt->from_val,buf,10);
 
@@ -576,9 +639,12 @@ void VBX_add_for(xmlNodePtr node, struct VB_For_stmt* stmt){
 
 	xmlNewProp(node,(const xmlChar *)"to_val",(const xmlChar *)buf);
 		
-	buf = VBX_for_type_to_string(stmt->type);
+	strcpy(buf,VBX_for_type_to_string(stmt->type));
 
 	xmlNewProp(node,(const xmlChar *)"type",(const xmlChar *)buf);
+
+	itoa(stmt->line_number,buf,10);
+	xmlNewProp(node,(const xmlChar *)"line_number",(const xmlChar *)buf);
 
 	if (stmt->new_id != NULL){
 		//VBX_add_expr(
@@ -607,11 +673,14 @@ void VBX_add_while(xmlNodePtr node, struct VB_While_stmt* stmt){
 
 void VBX_add_do_loop(xmlNodePtr node, struct VB_Do_loop_stmt* stmt){
 	
-	char * buf;
+	char * buf = (char*)malloc(sizeof(char) * 15);
 
-	buf = VBX_do_loop_type_to_string(stmt->type);
+	strcpy(buf, VBX_do_loop_type_to_string(stmt->type));
 
 	xmlNewProp(node,(const xmlChar *)"type",(const xmlChar *)buf);
+
+	itoa(stmt->line_number,buf,10);
+	xmlNewProp(node,(const xmlChar *)"line_number",(const xmlChar *)buf);
 
 	if (stmt->expr != NULL)
 		VBX_add_expr(
