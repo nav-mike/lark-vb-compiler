@@ -76,8 +76,8 @@ public class JLark {
     
     public static void showTables(){
         TableConstant tc = new TableConstant();
-        tables = new ArrayList<>();
-        titles = new ArrayList<>();
+        tables = new ArrayList();
+        titles = new ArrayList();
         for (int i = 1; i < m_class.constIndex; i++) {
             tc.addRow(m_class.m_constantsTable.get(Integer.valueOf(i)).getType().toString(),
                     m_class.m_constantsTable.get(Integer.valueOf(i)).getUtfConst());
@@ -320,20 +320,23 @@ public class JLark {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        
-        // Считываем данные из xml файла
         try {
-            readXML("tree.xml");
-        } catch (ParserConfigurationException | SAXException | IOException ex) {
+            // Считываем данные из xml файла
+                readXML("tree.xml");
+        } catch (ParserConfigurationException ex) {
+            Logger.getLogger(JLark.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SAXException ex) {
+            Logger.getLogger(JLark.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
             Logger.getLogger(JLark.class.getName()).log(Level.SEVERE, null, ex);
         }
        
         
         m_module = m_module;
 
-        new MainDebugWindow(m_module);
+        MainDebugWindow mWin = new MainDebugWindow(m_module);
 
-        new CodeGenerator(m_module);
+        new CodeGenerator(m_module,mWin.getMainClass(),mWin.getRtlClass());
 
         // cereateTable(); // Создать аблицу
 

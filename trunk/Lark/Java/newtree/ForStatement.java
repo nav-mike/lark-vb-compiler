@@ -343,6 +343,9 @@ public class ForStatement extends AbstractStatement {
         attr = attributes.getNamedItem("step_val");
         this.stepValue = Integer.parseInt(attr.getNodeValue());
         
+        attr = attributes.getNamedItem("line_number");
+        this.lineNumber = Integer.parseInt(attr.getNodeValue());
+        
         if (getType() == ForStmtType.WITH_DECL || getType() == ForStmtType.WITH_DECL_AND_STEP){
             IdExpression newId = new IdExpression();
             
@@ -363,11 +366,16 @@ public class ForStatement extends AbstractStatement {
         NodeList nodes = node.getChildNodes();
         
         for (int i = 0; i < nodes.getLength(); i++) {
-            switch (nodes.item(i).getNodeName()) {                    
-                case "VB_Stmt_list":
-                    this.body = new ArrayList<>();
-                    AbstractDeclaration.readBody(this.body, nodes.item(i));
-                    break;
+//            switch (nodes.item(i).getNodeName()) {                    
+//                case "VB_Stmt_list":
+//                    this.body = new ArrayList();
+//                    AbstractDeclaration.readBody(this.body, nodes.item(i));
+//                    break;
+//            }
+            if ("VB_Stmt_list".equals(nodes.item(i).getNodeName())) {
+                
+                this.body = new ArrayList<AbstractStatement>();
+                AbstractDeclaration.readBody(this.body, nodes.item(i));
             }
         }
     }

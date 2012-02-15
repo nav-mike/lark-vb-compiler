@@ -14,6 +14,8 @@ public class Expression implements XMLInterface{
     /* Поля класса. */
     /** Тип выражения. */
     protected int type;
+    /** Номер строки кода пользователя. */
+    protected int lineNumber;
     /** Тип выражения константы. */
     private DataType dtype;
     /** Выражение - константа. */
@@ -22,6 +24,22 @@ public class Expression implements XMLInterface{
     public final static int ID = 2;
     /** Выражение - математическая операция. */
     public final static int MATH = 3;
+
+    /**
+     * Метод получения номера строки пользователя.
+     * @return Номер строки пользователя.
+     */
+    public Integer getLineNumber() {
+        return lineNumber;
+    }
+
+    /**
+     * Метод задания номера строки пользователя.
+     * @param lineNumber Номер строки пользователя.
+     */
+    public void setLineNumber(Integer lineNumber) {
+        this.lineNumber = lineNumber;
+    }
     
     /**
      * Метод задания типа выражения константы.
@@ -90,7 +108,10 @@ public class Expression implements XMLInterface{
         // Разберемся с аттрибутами
         NamedNodeMap attributes = node.getAttributes();
         Node attr = attributes.getNamedItem("type");
-        String buffer = attr.getNodeValue();        
+        String buffer = attr.getNodeValue();
+        
+        attr = attributes.getNamedItem("line_number");
+        String ln = attr.getNodeValue();
         
         if (buffer.equals("EXPR_ID")){
             
@@ -108,7 +129,7 @@ public class Expression implements XMLInterface{
             id.setName(buffer);
             
             NodeList nodes = node.getChildNodes();
-            ArrayList<Expression> params = new ArrayList<>();
+            ArrayList<Expression> params = new ArrayList();
             
             Node list_node = nodes.item(0);
             NodeList list_items = list_node.getChildNodes();
@@ -121,31 +142,54 @@ public class Expression implements XMLInterface{
             result = id;
         }
         else if (buffer.contains("CONST")){
-            switch (buffer) {
-                case "EXPR_INT_CONST":
-                    attr = attributes.getNamedItem("int_val");
-                    buffer = attr.getNodeValue();
-                    result = new ConstantExpression(Integer.parseInt(buffer));
-                    result.setDtype(DataType.INTEGER);
-                    break;
-                    
-                case "EXPR_BOOLEAN_CONST":
-                    attr = attributes.getNamedItem("expr_string");
-                    buffer = attr.getNodeValue();
-                    if (buffer.equals("true"))
-                        result = new ConstantExpression(true);
-                    else
-                        result = new ConstantExpression(false);
+//            switch (buffer) {
+//                case "EXPR_INT_CONST":
+//                    attr = attributes.getNamedItem("int_val");
+//                    buffer = attr.getNodeValue();
+//                    result = new ConstantExpression(Integer.parseInt(buffer));
+//                    result.setDtype(DataType.INTEGER);
+//                    break;
+//                    
+//                case "EXPR_BOOLEAN_CONST":
+//                    attr = attributes.getNamedItem("expr_string");
+//                    buffer = attr.getNodeValue();
+//                    if (buffer.equals("true"))
+//                        result = new ConstantExpression(true);
+//                    else
+//                        result = new ConstantExpression(false);
+//
+//                    result.setDtype(DataType.BOOLEAN);
+//                    break;
+//                    
+//                case "EXPR_STRING_CONST":
+//                    attr = attributes.getNamedItem("expr_string");
+//                    buffer = attr.getNodeValue();
+//                    result = new ConstantExpression(buffer);
+//                    result.setDtype(DataType.STRING);                    
+//                    break;
+//            }
+            if ("EXPR_INT_CONST".equals(buffer)) {
+                
+                attr = attributes.getNamedItem("int_val");
+                buffer = attr.getNodeValue();
+                result = new ConstantExpression(Integer.parseInt(buffer));
+                result.setDtype(DataType.INTEGER);
+            } else if ("EXPR_BOOLEAN_CONST".equals(buffer)) {
+                
+                attr = attributes.getNamedItem("expr_string");
+                buffer = attr.getNodeValue();
+                if (buffer.equals("true"))
+                    result = new ConstantExpression(true);
+                else
+                    result = new ConstantExpression(false);
 
-                    result.setDtype(DataType.BOOLEAN);
-                    break;
-                    
-                case "EXPR_STRING_CONST":
-                    attr = attributes.getNamedItem("expr_string");
-                    buffer = attr.getNodeValue();
-                    result = new ConstantExpression(buffer);
-                    result.setDtype(DataType.STRING);                    
-                    break;
+                result.setDtype(DataType.BOOLEAN);
+            } else if ("EXPR_STRING_CONST".equals(buffer)) {
+                
+                attr = attributes.getNamedItem("expr_string");
+                buffer = attr.getNodeValue();
+                result = new ConstantExpression(buffer);
+                result.setDtype(DataType.STRING);
             }
         }
         else if (buffer.equals("EXPR_READ")){
@@ -187,6 +231,8 @@ public class Expression implements XMLInterface{
                     
             result = new MathExpression(left, right, MathExprType.fromString(buffer));
         }
+        
+        result.lineNumber = new Integer(Integer.parseInt(ln));
                 
         return result;
     }

@@ -12,6 +12,24 @@ public abstract class AbstractStatement implements XMLInterface{
     /* Поля класса. */
     /** Тип оператора. */
     protected StatementType stmtType;
+    /** Номер строки в коде пользователя. */
+    protected int lineNumber;
+
+    /**
+     * Метод получения номера строки в коде пользователя.
+     * @return Номер строки в коде пользователя.
+     */
+    public Integer getLineNumber() {
+        return lineNumber;
+    }
+
+    /**
+     * Метод задания номера строки в коде пользователя.
+     * @param lineNumber Номер строки в коде пользователя.
+     */
+    public void setLineNumber(Integer lineNumber) {
+        this.lineNumber = lineNumber;
+    }
 
     /**
      * Конструктор с параметром.

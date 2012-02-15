@@ -17,6 +17,24 @@ public class ParamStatement implements XMLInterface{
     private boolean isArray;
     /** Тип параметра. */
     private DataType type;
+    /** Номер строки в коде пользователя. */
+    private Integer lineNumber;
+
+    /**
+     * Метод получения строки из кода пользователя.
+     * @return Номер строки кода пользователя.
+     */
+    public Integer getLineNumber() {
+        return lineNumber;
+    }
+
+    /**
+     * Метод задания номера строки кода пользователя.
+     * @param lineNumber Номер строки кода пользователя.
+     */
+    public void setLineNumber(Integer lineNumber) {
+        this.lineNumber = lineNumber;
+    }
 
     /**
      * Конструктор по умолчанию
@@ -113,6 +131,9 @@ public class ParamStatement implements XMLInterface{
         attr = attributes.getNamedItem("id_type");
         buffer = attr.getNodeValue();
         type = DataType.fromString(buffer);
+        
+        attr = attributes.getNamedItem("line_number");
+        lineNumber = Integer.parseInt(attr.getNodeValue());
     }
     
 }

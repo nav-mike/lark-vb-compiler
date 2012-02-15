@@ -3,6 +3,7 @@ package finderros;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
+import main.CError;
 import newtree.*;
 import tables.*;
 
@@ -11,7 +12,60 @@ import tables.*;
  * @version 1.0
  */
 public class FillTables {
+    
+    /* Поля класса. */
+    /** Список отловленных ошибок. */
+    private static ArrayList<CError> errors = new ArrayList<CError>();
+
+    /**
+     * Метод получения списка отловленных ошибок.
+     * @return Список отловленных ошибок.
+     */
+    public static ArrayList<CError> getErrors() {
+        return errors;
+    }
+    
+    /**
+     * Метод добавления процедуры Main в таблицу констант, если это необходимо.
+     * @param ct Таблица констант.
+     * @param item Модуль программы.
+     * @throws InvalidParametersException Исключение выбрасывается при использовании
+     * неверных тиипов.
+     */
+    private static void addMainToConstantsTable (ConstantsTable ct, final Module item) throws InvalidParametersException {
         
+        if (item.contains("Main"))
+            return;
+        
+        ConstantsTableItem itemName = new ConstantsTableItem(0, "Main");
+        ConstantsTableItem itemDescr = new ConstantsTableItem(0, "()V;");
+        
+        ct.add(itemName); ct.add(itemDescr);
+        
+        ConstantsTableItem itemNaT = new ConstantsTableItem(0, itemName, itemDescr);
+        
+        ct.add(itemNaT);
+        
+        ConstantsTableItem main = ConstantsTableItem.CreateMethodRefConst(0, ct.get(3), itemNaT);
+        
+        ct.add(main);
+    }
+    
+    /**
+     * Метод добавления процедуры Main в таблицу методов класса.
+     * @param mt Таблица методов.
+     * @param item Модуль программы.
+     */
+    private static void addMainToMethodsTable (MethodsTable mt, final ArrayList<AbstractDeclaration> items) {
+        
+        if (items.contains(new AbstractDeclaration("Main", null, null)))
+            return;
+        
+        MethodsTableItem main = new MethodsTableItem("Main", DataType.NONE, 0, null);
+        
+        mt.add(main);
+    }
+    
     /**
      * Метод заполнения таблицы констант для RTL класса Console.
      * @return Заполненная таблица констант.
@@ -37,15 +91,18 @@ public class FillTables {
         
         ConstantsTable ct = new ConstantsTable();
         
-        writeStartConstatntsToTable(ct);
-        
+        //writeStartConstatntsToTable(ct);    // А НАДО???? ================================================================================================
+                                            // =====================================================================================
         Integer index = ct.size();
         
+        ct.add(new ConstantsTableItem(++index, "Code"));
         ct.add(new ConstantsTableItem(++index, item.getId()));
         ct.add(ConstantsTableItem.CreateClassConst(++index, ct.get(index-1)));
         
         fillMainClassConstantsTableByMethods(ct, item.getDeclList(), ++index, 
                 index - 1);
+        
+        addMainToConstantsTable(ct, item);
         
         return ct;
     }
@@ -216,11 +273,18 @@ public class FillTables {
         
         for (int i = 0; i < items.size(); i++) {
             
-            LocalVariablesTable lvt = new LocalVariablesTable();
-            mt.add(new MethodsTableItem(items.get(i).getName(),
-                    items.get(i).getRetType(), i + 1,
-                    fillLocalVariablesTable(items.get(i).getParamList(),items.get(i).getBody(),lvt)));
+            if (mt.contains(new MethodsTableItem(items.get(i).getName(), DataType.NONE, i, null)))
+                errors.add(new CError(items.get(i).getName(), "Multiple declaration: "
+                        + Integer.toString(items.get(i).getLineNumber())));
+            else {
+                LocalVariablesTable lvt = new LocalVariablesTable();
+                mt.add(new MethodsTableItem(items.get(i).getName(),
+                        items.get(i).getRetType(), i + 1,
+                        fillLocalVariablesTable(items.get(i).getParamList(),items.get(i).getBody(),lvt)));
+            }
         }
+        
+        addMainToMethodsTable(mt, items);
         
         return mt;
     }
@@ -240,8 +304,13 @@ public class FillTables {
             
             for (int i = 0; i < paramList.size(); i++) {
 
-                lvt.add(new LocalVariablesTableItem(paramList.get(i).getName(),
-                        paramList.get(i).getType(), i));
+                if (lvt.contains(new LocalVariablesTableItem(paramList.get(i).getName(), DataType.BOOLEAN, i)))
+                    errors.add(new CError("", "Multiple declaration: "
+                        + paramList.get(i).getLineNumber().toString()));
+                else {
+                    lvt.add(new LocalVariablesTableItem(paramList.get(i).getName(),
+                            paramList.get(i).getType(), i));
+                }
             }
         }
         
@@ -272,6 +341,26 @@ public class FillTables {
                                 ((IfStatement)body.get(i)).getBodyMain(),lvt);
                         fillLocalVariablesTable(null,
                                 ((IfStatement)body.get(i)).getBodyAlter(),lvt);
+                    } else if (body.get(i).getStmtType() == StatementType.EXPRESSION) {
+                        
+                        if (((MathExpression)((ExprStatement)body.get(i)).getExpr()).getLeft().getType() == Expression.ID) {
+                            
+                            if (((IdExpression)((MathExpression)((ExprStatement)body.get(i)).getExpr()).getLeft()).getName() != null) {
+                            
+                            if (!lvt.contains(new 
+                                    LocalVariablesTableItem(((IdExpression)((MathExpression)((ExprStatement)body.get(i)).getExpr()).getLeft()).getName(), DataType.BOOLEAN, 0))) {
+                                errors.add(new CError("", "Undeclared identifier: " +
+                                        body.get(i).getLineNumber().toString()));
+                            }
+                            }
+                        } else if (((MathExpression)((ExprStatement)body.get(i)).getExpr()).getRight().getType() == Expression.ID) {
+                            
+                            if (!lvt.contains(new 
+                                    LocalVariablesTableItem(((IdExpression)((MathExpression)((ExprStatement)body.get(i)).getExpr()).getRight()).getName(), DataType.BOOLEAN, 0))) {
+                                errors.add(new CError("", "Undeclared identifier: " +
+                                        body.get(i).getLineNumber().toString()));
+                            }
+                        }
                     }
                 }
 
@@ -292,7 +381,8 @@ public class FillTables {
         
         for (int i = 0; i < item.getBodyMain().size(); i++) {
             
-            findLocalVariableInAsExpression(item.getBodyMain().get(i), lvt);
+            
+            findLocalVariableInAsExpression(item.getBodyMain().get(i), lvt, item.getLineNumber());
         }
         
     }
@@ -305,14 +395,19 @@ public class FillTables {
      * @throws InvalidParametersException Исключение выбрасывается при неверном
      * создании констант.
      */
-    private static void findLocalVariableInAsExpression (AsExpression item, LocalVariablesTable lvt) throws InvalidParametersException {
+    private static void findLocalVariableInAsExpression (AsExpression item, LocalVariablesTable lvt, Integer ln) throws InvalidParametersException {
         
         if (item.getVariables() != null ) {
             
             for (int i = 0; i < item.getVariables().size(); i++) {
                 
-                lvt.add(new LocalVariablesTableItem(item.getVariables().get(i),
-                        item.getType(), i));
+                if (lvt.contains(new LocalVariablesTableItem(item.getVariables().get(i), DataType.BOOLEAN, i)))
+                    errors.add(new CError("", "Multiple declaration: "
+                        + ln.toString()));
+                else {
+                    lvt.add(new LocalVariablesTableItem(item.getVariables().get(i),
+                            item.getType(), i));
+                }
 
             }
         } else if (item.getArrays() != null ) {
@@ -323,7 +418,12 @@ public class FillTables {
             while (it.hasNext()) {
                 
                 String str = it.next();
-                lvt.add(new LocalVariablesTableItem(str, item.getType(), 0));
+                if (lvt.contains(new LocalVariablesTableItem(str, DataType.BOOLEAN, 0)))
+                    errors.add(new CError("", "Multiple declaration: "
+                        + ln.toString()));
+                else {
+                    lvt.add(new LocalVariablesTableItem(str, item.getType(), 0));
+                }
             }
         }
         

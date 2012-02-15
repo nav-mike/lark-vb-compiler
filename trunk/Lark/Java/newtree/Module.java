@@ -2,6 +2,7 @@ package newtree;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import main.JVBDeclStmt;
 import main.JVBDeclStmtList;
 import main.JVBStmtList;
@@ -20,13 +21,56 @@ public class Module implements XMLInterface{
     private String id;
     /** Список реализованных функций/процедур. */
     private ArrayList<AbstractDeclaration> declList;
+    /** Строка в коде пользователя. */
+    private Integer lineNumber;
+
+    /**
+     * Метод получения номера строки кода.
+     * @return Номер строки кода.
+     */
+    public Integer getLineNumber() {
+        return lineNumber;
+    }
+
+    /**
+     * Метод задания номера строки кода.
+     * @param lineNumber Номер строки кода.
+     */
+    public void setLineNumber(Integer lineNumber) {
+        this.lineNumber = lineNumber;
+    }
+    
+    /**
+     * Метод проверки существования функции/процедуры с заданным именем.
+     * @param name Имя функции/процедуры.
+     * @return true, если функция/процедура найдена.
+     */
+    public boolean contains (String name) {
+        
+        boolean flag = false;
+        
+        Iterator<AbstractDeclaration> it = declList.iterator();
+        
+        while (it.hasNext()) {
+            
+            AbstractDeclaration item = it.next();
+            
+            if (item.getName().equals(name)) {
+                
+                flag = true;
+                break;
+            }
+        }
+        
+        return flag;
+    }
 
     /**
      * Конструктор по умолчанию.
      */
     public Module(){
         this.id = "";
-        this.declList = new ArrayList<>();
+        this.declList = new ArrayList();
     }
     
     
@@ -50,7 +94,7 @@ public class Module implements XMLInterface{
     public Module(String id, AbstractDeclaration item) {
         
         this.id = id;
-        this.declList = new ArrayList<>();
+        this.declList = new ArrayList();
         this.declList.add(item);
     }
     
@@ -164,22 +208,34 @@ public class Module implements XMLInterface{
         Node attr = attributes.getNamedItem("id");
         id = attr.getNodeValue();
         
+        // Считывание строки в коде пользователя.
+        attr = attributes.getNamedItem("line_number");
+        lineNumber = Integer.parseInt(attr.getNodeValue());
+        
         // Считывание вложенных структур.
         NodeList nodes = node.getChildNodes();
         
-        ArrayList<AbstractStatement> mainBody = new ArrayList<>();
+        ArrayList<AbstractStatement> mainBody = new ArrayList();
         
         AbstractDeclaration subMain = new AbstractDeclaration("Main", null, mainBody);
         
         for (int i = 0; i < nodes.getLength(); i++) {
-            switch (nodes.item(i).getNodeName()) {
-                case "VB_Stmt_list":
-                    subMain.readBody(subMain.getBody(),nodes.item(i));
-                    declList.add(subMain);
-                    break;
-                case "VB_Decl_stmt_list":
-                    getDeclarationList(nodes.item(i));
-                    break;
+//            switch (nodes.item(i).getNodeName()) {
+//                case "VB_Stmt_list":
+//                    subMain.readBody(subMain.getBody(),nodes.item(i));
+//                    declList.add(subMain);
+//                    break;
+//                case "VB_Decl_stmt_list":
+//                    getDeclarationList(nodes.item(i));
+//                    break;
+//            }
+            if ("VB_Stmt_list".equals(nodes.item(i).getNodeName())) {
+                
+                subMain.readBody(subMain.getBody(), nodes.item(i));
+                declList.add(subMain);
+            } else if ("VB_Decl_stmt_list".equals(nodes.item(i).getNodeName())) {
+                
+                getDeclarationList(nodes.item(i));
             }
         }
     }

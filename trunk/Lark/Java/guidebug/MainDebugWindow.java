@@ -10,9 +10,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import newtree.Module;
+import tables.ErrorsTable;
 import tables.InvalidParametersException;
 import tables.ProgramsClass;
 import tables.gui.GuiConstantsTable;
+import tables.gui.GuiErrorsTable;
 import tables.gui.GuiLocalVariablesTable;
 import tables.gui.GuiMethodsTable;
 
@@ -60,11 +62,16 @@ public class MainDebugWindow extends JFrame {
         
         for (int i = 0; i < mainClass.getMethodTable().size(); i++) {
             
-            jtp.add(item.getId() + "." +
-                    mainClass.getMethodTable().get(i + 1).getName() + 
-                    ":local variables table",
-                    (new GuiLocalVariablesTable(mainClass.getMethodTable().get(i + 1).getLocalVariables()).getTable()));
+            if (mainClass.getMethodTable().get(i + 1).getLocalVariables() != null) {
+                
+                jtp.add(item.getId() + "." +
+                        mainClass.getMethodTable().get(i + 1).getName() + 
+                        ":local variables table",
+                        (new GuiLocalVariablesTable(mainClass.getMethodTable().get(i + 1).getLocalVariables()).getTable()));
+            }
         }
+        
+        jtp.add("errors", new JScrollPane(new GuiErrorsTable(new ErrorsTable(FillTables.getErrors())).getTable()));
         
         this.add(jtp, BorderLayout.CENTER);
         
@@ -73,5 +80,21 @@ public class MainDebugWindow extends JFrame {
         this.setSize(600, 600);
         this.setVisible(true);
         
+    }
+    
+    /**
+     * Получить ссылку на главный класс.
+     * @return Ссылка на класс.
+     */
+    public ProgramsClass getMainClass() {
+        return mainClass;
+    }
+
+    /**
+     * Получить ссылку на RTL класс.
+     * @return Ссылка на класс.
+     */
+    public ProgramsClass getRtlClass() {
+        return rtlClass;
     }
 }
