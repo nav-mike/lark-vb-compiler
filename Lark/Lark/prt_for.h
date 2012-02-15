@@ -19,6 +19,7 @@ struct VB_For_stmt
 
 	char*			new_id;				//!< Если переменная создается для цикла
 	enum VB_Id_type new_id_type;
+	     int        line_number;        //!< Line of this number.
 };
 /*!
 
@@ -50,6 +51,7 @@ struct VB_For_stmt * create_for_stmt(char* id, struct VB_Expr* start_expr, struc
 	result->stmt_list = body;
 	result->next = NULL;
 	result->new_id = NULL;
+	result->line_number = get_location();
 
     return result;
 }
@@ -85,6 +87,7 @@ struct VB_For_stmt * create_for_with_step_stmt(char* id, struct VB_Expr* start_e
 	result->stmt_list = body;
 	result->next = NULL;
 	result->new_id = NULL;
+	result->line_number = get_location();
 
     return result;
 }
@@ -122,6 +125,7 @@ struct VB_For_stmt * create_for_with_decl_stmt(char* id, enum VB_Id_type type, s
 	result->next = NULL;
 
 	result->id = result->new_id;
+	result->line_number = get_location();
 
     return result;
 }
@@ -163,6 +167,7 @@ struct VB_For_stmt * create_for_with_decl_with_step_stmt(char* id, enum VB_Id_ty
 	result->next = NULL;
 	
 	result->id = result->new_id;
+	result->line_number = get_location();
 
 
     return result;

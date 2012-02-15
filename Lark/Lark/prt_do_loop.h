@@ -13,6 +13,7 @@ struct VB_Do_loop_stmt
 	struct VB_Stmt_list* stmt_list;	//!< Тело цикла
 	struct VB_Expr*		 expr;		//!< Условие
 	struct VB_Stmt*		 next;		//!< Следующий оператор
+	       int           line_number; //!< Line of this staement.
 };
 
 /*!
@@ -33,6 +34,7 @@ struct VB_Do_loop_stmt * create_do_loop_stmt(enum VB_Do_loop_type type, struct V
 	result->expr = expr;
 	result->stmt_list = body;
 	result->next = NULL;
+	result->line_number = get_location();
 
     return result;
 }

@@ -9,8 +9,9 @@
  */
 struct VB_Decl_stmt_list
 {
-	struct VB_Decl_stmt* first;	//!< Первый элемент списка
-	struct VB_Decl_stmt* last;	//!< Последний элемент списка
+	struct VB_Decl_stmt* first;	      //!< Первый элемент списка
+	struct VB_Decl_stmt* last;	      //!< Последний элемент списка
+	       int           line_number; //!< Line of this statement.
 };
 
 /*!
@@ -28,6 +29,7 @@ struct VB_Decl_stmt_list* create_VB_Decl_stmt_list(struct VB_Decl_stmt* decl_stm
 
 	list->first = decl_stmt;
 	list->last = decl_stmt;
+	list->line_number = get_location();
 
 	return list;
 }
@@ -50,6 +52,7 @@ struct VB_Decl_stmt_list* edit_VB_Decl_stmt_list(struct VB_Decl_stmt_list* decl_
 		else
 			decl_list = create_VB_Decl_stmt_list(decl_stmt);
 	}
+	decl_list->line_number = get_location();
 
 	return decl_list;
 }
@@ -65,6 +68,7 @@ struct VB_Decl_stmt_list* merge_two_decl_stmt_list (struct VB_Decl_stmt_list* pr
 	struct VB_Decl_stmt* item = post->first;
 
 	prev->last->next = item;
+	prev->line_number = get_location();
 
 	return prev;
 }

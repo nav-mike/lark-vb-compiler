@@ -11,6 +11,7 @@ struct VB_Dim_stmt
 {
 	struct VB_As_Expr_list* list;		//!< Указатель на элемент списка объявляемых переменных
 	struct VB_Stmt*			next;		//!< Следующий оператор
+	       int              line_number; //!< Line of this statement.
 };
 
 
@@ -33,6 +34,7 @@ struct VB_As_Expr_list
 	enum   VB_As_Expr_list_type type;		//!< Тип
 	struct VB_As_expr*			as_expr;	//!< Идентификатор
 	struct VB_As_Expr_list*		next;		//!< Список идентификаторов или массивов
+	       int                  line_number; //!< Line of this statement.
 };
 
 
@@ -54,6 +56,7 @@ struct VB_As_expr
 	struct	VB_Expr*		expr;		//!< Инициализируемое значение
 	struct  VB_Expr_list*	expr_list;
 	//struct 	VB_Expr*		id;			//!< Идентификатор
+	        int             line_number; //!< Line of this statement.
 };
 
 /*! \struct VB_Id_list
@@ -65,6 +68,7 @@ struct VB_Id_list
 	struct VB_Expr* id;					//!< Имя текущего идентификатора
 	struct VB_Array_expr * arr;		//!< Массив
 	struct VB_Id_list* next;	//!Б Указатель на следубщий идентификатор
+	       int         line_number; //!< Line of this statement.
 };
 
 /*! \struct VB_Array_expr
@@ -77,6 +81,7 @@ struct VB_Array_expr
 	enum VB_Id_type	id_type;	//!< Тип определяемого идентификатора или масива
 	struct VB_Expr_list* list;	//!< Данные, которыми заполняется массив
 	char*	id;			//!< Идентификатор		???
+	int     line_number; //!< Line pf this statement.
 };
 
 
@@ -99,6 +104,7 @@ struct VB_Array_expr* create_Array (char* id, int int_const, enum VB_Id_type typ
 	arr->id = (char*)malloc(sizeof(char) * strlen(id));
 	strcpy(arr->id,id);
 	arr->list = NULL;
+	arr->line_number = get_location();
 
 	return arr;
 }
@@ -122,6 +128,7 @@ struct VB_Array_expr* create_Array_with_init (char* id, enum VB_Id_type type, st
 	result->id = (char*)malloc(sizeof(char) * strlen(id));
 	strcpy(result->id, id);
 	result->size = 0;
+	result->line_number = get_location();
 
 	return result;
 }
@@ -143,6 +150,7 @@ struct VB_Dim_stmt* create_dim_stmt(struct VB_As_Expr_list* list)
 
 	dim_stmt->list = list;
 	dim_stmt->next = NULL;
+	dim_stmt->line_number = get_location();
 
 	return dim_stmt;
 }
@@ -160,6 +168,7 @@ struct VB_As_Expr_list* create_as_expr_list(struct VB_As_expr* expr)
 	as_list->as_expr = expr;
 	as_list->next = NULL;
 	as_list->type = EXPR;
+	as_list->line_number = get_location();
 
 	return as_list;
 }
@@ -187,6 +196,8 @@ struct VB_As_Expr_list* add_to_as_expr_list(struct VB_As_Expr_list* list, struct
 	}
 
 	lastList->next = new_item;
+	lastList->line_number = get_location();
+	lastList->next->line_number = get_location();
 
 
 	return list;
@@ -220,17 +231,19 @@ struct VB_Id_list* create_id_list(char* id, int isArray, int size)
 		list->arr->is_init = 0;
 		list->arr->size = size;
 		list->arr->list = NULL;
+		list->arr->line_number = get_location();
 
 		list->id = NULL;
 	}
 
 	list->next = NULL;
 	list->counter = 1; /* change init 0 to 1 */	
+	list->line_number = get_location();
 	
 	return list;
 }
 
-struct VB_As_Expr* create_as_expr_id(char* id,struct VB_Id_list* list,enum VB_Id_type id_type){
+struct VB_As_expr* create_as_expr_id(char* id,struct VB_Id_list* list,enum VB_Id_type id_type){
 
 	struct VB_As_expr* as_expr = (struct VB_As_expr*)malloc(sizeof(struct VB_As_expr));
 	
@@ -246,13 +259,14 @@ struct VB_As_Expr* create_as_expr_id(char* id,struct VB_Id_list* list,enum VB_Id
 	as_expr->type = ID_LIST;
 
 	as_expr->list->next = list;
+	as_expr->line_number = get_location();
 
 	return as_expr;
 }
 
 
 
-struct VB_As_Expr* create_as_expr_arr(char* id, int size, struct VB_Id_list* list,enum VB_Id_type id_type){
+struct VB_As_expr* create_as_expr_arr(char* id, int size, struct VB_Id_list* list,enum VB_Id_type id_type){
 
 	struct VB_As_expr* as_expr = (struct VB_As_expr*)malloc(sizeof(struct VB_As_expr));
 	
@@ -268,6 +282,7 @@ struct VB_As_Expr* create_as_expr_arr(char* id, int size, struct VB_Id_list* lis
 	as_expr->type = ID_LIST;
 
 	as_expr->list->next = list;
+	as_expr->line_number = get_location();
 
 	return as_expr;
 }
@@ -293,6 +308,7 @@ struct VB_As_expr* create_as_expr_init(char* id, enum VB_Id_type id_type, struct
 		as_expr->type = ID_INIT;
 	else
 		as_expr->type = ONE_ID;
+	as_expr->line_number = get_location();
 
 	return as_expr;
 }
@@ -310,6 +326,10 @@ struct VB_As_expr* create_as_array(char* id, int size, enum VB_Id_type id_type)
 	as_expr->id_type = id_type;
 	
 	as_expr->type = ONE_ID;
+
+	as_expr->line_number = get_location();
+
+	return as_expr;
 
 }
 
@@ -338,6 +358,10 @@ as_expr->expr_list = NULL;
 	as_expr->id_type = id_type;
 	
 	as_expr->type = ID_INIT;
+
+	as_expr->line_number = get_location();
+
+	return as_expr;
 
 }
 
@@ -368,6 +392,7 @@ struct VB_Id_list* add_to_id_list(struct VB_Id_list* list, char* id, int isArray
 	while (last_list);
 
 	new_list->counter = ++(list->counter);
+	new_list->line_number = get_location();
 
 	return list;
 }

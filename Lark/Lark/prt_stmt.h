@@ -12,6 +12,7 @@ struct VB_Stmt
 	enum VB_Stmt_type type;		//!< Тип операции.
 	void*			  value;	//!< Операция
 	struct VB_Stmt*   next;	    //!< Указатель на следующий элемент последовательности операторов.
+	       int        line_number; //!< Line of this statement.
 };
 
 /*!
@@ -36,6 +37,9 @@ struct VB_Stmt* fill_stmt(enum VB_Stmt_type type, void* data)
 
 		stmt->next = NULL;
 	}
+	
+	stmt->line_number = get_location();
+
 	return stmt;
 }
 
