@@ -24,6 +24,29 @@ public class Expression implements XMLInterface{
     public final static int ID = 2;
     /** Выражение - математическая операция. */
     public final static int MATH = 3;
+    /** Тип допустимости выражения. */
+    protected int valueType;
+    /* Возможные типы допустимости выражения. */
+    /** Левосторонний оператор. */
+    public static final int L_VALUE = 0x7;
+    /** Правосторонний оператор. */
+    public static final int R_VALUE = 0x14;
+
+    /**
+     * Метод задания допустимости выражения.
+     * @param valueType Допустимость выражения.
+     */
+    public void setValueType(int valueType) {
+        this.valueType = valueType;
+    }
+
+    /**
+     * Метод получения допустимости выражения.
+     * @return Допустимость выражения.
+     */
+    public int getValueType() {
+        return valueType;
+    }
 
     /**
      * Метод получения номера строки пользователя.
@@ -132,12 +155,14 @@ public class Expression implements XMLInterface{
             ArrayList<Expression> params = new ArrayList();
             
             Node list_node = nodes.item(0);
-            NodeList list_items = list_node.getChildNodes();
-            
-            for (int i = 0; i < list_items.getLength(); i++) {
-                params.add(createExpr(list_items.item(i)));
+            if (list_node != null) {
+                NodeList list_items = list_node.getChildNodes();
+                            
+                for (int i = 0; i < list_items.getLength(); i++) {
+                    params.add(createExpr(list_items.item(i)));
+                }
+                id.setBody(params);
             }
-            id.setBody(params);
             
             result = id;
         }

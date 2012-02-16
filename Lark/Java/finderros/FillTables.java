@@ -16,6 +16,111 @@ public class FillTables {
     /* Поля класса. */
     /** Список отловленных ошибок. */
     private static ArrayList<CError> errors = new ArrayList<CError>();
+    /** Главный модуль программы пользователя.*/
+    private static Module module;
+    /** Текущая таблица локальных переменных. */
+    private static LocalVariablesTable curLocValsTable;
+    /** Имя текущей фунункции/процедуры. */
+    private static String curMethName;
+    
+    /**
+     * Проверка совпадения параметров при вызове функции.
+     * @param ie Идентификатор вызова функции.
+     * @param items Список параметров функции.
+     * @return true если функция вызывается правильно.
+     */
+    private static boolean isCorrectParams (IdExpression ie, 
+            ArrayList<ParamStatement> items) {
+        
+        boolean flag = true;kjadfsdklfhsdlkfj
+        
+        if ((items == null && ie.getBody() == null)) {
+            if (items.size() == ie.getBody().size()) {
+                Iterator<ParamStatement> it = items.iterator();
+                Iterator<Expression> jt = ie.getBody().iterator();
+
+                while (it.hasNext()) {
+
+                    DataType type1 = it.next().getType();
+                    DataType type2 = jt.next().getDtype();
+
+                    if (type1 != type2) {
+
+                        flag = false;
+                    }
+                }
+            } else flag = false;
+            
+        } else {
+            
+            flag = true;
+        }
+        
+        return flag;
+    }
+    
+    /**
+     * Метод проверки типа идентификатора.
+     * @param ie Проверяемый идентификатор.
+     * @throws InvalidParametersException Исключение выбрасываемое при поптыке
+     * при использовании неверных параметров.
+     */
+    private static void checkIdType (IdExpression ie) throws InvalidParametersException {
+        
+        if (module.contains(ie.getName())) {
+            
+            if (!isCorrectParams(ie, module.getParamsByOne(ie.getName()))) {
+                
+                errors.add(new CError(curMethName, "Invalid functions parameters: "
+                        + Integer.toString(ie.getLineNumber())));
+                ie.setIdType(IdExpression.CALLFUNCTION);
+                ie.setType(Expression.R_VALUE);
+            }
+        } else {
+            
+            ie.setIdType(IdExpression.VARIABLE);
+            ie.setType(Expression.L_VALUE);
+        }
+    }
+    
+    /**
+     * Метод поиска необъявленного идентификатора.
+     * @param item Проверямое выражение.
+     * @return true, если переменная не объявлена.
+     */
+    private static boolean isUndeclaredId (ExprStatement item) throws InvalidParametersException {
+        
+        boolean flag = false;
+        
+        if (item.getExpr().getType() == Expression.MATH) {
+            
+            MathExpression me = (MathExpression) item.getExpr();
+            
+            if (me.getLeft().getType() == Expression.ID) {
+                
+                IdExpression ie = (IdExpression) me.getLeft(); 
+                
+                if (!module.contains(ie.getName()) && 
+                        !curLocValsTable.contains(ie.getName())) {
+                    errors.add(new CError(curMethName, "Undeclared identifier: " 
+                            + Integer.toString(ie.getLineNumber())));
+                    flag = true;
+                } else checkIdType(ie);
+            } if (me.getRight().getType() == Expression.ID) {
+                
+                IdExpression ie1 = (IdExpression) me.getRight();
+                
+                if (!module.contains(ie1.getName()) && 
+                        !curLocValsTable.contains(ie1.getName())) {
+                    errors.add(new CError(curMethName, "Undeclared identifier: " 
+                            + Integer.toString(ie1.getLineNumber())));
+                    flag = true;
+                } else checkIdType(ie1);
+            }
+        }
+        
+        return flag;
+    }
 
     /**
      * Метод получения списка отловленных ошибок.
@@ -46,7 +151,7 @@ public class FillTables {
         
         ct.add(itemNaT);
         
-        ConstantsTableItem main = ConstantsTableItem.CreateMethodRefConst(0, ct.get(3), itemNaT);
+        ConstantsTableItem main = ConstantsTableItem.CreateMethodRefConst(0, ct.get(61), itemNaT);
         
         ct.add(main);
     }
@@ -90,12 +195,12 @@ public class FillTables {
     public static ConstantsTable fillMainClassConstatntsTable (Module item) throws InvalidParametersException {
         
         ConstantsTable ct = new ConstantsTable();
+        module = item;
         
-        //writeStartConstatntsToTable(ct);    // А НАДО???? ================================================================================================
-                                            // =====================================================================================
+        writeStartConstatntsToTable(ct);    // А НАДО???? НАДО!
         Integer index = ct.size();
         
-        ct.add(new ConstantsTableItem(++index, "Code"));
+        //ct.add(new ConstantsTableItem(++index, "Code"));
         ct.add(new ConstantsTableItem(++index, item.getId()));
         ct.add(ConstantsTableItem.CreateClassConst(++index, ct.get(index-1)));
         
@@ -105,6 +210,19 @@ public class FillTables {
         addMainToConstantsTable(ct, item);
         
         return ct;
+    }
+    
+    private static void addExprConstToTable (ExprStatement item) {
+        
+        //if (item)
+    }
+    
+    private static void addConstToTable (AbstractDeclaration items, 
+            ConstantsTable ct) {
+        
+        for (int i = 0; i < items.getBody().size(); i++) {
+            
+        }
     }
     
     /**
@@ -273,11 +391,14 @@ public class FillTables {
         
         for (int i = 0; i < items.size(); i++) {
             
+            curMethName = items.get(i).getName();
+            
             if (mt.contains(new MethodsTableItem(items.get(i).getName(), DataType.NONE, i, null)))
-                errors.add(new CError(items.get(i).getName(), "Multiple declaration: "
+                errors.add(new CError(curMethName, "Multiple declaration: "
                         + Integer.toString(items.get(i).getLineNumber())));
             else {
                 LocalVariablesTable lvt = new LocalVariablesTable();
+                curMethName = items.get(i).getName();
                 mt.add(new MethodsTableItem(items.get(i).getName(),
                         items.get(i).getRetType(), i + 1,
                         fillLocalVariablesTable(items.get(i).getParamList(),items.get(i).getBody(),lvt)));
@@ -304,8 +425,9 @@ public class FillTables {
             
             for (int i = 0; i < paramList.size(); i++) {
 
-                if (lvt.contains(new LocalVariablesTableItem(paramList.get(i).getName(), DataType.BOOLEAN, i)))
-                    errors.add(new CError("", "Multiple declaration: "
+                if (lvt.contains(new LocalVariablesTableItem(paramList.get(i).getName(), DataType.BOOLEAN, i)) ||
+                        module.contains(paramList.get(i).getName()))
+                    errors.add(new CError(curMethName, "Multiple declaration: "
                         + paramList.get(i).getLineNumber().toString()));
                 else {
                     lvt.add(new LocalVariablesTableItem(paramList.get(i).getName(),
@@ -343,24 +465,8 @@ public class FillTables {
                                 ((IfStatement)body.get(i)).getBodyAlter(),lvt);
                     } else if (body.get(i).getStmtType() == StatementType.EXPRESSION) {
                         
-                        if (((MathExpression)((ExprStatement)body.get(i)).getExpr()).getLeft().getType() == Expression.ID) {
-                            
-                            if (((IdExpression)((MathExpression)((ExprStatement)body.get(i)).getExpr()).getLeft()).getName() != null) {
-                            
-                            if (!lvt.contains(new 
-                                    LocalVariablesTableItem(((IdExpression)((MathExpression)((ExprStatement)body.get(i)).getExpr()).getLeft()).getName(), DataType.BOOLEAN, 0))) {
-                                errors.add(new CError("", "Undeclared identifier: " +
-                                        body.get(i).getLineNumber().toString()));
-                            }
-                            }
-                        } else if (((MathExpression)((ExprStatement)body.get(i)).getExpr()).getRight().getType() == Expression.ID) {
-                            
-                            if (!lvt.contains(new 
-                                    LocalVariablesTableItem(((IdExpression)((MathExpression)((ExprStatement)body.get(i)).getExpr()).getRight()).getName(), DataType.BOOLEAN, 0))) {
-                                errors.add(new CError("", "Undeclared identifier: " +
-                                        body.get(i).getLineNumber().toString()));
-                            }
-                        }
+                        curLocValsTable = lvt;
+                        isUndeclaredId((ExprStatement)body.get(i));
                     }
                 }
 
@@ -401,8 +507,9 @@ public class FillTables {
             
             for (int i = 0; i < item.getVariables().size(); i++) {
                 
-                if (lvt.contains(new LocalVariablesTableItem(item.getVariables().get(i), DataType.BOOLEAN, i)))
-                    errors.add(new CError("", "Multiple declaration: "
+                if (lvt.contains(new LocalVariablesTableItem(item.getVariables().get(i), DataType.BOOLEAN, i)) ||
+                        module.contains(item.getVariables().get(i)))
+                    errors.add(new CError(curMethName, "Multiple declaration: "
                         + ln.toString()));
                 else {
                     lvt.add(new LocalVariablesTableItem(item.getVariables().get(i),
@@ -410,7 +517,7 @@ public class FillTables {
                 }
 
             }
-        } else if (item.getArrays() != null ) {
+        } if (item.getArrays() != null ) {
             
             Set<String> keys = item.getArrays().keySet();
             Iterator<String> it = keys.iterator();
@@ -419,7 +526,7 @@ public class FillTables {
                 
                 String str = it.next();
                 if (lvt.contains(new LocalVariablesTableItem(str, DataType.BOOLEAN, 0)))
-                    errors.add(new CError("", "Multiple declaration: "
+                    errors.add(new CError(curMethName, "Multiple declaration: "
                         + ln.toString()));
                 else {
                     lvt.add(new LocalVariablesTableItem(str, item.getType(), 0));
