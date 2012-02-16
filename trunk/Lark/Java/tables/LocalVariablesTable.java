@@ -19,6 +19,32 @@ public class LocalVariablesTable {
     
     /**
      * Метод проверки наличия локальной переменной в таблице.
+     * @param name Имя локальной переменной.
+     * @return true, если локальная переменная присутствует в таблице.
+     */
+    public boolean contains (String name) {
+        
+        boolean flag = false;
+        
+        Set<Integer> set = items.keySet();
+        Iterator<Integer> it = set.iterator();
+        
+        while (it.hasNext()) {
+            
+            Integer i = it.next();
+            
+            if (items.get(i).getName().equals(name)) {
+                
+                flag = true;
+                break;
+            }
+        }
+        
+        return flag;
+    }
+    
+    /**
+     * Метод проверки наличия локальной переменной в таблице.
      * @param item Проверяемая локальная переменная.
      * @return true, если локальная переменная присутствует.
      */

@@ -9,6 +9,7 @@ import main.JVBStmtList;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import tables.InvalidParametersException;
 
 /**
  * Класс описывающий модуль, что по сути является пакетом/пространством имен.
@@ -22,13 +23,40 @@ public class Module implements XMLInterface{
     /** Список реализованных функций/процедур. */
     private ArrayList<AbstractDeclaration> declList;
     /** Строка в коде пользователя. */
-    private Integer lineNumber;
+    private int lineNumber;
+    
+    /**
+     * Метод проверки существования функции/процедуры.
+     * @param methodName Имя функции/процедуры.
+     * @return true, если существует функция/процедура с заданным именем.
+     * @deprecated Метод устарел.
+     */
+    @Deprecated
+    public boolean containsMethod (String methodName) {
+        
+        boolean flag = false;
+        
+        Iterator<AbstractDeclaration> it = declList.iterator();
+        
+        while (it.hasNext()) {
+            
+            AbstractDeclaration item = it.next();
+            
+            if (item.getName().equals(methodName)) {
+                
+                flag = true;
+                break;
+            }
+        }
+        
+        return flag;
+    }
 
     /**
      * Метод получения номера строки кода.
      * @return Номер строки кода.
      */
-    public Integer getLineNumber() {
+    public int getLineNumber() {
         return lineNumber;
     }
 
@@ -38,6 +66,33 @@ public class Module implements XMLInterface{
      */
     public void setLineNumber(Integer lineNumber) {
         this.lineNumber = lineNumber;
+    }
+    
+    /**
+     * Метод получения параметров функции/процедуры.
+     * @param name Имя функции/процедуры.
+     * @return Список параметров функции.
+     * @throws InvalidParametersException Исключение, выбрасываемое при поптыке
+     * получения списка параметров несуществующей функции.
+     */
+    public ArrayList<ParamStatement> getParamsByOne (String name) throws InvalidParametersException {
+        
+        if (!contains(name))
+            throw new InvalidParametersException("Попытка получить несуществующую функцию!");
+        
+        Iterator<AbstractDeclaration> it = declList.iterator();
+        
+        while (it.hasNext()) {
+            
+            AbstractDeclaration item = it.next();
+            
+            if (item.getName().equals(name)) {
+                
+                return item.getParamList();
+            }
+        }
+        
+        return null;
     }
     
     /**

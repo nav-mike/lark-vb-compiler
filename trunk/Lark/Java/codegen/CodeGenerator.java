@@ -134,6 +134,23 @@ public class CodeGenerator {
         }
     }
     
+    private void writeAboutData() throws IOException{
+        
+        int classConst = writeConstantsTable();
+
+        m_writer.write(ACC_SUPER);  // Пишем флаг класса
+
+        m_writer.write(classConst); // Текущий класс
+
+        m_writer.write(0);          // Класс родитель, 0 - object   
+
+        m_writer.write(0);          // Количество реализованных интерфейсов - 0
+
+        m_writer.write(0);          // Количество полей класса
+
+        m_writer.write(m_mthdsTable.size());  // Пишем количество методов
+    }
+    
     /**
      * Основной конструктор создания class файла.
      * @param mdl Модуль, класс которого создаем
@@ -141,34 +158,19 @@ public class CodeGenerator {
     public CodeGenerator(Module mdl, ProgramsClass main, ProgramsClass rtl) {
         
         // Копируем необходимые данные
-       // writer = null;
         m_mdl = mdl;
         m_mainClass = main;
         m_rtlClass = rtl;
         m_mainConstTable = main.getConstTable();
         
         m_mthdsTable = m_mainClass.getMethodTable();
-                
-        //m_classFile = new File(m_mdl.getId()+".class");     // Создаем объект файла
-        
+                        
         try{
             m_writer = new InvertDataOutputStream(m_mdl.getId()+".class");
 
             writeFileHeader();      // Пишем заголовок .class файла
 
-            int classConst = writeConstantsTable();
-
-            m_writer.write(ACC_SUPER);  // Пишем флаг класса
-        
-            m_writer.write(classConst); // Текущий класс
-
-            m_writer.write(0);          // Класс родитель, 0 - object   
-            
-            m_writer.write(0);          // Количество реализованных интерфейсов - 0
-
-            m_writer.write(0);          // Количество полей класса
-            
-            m_writer.write(m_mthdsTable.size());  // Пишем количество методов
+            writeAboutData();
             
             writeMethodsTable();        // Пишем таблицу методов 
                     

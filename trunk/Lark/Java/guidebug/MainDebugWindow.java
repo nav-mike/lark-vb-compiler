@@ -77,7 +77,7 @@ public class MainDebugWindow extends JFrame {
         
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setPreferredSize(new Dimension(600, 600));
-        this.setSize(600, 600);
+        this.setSize(700, 700);
         this.setVisible(true);
         
     }

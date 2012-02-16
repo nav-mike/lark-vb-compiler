@@ -34,7 +34,7 @@ public class InvertDataOutputStream extends DataOutputStream{
     @Override
     public void write(int c) throws IOException {
         //Integer.reverseBytes(c)
-        super.writeInt(Integer.reverseBytes(c));
+        super.writeInt(c);//Integer.reverseBytes(c));
 
     }
 
