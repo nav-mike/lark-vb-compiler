@@ -4,7 +4,9 @@
  */
 package codegen;
 
+import finderros.FillTables;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import main.JLark;
@@ -43,13 +45,13 @@ public class CodeGenerator {
     public static int MAGIC = 0xCAFEBABE;
     
     /** Малая версия */
-    public static short VER_MINOR = 3;
+    public static short VER_MINOR = 0;
      
     /** Большая версия */
-    public static short VER_MAJOR = 45;
+    public static short VER_MAJOR = 50;
     
     /** Флаг класса. */
-    public static short ACC_SUPER = 0x0200;
+    public static short ACC_SUPER = 0x02;
     
     /** Право доступа метода - public */
     public static short ACC_PUBLIC = 0x0001;
@@ -80,20 +82,22 @@ public class CodeGenerator {
         int result = 0;
         ConstantsTableItem item = null;
         String buf = null;
+        Integer intBuf;
         
         // Запишем размер таблицы констант
         m_writer.writeShort(m_mainConstTable.size() + 1);   // 2 байта
 
         for (int i = 1; i <= m_mainConstTable.size(); i++){
-            item = m_mainConstTable.get(i);         // Берем элемент
-            m_writer.writeShort(item.getType());         // Пишем тип 
+            item = m_mainConstTable.get(i);                 // Берем элемент
+            m_writer.writeByte(item.getType());             // Пишем тип
             
             // Посмотрим тип
             switch (item.getType()){
                 
+                
                 // Если это класс
                 case ConstantsTableItem.CONSTANT_Class:
-                    m_writer.write((String)(item.getFirst().getValue()));
+                    m_writer.writeShort(item.getFirst().getNumber());
                     result = item.getNumber();
                     break;
                     
@@ -103,9 +107,22 @@ public class CodeGenerator {
                     break;
                     
                 case ConstantsTableItem.CONSTANT_UTF8:
-                    buf = (String)item.getValue();
+                    buf = item.getValueString();
                     m_writer.writeShort(buf.length());
                     m_writer.write(buf);
+                    break;
+                    
+                case ConstantsTableItem.CONSTANT_Integer:
+                    m_writer.writeInt(item.getValueInteger());
+                    break;
+                    
+                case ConstantsTableItem.CONSTANT_String:
+                    m_writer.writeShort(item.getNumber());
+                    break;
+                    
+                case ConstantsTableItem.CONSTANT_NameAndType:
+                    m_writer.writeShort(item.getFirst().getNumber());
+                    m_writer.writeShort(item.getSecond().getNumber());
                     break;
             }
            
@@ -119,36 +136,98 @@ public class CodeGenerator {
      */
     private void writeMethodsTable() throws IOException{
         
-        ConstantsTableItem item = null;
+        int item = 0;
+        ArrayList<Integer> methRefNumbers = FillTables.getMethodRefNumbers();
         
-        for (int i = 1; i <= m_mainConstTable.size(); i++){
-            item = m_mainConstTable.get(i);
+        m_writer.writeShort(methRefNumbers.size());  // Пишем количество методов
+                
+        for (int i = 0; i < methRefNumbers.size(); i++){
+            item = methRefNumbers.get(i).shortValue();
             
-            if (item.getType() == ConstantsTableItem.CONSTANT_MethodRef){
-                // Пишем флаги доступа
-                m_writer.writeShort(ACC_PUBLIC);
-                m_writer.writeShort(ACC_STATIC);
+            // Пишем флаги доступа
+            m_writer.writeShort(0x0009);//ACC_PUBLIC | ACC_STATIC);
 
-                //m_writer.write(item.);   // Номер 
-            }
+            m_writer.writeShort(item);      // Пишем номер имени
+            m_writer.writeShort(item + 1);  // Пишем номер дескриптора (он идет вслед за именем)
+            m_writer.writeShort(1);         // Кол-во аттрибутов метода
+            writeMethodCode(m_mthdsTable.get(item));    // Пишем байткод методов
+            
+            m_writer.writeShort(0);         // количество атрибутов класса
+
         }
     }
     
+//    private void writeAboutData() throws IOException{
+//        
+//        int classConst = writeConstantsTable();
+//
+//        m_writer.write(ACC_SUPER);  // Пишем флаг класса
+//
+//        m_writer.write(classConst); // Текущий класс
+//
+//        m_writer.write(0);          // Класс родитель, 0 - object   
+//
+//        m_writer.write(0);          // Количество реализованных интерфейсов - 0
+//
+//        m_writer.write(0);          // Количество полей класса
+//
+//        m_writer.write(m_mthdsTable.size());  // Пишем количество методов
+//    }
+    
+    /**
+     * Записать код метода
+     * @param mt Ссылка на элемент таблицы методов
+     * @throws IOException
+     */
+    private void writeMethodCode(MethodsTableItem mt) throws IOException{
+        m_writer.writeShort(1);     // номер константы, содержащей слово Code
+        
+        byte [] byteCode = generateCodeForMethod(mt);       // Тут будет байт код Java
+
+        m_writer.writeInt(6 + 10 + byteCode.length);        // длина дальнейшей части атрибута + 10 байт на
+                                                            // стек, лок. пер, длину БК и табл. исключ.
+        
+        m_writer.writeShort(1000);                          // Размер стека
+        
+        // Пока 0
+        m_writer.writeShort(0);//mt.getLocalVariables().size()); // Количество локальных переменных
+        
+        m_writer.writeInt(byteCode.length);                 // Длина собственно байт-кода
+        
+        m_writer.write(byteCode);                           // Сам байткод
+        
+        m_writer.writeShort(0);                             // Количество записей в таблице исключений
+
+    }
+    
+    /**
+     * Сгенерировать байткод для метода
+     * @param mt Ссылка на элемент таблицы методов 
+     * @return 
+     */
+    private byte [] generateCodeForMethod(MethodsTableItem mt){
+        
+        return new byte [1];
+    }
+
+    
+    /**
+     * Записать даные о классе
+     * @throws IOException 
+     */
     private void writeAboutData() throws IOException{
         
         int classConst = writeConstantsTable();
 
-        m_writer.write(ACC_SUPER);  // Пишем флаг класса
+        m_writer.writeShort(ACC_SUPER);  // Пишем флаг класса
 
-        m_writer.write(classConst); // Текущий класс
+        m_writer.writeShort(classConst); // Текущий класс
 
-        m_writer.write(0);          // Класс родитель, 0 - object   
+        m_writer.writeShort(0);          // Класс родитель, 0 - object   
 
-        m_writer.write(0);          // Количество реализованных интерфейсов - 0
+        m_writer.writeShort(0);          // Количество реализованных интерфейсов - 0
 
-        m_writer.write(0);          // Количество полей класса
-
-        m_writer.write(m_mthdsTable.size());  // Пишем количество методов
+        m_writer.writeShort(0);          // Количество полей класса
     }
     
     /**
@@ -183,6 +262,3 @@ public class CodeGenerator {
         }         
     } 
 }
-
-            
-//FileOutputStream stream = new FileOutputStream(m_classFile);
