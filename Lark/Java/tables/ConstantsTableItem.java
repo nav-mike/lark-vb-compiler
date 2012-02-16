@@ -32,6 +32,32 @@ public class ConstantsTableItem {
     public static final int CONSTANT_FieldRef    = 0x9;
     public static final int CONSTANT_MethodRef   = 0xA;
     
+    
+    /**
+     * Получить текст константы CONSTANT_String
+     * @return Значение строковой константы
+     */
+    public String getValueString(){
+        return (String)value;
+    }
+    
+    /**
+     * Получить значение целочисленой константы CONSTANT_Integer
+     * @return Значение целочисленой константы
+     */
+    public int getValueInteger(){
+        Integer intVal = (Integer)value;
+        return intVal.intValue();
+    } 
+    
+    /**
+     * Получить текст константы CONSTANT_UTF8
+     * @return Значение строковой константы
+     */
+    public String getValueUTF8(){
+        return (String)value;
+    }
+    
     /**
      * Метод преобразования типа в строку.
      * @param type Тип константы.
