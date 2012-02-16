@@ -1,4 +1,4 @@
-﻿package newtree;
+package newtree;
 
 import java.util.ArrayList;
 import org.w3c.dom.NamedNodeMap;
