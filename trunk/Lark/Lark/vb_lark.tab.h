@@ -113,7 +113,7 @@ typedef union YYSTYPE
 {
 
 /* Line 1676 of yacc.c  */
-#line 20 "vb_lark.y"
+#line 22 "vb_lark.y"
 
 	int		b_const;
 	int		i_const;
@@ -143,7 +143,7 @@ typedef union YYSTYPE
 	struct VB_Sub_stmt*			Sub;
 	struct VB_Param_list*		Param_l;
 	struct VB_Param_stmt*		Param;
-//	struct VB_Func_stmt*		Func;
+	struct VB_Func_stmt*		Func;
 //	struct VB_Try_catch_stmt*	Try_catch;
 //	struct VB_Catch_stmt_list*	Catch_l;
 //	struct VB_Catch_stmt*		Catch;
