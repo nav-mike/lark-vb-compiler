@@ -10,6 +10,8 @@
 
 	void yyerror (char const* s);
 
+	int get_location ();
+	
 	extern FILE* yyin;
 %}
 
@@ -180,8 +182,15 @@
 %locations
 %%
 
-	module_stmt: MODULE ID ENDL decl_stmt_list SUB_MAIN ENDL stmt_list END_SUB ENDL decl_stmt_list END_MODULE {$$ = root = create_VB_Module_stmt($2,$7,$4,$10);}
-			   | MODULE ID ENDL decl_stmt_list SUB_MAIN ENDL stmt_list END_SUB ENDL decl_stmt_list END_MODULE ENDL {$$ = root = create_VB_Module_stmt($2,$7,$4,$10);}
+	ENDL_s:
+		  | ENDL_sE
+		  ;
+			 
+	ENDL_sE: ENDL
+		   | ENDL_sE ENDL
+		   ;
+
+	module_stmt: ENDL_s MODULE ID ENDL_sE decl_stmt_list SUB_MAIN ENDL_sE stmt_list END_SUB ENDL_sE decl_stmt_list END_MODULE ENDL_s {$$ = root = create_VB_Module_stmt($3,$8,$5,$11);}
 			   ;
 
 	stmt_list:						{$$ = create_VB_Stmt_list(0);}
@@ -192,7 +201,7 @@
 			  | stmt_listE stmt		{$$ = edit_VB_Stmt_list($1,$2);}
 		      ;
 
-        stmt: expr ENDL				{$$ = create_VB_Stmt_Expr($1);}
+        stmt: expr ENDL_sE			{$$ = create_VB_Stmt_Expr($1);}
 		    | if_stmt				{$$ = create_VB_Stmt_If($1);}
 		    | dim_stmt				{$$ = create_VB_Stmt_Dim($1);}
 		    | for_stmt				{$$ = create_VB_Stmt_For($1);}
@@ -242,11 +251,11 @@
 		| '-' expr %prec UMINUS						{$$ = create_operator_expr(EXPR_UMINUS,$2,0);}
 		;
 
-	if_stmt: IF expr THEN ENDL stmt_list END_IF ENDL						{$$ = create_if_stmt(0,$2,$5,NULL);}
-		   | IF expr THEN ENDL stmt_list ELSE ENDL stmt_list END_IF ENDL	{$$ = create_if_stmt(1,$2,$5,$8);}
+	if_stmt: IF expr THEN ENDL_sE stmt_list END_IF ENDL_sE							{$$ = create_if_stmt(0,$2,$5,NULL);}
+		   | IF expr THEN ENDL_sE stmt_list ELSE ENDL_sE stmt_list END_IF ENDL_sE	{$$ = create_if_stmt(1,$2,$5,$8);}
 		   ;
 
-	dim_stmt: DIM as_expr_list ENDL				 			{$$ = create_dim_stmt($2);}
+	dim_stmt: DIM as_expr_list ENDL_sE				 			{$$ = create_dim_stmt($2);}
 			;
 
 		as_expr_list: as_expr					 			{$$ = create_as_expr_list($1);}
@@ -275,23 +284,23 @@
 				 | expr_list',' expr					{$$ = add_Expr_to_list($1,$3);}
 				 ;
 
-        for_stmt: FOR ID '=' expr TO expr ENDL stmt_list NEXT ENDL            				{$$ = create_for_stmt($2,$4,$6,$8);}
-                | FOR ID '=' expr TO expr STEP expr ENDL stmt_list NEXT ENDL 				{$$ = create_for_with_step_stmt($2,$4,$6,$8,$10);}
-                | FOR ID AS param_type '=' expr TO expr ENDL stmt_list NEXT ENDL 			{$$ = create_for_with_decl_stmt($2,DATA_INTEGER,$6,$8,$10);}
-                | FOR ID AS param_type '=' expr TO expr STEP expr ENDL stmt_list NEXT ENDL 	{$$ = create_for_with_decl_with_step_stmt($2,DATA_INTEGER,$6,$8,$10,$12);}
+        for_stmt: FOR ID '=' expr TO expr ENDL_sE stmt_list NEXT ENDL_sE            				{$$ = create_for_stmt($2,$4,$6,$8);}
+                | FOR ID '=' expr TO expr STEP expr ENDL_sE stmt_list NEXT ENDL_sE 				{$$ = create_for_with_step_stmt($2,$4,$6,$8,$10);}
+                | FOR ID AS param_type '=' expr TO expr ENDL_sE stmt_list NEXT ENDL_sE 			{$$ = create_for_with_decl_stmt($2,DATA_INTEGER,$6,$8,$10);}
+                | FOR ID AS param_type '=' expr TO expr STEP expr ENDL_sE stmt_list NEXT ENDL_sE 	{$$ = create_for_with_decl_with_step_stmt($2,DATA_INTEGER,$6,$8,$10,$12);}
 				;
 
-        while_stmt: WHILE expr ENDL stmt_list END_WHILE ENDL 	 {$$ = create_while_stmt($2,$4);}
+        while_stmt: WHILE expr ENDL_sE stmt_list END_WHILE ENDL_sE 	 {$$ = create_while_stmt($2,$4);}
 				  ;
 
-        do_loop_stmt: DO WHILE expr ENDL stmt_list LOOP ENDL     {$$ = create_do_loop_stmt(0,$3,$5);}
-                    | DO UNTIL expr ENDL stmt_list LOOP ENDL     {$$ = create_do_loop_stmt(1,$3,$5);}
-                    | DO ENDL stmt_list LOOP WHILE expr ENDL     {$$ = create_do_loop_stmt(2,$6,$3);}
-                    | DO ENDL stmt_list LOOP UNTIL expr ENDL     {$$ = create_do_loop_stmt(3,$6,$3);}
+        do_loop_stmt: DO WHILE expr ENDL_sE stmt_list LOOP ENDL_sE     {$$ = create_do_loop_stmt(0,$3,$5);}
+                    | DO UNTIL expr ENDL_sE stmt_list LOOP ENDL_sE     {$$ = create_do_loop_stmt(1,$3,$5);}
+                    | DO ENDL_sE stmt_list LOOP WHILE expr ENDL_sE     {$$ = create_do_loop_stmt(2,$6,$3);}
+                    | DO ENDL_sE stmt_list LOOP UNTIL expr ENDL_sE     {$$ = create_do_loop_stmt(3,$6,$3);}
                     ;
 
-        sub_stmt: SUB ID '('')' ENDL stmt_list END_SUB ENDL             {$$ = create_sub_stmt($2,NULL,$6);}
-                | SUB ID '('param_list')' ENDL stmt_list END_SUB ENDL   {$$ = create_sub_stmt($2,$4,$7);}
+        sub_stmt: SUB ID '('')' ENDL_sE stmt_list END_SUB ENDL_sE             {$$ = create_sub_stmt($2,NULL,$6);}
+                | SUB ID '('param_list')' ENDL_sE stmt_list END_SUB ENDL_sE   {$$ = create_sub_stmt($2,$4,$7);}
 				;
 
                 param_list: param_stmt                  {$$ = create_param_list($1);}
@@ -308,12 +317,12 @@
                           | STRING_T       {$$ = DATA_STRING;}
                           ;
 
-	return_stmt: RETURN expr ENDL   {$$ = create_return_stmt($2);}
+	return_stmt: RETURN expr ENDL_sE   {$$ = create_return_stmt($2);}
 
-        func_stmt: FUNCTION ID '('')' AS param_type ENDL stmt_list END_FUNCTION ENDL          {$$ = create_func_stmt($2,NULL,$6,$8);}
-				 | FUNCTION ID '('param_list')' AS param_type ENDL stmt_list END_FUNCTION ENDL  {$$ = create_func_stmt($2,$4,$7,$9);}
-				 | FUNCTION ID '('')' AS param_type'('')' ENDL stmt_list END_FUNCTION ENDL          {$$ = create_func_stmt($2,NULL,$6,$10);}
-				 | FUNCTION ID '('param_list')' AS param_type'('')' ENDL stmt_list END_FUNCTION ENDL  {$$ = create_func_stmt($2,$4,$7,$11);}
+        func_stmt: FUNCTION ID '('')' AS param_type ENDL_sE stmt_list END_FUNCTION ENDL_sE          {$$ = create_func_stmt($2,NULL,$6,$8);}
+				 | FUNCTION ID '('param_list')' AS param_type ENDL_sE stmt_list END_FUNCTION ENDL_sE  {$$ = create_func_stmt($2,$4,$7,$9);}
+				 | FUNCTION ID '('')' AS param_type'('')' ENDL_sE stmt_list END_FUNCTION ENDL_sE          {$$ = create_func_stmt($2,NULL,$6,$10);}
+				 | FUNCTION ID '('param_list')' AS param_type'('')' ENDL_sE stmt_list END_FUNCTION ENDL_sE  {$$ = create_func_stmt($2,$4,$7,$11);}
 				 ;
 
 %%
@@ -324,6 +333,11 @@ void yyerror (char const* s)
 	printf("ERROR on line: %d and column: %d", yylloc.first_line,yylloc.last_column);
 	getchar();
 	exit(0);
+}
+
+int get_location()
+{
+	return yylloc.first_line;
 }
 
 int main (int argc, char* argv[])
