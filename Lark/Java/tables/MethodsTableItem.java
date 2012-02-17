@@ -17,7 +17,26 @@ public class MethodsTableItem {
     private int number;
     /** Таблица локальных переменных. */
     private LocalVariablesTable localVariables;
+    
+    /** Ссылка на элемент из таблицы констант.*/
+    private ConstantsTableItem constItem;
 
+    /**
+     * Получить элемент метода из таблицы констант.
+     * @return Элемент-константа
+     */
+    public ConstantsTableItem getConstItem() {
+        return constItem;
+    }
+
+    /**
+     * Задать методу соответствующий элемент из таблицы констант.
+     * @param constItem Элемент из таблицы костант
+     */
+    public void setConstItem(ConstantsTableItem constItem) {
+        this.constItem = constItem;
+    }
+    
     /**
      * Метод преобразования объекта в строку.
      * @return Строка с объектом.
