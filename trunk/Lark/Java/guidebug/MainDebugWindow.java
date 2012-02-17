@@ -16,6 +16,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import main.CError;
 import newtree.Module;
+import tables.ConstantsTable;
 import tables.ErrorsTable;
 import tables.InvalidParametersException;
 import tables.ProgramsClass;
@@ -49,8 +50,10 @@ public class MainDebugWindow extends JFrame {
         super("Отладочная печать");
         try {
             rtlClass = new ProgramsClass(FillTables.fillConsoleConstantsTable(), null, null);
-            mainClass = new ProgramsClass(FillTables.fillMainClassConstatntsTable(item),
-                    FillTables.fillModulesMethodsTable(item.getDeclList()), null);
+            
+            ConstantsTable cTable = FillTables.fillMainClassConstatntsTable(item);
+            mainClass = new ProgramsClass(cTable,
+                    FillTables.fillModulesMethodsTable(item.getDeclList(),cTable), null);
         } catch (InvalidParametersException ex) {
             Logger.getLogger(MainDebugWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
