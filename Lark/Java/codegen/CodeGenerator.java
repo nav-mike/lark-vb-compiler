@@ -94,7 +94,6 @@ public class CodeGenerator {
             // Посмотрим тип
             switch (item.getType()){
                 
-                
                 // Если это класс
                 case ConstantsTableItem.CONSTANT_Class:
                     m_writer.writeShort(item.getFirst().getNumber());
@@ -141,56 +140,45 @@ public class CodeGenerator {
         
         m_writer.writeShort(methRefNumbers.size());  // Пишем количество методов
                 
-        for (int i = 0; i < methRefNumbers.size(); i++){
-            item = methRefNumbers.get(i).shortValue();
+        for (int i = 1; i <= methRefNumbers.size(); i++){
+            item = methRefNumbers.get(i-1).shortValue();
             
             // Пишем флаги доступа
-            m_writer.writeShort(0x0009);//ACC_PUBLIC | ACC_STATIC);
+            if (m_mthdsTable.get(i).getName().equals("<init>"))
+                m_writer.writeShort(0x0001);//ACC_PUBLIC);
+            else
+                m_writer.writeShort(0x0009);//ACC_PUBLIC | ACC_STATIC);
 
             m_writer.writeShort(item);      // Пишем номер имени
             m_writer.writeShort(item + 1);  // Пишем номер дескриптора (он идет вслед за именем)
             m_writer.writeShort(1);         // Кол-во аттрибутов метода
-            writeMethodCode(m_mthdsTable.get(item));    // Пишем байткод методов
+            writeMethodCode(m_mthdsTable.get(i));    // Пишем байткод методов
             
             m_writer.writeShort(0);         // количество атрибутов класса
 
         }
     }
-    
-//    private void writeAboutData() throws IOException{
-//        
-//        int classConst = writeConstantsTable();
-//
-//        m_writer.write(ACC_SUPER);  // Пишем флаг класса
-//
-//        m_writer.write(classConst); // Текущий класс
-//
-//        m_writer.write(0);          // Класс родитель, 0 - object   
-//
-//        m_writer.write(0);          // Количество реализованных интерфейсов - 0
-//
-//        m_writer.write(0);          // Количество полей класса
-//
-//        m_writer.write(m_mthdsTable.size());  // Пишем количество методов
-//    }
-    
+        
     /**
      * Записать код метода
      * @param mt Ссылка на элемент таблицы методов
      * @throws IOException
      */
     private void writeMethodCode(MethodsTableItem mt) throws IOException{
+        
         m_writer.writeShort(1);     // номер константы, содержащей слово Code
         
         byte [] byteCode = generateCodeForMethod(mt);       // Тут будет байт код Java
 
-        m_writer.writeInt(6 + 10 + byteCode.length);        // длина дальнейшей части атрибута + 10 байт на
-                                                            // стек, лок. пер, длину БК и табл. исключ.
+        m_writer.writeInt(10 + byteCode.length);        // длина дальнейшей части атрибута + 10 байт на
+                                                             // стек, лок. пер, длину БК и табл. исключ.
         
         m_writer.writeShort(1000);                          // Размер стека
         
-        // Пока 0
-        m_writer.writeShort(0);//mt.getLocalVariables().size()); // Количество локальных переменных
+        if (mt.getLocalVariables() != null)
+            m_writer.writeShort(mt.getLocalVariables().size()); // Количество локальных переменных
+        else
+            m_writer.writeShort(0);
         
         m_writer.writeInt(byteCode.length);                 // Длина собственно байт-кода
         
@@ -206,8 +194,12 @@ public class CodeGenerator {
      * @return 
      */
     private byte [] generateCodeForMethod(MethodsTableItem mt){
+        byte [] byteCode = new byte [1];
         
-        return new byte [1];
+        byteCode[0] = (byte)0xAC;
+        
+        
+        return byteCode;
     }
 
     
@@ -216,14 +208,12 @@ public class CodeGenerator {
      * @throws IOException 
      */
     private void writeAboutData() throws IOException{
-        
-        int classConst = writeConstantsTable();
-
+       
         m_writer.writeShort(ACC_SUPER);  // Пишем флаг класса
 
-        m_writer.writeShort(classConst); // Текущий класс
+        m_writer.writeShort(63);         // Текущий класс
 
-        m_writer.writeShort(0);          // Класс родитель, 0 - object   
+        m_writer.writeShort(3);          // Класс родитель, 3 - Object   
 
         m_writer.writeShort(0);          // Количество реализованных интерфейсов - 0
 
@@ -249,6 +239,8 @@ public class CodeGenerator {
 
             writeFileHeader();      // Пишем заголовок .class файла
 
+            writeConstantsTable();
+                    
             writeAboutData();
             
             writeMethodsTable();        // Пишем таблицу методов 
