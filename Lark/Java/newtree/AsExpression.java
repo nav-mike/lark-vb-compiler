@@ -25,7 +25,7 @@ public class AsExpression implements XMLInterface{
     /** Хэш массивов. */
     private HashMap<String, Integer> arrays;
     
-    private ArrayList<Expression> arrayInit;
+    private ArrayList<Expression> arrayInit = null;
     
     private DataType type;
 
@@ -263,7 +263,7 @@ public class AsExpression implements XMLInterface{
     public void getArrayInitData(Node node){
         NodeList nodes = node.getChildNodes();
                     
-        if (arrayInit == null)
+        if (arrayInit == null && nodes.getLength() != 0)
             arrayInit = new ArrayList();
             
         for (int i = 0; i < nodes.getLength(); i++) {

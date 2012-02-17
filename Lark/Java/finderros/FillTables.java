@@ -22,6 +22,8 @@ public class FillTables {
     private static LocalVariablesTable curLocValsTable;
     /** Имя текущей фунункции/процедуры. */
     private static String curMethName;
+    /** Буффер для списка параметров функции. */
+    private static ArrayList<ParamStatement> params;
     
     /**
      * Проверка совпадения параметров при вызове функции.
@@ -34,26 +36,30 @@ public class FillTables {
         
         boolean flag = true;
         
-        if ((items == null && ie.getBody() == null)) {
-            if (items.size() == ie.getBody().size()) {
-                Iterator<ParamStatement> it = items.iterator();
-                Iterator<Expression> jt = ie.getBody().iterator();
-
-                while (it.hasNext()) {
-
-                    DataType type1 = it.next().getType();
-                    DataType type2 = jt.next().getDtype();
-
-                    if (type1 != type2) {
-
-                        flag = false;
-                    }
-                }
-            } else flag = false;
-            
-        } else {
-            
-            flag = true;
+        if (ie.getName() == null)
+            return flag;
+        
+       if (items != null && ie.getBody() != null) {
+           
+           if (items.size() == ie.getBody().size()) {
+               
+               Iterator<ParamStatement> it = items.iterator();
+               Iterator<Expression> jt = ie.getBody().iterator();
+               
+               while (it.hasNext()) {
+                   
+                   DataType type1 = it.next().getType();
+                   DataType type2 = jt.next().getDtype();
+                   
+                   if (type1 != type2)
+                       flag = false;
+               }
+           } 
+       } else if (ie.getBody() != null && items == null
+                   && !ie.getBody().isEmpty()) { 
+            flag = false;
+        } else if (ie.getBody() == null && items != null) {
+            flag = false;
         }
         
         return flag;
@@ -442,6 +448,8 @@ public class FillTables {
     private static LocalVariablesTable fillLocalVariablesTable (ArrayList<ParamStatement> paramList,
             ArrayList<AbstractStatement> body, LocalVariablesTable lvt) throws InvalidParametersException {
         
+        params = paramList;
+        
         if (paramList != null) {
             
             for (int i = 0; i < paramList.size(); i++) {
@@ -488,7 +496,7 @@ public class FillTables {
                         
                         curLocValsTable = lvt;
                         isUndeclaredId((ExprStatement)body.get(i));
-                    }
+                    }// TODO: !!!!!!!!!!!!!!!!!!!!!
                 }
 
             }
@@ -533,8 +541,20 @@ public class FillTables {
                     errors.add(new CError(curMethName, "Multiple declaration: "
                         + ln.toString()));
                 else {
-                    lvt.add(new LocalVariablesTableItem(item.getVariables().get(i),
-                            item.getType(), i));
+                    
+                    if (item.getInitData() != null && item.getInitData().getType() == Expression.ID) {
+                        IdExpression ide = (IdExpression)item.getInitData();
+                        if (isCorrectParams(ide, params))
+                            lvt.add(new LocalVariablesTableItem(item.getVariables().get(i),
+                                    item.getType(), i));
+                        else
+                            errors.add(new CError(curMethName, "Invalid functions parameters: "
+                                + Integer.toString(item.getInitData().getLineNumber())));
+                    } else {
+                        
+                        lvt.add(new LocalVariablesTableItem(item.getVariables().get(i),
+                                    item.getType(), i));
+                    }
                 }
 
             }
