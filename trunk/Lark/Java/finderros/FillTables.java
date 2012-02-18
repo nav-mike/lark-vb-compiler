@@ -155,12 +155,12 @@ public class FillTables {
             } else {
                 
                 ie.setIdType(IdExpression.CALLFUNCTION);
-                ie.setType(Expression.R_VALUE);
+                ie.setValueType(Expression.R_VALUE);
             }
         } else if (ie.getBody().isEmpty()) {
             
             ie.setIdType(IdExpression.VARIABLE);
-            ie.setType(Expression.L_VALUE);
+            ie.setValueType(Expression.L_VALUE);
             ie.setDtype(curLocValsTable.getTypeFor(ie.getName()));
         } else if (ie.getBody().size() == 1) {
             
@@ -210,8 +210,17 @@ public class FillTables {
             
             setTypeForExpression(((MathExpression)expr).getLeft());
             setTypeForExpression(((MathExpression)expr).getRight());
-            if (((MathExpression)expr).getLeft().getDtype() == ((MathExpression)expr).getRight().getDtype())
-                expr.setDtype(((MathExpression)expr).getLeft().getDtype());
+            if (((MathExpression)expr).getLeft().getDtype() == ((MathExpression)expr).getRight().getDtype()) {
+                
+                if (((MathExpression)expr).isBooleanOperation())
+                    expr.setDtype(DataType.BOOLEAN);
+                else
+                    expr.setDtype(((MathExpression)expr).getLeft().getDtype());
+                if (((MathExpression)expr).getMathType() ==  MathExprType.ASSIGN &&
+                    ((MathExpression)expr).getLeft().getValueType() != Expression.L_VALUE)
+                    errors.add(new CError(curMethName, "Left operand isn't l-value: " + 
+                            Integer.toString(expr.getLineNumber())));
+            }
             else
                 errors.add(new CError(curMethName, "Operands have a different types: " +
                         Integer.toString(expr.getLineNumber())));
@@ -685,6 +694,7 @@ public class FillTables {
             else {
                 LocalVariablesTable lvt = new LocalVariablesTable();
                 curMethName = items.get(i).getName();
+                dt = items.get(i).getRetType();
                 
                 if (items.get(i).getRetType() != DataType.NONE)
                     checkHasReturnFromFunction(items.get(i).getBody());
