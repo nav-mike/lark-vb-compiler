@@ -4,6 +4,7 @@
  */
 package codegen;
 
+import com.sun.corba.se.impl.ior.ByteBuffer;
 import finderros.FillTables;
 import java.io.File;
 import java.io.IOException;
@@ -171,7 +172,7 @@ public class CodeGenerator {
         
         byte [] byteCode = generateCodeForMethod(mt);       // Тут будет байт код Java
 
-        m_writer.writeInt(10 + byteCode.length);        // длина дальнейшей части атрибута + 10 байт на
+        m_writer.writeInt(12 + byteCode.length);        // длина дальнейшей части атрибута + 10 байт на
                                                              // стек, лок. пер, длину БК и табл. исключ.
         
         m_writer.writeShort(1000);                          // Размер стека
@@ -179,7 +180,7 @@ public class CodeGenerator {
         if (mt.getLocalVariables() != null)
             m_writer.writeShort(mt.getLocalVariables().size()); // Количество локальных переменных
         else
-            m_writer.writeShort(0);
+            m_writer.writeShort(1); // wdf sdf sdf sdf 
         
         m_writer.writeInt(byteCode.length);                 // Длина собственно байт-кода
         
@@ -195,31 +196,20 @@ public class CodeGenerator {
      * @return 
      */
     private byte [] generateCodeForMethod(MethodsTableItem mt){
-        byte [] byteCode;
+        MyByteBuffer byteCode = new MyByteBuffer();
         
         if (mt.getName().equals("<init>")){
-            byteCode =  new byte [3];
-//            ByteArrayBuffer ba = new ByteArrayBuffer();
-            //ba.write(5);
-            
-            
+            byteCode.append((byte)0x2A);
+            byteCode.append((byte)0xb7);
+           // byteCode.appendShort((short)65); ===================
+            byteCode.appendShort((short)7);
+        }
 
-            byteCode[0] = (byte)0x2A;
-            byteCode[1] = (byte)0xb7;
-            byteCode[2] = (byte)0xB1;
-        }
-        else{
-            byteCode = new byte [1];
-            byteCode[0] = (byte)0xB1;
-        }
-            
-            
-            
-            
-            
+        byteCode.append((byte)0xB1);
         
+        byteCode.trimToSize();
         
-        return byteCode;
+        return byteCode.toArray();
     }
 
     
@@ -231,7 +221,8 @@ public class CodeGenerator {
        
         m_writer.writeShort(ACC_SUPER);  // Пишем флаг класса
 
-        m_writer.writeShort(63);         // Текущий класс
+        //m_writer.writeShort(67);         // Текущий класс
+        m_writer.writeShort(9);
 
         m_writer.writeShort(3);          // Класс родитель, 3 - Object   
 
@@ -265,7 +256,7 @@ public class CodeGenerator {
             
             writeMethodsTable();        // Пишем таблицу методов 
                     
-            m_writer.write(0);          // Количество аттрибутов класса - 0
+            m_writer.writeShort(0);          // Количество аттрибутов класса - 0
             
             m_writer.close();
                
