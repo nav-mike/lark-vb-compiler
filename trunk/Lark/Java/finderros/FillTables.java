@@ -729,6 +729,23 @@ public class FillTables {
     }
     
     /**
+     * Функция замены присваивания равенством в условии.
+     * @param es Математический оператор.
+     */
+    private static void editAssignEqualSituation (ExprStatement es) {
+        
+        if (es.getExpr().getType() != Expression.MATH)
+            return;
+        
+        MathExpression me = (MathExpression)es.getExpr();
+        
+        if (me.getMathType() != MathExprType.ASSIGN)
+            return;
+        
+        me.setMathType(MathExprType.EQUAL);
+    }
+    
+    /**
      * Метод заполнения таблицы локальных переменных.
      * @param paramList Входные параметры в функцию/процедуру.
      * @param body Тело функции/процедуры.
@@ -767,13 +784,14 @@ public class FillTables {
                         findLocalVariableInDim((DimStatement)body.get(i), lvt);
                     } else if (body.get(i).getStmtType() == StatementType.DO_LOOP) {
 
-                        fillLocalVariablesTable(null,
-                                ((DoLoopStatement)body.get(i)).getBody(),lvt);
                         ExprStatement ex = new ExprStatement();
                         ex.setExpr(((DoLoopStatement)body.get(i)).getCondition());
                         ArrayList<AbstractStatement> t = new ArrayList<AbstractStatement>();
                         t.add(ex);
+                        editAssignEqualSituation(ex);
                         fillLocalVariablesTable(paramList, t, lvt);
+                        fillLocalVariablesTable(null,
+                                ((DoLoopStatement)body.get(i)).getBody(),lvt);
                     } else if (body.get(i).getStmtType() == StatementType.FOR) {
 
                         if (((ForStatement)body.get(i)).getType() == ForStmtType.WITH_DECL ||
@@ -799,24 +817,26 @@ public class FillTables {
                                 ((ForStatement)body.get(i)).getBody(),lvt);
                     } else if (body.get(i).getStmtType() == StatementType.WHILE) {
 
-                        fillLocalVariablesTable(null,
-                                ((WhileStatement)body.get(i)).getBody(),lvt);
                         ExprStatement ex = new ExprStatement();
                         ex.setExpr(((WhileStatement)body.get(i)).getCondition());
                         ArrayList<AbstractStatement> t = new ArrayList<AbstractStatement>();
                         t.add(ex);
+                        editAssignEqualSituation(ex);
                         fillLocalVariablesTable(paramList, t, lvt);
+                        fillLocalVariablesTable(null,
+                                ((WhileStatement)body.get(i)).getBody(),lvt);
                     } else if (body.get(i).getStmtType() == StatementType.IF) {
 
-                        fillLocalVariablesTable(null,
-                                ((IfStatement)body.get(i)).getBodyMain(),lvt);
-                        fillLocalVariablesTable(null,
-                                ((IfStatement)body.get(i)).getBodyAlter(),lvt);
                         ExprStatement ex = new ExprStatement();
                         ex.setExpr(((IfStatement)body.get(i)).getCondition());
                         ArrayList<AbstractStatement> t = new ArrayList<AbstractStatement>();
                         t.add(ex);
+                        editAssignEqualSituation(ex);
                         fillLocalVariablesTable(paramList, t, lvt);
+                        fillLocalVariablesTable(null,
+                                ((IfStatement)body.get(i)).getBodyMain(),lvt);
+                        fillLocalVariablesTable(null,
+                                ((IfStatement)body.get(i)).getBodyAlter(),lvt);
                     } else if (body.get(i).getStmtType() == StatementType.EXPRESSION) {
                         
                         curLocValsTable = lvt;
