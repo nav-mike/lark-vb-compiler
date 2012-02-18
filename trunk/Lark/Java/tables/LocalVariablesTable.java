@@ -3,6 +3,7 @@ package tables;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
+import newtree.DataType;
 
 /**
  * Класс таблицы локальных переменных.
@@ -67,6 +68,32 @@ public class LocalVariablesTable {
         }
         
         return flag;
+    }
+    
+    /**
+     * Метод получения типа локальной перемнной по имени.
+     * @param name Имя локальной переменной.
+     * @return Тип локальной переменной.
+     */
+    public DataType getTypeFor (String name) {
+        
+        DataType td = DataType.NONE;
+        
+        Set<Integer> set = items.keySet();
+        Iterator<Integer> it = set.iterator();
+        
+        while (it.hasNext()) {
+            
+            Integer i = it.next();
+            
+            if (items.get(i).getName().equals(name)) {
+                
+                td = items.get(i).getType();
+                break;
+            }
+        }
+        
+        return td;
     }
 
     /**
