@@ -140,6 +140,7 @@ public class FillTables {
             
             ie.setIdType(IdExpression.VARIABLE);
             ie.setType(Expression.L_VALUE);
+            ie.setDtype(curLocValsTable.getTypeFor(ie.getName()));
         } else if (ie.getBody().size() == 1) {
             
             if (ie.getArrayIndex().getDtype() == DataType.INTEGER
@@ -149,6 +150,8 @@ public class FillTables {
                     
                     ie.setType(IdExpression.GETITEM);
                     ie.setValueType(Expression.L_VALUE);
+                    ie.setDtype(curLocValsTable.getTypeFor(ie.getName()));
+                    
                 } else 
                     errors.add(new CError(curMethName, "This isn\'t array: " + 
                             Integer.toString(ie.getLineNumber())));
@@ -158,6 +161,17 @@ public class FillTables {
         } else
             errors.add(new CError(curMethName, "Invalid count of indexes: " +
                     Integer.toString(ie.getLineNumber())));
+    }
+    
+    /**
+     * Метод проверки типов операндов при арифметичских выражениях.
+     * @param me Узел арифметического выражения.
+     */
+    private static void checkDataType (MathExpression me) {
+        
+        if (me.getLeft().getDtype() != me.getRight().getDtype())
+            errors.add(new CError(curMethName, "Expressions have different types: " +
+                    Integer.toString(me.getLineNumber())));
     }
     
     /**
@@ -194,6 +208,7 @@ public class FillTables {
                     flag = true;
                 } else checkIdType(ie1);
             }
+            checkDataType(me);
         } else if (item.getExpr().getType() == Expression.ID) {
             
             IdExpression ie1 = (IdExpression) item.getExpr();
