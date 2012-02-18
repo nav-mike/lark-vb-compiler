@@ -76,4 +76,25 @@ public class MathExpression extends Expression {
     public void setRight(Expression right) {
         this.right = right;
     }
+    
+    /**
+     * Метод проверки, является ли операция логической.
+     * @return true, если оперция логическая.
+     */
+    public boolean isBooleanOperation () {
+        
+        boolean flag = false;
+        
+        if (this.mathType == MathExprType.EQUAL         || 
+            this.mathType == MathExprType.LESS          ||
+            this.mathType == MathExprType.NOT_MORE      ||
+            this.mathType == MathExprType.LESS_OR_EQUAL ||
+            this.mathType == MathExprType.NOT_LESS      ||
+            this.mathType == MathExprType.MORE_OR_EQUAL ||
+            this.mathType == MathExprType.NOT_EQUAL     ||
+            this.mathType == MathExprType.MORE)
+            flag = true;
+        
+        return flag;
+    }
 }
