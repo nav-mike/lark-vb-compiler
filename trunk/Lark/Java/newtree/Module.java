@@ -294,7 +294,7 @@ public class Module implements XMLInterface{
         
         ArrayList<AbstractStatement> mainBody = new ArrayList();
         
-        AbstractDeclaration subMain = new AbstractDeclaration("Main", null, mainBody);
+        AbstractDeclaration subMain = new AbstractDeclaration("main", null, mainBody);
         
         for (int i = 0; i < nodes.getLength(); i++) {
 //            switch (nodes.item(i).getNodeName()) {

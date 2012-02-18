@@ -30,6 +30,26 @@ public class FillTables {
     /** Ссылка на таблицу констант. */
     private static ConstantsTable cTable;
     
+//    private static void checkHasReturnFromProcedure (ArrayList<AbstractStatement> body) {
+//        
+//        Iterator<AbstractStatement> it = body.iterator();
+//        boolean isRemove = false;
+//        
+//        while (it.hasNext()) {
+//            
+//            AbstractStatement item = it.next();
+//            
+//            if (item.getStmtType() == StatementType.RETURN) {
+//                
+//                isRemove = true;
+//                break;
+//            }
+//        }
+//        
+//        if (isRemove)
+//            errors.add(new CError(curMethName, "Procedure cann\'t have \"Return\""));
+//    }
+    
     /**
      * Метод проверки наличия возврата в процедуре.
      * @param body Тело процедуры.
@@ -286,13 +306,13 @@ public class FillTables {
      * @throws InvalidParametersException Исключение выбрасывается при использовании
      * неверных тиипов.
      */
-    private static void addMainToConstantsTable (ConstantsTable ct, final Module item) throws InvalidParametersException {
+    private static void addMainToConstantsTable (ConstantsTable ct, final Module item, int classConst) throws InvalidParametersException {
         
         if (item.contains("main"))
             return;
         
         ConstantsTableItem itemName = new ConstantsTableItem(0, "main");
-        ConstantsTableItem itemDescr = new ConstantsTableItem(0, "()V");
+        ConstantsTableItem itemDescr = new ConstantsTableItem(0, "([Ljava/lang/String;)V");
 
         ct.add(itemName); ct.add(itemDescr);
         
@@ -300,7 +320,7 @@ public class FillTables {
         
         ct.add(itemNaT);
         
-        ConstantsTableItem main = ConstantsTableItem.CreateMethodRefConst(0, ct.get(61 + 2), itemNaT);
+        ConstantsTableItem main = ConstantsTableItem.CreateMethodRefConst(0, ct.get(classConst), itemNaT);
         
         ct.add(main);
         
@@ -315,7 +335,7 @@ public class FillTables {
      * @throws InvalidParametersException Исключение выбрасывается при использовании
      * неверных тиипов.
      */
-    private static void addConstructorToConstantsTable (ConstantsTable ct, final Module item) throws InvalidParametersException {
+    private static void addConstructorToConstantsTable (ConstantsTable ct, final Module item, int classConst) throws InvalidParametersException {
                
         ConstantsTableItem itemName = new ConstantsTableItem(0, "<init>");
         ConstantsTableItem itemDescr = new ConstantsTableItem(0, "()V");
@@ -326,7 +346,7 @@ public class FillTables {
         
         ct.add(itemNaT);
         
-        ConstantsTableItem init = ConstantsTableItem.CreateMethodRefConst(0, ct.get(61 + 2), itemNaT);
+        ConstantsTableItem init = ConstantsTableItem.CreateMethodRefConst(0, ct.get(classConst), itemNaT);
         
         ct.add(init);
         
@@ -338,14 +358,14 @@ public class FillTables {
      * @param mt Таблица методов.
      * @param item Модуль программы.
      */
-    private static void addMainToMethodsTable (MethodsTable mt, final ArrayList<AbstractDeclaration> items) throws InvalidParametersException {
+    private static void addMainToMethodsTable (MethodsTable mt, final ArrayList<AbstractDeclaration> items,
+            LocalVariablesTable mainLocals) throws InvalidParametersException {
         
         if (items.contains(new AbstractDeclaration("main", null, null)))
             return;
         
         MethodsTableItem main = new MethodsTableItem("main", DataType.NONE, 0, null);
         
-        LocalVariablesTable mainLocals = new LocalVariablesTable();
         mainLocals.add(new LocalVariablesTableItem("args", 0, DataType.STRING));
         
         main.setLocalVariables(curLocValsTable);
@@ -400,19 +420,42 @@ public class FillTables {
         
         module = item;
         
-        writeStartConstatntsToTable(ct);    // А НАДО???? НАДО!
+       // writeStartConstatntsToTable(ct);    // А НАДО???? НАДО!
+        
+        // ====================================================
+        ct.add(new ConstantsTableItem(1, "Code"));
+        
+        ct.add(new ConstantsTableItem(2, "java/lang/Object"));
+        ct.add(ConstantsTableItem.CreateClassConst(3, ct.get(2)));
+        ConstantsTableItem a1, a2, a3, a4;
+        a1 = new ConstantsTableItem(62, "<init>");
+        ct.add(a1);
+        
+        a2 = new ConstantsTableItem(63, "()V");
+        ct.add(a2);
+        
+        a3 = new ConstantsTableItem(64, ct.get(a1.getNumber()), ct.get(a2.getNumber()));
+        ct.add(a3);
+        
+        ct.add(ConstantsTableItem.CreateMethodRefConst(65, ct.get(3), ct.get(a3.getNumber())));
+        //=========================================================
+        
+        
+        
         Integer index = ct.size();
         
         //ct.add(new ConstantsTableItem(++index, "Code"));
         ct.add(new ConstantsTableItem(++index, item.getId()));
-        ct.add(ConstantsTableItem.CreateClassConst(++index, ct.get(index-1)));
+        
+        ConstantsTableItem classConst = ConstantsTableItem.CreateClassConst(++index, ct.get(index-1));
+        ct.add(classConst);
         
         fillMainClassConstantsTableByMethods(ct, item.getDeclList(), ++index, 
                 index - 1);
         
-        addMainToConstantsTable(ct, item);
+     //   addMainToConstantsTable(ct, item,classConst.getNumber());
         
-        addConstructorToConstantsTable(ct,item);
+        addConstructorToConstantsTable(ct,item,classConst.getNumber());
         
         return ct;
     }
@@ -479,6 +522,10 @@ public class FillTables {
             }
         }
         
+        if (item.getName().equals("main")){
+            result += "[Ljava/lang/String;";
+        }
+        
         result += ")";
         
         result += item.getRetType().convertToConstantsTablesString();
@@ -513,7 +560,7 @@ public class FillTables {
     private static void writeConsoleClassToConstantTable (ConstantsTable ct) throws InvalidParametersException {
         
         ct.add(new ConstantsTableItem(2, "java/lang/Object"));
-        ct.add(ConstantsTableItem.CreateClassConst(3, ct.get(2)));
+        ct.add(ConstantsTableItem.CreateClassConst(3, ct.get(2)));      
         
         ct.add(new ConstantsTableItem(2, "Console"));
         ct.add(ConstantsTableItem.CreateClassConst(3, ct.get(2 + 2)));
@@ -602,6 +649,19 @@ public class FillTables {
         ct.add(new ConstantsTableItem(57+1, ct.get(55 + 3), ct.get(56 + 3)));
         ct.add(ConstantsTableItem.CreateMethodRefConst(58 + 3, ct.get(3 + 2), ct.get(57 + 3)));
         //methodRefNumbers.add(56 + 2);
+        
+        ConstantsTableItem a1, a2, a3, a4;
+        a1 = new ConstantsTableItem(62, "<init>");
+        ct.add(a1);
+        
+        a2 = new ConstantsTableItem(63, "()V");
+        ct.add(a2);
+        
+        a3 = new ConstantsTableItem(64, ct.get(a1.getNumber()), ct.get(a2.getNumber()));
+        ct.add(a3);
+        
+        ct.add(ConstantsTableItem.CreateMethodRefConst(65, ct.get(3), ct.get(a3.getNumber())));
+        
     }
     
     /**
@@ -630,17 +690,38 @@ public class FillTables {
                     checkHasReturnFromFunction(items.get(i).getBody());
                 else
                     checkHasReturnFromProcedure(items.get(i).getBody());
+                MethodsTableItem item;
                 
-                dt = items.get(i).getRetType();
-                MethodsTableItem item = new MethodsTableItem(items.get(i).getName(),
+                if (items.get(i).getName().equals("main") == false){
+                    item = new MethodsTableItem(items.get(i).getName(),
                         items.get(i).getRetType(), i + 1,
                         fillLocalVariablesTable(items.get(i).getParamList(),items.get(i).getBody(),lvt));
-                item.setConstItem(cTable.get(methodRefNumbers.get(i)));
-                mt.add(item);
+                    
+                    item.setConstItem(cTable.get(methodRefNumbers.get(i)));
+                    mt.add(item);
+                }
+                else{
+                   // addMainToMethodsTable(mt, items, lvt);
+                    
+                    if (items.contains(new AbstractDeclaration("main", null, null)) == false){
+
+                        MethodsTableItem main = new MethodsTableItem("main", DataType.NONE, i + 1, null);
+
+                        lvt.add(new LocalVariablesTableItem("args", 0, DataType.STRING));
+
+                        fillLocalVariablesTable(items.get(i).getParamList(),items.get(i).getBody(),lvt);
+                        
+                        main.setLocalVariables(curLocValsTable);
+                        main.setConstItem(cTable.get(methodRefNumbers.get(i)));
+                        mt.add(main);
+                    }
+                }
+                    
+
             }
         }
         
-        addMainToMethodsTable(mt, items);
+        
         
         addConstructorToMethodsTable(mt, items);
         
