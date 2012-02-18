@@ -158,7 +158,7 @@ void VBX_createXML (struct VB_Module_stmt* module){
  */
 void VBX_add_statement_list(xmlNodePtr parent, struct VB_Stmt_list* list){
 	
-	if (list != NULL){
+	if (list->first != NULL){
 		struct VB_Stmt * item = list->first;
 
 	//	xmlNodePtr listNode;
