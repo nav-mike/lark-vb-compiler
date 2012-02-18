@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import main.JLark;
+import newtree.DataType;
 import newtree.Module;
 import tables.*;
 
@@ -61,7 +62,9 @@ public class CodeGenerator {
     /** Модификтор метода - статический*/
     public static short ACC_STATIC = 0x0008;
 
-
+    /** Контейнер байт кода. */
+    public static MyByteBuffer byteCode;
+    
     /**
      * Записать заголовок файла.
      * @param writer Дескриптор
@@ -75,6 +78,23 @@ public class CodeGenerator {
     }
     
     /**
+     * Записать даные о классе
+     * @throws IOException 
+     */
+    private void writeAboutData() throws IOException{
+       
+        m_writer.writeShort(ACC_SUPER);  // Пишем флаг класса
+       
+        m_writer.writeShort(9);          // Текущий класс
+
+        m_writer.writeShort(3);          // Класс родитель, 3 - Object   
+
+        m_writer.writeShort(0);          // Количество реализованных интерфейсов - 0
+
+        m_writer.writeShort(0);          // Количество полей класса
+    }   
+    
+    /**
      * Записать таблицу констант
      * @param writer Дескриптор.
      * @throws IOException Исключение при записи в файл
@@ -82,9 +102,8 @@ public class CodeGenerator {
     private int writeConstantsTable() throws IOException{
         
         int result = 0;
-        ConstantsTableItem item = null;
-        String buf = null;
-        Integer intBuf;
+        ConstantsTableItem item;
+        String buf;
         
         // Запишем размер таблицы констант
         m_writer.writeShort(m_mainConstTable.size() + 1);   // 2 байта
@@ -128,9 +147,9 @@ public class CodeGenerator {
             }
            
         }
-        
         return result;
     }
+    
     
     /**
      * Записать таблицу методов в файл.
@@ -170,65 +189,24 @@ public class CodeGenerator {
         
         m_writer.writeShort(1);     // номер константы, содержащей слово Code
         
-        byte [] byteCode = generateCodeForMethod(mt);       // Тут будет байт код Java
+        byte [] code = generateCodeForMethod(mt);       // Тут будет байт код Java
 
-        m_writer.writeInt(12 + byteCode.length);        // длина дальнейшей части атрибута + 10 байт на
-                                                             // стек, лок. пер, длину БК и табл. исключ.
+        m_writer.writeInt(12 + code.length);            // длина дальнейшей части атрибута + 10 байт на
+                                                        // стек, лок. пер, длину БК и табл. исключ.
         
-        m_writer.writeShort(1000);                          // Размер стека
+        m_writer.writeShort(1000);                      // Размер стека
         
         if (mt.getLocalVariables() != null)
             m_writer.writeShort(mt.getLocalVariables().size()); // Количество локальных переменных
         else
-            m_writer.writeShort(1); // wdf sdf sdf sdf 
+            m_writer.writeShort(1);
         
-        m_writer.writeInt(byteCode.length);                 // Длина собственно байт-кода
+        m_writer.writeInt(code.length);                 // Длина собственно байт-кода
         
-        m_writer.write(byteCode);                           // Сам байткод
+        m_writer.write(code);                           // Сам байткод
         
         m_writer.writeShort(0);                             // Количество записей в таблице исключений
 
-    }
-    
-    /**
-     * Сгенерировать байткод для метода
-     * @param mt Ссылка на элемент таблицы методов 
-     * @return 
-     */
-    private byte [] generateCodeForMethod(MethodsTableItem mt){
-        MyByteBuffer byteCode = new MyByteBuffer();
-        
-        if (mt.getName().equals("<init>")){
-            byteCode.append((byte)0x2A);
-            byteCode.append((byte)0xb7);
-           // byteCode.appendShort((short)65); ===================
-            byteCode.appendShort((short)7);
-        }
-
-        byteCode.append((byte)0xB1);
-        
-        byteCode.trimToSize();
-        
-        return byteCode.toArray();
-    }
-
-    
-    /**
-     * Записать даные о классе
-     * @throws IOException 
-     */
-    private void writeAboutData() throws IOException{
-       
-        m_writer.writeShort(ACC_SUPER);  // Пишем флаг класса
-
-        //m_writer.writeShort(67);         // Текущий класс
-        m_writer.writeShort(9);
-
-        m_writer.writeShort(3);          // Класс родитель, 3 - Object   
-
-        m_writer.writeShort(0);          // Количество реализованных интерфейсов - 0
-
-        m_writer.writeShort(0);          // Количество полей класса
     }
     
     /**
@@ -248,15 +226,15 @@ public class CodeGenerator {
         try{
             m_writer = new InvertDataOutputStream(m_mdl.getId()+".class");
 
-            writeFileHeader();      // Пишем заголовок .class файла
+            writeFileHeader();          // Пишем заголовок .class файла
 
-            writeConstantsTable();
-                    
-            writeAboutData();
+            writeConstantsTable();      // Запишем таблицу констант
+                        
+            writeAboutData();           // Записать даные о классе
             
             writeMethodsTable();        // Пишем таблицу методов 
                     
-            m_writer.writeShort(0);          // Количество аттрибутов класса - 0
+            m_writer.writeShort(0);     // Количество аттрибутов класса - 0
             
             m_writer.close();
                
@@ -264,4 +242,42 @@ public class CodeGenerator {
             Logger.getLogger(JLark.class.getName()).log(Level.SEVERE, null, ex);
         }         
     } 
+    
+        /**
+     * Сгенерировать байткод для метода
+     * @param mt Ссылка на элемент таблицы методов 
+     * @return 
+     */
+    private byte [] generateCodeForMethod(MethodsTableItem mt){
+        byteCode = new MyByteBuffer();
+        
+        if (mt.getName().equals("<init>")){
+            byteCode.append(BC.ALOAD_0);
+            byteCode.append(BC.INVOKESPECIAL);
+            byteCode.appendShort((short)7);
+        }
+
+        writeReturn(mt.getType());
+                
+        byteCode.trimToSize();
+        
+        return byteCode.toArray();
+    }
+    
+    /**
+     * Записать тип возвращаемого значения 
+     * @param type Тип возвращаемого значения проецедуры/функции
+     */
+    private void writeReturn(DataType type){
+        if (type == DataType.NONE)          // Если это процедура
+            byteCode.append(BC.RETURN);
+        
+        else if (type == DataType.INTEGER || type == DataType.BOOLEAN){  // Целый и булевский тип
+            byteCode.append(BC.ICONST_0);   // ТЕСТ
+            byteCode.append(BC.IRETURN);
+        }
+        
+        else if (type == DataType.STRING)   // Если строка
+            byteCode.append(BC.ARETURN);
+    }
 }
