@@ -3,10 +3,7 @@ package guidebug;
 import finderros.FillTables;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.io.DataOutputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -45,7 +42,7 @@ public class MainDebugWindow extends JFrame {
      * Конструктор по умолчанию.
      * Создает окно с таблицами.
      */
-    public MainDebugWindow(Module item) {
+    public MainDebugWindow(Module item) throws FileNotFoundException, IOException {
         
         super("Отладочная печать");
         try {
@@ -88,6 +85,25 @@ public class MainDebugWindow extends JFrame {
         this.setPreferredSize(new Dimension(600, 600));
         this.setSize(700, 700);
         this.setVisible(true);
+        
+        String filename = "jresult.txt";
+        
+//        FileOutputStream fos = new FileOutputStream(filename);
+//        
+//        DataOutputStream dos = new DataOutputStream(fos);
+//        
+        int t = FillTables.getErrors().size();
+//        ()=
+        if (t == 0)
+            t = -1;
+//        
+//        dos.writeInt(t);
+//        dos.close();
+        
+        File file= new File(filename);
+        PrintStream pin = new PrintStream(new BufferedOutputStream(new FileOutputStream(file.toString(), false)),true);
+        System.setOut(pin);
+        System.out.println(t);
         
     }
     

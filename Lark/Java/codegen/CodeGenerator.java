@@ -5,12 +5,13 @@
 package codegen;
 
 import finderros.FillTables;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import main.JLark;
-import newtree.*;
+import newtree.Module;
 import tables.*;
 
 
@@ -194,9 +195,28 @@ public class CodeGenerator {
      * @return 
      */
     private byte [] generateCodeForMethod(MethodsTableItem mt){
-        byte [] byteCode = new byte [1];
+        byte [] byteCode;
         
-        byteCode[0] = (byte)0xAC;
+        if (mt.getName().equals("<init>")){
+            byteCode =  new byte [3];
+//            ByteArrayBuffer ba = new ByteArrayBuffer();
+            //ba.write(5);
+            
+            
+
+            byteCode[0] = (byte)0x2A;
+            byteCode[1] = (byte)0xb7;
+            byteCode[2] = (byte)0xB1;
+        }
+        else{
+            byteCode = new byte [1];
+            byteCode[0] = (byte)0xB1;
+        }
+            
+            
+            
+            
+            
         
         
         return byteCode;
