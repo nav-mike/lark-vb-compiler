@@ -232,6 +232,28 @@ public class Module implements XMLInterface{
         
         return declList.get(index);
     }
+    
+    /**
+     * Метод получения типа возвращаемого значения функции/процедуры.
+     * @param name Имя функции/процедуры.
+     * @return Тип возвращаемого значения.
+     */
+    public DataType getTypeByName (String name) {
+        
+        Iterator<AbstractDeclaration> it = declList.iterator();
+        
+        while (it.hasNext()) {
+            
+            AbstractDeclaration item = it.next();
+            
+            if (name.equals(item.getName())) {
+                
+                return item.getRetType();
+            }
+        }
+        
+        return null;
+    }
 
     /**
      * Считывание процедур и функций.

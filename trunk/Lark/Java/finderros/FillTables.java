@@ -127,6 +127,7 @@ public class FillTables {
         
         if (module.contains(ie.getName())) {
             
+            ie.setDtype(module.getTypeByName(ie.getName()));
             if (!isCorrectParams(ie, module.getParamsByOne(ie.getName()))) {
                 
                 errors.add(new CError(curMethName, "Invalid functions parameters: "
@@ -175,10 +176,56 @@ public class FillTables {
     }
     
     /**
+     * Функция установки типа операндов операторов.
+     * @param expr Проверяемый операнд.
+     * @throws InvalidParametersException Исключение выбрасываемое при использовании
+     * неверных параметров.
+     */
+    private static void setTypeForExpression (Expression expr) throws InvalidParametersException {
+        
+        if (expr.getType() == Expression.CONST) {
+            
+            expr.setValueType(Expression.R_VALUE);
+        } else if (expr.getType() == Expression.MATH) {
+            
+            setTypeForExpression(((MathExpression)expr).getLeft());
+            setTypeForExpression(((MathExpression)expr).getRight());
+            if (((MathExpression)expr).getLeft().getDtype() == ((MathExpression)expr).getRight().getDtype())
+                expr.setDtype(((MathExpression)expr).getLeft().getDtype());
+            else
+                errors.add(new CError(curMethName, "Operands have a different types: " +
+                        Integer.toString(expr.getLineNumber())));
+            expr.setType(Expression.R_VALUE);
+        } else {
+            
+            if (!module.contains(((IdExpression)expr).getName()) && 
+                        !curLocValsTable.contains(((IdExpression)expr).getName())) {
+                    errors.add(new CError(curMethName, "Undeclared identifier: " 
+                            + Integer.toString(((IdExpression)expr).getLineNumber())));
+                }
+            
+            if (((IdExpression)expr).getBody().isEmpty()) {
+                
+                checkIdType((IdExpression)expr);
+            } else {
+                
+                for (int i = 0; i < ((IdExpression)expr).getBody().size(); i++) {
+                    
+                    setTypeForExpression(((IdExpression)expr).getBody().get(i));
+                }
+                
+                checkIdType((IdExpression)expr);
+            }
+            
+        }
+    }
+    
+    /**
      * Метод поиска необъявленного идентификатора.
      * @param item Проверямое выражение.
      * @return true, если переменная не объявлена.
      */
+    @Deprecated
     private static boolean isUndeclaredId (ExprStatement item) throws InvalidParametersException {
         
         boolean flag = false;
@@ -692,13 +739,13 @@ public class FillTables {
                     } else if (body.get(i).getStmtType() == StatementType.EXPRESSION) {
                         
                         curLocValsTable = lvt;
-                        isUndeclaredId((ExprStatement)body.get(i));
+                        setTypeForExpression(((ExprStatement)body.get(i)).getExpr());
                     } else if (body.get(i).getStmtType() == StatementType.RETURN) {
                         
                         ExprStatement ex = new ExprStatement();
                         ex.setExpr(((ReturnStatement)body.get(i)).getRetData());
                         curLocValsTable = lvt;
-                        isUndeclaredId(ex);
+                        setTypeForExpression(ex.getExpr());
                         
                         if (dt != ex.getExpr().getDtype())
                             errors.add(new CError(curMethName,
