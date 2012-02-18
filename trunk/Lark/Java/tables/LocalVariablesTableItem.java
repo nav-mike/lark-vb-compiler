@@ -16,7 +16,25 @@ public class LocalVariablesTableItem {
     private DataType type;
     /** Индекс локальной переменной в таблице локальных переменных. */
     private int number;
+    /** Размер массиве (-1, если это простая переменная). */
+    private int arraySize;
+    
+    /** 
+     * Получить рамзмер массива.
+     * @return Размер массива.
+     */
+    public int getArraySize() {
+        return arraySize;
+    }
 
+    /**
+     * Задать размер массива.
+     * @param arraySize 
+     */
+    public void setArraySize(int arraySize) {
+        this.arraySize = arraySize;
+    }
+    
     /**
      * Метод преобразования информации о классе в строку.
      * @return Строка с информацией о классе.
@@ -104,6 +122,27 @@ public class LocalVariablesTableItem {
         this.name = name;
         this.type = type;
         this.number = number;
+        this.arraySize = -1;
+    }
+
+    /**
+     * Конструктор для создания локальной переменной - массива.
+     * @param name Имя локальной переменной - массива,
+     * @param type Тип массива.
+     * @param arraySize Размер массива
+     * @throws InvalidParametersException Исключение вызываемое когда тип переменной
+     * задается как NONE.
+     */
+    public LocalVariablesTableItem(String name, int arraySize, DataType type) throws InvalidParametersException {
+        if (type == DataType.NONE)
+            throw new InvalidParametersException("Неверный тип локальной переменной!");
+        
+        this.name = name;
+        this.type = type;
+        this.arraySize = arraySize;
     }
     
+    
+    
+   
 }

@@ -334,7 +334,14 @@ public class JLark {
         
         m_module = m_module;
 
-        MainDebugWindow mWin = new MainDebugWindow(m_module);
+        MainDebugWindow mWin = null;
+        try {
+            mWin = new MainDebugWindow(m_module);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(JLark.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(JLark.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         new CodeGenerator(m_module,mWin.getMainClass(),mWin.getRtlClass());
 

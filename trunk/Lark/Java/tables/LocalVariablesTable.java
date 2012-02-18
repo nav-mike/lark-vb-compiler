@@ -117,6 +117,34 @@ public class LocalVariablesTable {
     }
     
     /**
+     * Метод проверяющий, является ли данная локальная переменная массивом.
+     * @param lvname Имя локальной переменной.
+     * @return true, если локальная переменная является массивом.
+     */
+    public boolean itemIsArray (String lvname) {
+        
+        boolean flag = false;
+        
+        Set<Integer> set = items.keySet();
+        Iterator<Integer> it = set.iterator();
+        
+        while (it.hasNext()) {
+            
+            Integer i = it.next();
+            
+            if (items.get(i).getName().equals(lvname)) {
+                
+                if (items.get(i).getArraySize() != -1)
+                    flag = true;
+                
+                break;
+            }
+        }
+        
+        return flag;
+    }
+    
+    /**
      * Метод очистки списка локальных переменных.
      */
     public void clear () {

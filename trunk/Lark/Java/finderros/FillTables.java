@@ -24,9 +24,58 @@ public class FillTables {
     private static String curMethName;
     /** Буффер для списка параметров функции. */
     private static ArrayList<ParamStatement> params;
+    /** Тип функции/процедуры. */
+    private static DataType dt;
     
     /** Ссылка на таблицу констант. */
     private static ConstantsTable cTable;
+    
+    /**
+     * Метод проверки наличия возврата в процедуре.
+     * @param body Тело процедуры.
+     */
+    private static void checkHasReturnFromProcedure (ArrayList<AbstractStatement> body) {
+        
+        Iterator<AbstractStatement> it = body.iterator();
+        boolean isRemove = false;
+        
+        while (it.hasNext()) {
+            
+            AbstractStatement item = it.next();
+            
+            if (item.getStmtType() == StatementType.RETURN) {
+                
+                isRemove = true;
+                break;
+            }
+        }
+        
+        if (isRemove)
+            errors.add(new CError(curMethName, "Procedure cann\'t have \"Return\""));
+    }
+    
+    /**
+     * Метод проверки тела функции на наличие возврата.
+     * @param body Тело функции.
+     */
+    private static void checkHasReturnFromFunction (ArrayList<AbstractStatement> body) {
+        
+        Iterator<AbstractStatement> it = body.iterator();
+        boolean isRemove = false;
+        
+        while (it.hasNext()) {
+            
+            AbstractStatement item = it.next();
+            
+            if (isRemove)
+                it.remove();
+            else if (item.getStmtType() == StatementType.RETURN)
+                isRemove = true;
+        }
+        
+        if (!isRemove)
+            errors.add(new CError(curMethName, "Function doesn't have \"Return\""));
+    }
     
     /**
      * Проверка совпадения параметров при вызове функции.
@@ -82,14 +131,33 @@ public class FillTables {
                 
                 errors.add(new CError(curMethName, "Invalid functions parameters: "
                         + Integer.toString(ie.getLineNumber())));
+            } else {
+                
                 ie.setIdType(IdExpression.CALLFUNCTION);
                 ie.setType(Expression.R_VALUE);
             }
-        } else {
+        } else if (ie.getBody().isEmpty()) {
             
             ie.setIdType(IdExpression.VARIABLE);
             ie.setType(Expression.L_VALUE);
-        }
+        } else if (ie.getBody().size() == 1) {
+            
+            if (ie.getArrayIndex().getDtype() == DataType.INTEGER
+                    && ((ConstantExpression)ie.getArrayIndex()).getIntValue() > 0) {
+                
+                if (curLocValsTable.itemIsArray(ie.getName())) {
+                    
+                    ie.setType(IdExpression.GETITEM);
+                    ie.setValueType(Expression.L_VALUE);
+                } else 
+                    errors.add(new CError(curMethName, "This isn\'t array: " + 
+                            Integer.toString(ie.getLineNumber())));
+            } else
+                errors.add(new CError(curMethName, "Bad array\'s index: " +
+                        Integer.toString(ie.getLineNumber())));
+        } else
+            errors.add(new CError(curMethName, "Invalid count of indexes: " +
+                    Integer.toString(ie.getLineNumber())));
     }
     
     /**
@@ -126,6 +194,16 @@ public class FillTables {
                     flag = true;
                 } else checkIdType(ie1);
             }
+        } else if (item.getExpr().getType() == Expression.ID) {
+            
+            IdExpression ie1 = (IdExpression) item.getExpr();
+                
+                if (!module.contains(ie1.getName()) && 
+                        !curLocValsTable.contains(ie1.getName())) {
+                    errors.add(new CError(curMethName, "Undeclared identifier: " 
+                            + Integer.toString(ie1.getLineNumber())));
+                    flag = true;
+                } else checkIdType(ie1);
         }
         
         return flag;
@@ -148,10 +226,10 @@ public class FillTables {
      */
     private static void addMainToConstantsTable (ConstantsTable ct, final Module item) throws InvalidParametersException {
         
-        if (item.contains("Main"))
+        if (item.contains("main"))
             return;
         
-        ConstantsTableItem itemName = new ConstantsTableItem(0, "Main");
+        ConstantsTableItem itemName = new ConstantsTableItem(0, "main");
         ConstantsTableItem itemDescr = new ConstantsTableItem(0, "()V");
 
         ct.add(itemName); ct.add(itemDescr);
@@ -192,18 +270,23 @@ public class FillTables {
         
         methodRefNumbers.add(itemName.getNumber());
     }
-    
+
     /**
      * Метод добавления процедуры Main в таблицу методов класса.
      * @param mt Таблица методов.
      * @param item Модуль программы.
      */
-    private static void addMainToMethodsTable (MethodsTable mt, final ArrayList<AbstractDeclaration> items) {
+    private static void addMainToMethodsTable (MethodsTable mt, final ArrayList<AbstractDeclaration> items) throws InvalidParametersException {
         
-        if (items.contains(new AbstractDeclaration("Main", null, null)))
+        if (items.contains(new AbstractDeclaration("main", null, null)))
             return;
         
-        MethodsTableItem main = new MethodsTableItem("Main", DataType.NONE, 0, null);
+        MethodsTableItem main = new MethodsTableItem("main", DataType.NONE, 0, null);
+        
+        LocalVariablesTable mainLocals = new LocalVariablesTable();
+        mainLocals.add(new LocalVariablesTableItem("args", 0, DataType.STRING));
+        
+        main.setLocalVariables(curLocValsTable);
         
         mt.add(main);
     }
@@ -213,9 +296,13 @@ public class FillTables {
      * @param mt Таблица методов.
      * @param item Модуль программы.
      */
-    private static void addConstructorToMethodsTable (MethodsTable mt, final ArrayList<AbstractDeclaration> items) {
+    private static void addConstructorToMethodsTable (MethodsTable mt, final ArrayList<AbstractDeclaration> items) throws InvalidParametersException {
         
         MethodsTableItem init = new MethodsTableItem("<init>", DataType.NONE, 0, null);
+        
+        LocalVariablesTable initLocals = new LocalVariablesTable();
+        initLocals.add(new LocalVariablesTableItem("this", DataType.THIS, 0));
+        init.setLocalVariables(initLocals);
         
         mt.add(init);
     }
@@ -477,6 +564,12 @@ public class FillTables {
                 LocalVariablesTable lvt = new LocalVariablesTable();
                 curMethName = items.get(i).getName();
                 
+                if (items.get(i).getRetType() != DataType.NONE)
+                    checkHasReturnFromFunction(items.get(i).getBody());
+                else
+                    checkHasReturnFromProcedure(items.get(i).getBody());
+                
+                dt = items.get(i).getRetType();
                 MethodsTableItem item = new MethodsTableItem(items.get(i).getName(),
                         items.get(i).getRetType(), i + 1,
                         fillLocalVariablesTable(items.get(i).getParamList(),items.get(i).getBody(),lvt));
@@ -533,25 +626,69 @@ public class FillTables {
 
                         fillLocalVariablesTable(null,
                                 ((DoLoopStatement)body.get(i)).getBody(),lvt);
+                        ExprStatement ex = new ExprStatement();
+                        ex.setExpr(((DoLoopStatement)body.get(i)).getCondition());
+                        ArrayList<AbstractStatement> t = new ArrayList<AbstractStatement>();
+                        t.add(ex);
+                        fillLocalVariablesTable(paramList, t, lvt);
                     } else if (body.get(i).getStmtType() == StatementType.FOR) {
 
+                        if (((ForStatement)body.get(i)).getType() == ForStmtType.WITH_DECL ||
+                            ((ForStatement)body.get(i)).getType() == ForStmtType.WITH_DECL_AND_STEP) {
+                            
+                            ArrayList<String> var = new ArrayList<String>();
+                            var.add(((IdExpression)((ForStatement)body.get(i)).getNewIterator()).getName());
+                            DimStatement dim = new DimStatement(new AsExpression(DataType.INTEGER, var));
+                            ArrayList<AbstractStatement> abs = new ArrayList<AbstractStatement>();
+                            abs.add(dim);
+                            fillLocalVariablesTable(paramList, abs, lvt);
+                        } else {
+                            
+                            ExprStatement ex = new ExprStatement();
+                            IdExpression ie = new IdExpression();
+                            ie.setName(((ForStatement)body.get(i)).getExistedIterator());
+                            ex.setExpr(ie);
+                            ArrayList<AbstractStatement> t = new ArrayList<AbstractStatement>();
+                            t.add(ex);
+                            fillLocalVariablesTable(null,t,lvt);
+                        }
                         fillLocalVariablesTable(null,
                                 ((ForStatement)body.get(i)).getBody(),lvt);
                     } else if (body.get(i).getStmtType() == StatementType.WHILE) {
 
                         fillLocalVariablesTable(null,
                                 ((WhileStatement)body.get(i)).getBody(),lvt);
+                        ExprStatement ex = new ExprStatement();
+                        ex.setExpr(((WhileStatement)body.get(i)).getCondition());
+                        ArrayList<AbstractStatement> t = new ArrayList<AbstractStatement>();
+                        t.add(ex);
+                        fillLocalVariablesTable(paramList, t, lvt);
                     } else if (body.get(i).getStmtType() == StatementType.IF) {
 
                         fillLocalVariablesTable(null,
                                 ((IfStatement)body.get(i)).getBodyMain(),lvt);
                         fillLocalVariablesTable(null,
                                 ((IfStatement)body.get(i)).getBodyAlter(),lvt);
+                        ExprStatement ex = new ExprStatement();
+                        ex.setExpr(((IfStatement)body.get(i)).getCondition());
+                        ArrayList<AbstractStatement> t = new ArrayList<AbstractStatement>();
+                        t.add(ex);
+                        fillLocalVariablesTable(paramList, t, lvt);
                     } else if (body.get(i).getStmtType() == StatementType.EXPRESSION) {
                         
                         curLocValsTable = lvt;
                         isUndeclaredId((ExprStatement)body.get(i));
-                    }// TODO: !!!!!!!!!!!!!!!!!!!!!
+                    } else if (body.get(i).getStmtType() == StatementType.RETURN) {
+                        
+                        ExprStatement ex = new ExprStatement();
+                        ex.setExpr(((ReturnStatement)body.get(i)).getRetData());
+                        curLocValsTable = lvt;
+                        isUndeclaredId(ex);
+                        
+                        if (dt != ex.getExpr().getDtype())
+                            errors.add(new CError(curMethName,
+                                    "Function has invalid return type: " + Integer.toString(body.get(i).getLineNumber())));
+                    }
                 }
 
             }
@@ -625,7 +762,7 @@ public class FillTables {
                     errors.add(new CError(curMethName, "Multiple declaration: "
                         + ln.toString()));
                 else {
-                    lvt.add(new LocalVariablesTableItem(str, item.getType(), 0));
+                    lvt.add(new LocalVariablesTableItem(str, item.getArrays().get(str), item.getType()));
                 }
             }
         }
