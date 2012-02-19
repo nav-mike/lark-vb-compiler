@@ -37,5 +37,6 @@ public class ReadLineExpression extends Expression{
     public ReadLineExpression(String data) {
         
         this.data = data;
+        this.type = Expression.READ_LINE_EXPR;
     }   
 }

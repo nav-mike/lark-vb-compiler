@@ -36,5 +36,6 @@ public class PrintExpression extends Expression {
     public PrintExpression(Expression printedData) {
         
         this.printedData = printedData;
+        this.type = Expression.WRITE_EXPR;
     }    
 }

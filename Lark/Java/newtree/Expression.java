@@ -32,6 +32,16 @@ public class Expression implements XMLInterface{
     /** Правосторонний оператор. */
     public static final int R_VALUE = 0x14;
 
+    
+    /** Выражение - математическая операция. */
+    public final static int WRITE_EXPR = 4;
+    
+    /** Выражение - математическая операция. */
+    public final static int WRITE_LINE_EXPR = 5;
+    
+    /** Выражение - математическая операция. */
+    public final static int READ_LINE_EXPR = 6;
+        
     /**
      * Метод задания допустимости выражения.
      * @param valueType Допустимость выражения.
