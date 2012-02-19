@@ -293,6 +293,22 @@ public class ConstantsTableItem {
         this.type = type;
         this.value = value;
     }
+    
+    /**
+     * Конструктор с параметрами.
+     * Создает константу UTF8, не задавая ей номер.
+     * @param value Значение константы.
+     */
+    public ConstantsTableItem (String value) {
+        
+        this.first = null;
+        this.ifirst = -1;
+        this.isecond = -1;
+        this.number = -1;
+        this.second = null;
+        this.type = CONSTANT_UTF8;
+        this.value = value;
+    }
 
     /**
      * Метод задания значения константы.
