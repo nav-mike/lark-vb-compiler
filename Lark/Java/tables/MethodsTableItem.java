@@ -1,5 +1,7 @@
 package tables;
 
+import java.util.ArrayList;
+import newtree.AbstractStatement;
 import newtree.DataType;
 
 /**
@@ -18,25 +20,44 @@ public class MethodsTableItem {
     /** Таблица локальных переменных. */
     private LocalVariablesTable localVariables;
     
-    /** Ссылка на элемент из таблицы констант.*/
-    private ConstantsTableItem constItem;
-
-    /**
-     * Получить элемент метода из таблицы констант.
-     * @return Элемент-константа
-     */
-    public ConstantsTableItem getConstItem() {
-        return constItem;
-    }
-
-    /**
-     * Задать методу соответствующий элемент из таблицы констант.
-     * @param constItem Элемент из таблицы костант
-     */
-    public void setConstItem(ConstantsTableItem constItem) {
-        this.constItem = constItem;
-    }
+    /** Номер метода в таблице констант. */
+    private int constsTableNum;
     
+    /** Тело функции/процедуры. */
+    private ArrayList<AbstractStatement> body;
+ 
+    /**
+     * Получить тело метода.
+     * @return Тело метода.
+     */
+    public ArrayList<AbstractStatement> getBody() {
+        return body;
+    }
+
+    /**
+     * Получить номер метода в таблице констант.
+     * @return Номер из таблицы.
+     */
+    public int getConstsTableNum() {
+        return constsTableNum;
+    }
+
+    /**
+     * Задать методу тело.
+     * @param body Новое тело метода.
+     */
+    public void setBody(ArrayList<AbstractStatement> body) {
+        this.body = body;
+    }
+
+    /**
+     * Задать методу новый номер из таблицы констант.
+     * @param constsTableNum Номер из таблицы.
+     */
+    public void setConstsTableNum(int constsTableNum) {
+        this.constsTableNum = constsTableNum;
+    }
+
     /**
      * Метод преобразования объекта в строку.
      * @return Строка с объектом.
@@ -59,10 +80,16 @@ public class MethodsTableItem {
      * @param number Индекс в таблице методов.
      * @param localVariables Таблица локальных переменных.
      */
-    public MethodsTableItem(String name, DataType type, int number, LocalVariablesTable localVariables) {
+    public MethodsTableItem(String name, 
+            DataType type, 
+            LocalVariablesTable localVariables, 
+            int constNum,
+            ArrayList<AbstractStatement> body) {
         this.name = name;
         this.type = type;
-        this.number = number;
+        this.number = 0;
+        this.body = body;
+        this.constsTableNum = constNum;
         this.localVariables = localVariables;
     }
 
@@ -130,4 +157,23 @@ public class MethodsTableItem {
         return name;
     }
     
+    
+    
+//    /** Ссылка на элемент из таблицы констант. */
+//    private ConstantsTableItem constItem;
+//    /**
+//     * Получить элемент метода из таблицы констант.
+//     * @return Элемент-константа
+//     */
+//    public ConstantsTableItem getConstItem() {
+//        return constItem;
+//    }
+//    
+//    /**
+//     * Задать методу соответствующий элемент из таблицы констант.
+//     * @param constItem Элемент из таблицы костант
+//     */
+//    public void setConstItem(ConstantsTableItem constItem) {
+//        this.constItem = constItem;
+//    }
 }
