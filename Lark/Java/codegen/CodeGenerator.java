@@ -85,9 +85,9 @@ public class CodeGenerator {
        
         m_writer.writeShort(ACC_SUPER);  // Пишем флаг класса
        
-        m_writer.writeShort(9);          // Текущий класс
+        m_writer.writeShort(CodeConstants.CURRENT_CLASS);   // Текущий класс
 
-        m_writer.writeShort(3);          // Класс родитель, 3 - Object   
+        m_writer.writeShort(CodeConstants.OBJECT_CLASS);    // Класс родитель, 3 - Object   
 
         m_writer.writeShort(0);          // Количество реализованных интерфейсов - 0
 
@@ -156,27 +156,27 @@ public class CodeGenerator {
      */
     private void writeMethodsTable() throws IOException{
         
-        int item = 0;
-        ArrayList<Integer> methRefNumbers = FillTables.getMethodRefNumbers();
+        //int item = 0;
+        MethodsTableItem buf;
         
-        m_writer.writeShort(methRefNumbers.size());  // Пишем количество методов
+        m_writer.writeShort(m_mthdsTable.size());  // Пишем количество методов
                 
-        for (int i = 1; i <= methRefNumbers.size(); i++){
-            item = methRefNumbers.get(i-1).shortValue();
-            
+        for (int i = 1; i <= m_mthdsTable.size(); i++){
+             buf = m_mthdsTable.get(i);
+             
             // Пишем флаги доступа
-            if (m_mthdsTable.get(i).getName().equals("<init>"))
-                m_writer.writeShort(0x0001);//ACC_PUBLIC);
+            if (buf.getName().equals("<init>"))
+                m_writer.writeShort(0x0001);    //ACC_PUBLIC);
             else
-                m_writer.writeShort(0x0009);//ACC_PUBLIC | ACC_STATIC);
-
-            m_writer.writeShort(item);      // Пишем номер имени
-            m_writer.writeShort(item + 1);  // Пишем номер дескриптора (он идет вслед за именем)
-            m_writer.writeShort(1);         // Кол-во аттрибутов метода
-            writeMethodCode(m_mthdsTable.get(i));    // Пишем байткод методов
+                m_writer.writeShort(0x0009);    //ACC_PUBLIC | ACC_STATIC);
+            
+            m_writer.writeShort(buf.getConstsTableNum() - 3);   // Пишем номер имени
+            m_writer.writeShort(buf.getConstsTableNum() - 2);   // Пишем номер дескриптора (он идет вслед за именем)
+            m_writer.writeShort(1);                             // Кол-во аттрибутов метода
+            writeMethodCode(buf);                               // Пишем байткод методов
             
             m_writer.writeShort(0);         // количество атрибутов класса
-
+            
         }
     }
         
@@ -254,7 +254,7 @@ public class CodeGenerator {
         if (mt.getName().equals("<init>")){
             byteCode.append(BC.ALOAD_0);
             byteCode.append(BC.INVOKESPECIAL);
-            byteCode.appendShort((short)7);
+            byteCode.appendShort((short)CodeConstants.OBJECT_INIT);
         }
 
         writeReturn(mt.getType());
@@ -268,7 +268,8 @@ public class CodeGenerator {
      * Записать тип возвращаемого значения 
      * @param type Тип возвращаемого значения проецедуры/функции
      */
-    private void writeReturn(DataType type){
+    private void writeReturn(DataType type){         
+
         if (type == DataType.NONE)          // Если это процедура
             byteCode.append(BC.RETURN);
         
