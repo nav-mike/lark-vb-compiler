@@ -9,11 +9,11 @@ import finderros.FillTables;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import main.JLark;
-import newtree.DataType;
-import newtree.Module;
+import newtree.*;
 import tables.*;
 
 
@@ -172,6 +172,7 @@ public class CodeGenerator {
             m_writer.writeShort(buf.getConstsTableNum() - 3);   // Пишем номер имени
             m_writer.writeShort(buf.getConstsTableNum() - 2);   // Пишем номер дескриптора (он идет вслед за именем)
             m_writer.writeShort(1);                             // Кол-во аттрибутов метода
+            
             writeMethodCode(buf);                               // Пишем байткод методов
             
             m_writer.writeShort(0);             // количество атрибутов класса
@@ -249,41 +250,223 @@ public class CodeGenerator {
     private byte [] generateCodeForMethod(MethodsTableItem mt){
         byteCode = new MyByteBuffer();
         
-        if (mt.getName().equals("<init>")){
-            byteCode.append(BC.ALOAD_0);
-            byteCode.append(BC.INVOKESPECIAL);
-            byteCode.appendShort((short)CodeConstants.OBJECT_INIT);
-        }
-        else {
-           // byteCode.append(BC.ALOAD_0);
-            byteCode.append(BC.LDC);
-            byteCode.append((byte)58);
-            byteCode.append(BC.INVOKESTATIC);
-            byteCode.appendShort((short)CodeConstants.WRITE_LINE_STRING);
-        }
+        // Если это конструктор - создаем
+        if (mt.getName().equals("<init>"))
+            createInit();
+  
+        else 
+            parseBody(mt.getBody());    // Парсим тело функции
+        
+        if (mt.getType() == DataType.NONE)  // Если это процедура - добавляем пустой return
+            byteCode.append(BC.RETURN);
 
-        writeReturn(mt.getType());
-                
         byteCode.trimToSize();
         
         return byteCode.toArray();
     }
     
     /**
-     * Записать тип возвращаемого значения 
-     * @param type Тип возвращаемого значения проецедуры/функции
+     * Создание конструктора по умолчанию
      */
-    private void writeReturn(DataType type){         
-
-        if (type == DataType.NONE)          // Если это процедура
-            byteCode.append(BC.RETURN);
-        
-        else if (type == DataType.INTEGER || type == DataType.BOOLEAN){  // Целый и булевский тип
-            byteCode.append(BC.ICONST_0);   // ТЕСТ
-            byteCode.append(BC.IRETURN);
-        }
-        
-        else if (type == DataType.STRING)   // Если строка
-            byteCode.append(BC.ARETURN);
+    private void createInit(){
+        byteCode.append(BC.ALOAD_0);
+        byteCode.append(BC.INVOKESPECIAL);
+        byteCode.appendShort((short)CodeConstants.OBJECT_INIT);
     }
+    
+    /**
+     * Разбор операторов процедуры или функции.
+     * @param stmtList Список операторов
+     */
+    private void parseBody(ArrayList<AbstractStatement> stmtList){
+        
+        // Создаем итератор для контейнера
+        Iterator<AbstractStatement> i = stmtList.iterator();
+        AbstractStatement stmt;     // Буфер для следующего оператора
+        
+        // Проходим по всем операторам метода
+        while (i.hasNext()){
+            stmt = i.next();
+            
+            if (stmt.getStmtType() == StatementType.DIM)
+                parseDim((DimStatement)stmt);
+            
+            else if (stmt.getStmtType() == StatementType.DO_LOOP)
+                parseDoLoop((DoLoopStatement)stmt);
+            
+            else if (stmt.getStmtType() == StatementType.EXPRESSION)
+                parseExpr((ExprStatement)stmt);
+                
+            else if (stmt.getStmtType() == StatementType.FOR)
+                parseFor((ForStatement)stmt);
+                
+            else if (stmt.getStmtType() == StatementType.IF)
+                parseIf((IfStatement)stmt);
+                
+            else if (stmt.getStmtType() == StatementType.RETURN)
+                parseReturn((ReturnStatement)stmt);
+                
+            else if (stmt.getStmtType() == StatementType.WHILE)
+                parseWhile((WhileStatement)stmt);
+        }
+    }
+
+// =========== || =========== ||  =========== ||  =========== ||  =========== || 
+// =========== || =========== ||  =========== ||  =========== ||  =========== || 
+// =========== || =========== ||  =========== ||  =========== ||  =========== || 
+    
+    /**
+     * Разбираем оператор Dim
+     * @param stmt Ссылка на оператор
+     */
+    private void parseDim(DimStatement stmt){
+        
+    }
+    
+    /**
+     * Разбираем оператор Do .. Loop
+     * @param stmt Ссылка на оператор
+     */
+    private void parseDoLoop(DoLoopStatement stmt){
+        
+    }
+    
+    /**
+     * Разбираем выражение
+     * @param stmt Ссылка на оператор
+     */
+    private void parseExpr(ExprStatement stmt){
+        Expression expr = stmt.getExpr();  // Получаем хранящееся тут выражение
+        
+        // Если это вывод строки на экран
+        if (expr.getType() == Expression.WRITE_LINE_EXPR)
+            writeWriteLine((PrintLineExpression)expr);
+
+    }
+    
+    /**
+     * Разбираем оператор For
+     * @param stmt Ссылка на оператор
+     */
+    private void parseFor(ForStatement stmt){
+        
+    }
+    
+    /**
+     * Разбираем оператор If
+     * @param stmt Ссылка на оператор
+     */
+    private void parseIf(IfStatement stmt){
+        
+    }
+    
+    /**
+     * Разбираем оператор Return
+     * @param stmt Ссылка на оператор
+     */
+    private void parseReturn(ReturnStatement stmt){
+        
+    }
+    
+    /**
+     * Разбираем оператор While
+     * @param stmt Ссылка на оператор
+     */
+    private void parseWhile(WhileStatement stmt){
+        
+    }
+    
+// =========== || =========== ||  =========== ||  =========== ||  =========== || 
+// =========== || =========== ||  =========== ||  =========== ||  =========== || 
+// =========== || =========== ||  =========== ||  =========== ||  =========== || 
+    
+    /**
+     * Записать в байткод операцию WriteLine
+     * @param expr Выражение с операцией
+     */
+    private void writeWriteLine(PrintLineExpression expr){
+        
+        // Данные для вывода на экран
+        Expression data = expr.getPrintedData();
+        
+        // Если это какая-либо константа
+        if (data.getType() == Expression.CONST){
+            
+            ConstantExpression constData = (ConstantExpression)data;
+            
+            // Если это строка
+            if (constData.getDtype() == DataType.STRING){
+                byteCode.append(BC.LDC);                            // Загружаем константу на стек
+                byteCode.append((byte)constData.getConstNum());     // Пишем номер константы
+                byteCode.append(BC.INVOKESTATIC);                   // Вызов метода
+                byteCode.appendShort((short)CodeConstants.WRITE_LINE_STRING);
+            }
+            // Если целочисленная константа
+            else if (constData.getDtype() == DataType.INTEGER){
+                
+                if (constData.getIntValue() > 32767 || constData.getIntValue() < -32768){
+                    byteCode.append(BC.LDC);                            // Загружаем константу на стек
+                    byteCode.append((byte)constData.getConstNum());     // Пишем номер константы
+                }
+                
+                else if (constData.getIntValue() > 127 || constData.getIntValue() < -128){
+                    byteCode.append(BC.SIPUSH);                    // Загружаем константу на стек
+                    byteCode.appendShort((short)constData.getIntValue());
+                }
+                
+                else {
+                    byteCode.append(BC.BIPUSH);                    // Загружаем константу на стек
+                    byteCode.append((byte)constData.getIntValue());
+                }
+                
+                byteCode.append(BC.INVOKESTATIC);                   // Вызов метода
+                byteCode.appendShort((short)CodeConstants.WRITE_LINE_INT);
+            }
+            // Если логическая константа
+            else if (constData.getDtype() == DataType.BOOLEAN){
+                byteCode.append(BC.BIPUSH);                    // Загружаем константу на стек
+                
+                // Преобразуем в int
+                if (constData.getBooleanValue() == true)
+                    byteCode.append((byte)1);
+                else
+                    byteCode.append((byte)0);
+                
+                byteCode.append(BC.INVOKESTATIC);              // Вызов метода
+                byteCode.appendShort((short)CodeConstants.WRITE_LINE_INT);
+            }
+        }
+    }
+    
 }
+
+
+
+
+
+
+
+//           // byteCode.append(BC.ALOAD_0);
+//            byteCode.append(BC.LDC);
+//            byteCode.append((byte)58);
+//            byteCode.append(BC.INVOKESTATIC);
+//            byteCode.appendShort((short)CodeConstants.WRITE_LINE_STRING);
+
+
+//    /**
+//     * Записать тип возвращаемого значения 
+//     * @param type Тип возвращаемого значения проецедуры/функции
+//     */
+//    private void writeReturn(DataType type){         
+//
+//        if (type == DataType.NONE)          // Если это процедура
+//            byteCode.append(BC.RETURN);
+//        
+//        else if (type == DataType.INTEGER || type == DataType.BOOLEAN){  // Целый и булевский тип
+//            byteCode.append(BC.ICONST_0);   // ТЕСТ
+//            byteCode.append(BC.IRETURN);
+//        }
+//        
+//        else if (type == DataType.STRING)   // Если строка
+//            byteCode.append(BC.ARETURN);
+//    }

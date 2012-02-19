@@ -127,9 +127,13 @@ public class FillTables {
      */
     private static void checkIdType (IdExpression ie) throws InvalidParametersException {
         
+        // Проверяем, есть ли такая процедура/функция
         if (module.contains(ie.getName())) {
             
+            // Задаем тип возвращающего значения
             ie.setDtype(module.getTypeByName(ie.getName()));
+            
+            // Проверяем передаваемые параметры
             if (!isCorrectParams(ie, module.getParamsByOne(ie.getName()))) {
                 
                 errors.add(new CError(curMethName, "Invalid functions parameters: "
@@ -139,28 +143,47 @@ public class FillTables {
                 ie.setIdType(IdExpression.CALLFUNCTION);
                 ie.setValueType(Expression.R_VALUE);
             }
+            
+        // Если данному идентификатору ничего не передается - это переменная
         } else if (ie.getBody().isEmpty()) {
             
             ie.setIdType(IdExpression.VARIABLE);
             ie.setValueType(Expression.L_VALUE);
             ie.setDtype(curLocValsTable.getTypeFor(ie.getName()));
+        
+        // Если передали только 1 параметр
         } else if (ie.getBody().size() == 1) {
             
-            if (ie.getArrayIndex().getDtype() == DataType.INTEGER
-                    && ((ConstantExpression)ie.getArrayIndex()).getIntValue() > 0) {
+            Expression exprBuf = ie.getArrayIndex();    // Получаем то, что передают
+
+            if (exprBuf.getType() == Expression.ID){    // Если это идентификатор
                 
-                if (curLocValsTable.itemIsArray(ie.getName())) {
-                    
-                    ie.setType(IdExpression.GETITEM);
-                    ie.setValueType(Expression.L_VALUE);
-                    ie.setDtype(curLocValsTable.getTypeFor(ie.getName()));
-                    
-                } else 
-                    errors.add(new CError(curMethName, "This isn\'t array: " + 
+            }
+            else if (exprBuf.getType() == Expression.CONST){    // Если константа
+                
+                ConstantExpression constExprBuf = (ConstantExpression)exprBuf;
+
+                if (ie.getArrayIndex().getDtype() == DataType.INTEGER
+                        && constExprBuf.getIntValue() > 0) {
+
+                    if (curLocValsTable.itemIsArray(ie.getName())) {
+
+                        ie.setType(IdExpression.GETITEM);
+                        ie.setValueType(Expression.L_VALUE);
+                        ie.setDtype(curLocValsTable.getTypeFor(ie.getName()));
+
+                    } else 
+                        errors.add(new CError(curMethName, "This isn\'t array: " + 
+                                Integer.toString(ie.getLineNumber())));
+                } else
+                    errors.add(new CError(curMethName, "Bad array\'s index: " +
                             Integer.toString(ie.getLineNumber())));
-            } else
-                errors.add(new CError(curMethName, "Bad array\'s index: " +
-                        Integer.toString(ie.getLineNumber())));
+            }
+            else if (exprBuf.getType() == Expression.MATH){     // Если мат. выражение
+                
+            }
+      
+            // Иначе ошибка
         } else
             errors.add(new CError(curMethName, "Invalid count of indexes: " +
                     Integer.toString(ie.getLineNumber())));
@@ -185,7 +208,7 @@ public class FillTables {
     public static void addCostantInfoToTable(ConstantExpression expr) throws InvalidParametersException{
         
         // Если тип Integer и оно занимает больше дух байт
-        if (expr.getDtype() == DataType.INTEGER && expr.getIntValue() > 32767){
+        if (expr.getDtype() == DataType.INTEGER && (expr.getIntValue() > 32767 || expr.getIntValue() < -32768)){
             ConstantsTableItem intConst = new ConstantsTableItem(0,Integer.valueOf(expr.getIntValue()));
             ctMain.add(intConst);
             
