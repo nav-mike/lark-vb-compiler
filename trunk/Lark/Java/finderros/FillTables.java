@@ -28,6 +28,9 @@ public class FillTables {
     /** Тип функции/процедуры. */
     private static DataType dt;
     
+    /** Таблица констант главного класса. */
+    private static ConstantsTable ctMain;
+    
         
     /**
      * Метод проверки наличия возврата в процедуре.
@@ -175,6 +178,25 @@ public class FillTables {
     }
     
     /**
+     * Создание констант Integer и String
+     * @param expr Константное выражение
+     * @throws InvalidParametersException 
+     */
+    public static void addCostantInfoToTable(ConstantExpression expr) throws InvalidParametersException{
+        
+        // Если тип Integer и оно занимает больше дух байт
+        if (expr.getDtype() == DataType.INTEGER && expr.getIntValue() > 32767){
+            ctMain.add(new ConstantsTableItem(0,Integer.valueOf(expr.getIntValue())));
+        }
+        // Если тип String
+        else if(expr.getDtype() == DataType.STRING){
+            ConstantsTableItem strConst = new ConstantsTableItem(0,expr.getStringValue());
+            ctMain.add(strConst);
+            ctMain.add(new ConstantsTableItem(0,strConst));
+        }
+    }
+    
+    /**
      * Функция установки типа операндов операторов.
      * @param expr Проверяемый операнд.
      * @throws InvalidParametersException Исключение выбрасываемое при использовании
@@ -185,6 +207,9 @@ public class FillTables {
         if (expr.getType() == Expression.CONST) {
             
             expr.setValueType(Expression.R_VALUE);
+            
+            addCostantInfoToTable((ConstantExpression)expr);
+            
         } else if (expr.getType() == Expression.MATH) {
             
             setTypeForExpression(((MathExpression)expr).getLeft());
@@ -204,7 +229,7 @@ public class FillTables {
                 errors.add(new CError(curMethName, "Operands have a different types: " +
                         Integer.toString(expr.getLineNumber())));
             expr.setType(Expression.R_VALUE);
-        } else {
+        } else if (expr.getType() == Expression.ID){
             
             if (!module.contains(((IdExpression)expr).getName()) && 
                         !curLocValsTable.contains(((IdExpression)expr).getName())) {
@@ -226,6 +251,16 @@ public class FillTables {
             }
             
         }
+        else if (expr.getType() == Expression.WRITE_EXPR){
+            PrintExpression prex = (PrintExpression)expr;
+            setTypeForExpression(prex.getPrintedData());
+            
+        }
+        else if (expr.getType() == Expression.WRITE_LINE_EXPR){
+            PrintLineExpression prex = (PrintLineExpression)expr;
+            setTypeForExpression(prex.getPrintedData());
+        }
+
     }
 
     /**
@@ -271,7 +306,9 @@ public class FillTables {
         module = item;                              // Сохраняем модуль
         
         ConstantsTable ct = new ConstantsTable();   // Создаем таблицу констант 
-                        
+        
+        ctMain = ct;
+        
         createMainConstants(ct);                    // Заполняем таблицу основными полями
         
         createRTLConstants(ct);                     // Заполняем таблицу константами RTL
