@@ -41,6 +41,20 @@ public class Expression implements XMLInterface{
     
     /** Выражение - математическая операция. */
     public final static int READ_LINE_EXPR = 6;
+    
+    /** Номер константы в таблице констант (если нужен). */
+    private int constNum;
+
+    
+    public int getConstNum() {
+        return constNum;
+    }
+
+    public void setConstNum(int constNum) {
+        this.constNum = constNum;
+    }
+    
+    
         
     /**
      * Метод задания допустимости выражения.
