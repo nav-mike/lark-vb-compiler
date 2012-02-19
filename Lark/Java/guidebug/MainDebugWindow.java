@@ -13,10 +13,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import main.CError;
 import newtree.Module;
-import tables.ConstantsTable;
-import tables.ErrorsTable;
-import tables.InvalidParametersException;
-import tables.ProgramsClass;
+import tables.*;
 import tables.gui.GuiConstantsTable;
 import tables.gui.GuiErrorsTable;
 import tables.gui.GuiLocalVariablesTable;
@@ -48,9 +45,12 @@ public class MainDebugWindow extends JFrame {
         try {
             rtlClass = new ProgramsClass(FillTables.fillConsoleConstantsTable(), null, null);
             
-            ConstantsTable cTable = FillTables.fillMainClassConstatntsTable(item);
-            mainClass = new ProgramsClass(cTable,
-                    FillTables.fillModulesMethodsTable(item.getDeclList(),cTable), null);
+            MethodsTable mTable = new MethodsTable();
+            
+            ConstantsTable cTable = FillTables.fillMainClassConstatntsTable(item,mTable);
+                        
+            mainClass = new ProgramsClass(cTable,mTable, null);
+            
         } catch (InvalidParametersException ex) {
             Logger.getLogger(MainDebugWindow.class.getName()).log(Level.SEVERE, null, ex);
         }

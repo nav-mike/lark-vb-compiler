@@ -1,5 +1,6 @@
 package finderros;
 
+import codegen.CodeConstants;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
@@ -27,29 +28,7 @@ public class FillTables {
     /** Тип функции/процедуры. */
     private static DataType dt;
     
-    /** Ссылка на таблицу констант. */
-    private static ConstantsTable cTable;
-    
-//    private static void checkHasReturnFromProcedure (ArrayList<AbstractStatement> body) {
-//        
-//        Iterator<AbstractStatement> it = body.iterator();
-//        boolean isRemove = false;
-//        
-//        while (it.hasNext()) {
-//            
-//            AbstractStatement item = it.next();
-//            
-//            if (item.getStmtType() == StatementType.RETURN) {
-//                
-//                isRemove = true;
-//                break;
-//            }
-//        }
-//        
-//        if (isRemove)
-//            errors.add(new CError(curMethName, "Procedure cann\'t have \"Return\""));
-//    }
-    
+        
     /**
      * Метод проверки наличия возврата в процедуре.
      * @param body Тело процедуры.
@@ -248,57 +227,6 @@ public class FillTables {
             
         }
     }
-    
-    /**
-     * Метод поиска необъявленного идентификатора.
-     * @param item Проверямое выражение.
-     * @return true, если переменная не объявлена.
-     */
-    @Deprecated
-    private static boolean isUndeclaredId (ExprStatement item) throws InvalidParametersException {
-        
-        boolean flag = false;
-        
-        if (item.getExpr().getType() == Expression.MATH) {
-            
-            MathExpression me = (MathExpression) item.getExpr();
-            
-            if (me.getLeft().getType() == Expression.ID) {
-                
-                IdExpression ie = (IdExpression) me.getLeft(); 
-                
-                if (!module.contains(ie.getName()) && 
-                        !curLocValsTable.contains(ie.getName())) {
-                    errors.add(new CError(curMethName, "Undeclared identifier: " 
-                            + Integer.toString(ie.getLineNumber())));
-                    flag = true;
-                } else checkIdType(ie);
-            } if (me.getRight().getType() == Expression.ID) {
-                
-                IdExpression ie1 = (IdExpression) me.getRight();
-                
-                if (!module.contains(ie1.getName()) && 
-                        !curLocValsTable.contains(ie1.getName())) {
-                    errors.add(new CError(curMethName, "Undeclared identifier: " 
-                            + Integer.toString(ie1.getLineNumber())));
-                    flag = true;
-                } else checkIdType(ie1);
-            }
-            checkDataType(me);
-        } else if (item.getExpr().getType() == Expression.ID) {
-            
-            IdExpression ie1 = (IdExpression) item.getExpr();
-                
-                if (!module.contains(ie1.getName()) && 
-                        !curLocValsTable.contains(ie1.getName())) {
-                    errors.add(new CError(curMethName, "Undeclared identifier: " 
-                            + Integer.toString(ie1.getLineNumber())));
-                    flag = true;
-                } else checkIdType(ie1);
-        }
-        
-        return flag;
-    }
 
     /**
      * Метод получения списка отловленных ошибок.
@@ -307,96 +235,15 @@ public class FillTables {
     public static ArrayList<CError> getErrors() {
         return errors;
     }
-    
-    /**
-     * Метод добавления процедуры Main в таблицу констант, если это необходимо.
-     * @param ct Таблица констант.
-     * @param item Модуль программы.
-     * @throws InvalidParametersException Исключение выбрасывается при использовании
-     * неверных тиипов.
-     */
-    private static void addMainToConstantsTable (ConstantsTable ct, final Module item, int classConst) throws InvalidParametersException {
         
-        if (item.contains("main"))
-            return;
-        
-        ConstantsTableItem itemName = new ConstantsTableItem(0, "main");
-        ConstantsTableItem itemDescr = new ConstantsTableItem(0, "([Ljava/lang/String;)V");
-
-        ct.add(itemName); ct.add(itemDescr);
-        
-        ConstantsTableItem itemNaT = new ConstantsTableItem(0, itemName, itemDescr);
-        
-        ct.add(itemNaT);
-        
-        ConstantsTableItem main = ConstantsTableItem.CreateMethodRefConst(0, ct.get(classConst), itemNaT);
-        
-        ct.add(main);
-        
-        methodRefNumbers.add(itemName.getNumber());
-    }
     
     
-    /**
-     * Метод добавления конструктора класса в таблицу констант.
-     * @param ct Таблица констант.
-     * @param item Модуль программы.
-     * @throws InvalidParametersException Исключение выбрасывается при использовании
-     * неверных тиипов.
-     */
-    private static void addConstructorToConstantsTable (ConstantsTable ct, final Module item, int classConst) throws InvalidParametersException {
-               
-        ConstantsTableItem itemName = new ConstantsTableItem(0, "<init>");
-        ConstantsTableItem itemDescr = new ConstantsTableItem(0, "()V");
-
-        ct.add(itemName); ct.add(itemDescr);
-        
-        ConstantsTableItem itemNaT = new ConstantsTableItem(0, itemName, itemDescr);
-        
-        ct.add(itemNaT);
-        
-        ConstantsTableItem init = ConstantsTableItem.CreateMethodRefConst(0, ct.get(classConst), itemNaT);
-        
-        ct.add(init);
-        
-        methodRefNumbers.add(itemName.getNumber());
-    }
-
-    /**
-     * Метод добавления процедуры Main в таблицу методов класса.
-     * @param mt Таблица методов.
-     * @param item Модуль программы.
-     */
-    private static void addMainToMethodsTable (MethodsTable mt, final ArrayList<AbstractDeclaration> items,
-            LocalVariablesTable mainLocals) throws InvalidParametersException {
-        
-        if (items.contains(new AbstractDeclaration("main", null, null)))
-            return;
-        
-        MethodsTableItem main = new MethodsTableItem("main", DataType.NONE, 0, null);
-        
-        mainLocals.add(new LocalVariablesTableItem("args", 0, DataType.STRING));
-        
-        main.setLocalVariables(curLocValsTable);
-        
-        mt.add(main);
-    }
     
-    /**
-     * Метод добавления процедуры Main в таблицу методов класса.
-     * @param mt Таблица методов.
-     * @param item Модуль программы.
-     */
-    private static void addConstructorToMethodsTable (MethodsTable mt, final ArrayList<AbstractDeclaration> items) throws InvalidParametersException {
-        
-        MethodsTableItem init = new MethodsTableItem("<init>", DataType.NONE, 0, null);
-        
-        LocalVariablesTable initLocals = new LocalVariablesTable();
-        initLocals.add(new LocalVariablesTableItem("this", DataType.THIS, 0));
-        init.setLocalVariables(initLocals);
-        
-        mt.add(init);
-    }
+// ==============|| ==============|| ==============|| ==============|| ==============|| ==============||
+// ==============|| ==============|| ==============|| ==============|| ==============|| ==============||
+// ==============|| ==============|| ==============|| ==============|| ==============|| ==============||  
+    
+    
     
     /**
      * Метод заполнения таблицы констант для RTL класса Console.
@@ -405,11 +252,9 @@ public class FillTables {
      */
     public static ConstantsTable fillConsoleConstantsTable () throws InvalidParametersException {
         
-        ConstantsTable ct = new ConstantsTable();
+        ConstantsTable ct = new ConstantsTable();   // Создаем таблицу констант 
                 
-        methodRefNumbers = new ArrayList<Integer>();
-                
-        writeStartConstatntsToTable(ct);
+        createRTLConstants(ct);                 // Заполняем таблицу константами RTL
         
         return ct;
     }
@@ -421,94 +266,245 @@ public class FillTables {
      * @throws InvalidParametersException Исключение выбрасывается при неверном
      * создании констант.
      */
-    public static ConstantsTable fillMainClassConstatntsTable (Module item) throws InvalidParametersException {
+    public static ConstantsTable fillMainClassConstatntsTable (Module item, MethodsTable methsTable) throws InvalidParametersException {
         
-        ConstantsTable ct = new ConstantsTable();
+        module = item;                              // Сохраняем модуль
         
-        methodRefNumbers = new ArrayList<Integer>();
+        ConstantsTable ct = new ConstantsTable();   // Создаем таблицу констант 
+                        
+        createMainConstants(ct);                    // Заполняем таблицу основными полями
         
-        module = item;
+        createRTLConstants(ct);                     // Заполняем таблицу константами RTL
+
+        createThisClassConstants(ct, methsTable);   // Заполняем данные о текущем классе
         
-       // writeStartConstatntsToTable(ct);    // А НАДО???? НАДО!
-        
-        // ====================================================
-        ct.add(new ConstantsTableItem(1, "Code"));
-        
-        ct.add(new ConstantsTableItem(2, "java/lang/Object"));
-        ct.add(ConstantsTableItem.CreateClassConst(3, ct.get(2)));
-        ConstantsTableItem a1, a2, a3, a4;
-        a1 = new ConstantsTableItem(62, "<init>");
-        ct.add(a1);
-        
-        a2 = new ConstantsTableItem(63, "()V");
-        ct.add(a2);
-        
-        a3 = new ConstantsTableItem(64, ct.get(a1.getNumber()), ct.get(a2.getNumber()));
-        ct.add(a3);
-        
-        ct.add(ConstantsTableItem.CreateMethodRefConst(65, ct.get(3), ct.get(a3.getNumber())));
-        //=========================================================
-        
-        
-        
-        Integer index = ct.size();
-        
-        //ct.add(new ConstantsTableItem(++index, "Code"));
-        ct.add(new ConstantsTableItem(++index, item.getId()));
-        
-        ConstantsTableItem classConst = ConstantsTableItem.CreateClassConst(++index, ct.get(index-1));
-        ct.add(classConst);
-        
-        fillMainClassConstantsTableByMethods(ct, item.getDeclList(), ++index, 
-                index - 1);
-        
-     //   addMainToConstantsTable(ct, item,classConst.getNumber());
-        
-        addConstructorToConstantsTable(ct,item,classConst.getNumber());
-        
+        createThisMethodsConstants(ct, methsTable); // Заполняем данные методов текущего класса
+      
         return ct;
-    }
+    }    
     
-    private static void addExprConstToTable (ExprStatement item) {
+     /**
+     * Заполнить таблицу констант основными данными
+     * @param ct Текущая таблица констант
+     */
+    public static void createMainConstants(ConstantsTable ct) throws InvalidParametersException{
         
-        //if (item)
-    }
+        // Создадим константу Code
+        ConstantsTableItem codeItem = new ConstantsTableItem("Code");
+        ct.add(codeItem);                            // Добавим в контейнер
+        CodeConstants.CODE = codeItem.getNumber();   // Запомним ее
+        
+        codeItem = null;
+        
+        // Создадим константу класса Object
+        ConstantsTableItem objectItem = new ConstantsTableItem("java/lang/Object");
+        ct.add(objectItem);                            // Добавим в контейнер ее имя
+        
+        // Создадим ссылку на класс
+        ConstantsTableItem classItem = ConstantsTableItem.CreateClassConst(0,ct.get(objectItem.getNumber()));
+        ct.add(classItem);                            // Добавим в контейнер
+        
+        CodeConstants.OBJECT_CLASS = classItem.getNumber(); // Запомним ее 
+        
+        objectItem = null;
+        classItem  = null;
+                
+        // Создадим константу класса String
+        ConstantsTableItem stringItem = new ConstantsTableItem("java/lang/String");
+        ct.add(stringItem);
+        
+        CodeConstants.STRING = stringItem.getNumber(); // Запомним ее 
+        stringItem = null;
+        
+        // Создадим конструктор <init>       
+        CodeConstants.OBJECT_INIT = addMethodToTable(
+            CodeConstants.OBJECT_CLASS,
+            "<init>", "()V", ct);
+    }     
     
-    private static void addConstToTable (AbstractDeclaration items, 
-            ConstantsTable ct) {
+    /**
+     * Заполнить таблицу константами RTL
+     * @param ct Таблица констант
+     */
+    public static void createRTLConstants(ConstantsTable ct) throws InvalidParametersException{
+             
+        // Добавляем имя консольного класса
+        ConstantsTableItem consItem = new ConstantsTableItem(8, "Console");
+        ct.add(consItem);
         
-        for (int i = 0; i < items.getBody().size(); i++) {
-            
-        }
+         // Добавляем его дескриптор
+        ConstantsTableItem consDescr = ConstantsTableItem.CreateClassConst(0,
+                ct.get(consItem.getNumber()));
+        ct.add(consDescr);
+        CodeConstants.CONSOLE_CLASS = consDescr.getNumber();
+        consDescr = null;
+        consItem = null;
+        
+        // Пишем метод записи строки с переносом
+        CodeConstants.WRITE_LINE_STRING = addMethodToTable(
+                CodeConstants.CONSOLE_CLASS,
+                "WriteLine", "(Ljava/lang/String;)V", ct);
+                
+        CodeConstants.WRITE_LINE_INT = addMethodToTable(
+                CodeConstants.CONSOLE_CLASS,
+                "WriteLine", "(I)V", ct);
+        
+        CodeConstants.WRITE_LINE_BOOLEAN = addMethodToTable(
+                CodeConstants.CONSOLE_CLASS,
+                "WriteLine", "(Z)V", ct);
+
+        CodeConstants.WRITE_STRING = addMethodToTable(
+                CodeConstants.CONSOLE_CLASS,
+                "Write", "(Ljava/lang/String;)V", ct);
+        
+        CodeConstants.WRITE_INT = addMethodToTable(
+                CodeConstants.CONSOLE_CLASS,
+                "Write", "(I)V", ct);
+        
+        CodeConstants.WRITE_BOOLEAN = addMethodToTable(
+                CodeConstants.CONSOLE_CLASS,
+                "Write", "(Z)V", ct);
+        
+        CodeConstants.READ_LINE_STRING = addMethodToTable(
+                CodeConstants.CONSOLE_CLASS,
+                "ReadLine", "()Ljava/lang/String;", ct);
+        
+        CodeConstants.STRING_TO_INT = addMethodToTable(
+                CodeConstants.CONSOLE_CLASS,
+                "StringToInteger", "(Ljava/lang/String;)I", ct);
+        
+        CodeConstants.STRING_TO_BOOLEAN = addMethodToTable(
+                CodeConstants.CONSOLE_CLASS,
+                "StringToBoolean", "(Ljava/lang/String;)Z", ct);
+    }   
+    
+    /**
+     * Запись метода класса RTL в таблицу констант
+     * @param name Имя метода
+     * @param descr Дескриптор метода
+     * @param ct Таблица констант
+     * @param mt Таблица методов
+     * @return Номер его MR в таблице
+     * @throws InvalidParametersException Не тот параметр
+     */
+    public static int addMethodToTable(
+            int classNum, 
+            String name, 
+            String descr, 
+            ConstantsTable ct) throws InvalidParametersException{
+        
+        ConstantsTableItem wrLname = new ConstantsTableItem(name);      // Создаем имя
+        ConstantsTableItem wrLnDescr = new ConstantsTableItem(descr);   // Создаем дескриптор
+        
+        ct.add(wrLname);
+        ct.add(wrLnDescr);
+        
+        // Создаем Nat
+        ConstantsTableItem wrLnNaT = new ConstantsTableItem(0, 
+                ct.get(wrLname.getNumber()), 
+                ct.get(wrLnDescr.getNumber()));
+
+        ct.add(wrLnNaT);
+                
+        // Создаем MR
+        ConstantsTableItem wrLnMR = ConstantsTableItem.CreateMethodRefConst(0,
+                ct.get(classNum),
+                ct.get(wrLnNaT.getNumber()));
+                
+        // Заносим все в таблицу
+        ct.add(wrLnMR);
+        
+        return wrLnMR.getNumber();  // Возвращаем номер
     }
     
     /**
-     * Метод заполнения таблицы констант методами пользователя пользовательского
-     * модуля.
-     * @param ct Таблица констант.
-     * @param items Список методов.
-     * @param size Размер таблицы констант.
-     * @param classIndex Индекс константы модуля (класса) в таблице констант.
-     * @throws InvalidParametersException Исключение выбрасывается при неверном
-     * создании констант.
+     * Записываем в таблицу данные главного класса
+     * @param ct Таблица констант
+     * @throws InvalidParametersException 
      */
-    private static void fillMainClassConstantsTableByMethods (ConstantsTable ct,
-        ArrayList<AbstractDeclaration> items, Integer size, int classIndex) throws InvalidParametersException {
+    public static void createThisClassConstants(ConstantsTable ct, MethodsTable mt) throws InvalidParametersException{
+             
+        // Сoздаем имя
+        ConstantsTableItem className = new ConstantsTableItem(module.getId());
+        ct.add(className);
+                
+        // Создаем класс
+        ConstantsTableItem classConst = ConstantsTableItem.CreateClassConst(0, 
+                ct.get(className.getNumber()));
         
-        ConstantsTableItem metRef = null;
-        int j = 0;
-        for (int i = 0; i < items.size(); i++) {
+        // Пишем все в таблицу
+        ct.add(classConst);
+        
+        CodeConstants.CURRENT_CLASS = classConst.getNumber();
+        
+        // Создаем конструктор по умолчанию
+        CodeConstants.CURRENT_INIT = addMethodToTable(
+            CodeConstants.CURRENT_CLASS,
+            "<init>", "()V", ct);   
+        
+        // Добавим конструктор в таблицу методов
+        MethodsTableItem initItem = new MethodsTableItem("<init>",
+                DataType.NONE, null,
+                CodeConstants.CURRENT_INIT, null);
+        
+        mt.add(initItem);
+    }
+    
+    /**
+     * Добавим в таблицу констант методы главного класса
+     * @param ct Таблица констант
+     * @throws InvalidParametersException 
+     */
+    public static void createThisMethodsConstants(ConstantsTable ct, MethodsTable mt) throws InvalidParametersException{
+        
+        // Берем список методов
+        ArrayList<AbstractDeclaration> declList = module.getDeclList();
+        Iterator<AbstractDeclaration> i = declList.iterator();
+        
+        AbstractDeclaration buf;    // Буфер для одной переменной
+        MethodsTableItem methItem;  // Новый лемент таблицы методов
+        int constNum;               // Номер MR новой функции   
+        LocalVariablesTable lvt;    // Таблица локальных переменных новой функции
+        
+        // Перебираем контейнер с объявлениями функций/процедур
+        while(i.hasNext()){
+            buf = i.next();
             
-            int index1 = size + j++, index2 = size + j++, index3 = size + j++;
-            metRef = new ConstantsTableItem(index1, items.get(i).getName());
-            ct.add(metRef);
-            ct.add(new ConstantsTableItem(index2, 
-                    constructDescriptorOfMethod(items.get(i))));
-            ct.add(new ConstantsTableItem(index3,ct.get(index1), ct.get(index2)));
-            ct.add(ConstantsTableItem.CreateMethodRefConst(size + j++,ct.get(classIndex), ct.get(index3)));
-            methodRefNumbers.add(metRef.getNumber());
+            // Проверим на множественное определение функций
+            if (mt.contains(new MethodsTableItem(buf.getName(), DataType.NONE, null, 0, null)))
+                errors.add(new CError(curMethName, "Multiple declaration: "
+                        + Integer.toString(buf.getLineNumber())));
+            else {
+                
+                // Проверим наличие return
+                if (buf.getRetType() != DataType.NONE)
+                    checkHasReturnFromFunction(buf.getBody());
+                else
+                    checkHasReturnFromProcedure(buf.getBody());
+                                
+                // Добавляем метод в таблицу констант, 
+                constNum = addMethodToTable(CodeConstants.CURRENT_CLASS,
+                        buf.getName(),                      // Получаем имя
+                        constructDescriptorOfMethod(buf),   // Получаем дескриптор
+                        ct);                                // Наша таблица
+
+                lvt = new LocalVariablesTable();        // Таблица лок переменных данного метода
+                
+                // Заполняем таблицу локальных переменных метода
+                fillLocalVariablesTable(buf.getParamList(), buf.getBody(), lvt);
+
+                if (buf.getName().equals("main"))
+                    lvt.add(new LocalVariablesTableItem("args", 0, DataType.STRING));
+
+                // Создаем элемент таблицы переменных
+                methItem = new MethodsTableItem(buf.getName(),
+                    buf.getRetType(), lvt,
+                    constNum, buf.getBody());
+
+                mt.add(methItem);   // Заносим в таблицу
+            }
+            
         }
-        
     }
     
     /**
@@ -531,6 +527,7 @@ public class FillTables {
             }
         }
         
+        // Если это main, то передадим ему параметр
         if (item.getName().equals("main")){
             result += "[Ljava/lang/String;";
         }
@@ -543,201 +540,8 @@ public class FillTables {
             result += ";";
         
         return result;
-        
     }
-    
-    /**
-     * Метод записи стандартного начала таблицы констант.
-     * @param ct Ссылка на таблицу констант.
-     * @throws InvalidParametersException Исключение выбрасывается при неверном
-     * создании констант.
-     */
-    private static void writeStartConstatntsToTable (ConstantsTable ct) throws InvalidParametersException {
-        
-        ct.add(new ConstantsTableItem(1, "Code"));
-
-        writeConsoleClassToConstantTable(ct);
-        
-    }
-    
-    /**
-     * Метод заполнения таблицы констант RTL классом Console.
-     * @param ct Ссылка на таблицу констант.
-     * @throws InvalidParametersException Исключение выбрасывается при неверном
-     * создании констант.
-     */
-    private static void writeConsoleClassToConstantTable (ConstantsTable ct) throws InvalidParametersException {
-        
-        ct.add(new ConstantsTableItem(2, "java/lang/Object"));
-        ct.add(ConstantsTableItem.CreateClassConst(3, ct.get(2)));      
-        
-        ct.add(new ConstantsTableItem(2, "Console"));
-        ct.add(ConstantsTableItem.CreateClassConst(3, ct.get(2 + 2)));
-        
-        ct.add(new ConstantsTableItem(4, "ReadLine"));
-        ct.add(new ConstantsTableItem(5, "()Ljava/lang/String;"));
-        ct.add(new ConstantsTableItem(6, ct.get(4 + 2), ct.get(5 + 2)));
-        ct.add(ConstantsTableItem.CreateMethodRefConst(7, ct.get(3 + 2), ct.get(6 + 2)));
-       // methodRefNumbers.add(4 + 2);
-        
-        
-        ct.add(new ConstantsTableItem(8, "StringToInteger"));
-        ct.add(new ConstantsTableItem(9, "(Ljava/lang/String;)I"));
-        ct.add(new ConstantsTableItem(10, ct.get(8 + 2), ct.get(9 + 2)));
-        ct.add(ConstantsTableItem.CreateMethodRefConst(11, ct.get(3 + 2), ct.get(10 + 2)));
-      //  methodRefNumbers.add(8 + 2);
-        
-        ct.add(new ConstantsTableItem(12, "StringToChar"));
-        ct.add(new ConstantsTableItem(13, "(Ljava/lang/String;)C"));
-        ct.add(new ConstantsTableItem(14, ct.get(12 + 2), ct.get(13 + 2)));
-        ct.add(ConstantsTableItem.CreateMethodRefConst(15, ct.get(3 + 2), ct.get(14 + 2)));
-       // methodRefNumbers.add(12 + 2);
-        
-        ct.add(new ConstantsTableItem(16, "StringToBoolean"));
-        ct.add(new ConstantsTableItem(17, "(Ljava/lang/String;)Z"));
-        ct.add(new ConstantsTableItem(18, ct.get(16 + 2), ct.get(17 + 2)));
-        ct.add(ConstantsTableItem.CreateMethodRefConst(19, ct.get(3 + 2), ct.get(18 + 2)));
-     //   methodRefNumbers.add(16 + 2);
-        
-        ct.add(new ConstantsTableItem(20, "WriteLine"));
-        ct.add(new ConstantsTableItem(21, "(Ljava/lang/String;)V"));
-        ct.add(new ConstantsTableItem(22, ct.get(20 + 2), ct.get(21 + 2)));
-        ct.add(ConstantsTableItem.CreateMethodRefConst(23, ct.get(3 + 2), ct.get(22 + 2)));
-      //  methodRefNumbers.add(20 + 2);
-        
-        ct.add(new ConstantsTableItem(24, "IntegerToString"));
-        ct.add(new ConstantsTableItem(25, "(I)Ljava/lang/String;"));
-        ct.add(new ConstantsTableItem(26, ct.get(24 + 2), ct.get(25 + 2)));
-        ct.add(ConstantsTableItem.CreateMethodRefConst(27, ct.get(3 + 2), ct.get(26 + 2)));
-      //  methodRefNumbers.add(24 + 2);
-        
-        ct.add(new ConstantsTableItem(28, "CharToString"));
-        ct.add(new ConstantsTableItem(29, "(C)Ljava/lang/String;"));
-        ct.add(new ConstantsTableItem(30, ct.get(28 + 2), ct.get(29 + 2)));
-        ct.add(ConstantsTableItem.CreateMethodRefConst(31, ct.get(3 + 2), ct.get(30 + 2)));
-      //  methodRefNumbers.add(28 + 2);
-        
-        ct.add(new ConstantsTableItem(32, "BooleanToString"));
-        ct.add(new ConstantsTableItem(33, "(Z)Ljava/lang/String;"));
-        ct.add(new ConstantsTableItem(34, ct.get(32 + 2), ct.get(33 + 2)));
-        ct.add(ConstantsTableItem.CreateMethodRefConst(35, ct.get(3 + 2), ct.get(34 + 2)));
-      //  methodRefNumbers.add(32 + 2);
-        
-        ct.add(new ConstantsTableItem(36, "Write"));
-        ct.add(new ConstantsTableItem(37, "(Ljava/lang/String;)V"));
-        ct.add(new ConstantsTableItem(38, ct.get(36 + 2), ct.get(37 + 2)));
-        ct.add(ConstantsTableItem.CreateMethodRefConst(39, ct.get(3 + 2), ct.get(38 + 2)));
-      //  methodRefNumbers.add(36 + 2);
-        
-        ct.add(new ConstantsTableItem(39+1, "Read"));
-        ct.add(new ConstantsTableItem(40+1, "()C"));
-        ct.add(new ConstantsTableItem(41+1, ct.get(39 + 3), ct.get(40 + 3)));
-        ct.add(ConstantsTableItem.CreateMethodRefConst(42 + 3, ct.get(3 + 2), ct.get(41 + 3)));
-       // methodRefNumbers.add(40 + 2);
-        
-        ct.add(new ConstantsTableItem(43+1, "CharToInteger"));
-        ct.add(new ConstantsTableItem(44+1, "(C)I"));
-        ct.add(new ConstantsTableItem(45+1, ct.get(43 + 3), ct.get(44 + 3)));
-        ct.add(ConstantsTableItem.CreateMethodRefConst(46 + 3, ct.get(3 + 2), ct.get(45 + 3)));
-       // methodRefNumbers.add(44 + 2);
-        
-        ct.add(new ConstantsTableItem(47+1, "IntegerToChar"));
-        ct.add(new ConstantsTableItem(48+1, "(I)C"));
-        ct.add(new ConstantsTableItem(49+1, ct.get(47 + 3), ct.get(48 + 3)));
-        ct.add(ConstantsTableItem.CreateMethodRefConst(50 + 3, ct.get(3 + 2), ct.get(49 + 3)));
-       // methodRefNumbers.add(48 + 2);
-        
-        ct.add(new ConstantsTableItem(51+1, "CharToBoolean"));
-        ct.add(new ConstantsTableItem(52+1, "(C)Z"));
-        ct.add(new ConstantsTableItem(53+1, ct.get(51 + 3), ct.get(52 + 3)));
-        ct.add(ConstantsTableItem.CreateMethodRefConst(54 + 3, ct.get(3 + 2), ct.get(53 + 3)));
-      //  methodRefNumbers.add(52 + 2);
-        
-        ct.add(new ConstantsTableItem(55+1, "BooleanToChar"));
-        ct.add(new ConstantsTableItem(56+1, "(Z)C"));
-        ct.add(new ConstantsTableItem(57+1, ct.get(55 + 3), ct.get(56 + 3)));
-        ct.add(ConstantsTableItem.CreateMethodRefConst(58 + 3, ct.get(3 + 2), ct.get(57 + 3)));
-        //methodRefNumbers.add(56 + 2);
-        
-        ConstantsTableItem a1, a2, a3, a4;
-        a1 = new ConstantsTableItem(62, "<init>");
-        ct.add(a1);
-        
-        a2 = new ConstantsTableItem(63, "()V");
-        ct.add(a2);
-        
-        a3 = new ConstantsTableItem(64, ct.get(a1.getNumber()), ct.get(a2.getNumber()));
-        ct.add(a3);
-        
-        ct.add(ConstantsTableItem.CreateMethodRefConst(65, ct.get(3), ct.get(a3.getNumber())));
-        
-    }
-    
-    /**
-     * Метод заполнения таблицы методов главного модуля.
-     * @param items Список функций/процедур методов.
-     * @return Заполненная таблица методов главного модуля.
-     */
-    public static MethodsTable fillModulesMethodsTable (ArrayList<AbstractDeclaration> items, ConstantsTable table) throws InvalidParametersException {
-        
-        cTable = table;
-        
-        MethodsTable mt = new MethodsTable();
-        
-        for (int i = 0; i < items.size(); i++) {
-            
-            curMethName = items.get(i).getName();
-            
-            if (mt.contains(new MethodsTableItem(items.get(i).getName(), DataType.NONE, i, null)))
-                errors.add(new CError(curMethName, "Multiple declaration: "
-                        + Integer.toString(items.get(i).getLineNumber())));
-            else {
-                LocalVariablesTable lvt = new LocalVariablesTable();
-                curMethName = items.get(i).getName();
-                dt = items.get(i).getRetType();
-                
-                if (items.get(i).getRetType() != DataType.NONE)
-                    checkHasReturnFromFunction(items.get(i).getBody());
-                else
-                    checkHasReturnFromProcedure(items.get(i).getBody());
-                MethodsTableItem item;
-                
-                if (items.get(i).getName().equals("main") == false){
-                    item = new MethodsTableItem(items.get(i).getName(),
-                        items.get(i).getRetType(), i + 1,
-                        fillLocalVariablesTable(items.get(i).getParamList(),items.get(i).getBody(),lvt));
-                    
-                    item.setConstItem(cTable.get(methodRefNumbers.get(i)));
-                    mt.add(item);
-                }
-                else{
-                   // addMainToMethodsTable(mt, items, lvt);
-                    
-                    if (items.contains(new AbstractDeclaration("main", null, null)) == false){
-
-                        MethodsTableItem main = new MethodsTableItem("main", DataType.NONE, i + 1, null);
-
-                        lvt.add(new LocalVariablesTableItem("args", 0, DataType.STRING));
-
-                        fillLocalVariablesTable(items.get(i).getParamList(),items.get(i).getBody(),lvt);
-                        
-                        main.setLocalVariables(curLocValsTable);
-                        main.setConstItem(cTable.get(methodRefNumbers.get(i)));
-                        mt.add(main);
-                    }
-                }
-                    
-
-            }
-        }
-        
-        
-        
-        addConstructorToMethodsTable(mt, items);
-        
-        return mt;
-    }
-    
+  
     /**
      * Функция замены присваивания равенством в условии.
      * @param es Математический оператор.
@@ -880,8 +684,7 @@ public class FillTables {
     private static void findLocalVariableInDim (DimStatement item, LocalVariablesTable lvt) throws InvalidParametersException {
         
         for (int i = 0; i < item.getBodyMain().size(); i++) {
-            
-            
+
             findLocalVariableInAsExpression(item.getBodyMain().get(i), lvt, item.getLineNumber());
         }
         
@@ -941,16 +744,141 @@ public class FillTables {
         }
         
     }
-    
-    private static ArrayList<Integer> methodRefNumbers;
-
-    /**
-     * Получить список номеров констант типа CONSTANT_MethodRef
-     * @return Контейнер с номерами
-     */ 
-    public static ArrayList<Integer> getMethodRefNumbers() {
-        return methodRefNumbers;
-    }
+     
     
     
+    
+// ==============|| ==============|| ==============|| ==============|| ==============|| ==============||
+// ==============|| ==============|| ==============|| ==============|| ==============|| ==============||
+// ==============|| ==============|| ==============|| ==============|| ==============|| ==============||  
+ 
+    
+    
+    
+    
+//    /**
+//     * Метод заполнения таблицы методов главного модуля.
+//     * @param items Список функций/процедур методов.
+//     * @return Заполненная таблица методов главного модуля.
+//     */
+//    public static MethodsTable fillModulesMethodsTable (ArrayList<AbstractDeclaration> items, ConstantsTable table) throws InvalidParametersException {
+//        
+//        cTable = table;
+//        
+//        MethodsTable mt = new MethodsTable();
+//        
+//        for (int i = 0; i < items.size(); i++) {
+//            
+//            curMethName = items.get(i).getName();
+//            
+//            if (mt.contains(new MethodsTableItem(items.get(i).getName(), DataType.NONE, i, null)))
+//                errors.add(new CError(curMethName, "Multiple declaration: "
+//                        + Integer.toString(items.get(i).getLineNumber())));
+//            else {
+//                LocalVariablesTable lvt = new LocalVariablesTable();
+//                curMethName = items.get(i).getName();
+//                dt = items.get(i).getRetType();
+//                
+//                if (items.get(i).getRetType() != DataType.NONE)
+//                    checkHasReturnFromFunction(items.get(i).getBody());
+//                else
+//                    checkHasReturnFromProcedure(items.get(i).getBody());
+//                MethodsTableItem item;
+//                
+//                if (items.get(i).getName().equals("main") == false){
+//                    item = new MethodsTableItem(items.get(i).getName(),
+//                        items.get(i).getRetType(), i + 1,
+//                        fillLocalVariablesTable(items.get(i).getParamList(),items.get(i).getBody(),lvt));
+//                    
+//                    item.setConstItem(cTable.get(methodRefNumbers.get(i)));
+//                    mt.add(item);
+//                }
+//                else{
+//                   // addMainToMethodsTable(mt, items, lvt);
+//                    
+//                    if (items.contains(new AbstractDeclaration("main", null, null)) == false){
+//
+//                        MethodsTableItem main = new MethodsTableItem("main", DataType.NONE, i + 1, null);
+//
+//                        lvt.add(new LocalVariablesTableItem("args", 0, DataType.STRING));
+//
+//                        fillLocalVariablesTable(items.get(i).getParamList(),items.get(i).getBody(),lvt);
+//                        
+//                        main.setLocalVariables(curLocValsTable);
+//                        main.setConstItem(cTable.get(methodRefNumbers.get(i)));
+//                        mt.add(main);
+//                    }
+//                }
+//                    
+//
+//            }
+//        }
+//        return mt;
+//    }
+//    
+//  
+//    
+//    /**
+//     * Метод поиска необъявленного идентификатора.
+//     * @param item Проверямое выражение.
+//     * @return true, если переменная не объявлена.
+//     */
+//    @Deprecated
+//    private static boolean isUndeclaredId (ExprStatement item) throws InvalidParametersException {
+//        
+//        boolean flag = false;
+//        
+//        if (item.getExpr().getType() == Expression.MATH) {
+//            
+//            MathExpression me = (MathExpression) item.getExpr();
+//            
+//            if (me.getLeft().getType() == Expression.ID) {
+//                
+//                IdExpression ie = (IdExpression) me.getLeft(); 
+//                
+//                if (!module.contains(ie.getName()) && 
+//                        !curLocValsTable.contains(ie.getName())) {
+//                    errors.add(new CError(curMethName, "Undeclared identifier: " 
+//                            + Integer.toString(ie.getLineNumber())));
+//                    flag = true;
+//                } else checkIdType(ie);
+//            } if (me.getRight().getType() == Expression.ID) {
+//                
+//                IdExpression ie1 = (IdExpression) me.getRight();
+//                
+//                if (!module.contains(ie1.getName()) && 
+//                        !curLocValsTable.contains(ie1.getName())) {
+//                    errors.add(new CError(curMethName, "Undeclared identifier: " 
+//                            + Integer.toString(ie1.getLineNumber())));
+//                    flag = true;
+//                } else checkIdType(ie1);
+//            }
+//            checkDataType(me);
+//        } else if (item.getExpr().getType() == Expression.ID) {
+//            
+//            IdExpression ie1 = (IdExpression) item.getExpr();
+//                
+//                if (!module.contains(ie1.getName()) && 
+//                        !curLocValsTable.contains(ie1.getName())) {
+//                    errors.add(new CError(curMethName, "Undeclared identifier: " 
+//                            + Integer.toString(ie1.getLineNumber())));
+//                    flag = true;
+//                } else checkIdType(ie1);
+//        }
+//        
+//        return flag;
+//    }
+//    
+//    private static void addExprConstToTable (ExprStatement item) {
+//        
+//        //if (item)
+//    }
+//    
+//    private static void addConstToTable (AbstractDeclaration items, 
+//            ConstantsTable ct) {
+//        
+//        for (int i = 0; i < items.getBody().size(); i++) {
+//            
+//        }
+//    }
 }
