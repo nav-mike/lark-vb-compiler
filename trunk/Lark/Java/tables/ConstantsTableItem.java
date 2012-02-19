@@ -211,11 +211,11 @@ public class ConstantsTableItem {
         
         this.first = value;
         this.ifirst = value.number;
-        this.isecond = -1;
+        this.isecond = -5;
         this.number = number;
         this.second = null;
         this.type = CONSTANT_String;
-        this.value = Integer.toString(value.ifirst);
+        this.value = Integer.toString(ifirst);
     }
     
     /**

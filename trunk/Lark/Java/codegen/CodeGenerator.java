@@ -137,7 +137,7 @@ public class CodeGenerator {
                     break;
                     
                 case ConstantsTableItem.CONSTANT_String:
-                    m_writer.writeShort(item.getNumber());
+                    m_writer.writeShort(item.getIfirst());
                     break;
                     
                 case ConstantsTableItem.CONSTANT_NameAndType:
@@ -145,7 +145,6 @@ public class CodeGenerator {
                     m_writer.writeShort(item.getSecond().getNumber());
                     break;
             }
-           
         }
         return result;
     }
@@ -175,7 +174,7 @@ public class CodeGenerator {
             m_writer.writeShort(1);                             // Кол-во аттрибутов метода
             writeMethodCode(buf);                               // Пишем байткод методов
             
-            m_writer.writeShort(0);         // количество атрибутов класса
+            m_writer.writeShort(0);             // количество атрибутов класса
             
         }
     }
@@ -205,8 +204,7 @@ public class CodeGenerator {
         
         m_writer.write(code);                           // Сам байткод
         
-        m_writer.writeShort(0);                             // Количество записей в таблице исключений
-
+        m_writer.writeShort(0);                         // Количество записей в таблице исключений
     }
     
     /**
