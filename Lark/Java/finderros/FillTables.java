@@ -186,13 +186,18 @@ public class FillTables {
         
         // Если тип Integer и оно занимает больше дух байт
         if (expr.getDtype() == DataType.INTEGER && expr.getIntValue() > 32767){
-            ctMain.add(new ConstantsTableItem(0,Integer.valueOf(expr.getIntValue())));
+            ConstantsTableItem intConst = new ConstantsTableItem(0,Integer.valueOf(expr.getIntValue()));
+            ctMain.add(intConst);
+            
+            expr.setConstNum(intConst.getNumber());
         }
         // Если тип String
         else if(expr.getDtype() == DataType.STRING){
             ConstantsTableItem strConst = new ConstantsTableItem(0,expr.getStringValue());
             ctMain.add(strConst);
             ctMain.add(new ConstantsTableItem(0,strConst));
+            
+            expr.setConstNum(strConst.getNumber() + 1);
         }
     }
     

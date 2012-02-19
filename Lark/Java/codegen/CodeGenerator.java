@@ -254,6 +254,13 @@ public class CodeGenerator {
             byteCode.append(BC.INVOKESPECIAL);
             byteCode.appendShort((short)CodeConstants.OBJECT_INIT);
         }
+        else {
+           // byteCode.append(BC.ALOAD_0);
+            byteCode.append(BC.LDC);
+            byteCode.append((byte)58);
+            byteCode.append(BC.INVOKESTATIC);
+            byteCode.appendShort((short)CodeConstants.WRITE_LINE_STRING);
+        }
 
         writeReturn(mt.getType());
                 
