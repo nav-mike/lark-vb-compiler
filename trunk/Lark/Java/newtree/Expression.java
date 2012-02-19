@@ -45,16 +45,21 @@ public class Expression implements XMLInterface{
     /** Номер константы в таблице констант (если нужен). */
     private int constNum;
 
-    
+    /**
+     * Получить номер константы из таблицы.
+     * @return Значение номера.
+     */
     public int getConstNum() {
         return constNum;
     }
-
+    
+    /**
+     * Задать номер из таблицы константе
+     * @param constNum Новый номер
+     */
     public void setConstNum(int constNum) {
         this.constNum = constNum;
     }
-    
-    
         
     /**
      * Метод задания допустимости выражения.
