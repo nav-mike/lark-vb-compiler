@@ -44,6 +44,9 @@ public class CodeGenerator {
    
     private InvertDataOutputStream m_writer;
     
+    /** Текущий разбираемый метод. */
+    private MethodsTableItem m_currentMth;
+    
     /** Магическое число */
     public static int MAGIC = 0xCAFEBABE;
     
@@ -155,25 +158,22 @@ public class CodeGenerator {
      */
     private void writeMethodsTable() throws IOException{
         
-        //int item = 0;
-        MethodsTableItem buf;
-        
         m_writer.writeShort(m_mthdsTable.size());  // Пишем количество методов
                 
         for (int i = 1; i <= m_mthdsTable.size(); i++){
-             buf = m_mthdsTable.get(i);
+             m_currentMth = m_mthdsTable.get(i);
              
             // Пишем флаги доступа
-            if (buf.getName().equals("<init>"))
+            if (m_currentMth.getName().equals("<init>"))
                 m_writer.writeShort(0x0001);    //ACC_PUBLIC);
             else
                 m_writer.writeShort(0x0009);    //ACC_PUBLIC | ACC_STATIC);
             
-            m_writer.writeShort(buf.getConstsTableNum() - 3);   // Пишем номер имени
-            m_writer.writeShort(buf.getConstsTableNum() - 2);   // Пишем номер дескриптора (он идет вслед за именем)
+            m_writer.writeShort(m_currentMth.getConstsTableNum() - 3);   // Пишем номер имени
+            m_writer.writeShort(m_currentMth.getConstsTableNum() - 2);   // Пишем номер дескриптора (он идет вслед за именем)
             m_writer.writeShort(1);                             // Кол-во аттрибутов метода
             
-            writeMethodCode(buf);                               // Пишем байткод методов
+            writeMethodCode(m_currentMth);                               // Пишем байткод методов
             
             m_writer.writeShort(0);             // количество атрибутов класса
             
@@ -295,7 +295,7 @@ public class CodeGenerator {
                 parseDoLoop((DoLoopStatement)stmt);
             
             else if (stmt.getStmtType() == StatementType.EXPRESSION)
-                parseExpr((ExprStatement)stmt);
+                parseExpr(((ExprStatement)stmt).getExpr());
                 
             else if (stmt.getStmtType() == StatementType.FOR)
                 parseFor((ForStatement)stmt);
@@ -323,12 +323,32 @@ public class CodeGenerator {
         
         ArrayList<AsExpression> declList = stmt.getBodyMain();
         Iterator<AsExpression> i = declList.iterator();
+        AsExpression expr;
+
+        int k = m_currentMth.getLocalVariables().size() - 1;
         
         while (i.hasNext()){
+            expr = i.next();
             
-            i.next();
-        }
-        
+            if (expr.getInitData() != null){
+                
+                Expression init = expr.getInitData();
+                
+                if (init.getType() == Expression.CONST){
+                    ConstantExpression cnst = (ConstantExpression)init;
+                    
+                    if (cnst.getDtype() == DataType.INTEGER){
+                        loadIntConst(cnst);
+                        byteCode.append(BC.ISTORE);
+                        byteCode.append((byte)k);
+                    }
+                    
+                }
+                
+            }
+
+            k++;
+        }   
     }
     
     /**
@@ -343,9 +363,8 @@ public class CodeGenerator {
      * Разбираем выражение
      * @param stmt Ссылка на оператор
      */
-    private void parseExpr(ExprStatement stmt){
-        Expression expr = stmt.getExpr();  // Получаем хранящееся тут выражение
-        
+    private void parseExpr(Expression expr){
+                
         // Если это вывод строки на экран с переносом строки
         if (expr.getType() == Expression.WRITE_EXPR)
             writeWriteLine(expr, false);
@@ -420,6 +439,7 @@ public class CodeGenerator {
             if (constData.getDtype() == DataType.STRING){
                 byteCode.append(BC.LDC);                            // Загружаем константу на стек
                 byteCode.append((byte)constData.getConstNum());     // Пишем номер константы
+
                 byteCode.append(BC.INVOKESTATIC);                   // Вызов метода
                 
                 // Нужен ли перенос строки
@@ -431,31 +451,9 @@ public class CodeGenerator {
             // Если целочисленная константа
             else if (constData.getDtype() == DataType.INTEGER){
                 
-                // Если число четырехбайтное
-                if (constData.getIntValue() > 32767 || constData.getIntValue() < -32768){
-                    byteCode.append(BC.LDC);                            // Загружаем константу на стек
-                    byteCode.append((byte)constData.getConstNum());     // Пишем номер константы
-                }
+                loadIntConst(constData);
                 
-                // Если число двухбайтное
-                else if (constData.getIntValue() > 127 || constData.getIntValue() < -128){
-                    byteCode.append(BC.SIPUSH);                    // Загружаем константу на стек
-                    byteCode.appendShort((short)constData.getIntValue());
-                }
-                
-                // Если число однобайтнеое
-                else {
-                    byteCode.append(BC.BIPUSH);                    // Загружаем константу на стек
-                    byteCode.append((byte)constData.getIntValue());
-                }
-                
-                byteCode.append(BC.INVOKESTATIC);                   // Вызов метода
-                
-                // Нужен ли перенос строки
-                if (hasLN == true)
-                    byteCode.appendShort((short)CodeConstants.WRITE_LINE_INT);
-                else
-                    byteCode.appendShort((short)CodeConstants.WRITE_INT);   
+                loadWriteInt(hasLN); 
                         
             }
             // Если логическая константа
@@ -468,15 +466,58 @@ public class CodeGenerator {
                 else
                     byteCode.append((byte)0);
                 
-                byteCode.append(BC.INVOKESTATIC);              // Вызов метода
-                
-                // Нужен ли перенос строки
-                if (hasLN == true)
-                    byteCode.appendShort((short)CodeConstants.WRITE_LINE_INT);
-                else
-                    byteCode.appendShort((short)CodeConstants.WRITE_INT);
+                loadWriteInt(hasLN);
             }
         }
+        // Если это идентификатор
+        else if (data.getType() == Expression.ID){
+           
+            // Загружаем значение переменной на стек
+            byteCode.append(BC.ILOAD);
+            byte num = (byte)m_currentMth.getLocalVariables().getNumberByName(((IdExpression)data).getName());
+            byteCode.append(num);
+            
+            // Выводим значение на экран
+            loadWriteInt(hasLN);
+        }
+    }
+    
+    /**
+     * Записать в байт код целочисленную константу
+     * @param constData Константа для записи
+     */
+    private void loadIntConst(ConstantExpression constData){
+        // Если число четырехбайтное
+        if (constData.getBytesCount() == 4){
+            byteCode.append(BC.LDC);                            // Загружаем константу на стек
+            byteCode.append((byte)constData.getConstNum());     // Пишем номер константы
+        }
+
+        // Если число двухбайтное
+        else if (constData.getBytesCount() == 2){
+            byteCode.append(BC.SIPUSH);                    // Загружаем константу на стек
+            byteCode.appendShort((short)constData.getIntValue());
+        }
+
+        // Если число однобайтнеое
+        else {
+            byteCode.append(BC.BIPUSH);                    // Загружаем константу на стек
+            byteCode.append((byte)constData.getIntValue());
+        }
+    }
+    
+    /**
+     * Записать в байт код функцию вывода на экран целого числа 
+     * @param hasLN Нужен ли на конце перенос строки.
+     */
+    public void loadWriteInt(boolean hasLN){
+        byteCode.append(BC.INVOKESTATIC);              // Вызов метода
+
+        // Нужен ли перенос строки
+        if (hasLN == true)
+            byteCode.appendShort((short)CodeConstants.WRITE_LINE_INT);
+        else
+            byteCode.appendShort((short)CodeConstants.WRITE_INT);
     }
 }
 
