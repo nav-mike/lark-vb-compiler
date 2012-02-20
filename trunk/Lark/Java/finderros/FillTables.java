@@ -247,7 +247,7 @@ public class FillTables {
     public static void addCostantInfoToTable(ConstantExpression expr) throws InvalidParametersException{
         
         // Если тип Integer и оно занимает больше дух байт
-        if (expr.getDtype() == DataType.INTEGER && (expr.getIntValue() > 32767 || expr.getIntValue() < -32768)){
+        if (expr.getDtype() == DataType.INTEGER && expr.getBytesCount() == 4){
             ConstantsTableItem intConst = new ConstantsTableItem(0,Integer.valueOf(expr.getIntValue()));
             ctMain.add(intConst);
             
