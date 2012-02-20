@@ -669,8 +669,8 @@ public class FillTables {
         
         result += ")";
         
-      //  if (item.getRetType())                                       // МИХАН!!! Я ТУТ КОЕ-ЧТО ЗАКОММЕНТИЛ!!!
-      //  result += item.getRetType().convertToConstantsTablesString();// <--- ВООООН ТАМ!! Видишь?? Куда стрелка показывает! Нет, левее! Да, вот! Да, там!
+      //  if (item.getRetType())
+        result += item.getRetType().convertToConstantsTablesString();
         
         if (item.getRetType() == DataType.STRING)
             result += ";";

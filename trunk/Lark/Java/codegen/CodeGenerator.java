@@ -325,8 +325,10 @@ public class CodeGenerator {
         Iterator<AsExpression> i = declList.iterator();
         AsExpression expr;
 
+        // Получим номер локальной переменной
         int k = m_currentMth.getLocalVariables().size() - 1;
         
+        // Перебираем все идентификаторы
         while (i.hasNext()){
             expr = i.next();
             
@@ -371,6 +373,10 @@ public class CodeGenerator {
         
         // Если это вывод строки на экран
         else if (expr.getType() == Expression.WRITE_LINE_EXPR)
+            writeWriteLine(expr, true);
+        
+        // Если это вывод строки на экран
+        else if (expr.getType() == Expression.READ_LINE_EXPR)
             writeWriteLine(expr, true);
     }
     
