@@ -357,18 +357,18 @@ Exception                {
 						 }
 						 
 vbCrLf                   {
-						   yylval.c_const = '\n';
-						   return CHAR_CONST;
+						   yylval.c_const = "\n";
+						   return STRING_CONST;
 						 }
 						 
 vbTab                    {
-						   yylval.c_const = '\t';
-						   return CHAR_CONST;
+						   yylval.c_const = "\t";
+						   return STRING_CONST;
 						 }
 						 
 NullChar                 {
-						   yylval.c_const = '\0';
-						   return CHAR_CONST;
+						   yylval.c_const = "\0";
+						   return STRING_CONST;
 						 }
 
 [a-zA-Z_][_a-zA-Z0-9]*   {

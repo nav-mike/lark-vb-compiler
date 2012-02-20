@@ -1425,24 +1425,24 @@ case 83:
 YY_RULE_SETUP
 #line 359 "vb_lark.l"
 {
-						   yylval.c_const = '\n';
-						   return CHAR_CONST;
+						   yylval.c_const = "\n";
+						   return STRING_CONST;
 						 }
 	YY_BREAK
 case 84:
 YY_RULE_SETUP
 #line 364 "vb_lark.l"
 {
-						   yylval.c_const = '\t';
-						   return CHAR_CONST;
+						   yylval.c_const = "\t";
+						   return STRING_CONST;
 						 }
 	YY_BREAK
 case 85:
 YY_RULE_SETUP
 #line 369 "vb_lark.l"
 {
-						   yylval.c_const = '\0';
-						   return CHAR_CONST;
+						   yylval.c_const = "\0";
+						   return STRING_CONST;
 						 }
 	YY_BREAK
 case 86:
