@@ -471,6 +471,8 @@ public class CodeGenerator {
              
             if (((MathExpression)me.getLeft()).getMathType() == MathExprType.ADDITION)
                 writeAdd((MathExpression)me.getLeft());
+            else if (((MathExpression)me.getLeft()).getMathType() == MathExprType.MULTIPLICATION)
+                writeMul((MathExpression)me.getLeft());
         }
         
         // Загружаем на стек второй операнд.
@@ -483,6 +485,8 @@ public class CodeGenerator {
              
             if (((MathExpression)me.getRight()).getMathType() == MathExprType.ADDITION)
                 writeAdd((MathExpression)me.getRight());
+            else if (((MathExpression)me.getRight()).getMathType() == MathExprType.MULTIPLICATION)
+                writeMul((MathExpression)me.getRight());
         }
         
         // Выполняем сложение.
@@ -505,6 +509,8 @@ public class CodeGenerator {
             
             if (((MathExpression)me.getLeft()).getMathType() == MathExprType.MULTIPLICATION)
                 writeMul((MathExpression)me.getLeft());
+            else if (((MathExpression)me.getLeft()).getMathType() == MathExprType.ADDITION)
+                writeAdd((MathExpression)me.getLeft());
         }
         
         // Загружаем на стек второй операнд.
@@ -517,6 +523,8 @@ public class CodeGenerator {
             
             if (((MathExpression)me.getRight()).getMathType() == MathExprType.MULTIPLICATION)
                 writeMul((MathExpression)me.getRight());
+            else if (((MathExpression)me.getRight()).getMathType() == MathExprType.ADDITION)
+                writeAdd((MathExpression)me.getRight());
         }
         
         // Выполняем умножение.
