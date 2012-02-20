@@ -319,10 +319,10 @@
 
 	return_stmt: RETURN expr ENDL_sE   {$$ = create_return_stmt($2);}
 
-        func_stmt: FUNCTION ID '('')' AS param_type ENDL_sE stmt_list END_FUNCTION ENDL_sE          {$$ = create_func_stmt($2,NULL,$6,$8);}
-				 | FUNCTION ID '('param_list')' AS param_type ENDL_sE stmt_list END_FUNCTION ENDL_sE  {$$ = create_func_stmt($2,$4,$7,$9);}
-				 | FUNCTION ID '('')' AS param_type'('')' ENDL_sE stmt_list END_FUNCTION ENDL_sE          {$$ = create_func_stmt($2,NULL,$6,$10);}
-				 | FUNCTION ID '('param_list')' AS param_type'('')' ENDL_sE stmt_list END_FUNCTION ENDL_sE  {$$ = create_func_stmt($2,$4,$7,$11);}
+        func_stmt: FUNCTION ID '('')' AS param_type ENDL_sE stmt_list END_FUNCTION ENDL_sE          {$$ = create_func_stmt($2,NULL,$6,$8,0);}
+				 | FUNCTION ID '('param_list')' AS param_type ENDL_sE stmt_list END_FUNCTION ENDL_sE  {$$ = create_func_stmt($2,$4,$7,$9,0);}
+				 | FUNCTION ID '('')' AS param_type'('')' ENDL_sE stmt_list END_FUNCTION ENDL_sE          {$$ = create_func_stmt($2,NULL,$6,$10,1);}
+				 | FUNCTION ID '('param_list')' AS param_type'('')' ENDL_sE stmt_list END_FUNCTION ENDL_sE  {$$ = create_func_stmt($2,$4,$7,$11,1);}
 				 ;
 
 %%

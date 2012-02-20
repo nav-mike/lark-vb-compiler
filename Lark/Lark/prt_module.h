@@ -3,8 +3,6 @@
 
 #ifndef H_PRT_MODULE
 #define H_PRT_MODULE
-#include "prt_stmt.h"
-#include "prt_stmt_list.h"
 
 /*! \struct VB_Module_stmt
     —труктура дерева дл€ хранени€ корн€ дерева.
@@ -54,13 +52,6 @@ struct VB_Module_stmt* create_VB_Module_stmt(char* id, struct VB_Stmt_list* list
 
 	module->line_number = get_location();
 	
-	if (module->stmt_list == NULL){
-		module->stmt_list = (struct VB_Stmt_list*)malloc(sizeof(struct VB_Stmt_list));
-		module->stmt_list->first = NULL;
-		module->stmt_list->last = NULL;
-		module->stmt_list->line_number = -1;
-	}
-
 	return module;
 }
 

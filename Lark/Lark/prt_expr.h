@@ -25,6 +25,35 @@ struct VB_Expr
 	int   line_number; //!< Line of this expression.
 };
 
+struct VB_Expr* createEmptyString()
+{
+
+	return NULL;
+}
+
+/*!
+	Функция создания выражения текстовой константы.
+  \param string Строка.
+  \return указатель на объект выражения.
+*/
+struct VB_Expr* create_string_const_expr(char* string)
+{
+	struct VB_Expr* result = (struct VB_Expr*)malloc(sizeof(struct VB_Expr));
+
+	result->type = EXPR_STRING_CONST;
+	result->expr_string = (char*)malloc(sizeof(char)*strlen(string));
+	strcpy(result->expr_string,string);
+	result->left_chld = NULL;
+	result->list = NULL;
+	result->next = NULL;
+	result->right_chld = NULL;
+	result->id_type = DATA_STRING;
+	result->int_val = 0;
+	result->line_number = get_location();
+
+	return result;
+}
+
 /*!
 	Функция создания Console.Write()
   \param text Текст в функции.
@@ -38,13 +67,18 @@ struct VB_Expr* create_Print (struct VB_Expr* expr)
 
 	print->id_type = DATA_INTEGER;
 	print->int_val = 0;
-	print->left_chld = expr;
+
+	if (expr == NULL)
+		print->left_chld = create_string_const_expr("");
+	else
+		print->left_chld = expr;
+
 	print->list = NULL;
 	print->next = NULL;
 	print->right_chld = NULL;
 	print->type = EXPR_PRINT;
 	print->line_number = get_location();
-
+	
 	return print;
 }
 
@@ -61,13 +95,18 @@ struct VB_Expr* create_Println (struct VB_Expr* expr)
 
 	println->id_type = DATA_INTEGER;
 	println->int_val = 0;
-	println->left_chld = expr;
+
+	if (expr == NULL)
+		println->left_chld = create_string_const_expr("");
+	else
+		println->left_chld = expr;
+
 	println->list = NULL;
 	println->next = NULL;
 	println->right_chld = NULL;
 	println->type = EXPR_PRINTLN;
 	println->line_number = get_location();
-
+	
 	return println;
 }
 
@@ -212,34 +251,14 @@ struct VB_Expr* create_int_boolean_char_const_expr(enum VB_Expr_type type, int v
 }
 
 /*!
-	Функция создания выражения текстовой константы.
-  \param string Строка.
-  \return указатель на объект выражения.
-*/
-struct VB_Expr* create_string_const_expr(char* string)
-{
-	struct VB_Expr* result = (struct VB_Expr*)malloc(sizeof(struct VB_Expr));
-
-	result->type = EXPR_STRING_CONST;
-	result->expr_string = (char*)malloc(sizeof(char)*strlen(string));
-	strcpy(result->expr_string,string);
-	result->left_chld = NULL;
-	result->list = NULL;
-	result->next = NULL;
-	result->right_chld = NULL;
-	result->id_type = DATA_STRING;
-	result->int_val = 0;
-	result->line_number = get_location();
-
-	return result;
-}
-
-/*!
  * Функция реализации присваивания
  */
 void solve_assign(struct VB_Expr* result, struct VB_Expr* left, struct VB_Expr* right){
 	
 	printf("\n = \n");
+
+	if (left->type != EXPR_ID)
+		return;
 
 	// Проверим типы, если кто-то из детей строкового типа и типы не равны, то ошибка
 	//if ((left->id_type == DATA_STRING || right->id_type == DATA_STRING) && left->id_type != right->id_type)
