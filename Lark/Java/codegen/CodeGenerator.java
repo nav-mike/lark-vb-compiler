@@ -68,6 +68,8 @@ public class CodeGenerator {
     /** Контейнер байт кода. */
     public static MyByteBuffer byteCode;
     
+    public int k;
+    
     /**
      * Записать заголовок файла.
      * @param writer Дескриптор
@@ -162,7 +164,7 @@ public class CodeGenerator {
                 
         for (int i = 1; i <= m_mthdsTable.size(); i++){
              m_currentMth = m_mthdsTable.get(i);
-             
+                     
             // Пишем флаги доступа
             if (m_currentMth.getName().equals("<init>"))
                 m_writer.writeShort(0x0001);    //ACC_PUBLIC);
@@ -249,7 +251,7 @@ public class CodeGenerator {
      */
     private byte [] generateCodeForMethod(MethodsTableItem mt){
         byteCode = new MyByteBuffer();
-        
+                    
         // Если это конструктор - создаем
         if (mt.getName().equals("<init>"))
             createInit();
@@ -283,6 +285,9 @@ public class CodeGenerator {
         // Создаем итератор для контейнера
         Iterator<AbstractStatement> i = stmtList.iterator();
         AbstractStatement stmt;     // Буфер для следующего оператора
+        
+        // Получим номер локальной переменной
+        k = m_currentMth.getParamsCount();
         
         // Проходим по всем операторам метода
         while (i.hasNext()){
@@ -325,8 +330,6 @@ public class CodeGenerator {
         Iterator<AsExpression> i = declList.iterator();
         AsExpression expr;
 
-        // Получим номер локальной переменной
-        int k = m_currentMth.getLocalVariables().size() - 1;
         
         // Перебираем все идентификаторы
         while (i.hasNext()){

@@ -28,7 +28,19 @@ public class MethodsTableItem {
     
     /** Возвращает ли функция массив. */
     private boolean isArrayReturn;
+    
+    /** Число параметров метода. */
+    private int paramsCount;
 
+    /**
+     * Получить число параметров метода.
+     * @return 
+     */
+    public int getParamsCount() {
+        return paramsCount;
+    }
+
+    
     /**
      * Узнать, возвращает ли функция массив.
      * @return Значение флага
@@ -104,7 +116,8 @@ public class MethodsTableItem {
             LocalVariablesTable localVariables, 
             int constNum,
             ArrayList<AbstractStatement> body,
-            boolean isArrayReturn) {
+            boolean isArrayReturn,
+            int paramsCount) {
         this.name = name;
         this.type = type;
         this.number = 0;
@@ -112,6 +125,7 @@ public class MethodsTableItem {
         this.constsTableNum = constNum;
         this.localVariables = localVariables;
         this.isArrayReturn = isArrayReturn;
+        this.paramsCount = paramsCount;
     }
 
     /**

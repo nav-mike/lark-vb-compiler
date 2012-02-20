@@ -129,7 +129,7 @@ public class LocalVariablesTable {
      */
     public void add (LocalVariablesTableItem item) {
         
-        item.setNumber(++gIndex);
+        item.setNumber(gIndex++);
         this.items.put(gIndex, item);
     }
     

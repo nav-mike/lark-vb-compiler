@@ -586,7 +586,7 @@ public class FillTables {
         // Добавим конструктор в таблицу методов
         MethodsTableItem initItem = new MethodsTableItem("<init>",
                 DataType.NONE, null,
-                CodeConstants.CURRENT_INIT, null,false);
+                CodeConstants.CURRENT_INIT, null,false,0);
         
         mt.add(initItem);
     }
@@ -616,7 +616,7 @@ public class FillTables {
             arr = buf.isIsArrayReturn();
             
             // Проверим на множественное определение функций
-            if (mt.contains(new MethodsTableItem(buf.getName(), DataType.NONE, null, 0, null,false)))
+            if (mt.contains(new MethodsTableItem(buf.getName(), DataType.NONE, null, 0, null,false,0)))
                 errors.add(new CError(curMethName, "Multiple declaration: "
                         + Integer.toString(buf.getLineNumber())));
             else {
@@ -635,16 +635,30 @@ public class FillTables {
 
                 lvt = new LocalVariablesTable();        // Таблица лок переменных данного метода
                 
+                int paramsCount;    // Число параметров метода
+                
+                if (buf.getParamList() != null)
+                    paramsCount = buf.getParamList().size();
+                else
+                    paramsCount = 0;
+                                
+                if (buf.getName().equals("main")){
+                    lvt.add(new LocalVariablesTableItem("args", 0, DataType.STRING));
+                    paramsCount = 1;
+                }
+                
+                
                 // Заполняем таблицу локальных переменных метода
                 fillLocalVariablesTable(buf.getParamList(), buf.getBody(), lvt);
 
-                if (buf.getName().equals("main"))
-                    lvt.add(new LocalVariablesTableItem("args", 0, DataType.STRING));
+                
+                
 
+                        
                 // Создаем элемент таблицы переменных
                 methItem = new MethodsTableItem(buf.getName(),
                     buf.getRetType(), lvt,
-                    constNum, buf.getBody(),buf.isIsArrayReturn());
+                    constNum, buf.getBody(),buf.isIsArrayReturn(),paramsCount);
 
                 mt.add(methItem);   // Заносим в таблицу
             }
