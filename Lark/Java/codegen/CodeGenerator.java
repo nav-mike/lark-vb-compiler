@@ -544,6 +544,9 @@ public class CodeGenerator {
         } else if (me.getLeft().getType() == Expression.MATH) {
              
             checkMathType((MathExpression)me.getLeft());
+        } else if (me.getLeft().getType() == Expression.ID) {
+            
+            loadIdToStack((IdExpression)me.getLeft());
         }
         
         // Загружаем на стек второй операнд.
@@ -555,6 +558,9 @@ public class CodeGenerator {
         } else if (me.getRight().getType() == Expression.MATH) {
              
             checkMathType((MathExpression)me.getRight());
+        } else if (me.getRight().getType() == Expression.ID) {
+            
+            loadIdToStack((IdExpression)me.getRight());
         }
         
         // Выполняем сложение.
