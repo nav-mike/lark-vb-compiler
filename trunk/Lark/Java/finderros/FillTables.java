@@ -309,7 +309,8 @@ public class FillTables {
                         ((MathExpression)expr).getLeft().getValueType() != Expression.L_VALUE)
                         errors.add(new CError(curMethName, "Left operand isn't l-value: " + 
                                 Integer.toString(expr.getLineNumber())));
-                    else if (((IdExpression)((MathExpression)expr).getLeft()).isArray()
+                    else if (((MathExpression)expr).getLeft().getType() == Expression.ID &&
+                            ((IdExpression)((MathExpression)expr).getLeft()).isArray()
                             && ((IdExpression)((MathExpression)expr).getLeft()).getBody().isEmpty())
                         errors.add(new CError(curMethName, "Left operand isn't l-value: " + 
                                 Integer.toString(expr.getLineNumber())));
