@@ -14,6 +14,24 @@ public class IdExpression extends Expression {
     private ArrayList<Expression> body;
     /** Тип идентификатора. */
     private int idType;
+    /** Если идентификатор является массивом. */
+    private boolean array = false;
+
+    /**
+     * Указаение, является ли идентификатор массивом.
+     * @param array Флаг, является ли идентификатор массивом.
+     */
+    public void setArray(boolean array) {
+        this.array = array;
+    }
+
+    /**
+     * Проверка, является ли идентификатор массивом.
+     * @return true, если идентифактор является массивом.
+     */
+    public boolean isArray() {
+        return array;
+    }
 
     /**
      * Метод задания типа идентификатора.
