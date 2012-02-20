@@ -393,6 +393,9 @@ public class CodeGenerator {
         
         if (expr.getRight().getType() == Expression.CONST)
             writeAssignWithConstant(expr);
+        else if (expr.getRight().getType() == Expression.MATH &&
+                ((MathExpression)expr.getRight()).getMathType() == MathExprType.ADDITION)
+            writeAssignWithAdd(expr);
     }
     
     /**
@@ -411,6 +414,50 @@ public class CodeGenerator {
         byte num = (byte)m_currentMth.getLocalVariables().getNumberByName(id.getName());
         byteCode.append(BC.ISTORE);
         byteCode.append((byte)num);
+    }
+    
+    /**
+     * Метод присваивания, если правым операндом является операция сложения.
+     * @param expr Математическая операция - присваивание.
+     */
+    private void writeAssignWithAdd (MathExpression expr) {
+        
+        MathExpression me = (MathExpression)expr.getRight();
+        IdExpression id = (IdExpression)expr.getLeft();
+        
+        // Выполнение сохранения.
+        writeAdd(me);
+        
+        // Считывание константы в переменную со стека
+        byte num = (byte)m_currentMth.getLocalVariables().getNumberByName(id.getName());
+        byteCode.append(BC.ISTORE);
+        byteCode.append((byte)num);
+    }
+    
+    /**
+     * Метод записи операции сложения в Java байт-код.
+     * @param me Математический оператор - сложение.
+     */
+    private void writeAdd (MathExpression me) {
+        
+        // Загружаем на стек первый операнд.
+        if (me.getLeft().getType() == Expression.CONST) {
+            
+            ConstantExpression ce = (ConstantExpression)me.getLeft();
+            if (ce.getDtype() == DataType.INTEGER)
+                loadIntConst(ce);
+        }
+        
+        // Загружаем на стек второй операнд.
+        if (me.getRight().getType() == Expression.CONST) {
+            
+            ConstantExpression ce = (ConstantExpression)me.getRight();
+            if (ce.getDtype() == DataType.INTEGER)
+                loadIntConst(ce);
+        }
+        
+        // Выполняем сложение.
+        byteCode.append(BC.IADD);
     }
     
     /**
