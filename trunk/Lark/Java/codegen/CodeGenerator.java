@@ -389,9 +389,8 @@ public class CodeGenerator {
         
         if (expr.getRight().getType() == Expression.CONST)
             writeAssignWithConstant(expr);
-        else if (expr.getRight().getType() == Expression.READ_LINE_EXPR){
+        else if (expr.getRight().getType() == Expression.READ_LINE_EXPR)
             writeReadLine(expr);
-        }
         else if (expr.getRight().getType() == Expression.MATH &&
                 ((MathExpression)expr.getRight()).getMathType() == MathExprType.ADDITION)
             writeAssignWithAdd(expr);
@@ -401,6 +400,42 @@ public class CodeGenerator {
         else if (expr.getRight().getType() == Expression.MATH &&
                 ((MathExpression)expr.getRight()).getMathType() == MathExprType.SUBTRACTION)
             writeAssignWithSub(expr);
+        else if (expr.getRight().getType() == Expression.ID)
+            writeAssignWithId(expr);
+    }
+    
+    /**
+     * Метод загрузки идентификатора на стек.
+     * @param id Идентификатор, загружаемый на стек.
+     */
+    private void loadIdToStack (IdExpression id) {
+        
+        byte num = (byte)m_currentMth.getLocalVariables().getNumberByName(id.getName());
+        
+        if (id.isArray() && id.getBody().isEmpty())
+            byteCode.append(BC.ALOAD);
+        else if (!id.isArray())
+            byteCode.append(BC.ILOAD); // TODO: необходимо добавить загрузку элемента массива.
+        
+        byteCode.append((byte)num);
+    }
+    
+    /**
+     * Метод преобразования присваивания у которого правый элемент идентификатор.
+     * @param me Математический оператор - присваивание.
+     */
+    private void writeAssignWithId (MathExpression me) {
+        
+        IdExpression ie1 = (IdExpression)me.getLeft();
+        IdExpression ie2 = (IdExpression)me.getRight();
+        
+        // Загрузка константы в стек.
+        loadIdToStack(ie2);
+        
+        // Считывание константы в переменную со стека
+        byte num = (byte)m_currentMth.getLocalVariables().getNumberByName(ie1.getName());
+        byteCode.append(BC.ISTORE);
+        byteCode.append((byte)num);
     }
     
     /**
