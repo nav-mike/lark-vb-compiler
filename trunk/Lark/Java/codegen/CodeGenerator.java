@@ -476,6 +476,23 @@ public class CodeGenerator {
     }
     
     /**
+     * Метод проверки типа математического оператора и запуск его
+     * генерации в Java байт-код.
+     * @param me Проверяемая математическая операция.
+     */
+    private void checkMathType (MathExpression me) {
+        
+        if (me.getMathType() == MathExprType.ADDITION)
+                writeAdd(me);
+            else if (me.getMathType() == MathExprType.MULTIPLICATION)
+                writeMul(me);
+            else if (me.getMathType() == MathExprType.SUBTRACTION)
+                writeSub(me);
+            else if (me.getMathType() == MathExprType.DIVISION)
+                writeDiv(me);
+    }
+    
+    /**
      * Метод записи операции сложения в Java байт-код.
      * @param me Математический оператор - сложение.
      */
@@ -489,12 +506,7 @@ public class CodeGenerator {
                 loadIntConst(ce);
         } else if (me.getLeft().getType() == Expression.MATH) {
              
-            if (((MathExpression)me.getLeft()).getMathType() == MathExprType.ADDITION)
-                writeAdd((MathExpression)me.getLeft());
-            else if (((MathExpression)me.getLeft()).getMathType() == MathExprType.MULTIPLICATION)
-                writeMul((MathExpression)me.getLeft());
-            else if (((MathExpression)me.getLeft()).getMathType() == MathExprType.SUBTRACTION)
-                writeSub((MathExpression)me.getLeft());
+            checkMathType((MathExpression)me.getLeft());
         }
         
         // Загружаем на стек второй операнд.
@@ -505,16 +517,43 @@ public class CodeGenerator {
                 loadIntConst(ce);
         } else if (me.getRight().getType() == Expression.MATH) {
              
-            if (((MathExpression)me.getRight()).getMathType() == MathExprType.ADDITION)
-                writeAdd((MathExpression)me.getRight());
-            else if (((MathExpression)me.getRight()).getMathType() == MathExprType.MULTIPLICATION)
-                writeMul((MathExpression)me.getRight());
-            else if (((MathExpression)me.getRight()).getMathType() == MathExprType.SUBTRACTION)
-                writeSub((MathExpression)me.getRight());
+            checkMathType((MathExpression)me.getRight());
         }
         
         // Выполняем сложение.
         byteCode.append(BC.IADD);
+    }
+    
+    /**
+     * Метод записи операции сложения в Java байт-код.
+     * @param me Математический оператор - сложение.
+     */
+    private void writeDiv (MathExpression me) {
+        
+        // Загружаем на стек первый операнд.
+        if (me.getLeft().getType() == Expression.CONST) {
+            
+            ConstantExpression ce = (ConstantExpression)me.getLeft();
+            if (ce.getDtype() == DataType.INTEGER)
+                loadIntConst(ce);
+        } else if (me.getLeft().getType() == Expression.MATH) {
+             
+            checkMathType((MathExpression)me.getLeft());
+        }
+        
+        // Загружаем на стек второй операнд.
+        if (me.getRight().getType() == Expression.CONST) {
+            
+            ConstantExpression ce = (ConstantExpression)me.getRight();
+            if (ce.getDtype() == DataType.INTEGER)
+                loadIntConst(ce);
+        } else if (me.getRight().getType() == Expression.MATH) {
+             
+            checkMathType((MathExpression)me.getRight());
+        }
+        
+        // Выполняем сложение.
+        byteCode.append(BC.IDIV);
     }
     
     /**
@@ -531,12 +570,7 @@ public class CodeGenerator {
                 loadIntConst(ce);
         } else if (me.getLeft().getType() == Expression.MATH) {
              
-            if (((MathExpression)me.getLeft()).getMathType() == MathExprType.ADDITION)
-                writeAdd((MathExpression)me.getLeft());
-            else if (((MathExpression)me.getLeft()).getMathType() == MathExprType.MULTIPLICATION)
-                writeMul((MathExpression)me.getLeft());
-            else if (((MathExpression)me.getLeft()).getMathType() == MathExprType.SUBTRACTION)
-                writeSub((MathExpression)me.getLeft());
+            checkMathType((MathExpression)me.getLeft());
         }
         
         // Загружаем на стек второй операнд.
@@ -547,12 +581,7 @@ public class CodeGenerator {
                 loadIntConst(ce);
         } else if (me.getRight().getType() == Expression.MATH) {
              
-            if (((MathExpression)me.getRight()).getMathType() == MathExprType.ADDITION)
-                writeAdd((MathExpression)me.getRight());
-            else if (((MathExpression)me.getRight()).getMathType() == MathExprType.MULTIPLICATION)
-                writeMul((MathExpression)me.getRight());
-            else if (((MathExpression)me.getRight()).getMathType() == MathExprType.SUBTRACTION)
-                writeSub((MathExpression)me.getRight());
+            checkMathType((MathExpression)me.getRight());
         }
         
         // Выполняем сложение.
@@ -573,12 +602,7 @@ public class CodeGenerator {
                 loadIntConst(ce);
         } else if (me.getLeft().getType() == Expression.MATH) {
             
-            if (((MathExpression)me.getLeft()).getMathType() == MathExprType.MULTIPLICATION)
-                writeMul((MathExpression)me.getLeft());
-            else if (((MathExpression)me.getLeft()).getMathType() == MathExprType.ADDITION)
-                writeAdd((MathExpression)me.getLeft());
-            else if (((MathExpression)me.getLeft()).getMathType() == MathExprType.SUBTRACTION)
-                writeSub((MathExpression)me.getLeft());
+            checkMathType((MathExpression)me.getLeft());
         }
         
         // Загружаем на стек второй операнд.
@@ -589,12 +613,7 @@ public class CodeGenerator {
                 loadIntConst(ce);
         }else if (me.getRight().getType() == Expression.MATH) {
             
-            if (((MathExpression)me.getRight()).getMathType() == MathExprType.MULTIPLICATION)
-                writeMul((MathExpression)me.getRight());
-            else if (((MathExpression)me.getRight()).getMathType() == MathExprType.ADDITION)
-                writeAdd((MathExpression)me.getRight());
-            else if (((MathExpression)me.getRight()).getMathType() == MathExprType.SUBTRACTION)
-                writeSub((MathExpression)me.getRight());
+            checkMathType((MathExpression)me.getRight());
         }
         
         // Выполняем умножение.
