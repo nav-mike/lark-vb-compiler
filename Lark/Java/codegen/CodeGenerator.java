@@ -525,6 +525,8 @@ public class CodeGenerator {
                 writeSub(me);
             else if (me.getMathType() == MathExprType.DIVISION)
                 writeDiv(me);
+            else if (me.getMathType() == MathExprType.UMINUS)
+                writeUnarySub(me);
     }
     
     /**
@@ -653,6 +655,36 @@ public class CodeGenerator {
         
         // Выполняем умножение.
         byteCode.append(BC.IMUL);
+    }
+    
+    /**
+     * Метод записи операции унарного минуса в Java байт-код.
+     * @param me Математический оператор - вычитания.
+     */
+    private void writeUnarySub (MathExpression me) {
+        
+        if (me.getLeft() != null) {
+            // Загружаем на стек первый операнд.
+            if (me.getLeft().getType() == Expression.CONST) {
+
+                ConstantExpression ce = (ConstantExpression)me.getLeft();
+                if (ce.getDtype() == DataType.INTEGER)
+                    loadIntConst(ce);
+            } 
+            else if (me.getLeft().getType() == Expression.ID) {
+                
+                byteCode.append(BC.ILOAD);      // Загружаем значение переменной на стек
+                byte num = (byte)m_currentMth.getLocalVariables().getNumberByName(((IdExpression)me.getLeft()).getName());
+                byteCode.append(num);
+                
+                // Выполняем сложение.
+                byteCode.append(BC.INEG);
+            }            
+            else if (me.getLeft().getType() == Expression.MATH) {
+
+                checkMathType((MathExpression)me.getLeft());
+            }
+        }
     }
     
     /**
@@ -787,6 +819,9 @@ public class CodeGenerator {
             
             else if (mthExpr.getMathType() == MathExprType.DIVISION)
                 writeDiv(mthExpr);
+            
+            else if (mthExpr.getMathType() == MathExprType.UMINUS)
+                writeUnarySub(mthExpr);
                         
             loadWriteInt(hasLN);
         }
