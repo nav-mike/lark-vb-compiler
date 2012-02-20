@@ -17,6 +17,27 @@ public class ConstantExpression extends Expression {
     private boolean booleanValue;
     /** Тип выражения константы. */
     private DataType dtype;
+   
+    /** Число байт целочисленной константы. */
+    private int bytesCount;
+
+    /**
+     * Получить число байт данной целочисленной константы.
+     * @return Число байт данной константы.
+     */
+    public int getBytesCount() {
+        return bytesCount;
+    }
+
+    /**
+     * Задать число байт данной целочиленной констенте.
+     * @param bytesCount Новое число байт
+     */
+    public void setBytesCount(int bytesCount) {
+        this.bytesCount = bytesCount;
+    }
+    
+    
     
     /**
      * Конструктор с параметром.
@@ -31,6 +52,14 @@ public class ConstantExpression extends Expression {
         this.charValue = 0;
         this.intValue = intValue;
         this.stringValue = null;
+        
+        // Определяем число байт данной целочисленной константы.
+        if (intValue > 32767 || intValue < -32768)
+            bytesCount = 4;
+        else if (intValue > 127 || intValue < -128)
+            bytesCount = 2;
+        else
+            bytesCount = 1;
     }
     
     /**
