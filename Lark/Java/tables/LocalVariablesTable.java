@@ -144,6 +144,28 @@ public class LocalVariablesTable {
     }
     
     /**
+     * Метод получения номера локальной переменной по имени.
+     * @param name Имя локальной переменной.
+     * @return Номер локальной переменной, полученный по имени.
+     */
+    public int getNumberByName (String name) {
+        
+        Set<Integer> keys = items.keySet();
+        Iterator<Integer> i = keys.iterator();
+        int result = -1;
+        
+        while (i.hasNext() && result == -1){
+            Integer buf = i.next();
+            
+            if (items.get(buf).getName().equals(name)){
+                result = items.get(buf).getNumber();
+            }
+        }
+        
+        return result;
+    }
+    
+    /**
      * Метод проверяющий, является ли данная локальная переменная массивом.
      * @param lvname Имя локальной переменной.
      * @return true, если локальная переменная является массивом.
