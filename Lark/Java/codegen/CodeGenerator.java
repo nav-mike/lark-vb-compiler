@@ -396,6 +396,9 @@ public class CodeGenerator {
         else if (expr.getRight().getType() == Expression.MATH &&
                 ((MathExpression)expr.getRight()).getMathType() == MathExprType.ADDITION)
             writeAssignWithAdd(expr);
+        else if (expr.getRight().getType() == Expression.MATH &&
+                ((MathExpression)expr.getRight()).getMathType() == MathExprType.MULTIPLICATION)
+            writeAssignWithMul(expr);
     }
     
     /**
@@ -435,6 +438,24 @@ public class CodeGenerator {
     }
     
     /**
+     * Метод присваивания, если правым операндом является операция умножения.
+     * @param expr Математическая операция - присваивание.
+     */
+    private void writeAssignWithMul (MathExpression expr) {
+        
+        MathExpression me = (MathExpression)expr.getRight();
+        IdExpression id = (IdExpression)expr.getLeft();
+        
+        // Выполнения умножения.
+        writeMul(me);
+        
+        // Считывание константы в переменную со стека
+        byte num = (byte)m_currentMth.getLocalVariables().getNumberByName(id.getName());
+        byteCode.append(BC.ISTORE);
+        byteCode.append((byte)num);
+    }
+    
+    /**
      * Метод записи операции сложения в Java байт-код.
      * @param me Математический оператор - сложение.
      */
@@ -458,6 +479,32 @@ public class CodeGenerator {
         
         // Выполняем сложение.
         byteCode.append(BC.IADD);
+    }
+    
+    /**
+     * Метод записи операции умножения в Java байт-код.
+     * @param me Математический оператор - умножение.
+     */
+    private void writeMul (MathExpression me) {
+        
+        // Загружаем на стек первый операнд.
+        if (me.getLeft().getType() == Expression.CONST) {
+            
+            ConstantExpression ce = (ConstantExpression)me.getLeft();
+            if (ce.getDtype() == DataType.INTEGER)
+                loadIntConst(ce);
+        }
+        
+        // Загружаем на стек второй операнд.
+        if (me.getRight().getType() == Expression.CONST) {
+            
+            ConstantExpression ce = (ConstantExpression)me.getRight();
+            if (ce.getDtype() == DataType.INTEGER)
+                loadIntConst(ce);
+        }
+        
+        // Выполняем умножение.
+        byteCode.append(BC.IMUL);
     }
     
     /**
