@@ -33,7 +33,15 @@ public class FillTables {
     /** Таблица констант главного класса. */
     private static ConstantsTable ctMain;
     
-        
+    /**
+     * Добавить ошибку в таблицу ошибок
+     * @param number Номер строки
+     * @param text Сообщение
+     */
+    public static void addError(int number, String text){
+        errors.add(new CError(Integer.toString(number),text));
+    }
+    
     /**
      * Метод проверки наличия возврата в процедуре.
      * @param body Тело процедуры.

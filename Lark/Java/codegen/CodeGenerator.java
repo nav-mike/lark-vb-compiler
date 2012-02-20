@@ -344,9 +344,10 @@ public class CodeGenerator {
                         byteCode.append(BC.ISTORE);
                         byteCode.append((byte)k);
                     }
+                }
+                else if (init.getType() == Expression.CONST){
                     
                 }
-                
             }
             k++;
         }   
@@ -390,7 +391,6 @@ public class CodeGenerator {
             writeAssignWithConstant(expr);
         else if (expr.getRight().getType() == Expression.READ_LINE_EXPR){
             writeReadLine(expr);
-            
         }
         else if (expr.getRight().getType() == Expression.MATH &&
                 ((MathExpression)expr.getRight()).getMathType() == MathExprType.ADDITION)
@@ -738,9 +738,34 @@ public class CodeGenerator {
                 loadWriteString(hasLN);
             }              
         }
+        else if (data.getType() == Expression.MATH){    // Если это математическая операция
+            MathExpression mthExpr = (MathExpression)data;
+            
+            if (mthExpr.getMathType() == MathExprType.ADDITION)
+                writeAdd(mthExpr);
+            
+            else if (mthExpr.getMathType() == MathExprType.MULTIPLICATION)
+                writeMul(mthExpr);
+            
+            else if (mthExpr.getMathType() == MathExprType.SUBTRACTION)
+                writeSub(mthExpr);
+            
+            else if (mthExpr.getMathType() == MathExprType.DIVISION)
+                writeDiv(mthExpr);
+                        
+            loadWriteInt(hasLN);
+        }
     }
     
 
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
