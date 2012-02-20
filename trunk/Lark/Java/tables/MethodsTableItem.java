@@ -25,6 +25,25 @@ public class MethodsTableItem {
     
     /** Тело функции/процедуры. */
     private ArrayList<AbstractStatement> body;
+    
+    /** Возвращает ли функция массив. */
+    private boolean isArrayReturn;
+
+    /**
+     * Узнать, возвращает ли функция массив.
+     * @return Значение флага
+     */
+    public boolean isIsArrayReturn() {
+        return isArrayReturn;
+    }
+
+    /**
+     * Задать флаг того, возвращает ли функция массив
+     * @param isArrayReturn Новый флаг
+     */
+    public void setIsArrayReturn(boolean isArrayReturn) {
+        this.isArrayReturn = isArrayReturn;
+    }
  
     /**
      * Получить тело метода.
@@ -84,13 +103,15 @@ public class MethodsTableItem {
             DataType type, 
             LocalVariablesTable localVariables, 
             int constNum,
-            ArrayList<AbstractStatement> body) {
+            ArrayList<AbstractStatement> body,
+            boolean isArrayReturn) {
         this.name = name;
         this.type = type;
         this.number = 0;
         this.body = body;
         this.constsTableNum = constNum;
         this.localVariables = localVariables;
+        this.isArrayReturn = isArrayReturn;
     }
 
     /**

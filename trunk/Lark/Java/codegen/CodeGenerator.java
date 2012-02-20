@@ -242,10 +242,10 @@ public class CodeGenerator {
         }         
     } 
     
-        /**
+    /**
      * Сгенерировать байткод для метода
      * @param mt Ссылка на элемент таблицы методов 
-     * @return 
+     * @return Массив байткода
      */
     private byte [] generateCodeForMethod(MethodsTableItem mt){
         byteCode = new MyByteBuffer();
@@ -321,6 +321,14 @@ public class CodeGenerator {
      */
     private void parseDim(DimStatement stmt){
         
+        ArrayList<AsExpression> declList = stmt.getBodyMain();
+        Iterator<AsExpression> i = declList.iterator();
+        
+        while (i.hasNext()){
+            
+            i.next();
+        }
+        
     }
     
     /**
@@ -338,10 +346,13 @@ public class CodeGenerator {
     private void parseExpr(ExprStatement stmt){
         Expression expr = stmt.getExpr();  // Получаем хранящееся тут выражение
         
+        // Если это вывод строки на экран с переносом строки
+        if (expr.getType() == Expression.WRITE_EXPR)
+            writeWriteLine(expr, false);
+        
         // Если это вывод строки на экран
-        if (expr.getType() == Expression.WRITE_LINE_EXPR)
-            writeWriteLine((PrintLineExpression)expr);
-
+        else if (expr.getType() == Expression.WRITE_LINE_EXPR)
+            writeWriteLine(expr, true);
     }
     
     /**
@@ -384,11 +395,22 @@ public class CodeGenerator {
      * Записать в байткод операцию WriteLine
      * @param expr Выражение с операцией
      */
-    private void writeWriteLine(PrintLineExpression expr){
+    private void writeWriteLine(Expression expr, boolean hasLN){
         
-        // Данные для вывода на экран
-        Expression data = expr.getPrintedData();
+        PrintLineExpression prLN;   // Вывод с переносом
+        PrintExpression pr;         // Вывод без переноса
+        Expression data;            // Выводимые данные 
         
+        // Приведем к нужному типу
+        if (hasLN){
+            prLN = (PrintLineExpression)expr;   // Приводим к типу
+            data = prLN.getPrintedData();       // Данные для вывода на экран
+        }
+        else{
+            pr = (PrintExpression)expr;         // Привведем  к типу
+            data = pr.getPrintedData();         // Данные для вывода на экран
+        }
+
         // Если это какая-либо константа
         if (data.getType() == Expression.CONST){
             
@@ -399,28 +421,42 @@ public class CodeGenerator {
                 byteCode.append(BC.LDC);                            // Загружаем константу на стек
                 byteCode.append((byte)constData.getConstNum());     // Пишем номер константы
                 byteCode.append(BC.INVOKESTATIC);                   // Вызов метода
-                byteCode.appendShort((short)CodeConstants.WRITE_LINE_STRING);
+                
+                // Нужен ли перенос строки
+                if (hasLN == true)
+                    byteCode.appendShort((short)CodeConstants.WRITE_LINE_STRING);
+                else
+                    byteCode.appendShort((short)CodeConstants.WRITE_STRING);
             }
             // Если целочисленная константа
             else if (constData.getDtype() == DataType.INTEGER){
                 
+                // Если число четырехбайтное
                 if (constData.getIntValue() > 32767 || constData.getIntValue() < -32768){
                     byteCode.append(BC.LDC);                            // Загружаем константу на стек
                     byteCode.append((byte)constData.getConstNum());     // Пишем номер константы
                 }
                 
+                // Если число двухбайтное
                 else if (constData.getIntValue() > 127 || constData.getIntValue() < -128){
                     byteCode.append(BC.SIPUSH);                    // Загружаем константу на стек
                     byteCode.appendShort((short)constData.getIntValue());
                 }
                 
+                // Если число однобайтнеое
                 else {
                     byteCode.append(BC.BIPUSH);                    // Загружаем константу на стек
                     byteCode.append((byte)constData.getIntValue());
                 }
                 
                 byteCode.append(BC.INVOKESTATIC);                   // Вызов метода
-                byteCode.appendShort((short)CodeConstants.WRITE_LINE_INT);
+                
+                // Нужен ли перенос строки
+                if (hasLN == true)
+                    byteCode.appendShort((short)CodeConstants.WRITE_LINE_INT);
+                else
+                    byteCode.appendShort((short)CodeConstants.WRITE_INT);   
+                        
             }
             // Если логическая константа
             else if (constData.getDtype() == DataType.BOOLEAN){
@@ -433,11 +469,15 @@ public class CodeGenerator {
                     byteCode.append((byte)0);
                 
                 byteCode.append(BC.INVOKESTATIC);              // Вызов метода
-                byteCode.appendShort((short)CodeConstants.WRITE_LINE_INT);
+                
+                // Нужен ли перенос строки
+                if (hasLN == true)
+                    byteCode.appendShort((short)CodeConstants.WRITE_LINE_INT);
+                else
+                    byteCode.appendShort((short)CodeConstants.WRITE_INT);
             }
         }
     }
-    
 }
 
 

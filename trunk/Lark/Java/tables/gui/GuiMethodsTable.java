@@ -62,8 +62,12 @@ public class GuiMethodsTable {
     private void fillTable () {
         
         for (int i = 0; i < mtable.size(); i++) {
+            String typeString = "";
             
-            this.model.addRow(new Object[]{i + 1,mtable.get(i + 1).getName(),mtable.get(i + 1).getType()});
+            if (mtable.get(i+1).isIsArrayReturn() == true)
+                typeString += "Array of ";
+            
+            this.model.addRow(new Object[]{i + 1,mtable.get(i + 1).getName(),typeString + mtable.get(i + 1).getType().name()});
         }
         
     }

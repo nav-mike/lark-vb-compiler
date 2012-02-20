@@ -27,6 +27,24 @@ public class AbstractDeclaration implements XMLInterface{
     private ArrayList<AbstractStatement> body;
     /** Номер строки в коде пользователя. */
     private int lineNumber;
+    /** Возвращает ли функция массив. */
+    private boolean isArrayReturn;
+    
+    /**
+     * Узнать, возвращает ли функция массив.
+     * @return Значение флага
+     */
+    public boolean isIsArrayReturn() {
+        return isArrayReturn;
+    }
+
+    /**
+     * Задать флаг того, возвращает ли функция массив
+     * @param isArrayReturn Новый флаг
+     */
+    public void setIsArrayReturn(boolean isArrayReturn) {
+        this.isArrayReturn = isArrayReturn;
+    }
 
     /**
      * Метод получения номера строки в коде пользователя.
@@ -415,6 +433,12 @@ public class AbstractDeclaration implements XMLInterface{
         if (isFunc == true) {
             attr = attributes.getNamedItem("id_type");
             retType = DataType.fromString(attr.getNodeValue());
+             
+            attr = attributes.getNamedItem("is_array_return");
+            if (attr.getNodeValue().equals("1"))
+                isArrayReturn = true;
+            else
+                isArrayReturn = false;
         }
 
         // Считывание вложенных структур.

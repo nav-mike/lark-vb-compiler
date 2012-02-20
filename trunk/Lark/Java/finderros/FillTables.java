@@ -27,6 +27,8 @@ public class FillTables {
     private static ArrayList<ParamStatement> params;
     /** Тип функции/процедуры. */
     private static DataType dt;
+    /** Флаг того, что функция возвращает массив. */
+    private static boolean arr = false;
     
     /** Таблица констант главного класса. */
     private static ConstantsTable ctMain;
@@ -102,10 +104,13 @@ public class FillTables {
                
                while (it.hasNext()) {
                    
-                   DataType type1 = it.next().getType();
-                   DataType type2 = jt.next().getDtype();
+                   ParamStatement p = it.next();
+                   Expression e = jt.next();
                    
-                   if (type1 != type2)
+                   if (p.getType() != e.getDtype())
+                       flag = false;
+                   if (p.isIsArray() &&
+                           (e.getType() != IdExpression.ID || !((IdExpression)e).isArray()))
                        flag = false;
                }
            } 
@@ -158,6 +163,21 @@ public class FillTables {
 
             if (exprBuf.getType() == Expression.ID){    // Если это идентификатор
                 
+                if (ie.getArrayIndex().getDtype() == DataType.INTEGER) {
+
+                    if (curLocValsTable.itemIsArray(ie.getName())) {
+
+                        ie.setType(IdExpression.GETITEM);
+                        ie.setValueType(Expression.L_VALUE);
+                        ie.setDtype(curLocValsTable.getTypeFor(ie.getName()));
+                        ie.setArray(true);
+
+                    } else 
+                        errors.add(new CError(curMethName, "This isn\'t array: " + 
+                                Integer.toString(ie.getLineNumber())));
+                } else
+                    errors.add(new CError(curMethName, "Bad array\'s index: " +
+                            Integer.toString(ie.getLineNumber())));
             }
             else if (exprBuf.getType() == Expression.CONST){    // Если константа
                 
@@ -181,6 +201,20 @@ public class FillTables {
             }
             else if (exprBuf.getType() == Expression.MATH){     // Если мат. выражение
                 
+                 if (ie.getArrayIndex().getDtype() == DataType.INTEGER) {
+
+                    if (curLocValsTable.itemIsArray(ie.getName())) {
+
+                        ie.setType(IdExpression.GETITEM);
+                        ie.setValueType(Expression.L_VALUE);
+                        ie.setDtype(curLocValsTable.getTypeFor(ie.getName()));
+
+                    } else 
+                        errors.add(new CError(curMethName, "This isn\'t array: " + 
+                                Integer.toString(ie.getLineNumber())));
+                } else
+                    errors.add(new CError(curMethName, "Bad array\'s index: " +
+                            Integer.toString(ie.getLineNumber())));
             }
       
             // Иначе ошибка
@@ -196,6 +230,11 @@ public class FillTables {
     private static void checkDataType (MathExpression me) {
         
         if (me.getLeft().getDtype() != me.getRight().getDtype())
+            errors.add(new CError(curMethName, "Expressions have different types: " +
+                    Integer.toString(me.getLineNumber())));
+        else if (me.getRight().getType() == Expression.ID &&
+                ((IdExpression)me.getRight()).getType() == IdExpression.GETITEM &&
+                ((IdExpression)me.getRight()).getBody().isEmpty())
             errors.add(new CError(curMethName, "Expressions have different types: " +
                     Integer.toString(me.getLineNumber())));
     }
@@ -232,6 +271,8 @@ public class FillTables {
      */
     private static void setTypeForExpression (Expression expr) throws InvalidParametersException {
         
+        if (expr == null) return;
+        
         if (expr.getType() == Expression.CONST) {
             
             expr.setValueType(Expression.R_VALUE);
@@ -242,28 +283,49 @@ public class FillTables {
             
             setTypeForExpression(((MathExpression)expr).getLeft());
             setTypeForExpression(((MathExpression)expr).getRight());
+            
+            if (((MathExpression)expr).getRight().getType() == Expression.READ_LINE_EXPR) {
+                    
+                ((MathExpression)expr).getRight().setValueType(Expression.R_VALUE);
+                ((MathExpression)expr).getRight().setDtype(((MathExpression)expr).getLeft().getDtype());
+            }
+            
             if (((MathExpression)expr).getLeft().getDtype() == ((MathExpression)expr).getRight().getDtype()) {
                 
-                if (((MathExpression)expr).isBooleanOperation())
-                    expr.setDtype(DataType.BOOLEAN);
-                else
-                    expr.setDtype(((MathExpression)expr).getLeft().getDtype());
-                if (((MathExpression)expr).getMathType() ==  MathExprType.ASSIGN &&
-                    ((MathExpression)expr).getLeft().getValueType() != Expression.L_VALUE)
-                    errors.add(new CError(curMethName, "Left operand isn't l-value: " + 
-                            Integer.toString(expr.getLineNumber())));
+                if (((MathExpression)expr).getRight().getType() == Expression.ID &&
+                    curLocValsTable.itemIsArray(((IdExpression)((MathExpression)expr).getRight()).getName()) &&
+                    ((IdExpression)((MathExpression)expr).getRight()).getBody().isEmpty())
+                    errors.add(new CError(curMethName, "Expressions have different types: " +
+                    Integer.toString(((MathExpression)expr).getLineNumber())));
+                else {
+                
+                    if (((MathExpression)expr).isBooleanOperation())
+                        expr.setDtype(DataType.BOOLEAN);
+                    else
+                        expr.setDtype(((MathExpression)expr).getLeft().getDtype());
+                    if (((MathExpression)expr).getMathType() ==  MathExprType.ASSIGN &&
+                        ((MathExpression)expr).getLeft().getValueType() != Expression.L_VALUE)
+                        errors.add(new CError(curMethName, "Left operand isn't l-value: " + 
+                                Integer.toString(expr.getLineNumber())));
+                    else if (((IdExpression)((MathExpression)expr).getLeft()).isArray()
+                            && ((IdExpression)((MathExpression)expr).getLeft()).getBody().isEmpty())
+                        errors.add(new CError(curMethName, "Left operand isn't l-value: " + 
+                                Integer.toString(expr.getLineNumber())));
+                }
             }
-            else
-                errors.add(new CError(curMethName, "Operands have a different types: " +
+            else {
+                    errors.add(new CError(curMethName, "Operands have a different types: " +
                         Integer.toString(expr.getLineNumber())));
-            expr.setType(Expression.R_VALUE);
+            }
+            expr.setValueType(Expression.R_VALUE);
         } else if (expr.getType() == Expression.ID){
             
             if (!module.contains(((IdExpression)expr).getName()) && 
                         !curLocValsTable.contains(((IdExpression)expr).getName())) {
                     errors.add(new CError(curMethName, "Undeclared identifier: " 
                             + Integer.toString(((IdExpression)expr).getLineNumber())));
-                }
+                } else if (curLocValsTable.itemIsArray(((IdExpression)expr).getName()))
+                    ((IdExpression)expr).setArray(true);
             
             if (((IdExpression)expr).getBody().isEmpty()) {
                 
@@ -282,11 +344,13 @@ public class FillTables {
         else if (expr.getType() == Expression.WRITE_EXPR){
             PrintExpression prex = (PrintExpression)expr;
             setTypeForExpression(prex.getPrintedData());
+            prex.setValueType(Expression.R_VALUE);
             
         }
         else if (expr.getType() == Expression.WRITE_LINE_EXPR){
             PrintLineExpression prex = (PrintLineExpression)expr;
             setTypeForExpression(prex.getPrintedData());
+            prex.setValueType(Expression.R_VALUE);
         }
 
     }
@@ -302,9 +366,9 @@ public class FillTables {
     
     
     
-// ==============|| ==============|| ==============|| ==============|| ==============|| ==============||
-// ==============|| ==============|| ==============|| ==============|| ==============|| ==============||
-// ==============|| ==============|| ==============|| ==============|| ==============|| ==============||  
+// ==============|| ==============|| ==============|| ==============|| ==============|| ==============|| ==============||
+// ==============|| ==============|| ==============|| ==============|| ==============|| ==============|| ==============||
+// ==============|| ==============|| ==============|| ==============|| ==============|| ==============|| ==============||
     
     
     
@@ -510,7 +574,7 @@ public class FillTables {
         // Добавим конструктор в таблицу методов
         MethodsTableItem initItem = new MethodsTableItem("<init>",
                 DataType.NONE, null,
-                CodeConstants.CURRENT_INIT, null);
+                CodeConstants.CURRENT_INIT, null,false);
         
         mt.add(initItem);
     }
@@ -535,8 +599,12 @@ public class FillTables {
         while(i.hasNext()){
             buf = i.next();
             
+            curMethName = buf.getName();
+            dt = buf.getRetType();
+            arr = buf.isIsArrayReturn();
+            
             // Проверим на множественное определение функций
-            if (mt.contains(new MethodsTableItem(buf.getName(), DataType.NONE, null, 0, null)))
+            if (mt.contains(new MethodsTableItem(buf.getName(), DataType.NONE, null, 0, null,false)))
                 errors.add(new CError(curMethName, "Multiple declaration: "
                         + Integer.toString(buf.getLineNumber())));
             else {
@@ -564,7 +632,7 @@ public class FillTables {
                 // Создаем элемент таблицы переменных
                 methItem = new MethodsTableItem(buf.getName(),
                     buf.getRetType(), lvt,
-                    constNum, buf.getBody());
+                    constNum, buf.getBody(),buf.isIsArrayReturn());
 
                 mt.add(methItem);   // Заносим в таблицу
             }
@@ -585,6 +653,8 @@ public class FillTables {
             
             for (int i = 0; i < item.getParamList().size(); i++) {
 
+                if (item.getParamList().get(i).isIsArray())
+                    result += "[";
                 result += item.getFromParamList(i).getType().convertToConstantsTablesString();
 
                 if (i != item.getParamList().size() - 1)
@@ -599,7 +669,8 @@ public class FillTables {
         
         result += ")";
         
-        result += item.getRetType().convertToConstantsTablesString();
+      //  if (item.getRetType())                                       // МИХАН!!! Я ТУТ КОЕ-ЧТО ЗАКОММЕНТИЛ!!!
+      //  result += item.getRetType().convertToConstantsTablesString();// <--- ВООООН ТАМ!! Видишь?? Куда стрелка показывает! Нет, левее! Да, вот! Да, там!
         
         if (item.getRetType() == DataType.STRING)
             result += ";";
@@ -646,8 +717,12 @@ public class FillTables {
                     errors.add(new CError(curMethName, "Multiple declaration: "
                         + paramList.get(i).getLineNumber().toString()));
                 else {
-                    lvt.add(new LocalVariablesTableItem(paramList.get(i).getName(),
+                    if (!paramList.get(i).isIsArray())
+                        lvt.add(new LocalVariablesTableItem(paramList.get(i).getName(),
                             paramList.get(i).getType(), i));
+                    else
+                        lvt.add(new LocalVariablesTableItem(paramList.get(i).getName(),
+                                0, paramList.get(i).getType()));
                 }
             }
         }
@@ -730,6 +805,13 @@ public class FillTables {
                         if (dt != ex.getExpr().getDtype())
                             errors.add(new CError(curMethName,
                                     "Function has invalid return type: " + Integer.toString(body.get(i).getLineNumber())));
+                        else if (ex.getExpr().getType() == Expression.ID) {
+                            
+                            IdExpression ie = (IdExpression)ex.getExpr();
+                            if (arr != ie.isArray())
+                                errors.add(new CError(curMethName,
+                                    "Function has invalid return type: " + Integer.toString(body.get(i).getLineNumber())));
+                        }
                     }
                 }
 
@@ -764,6 +846,12 @@ public class FillTables {
      * создании констант.
      */
     private static void findLocalVariableInAsExpression (AsExpression item, LocalVariablesTable lvt, Integer ln) throws InvalidParametersException {
+        
+        if (item.getInitData() != null) {
+            
+            curLocValsTable = lvt;
+            setTypeForExpression(item.getInitData());
+        }
         
         if (item.getVariables() != null ) {
             
