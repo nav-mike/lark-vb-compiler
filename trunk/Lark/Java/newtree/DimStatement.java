@@ -103,7 +103,7 @@ public class DimStatement extends AbstractStatement {
         this.bodyMain.add(item);
     }
 
-    public void getAsExprList(Node node) {
+    private void getAsExprList(Node node) {
         
         // Считывание списка объявляемых переменных.
         NodeList nodes = node.getChildNodes();

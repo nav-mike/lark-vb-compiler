@@ -194,7 +194,9 @@ public class AsExpression implements XMLInterface{
         NodeList nodes = node.getChildNodes();
         NamedNodeMap attributes;
         Node attr;
-                
+               
+        int constNumber = 0;
+        
         for (int i = 0; i < nodes.getLength(); i++) {
             // Если это список идентификаторов.
 //            switch (nodes.item(i).getNodeName()) {
@@ -287,6 +289,19 @@ public class AsExpression implements XMLInterface{
         NodeList nodes = node.getChildNodes();
 
         for (int i = 0; i < nodes.getLength(); i++) {
+            if ("VB_Expr__expr".equals(nodes.item(i).getNodeName())) {
+                
+                initData = Expression.createExpr(nodes.item(i));
+            } else if ("VB_Id_list".equals(nodes.item(i).getNodeName())) {
+                
+                readFromIdList(nodes.item(i));
+            }
+        }
+    }
+  
+    
+    
+    
             // Если это список идентификаторов.
 //            switch (nodes.item(i).getNodeName()) {
 //                case "VB_Expr__expr":
@@ -297,14 +312,4 @@ public class AsExpression implements XMLInterface{
 //                    readFromIdList(nodes.item(i));
 //                    break;
 //            }
-            if ("VB_Expr__expr".equals(nodes.item(i).getNodeName())) {
-                
-                initData = Expression.createExpr(nodes.item(i));
-            } else if ("VB_Id_list".equals(nodes.item(i).getNodeName())) {
-                
-                readFromIdList(nodes.item(i));
-            }
-        }
-    }
-    
 }
