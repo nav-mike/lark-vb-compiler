@@ -378,6 +378,39 @@ public class CodeGenerator {
         // Если это вывод строки на экран
         else if (expr.getType() == Expression.READ_LINE_EXPR)
             writeWriteLine(expr, true);
+        
+        // Если это присваивание
+        else if (expr.getType() == Expression.MATH &&
+                ((MathExpression)expr).getMathType() == MathExprType.ASSIGN)
+            writeAssign((MathExpression)expr);
+    }
+    
+    /**
+     * Метод записи в байт код присваивания.
+     * @param expr Математическое выражение - присваивание.
+     */
+    private void writeAssign(MathExpression expr) {
+        
+        if (expr.getRight().getType() == Expression.CONST)
+            writeAssignWithConstant(expr);
+    }
+    
+    /**
+     * Метод записи присваивания, если правым операндом является константа.
+     * @param expr Математическая операция - присваивание.
+     */
+    private void writeAssignWithConstant (MathExpression expr) {
+        
+        ConstantExpression ce = (ConstantExpression)expr.getRight();
+        IdExpression id = (IdExpression)expr.getLeft();
+        
+        if (ce.getDtype() == DataType.INTEGER)
+            loadIntConst(ce);
+        
+        // Считывание константы в переменную со стека
+        byte num = (byte)m_currentMth.getLocalVariables().getNumberByName(id.getName());
+        byteCode.append(BC.ISTORE);
+        byteCode.append((byte)num);
     }
     
     /**
