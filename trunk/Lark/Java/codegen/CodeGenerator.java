@@ -348,7 +348,6 @@ public class CodeGenerator {
                 }
                 
             }
-
             k++;
         }   
     }
@@ -374,11 +373,7 @@ public class CodeGenerator {
         // Если это вывод строки на экран
         else if (expr.getType() == Expression.WRITE_LINE_EXPR)
             writeWriteLine(expr, true);
-        
-        // Если это вывод строки на экран
-        else if (expr.getType() == Expression.READ_LINE_EXPR)
-            writeWriteLine(expr, true);
-        
+                    
         // Если это присваивание
         else if (expr.getType() == Expression.MATH &&
                 ((MathExpression)expr).getMathType() == MathExprType.ASSIGN)
@@ -393,6 +388,10 @@ public class CodeGenerator {
         
         if (expr.getRight().getType() == Expression.CONST)
             writeAssignWithConstant(expr);
+        else if (expr.getRight().getType() == Expression.READ_LINE_EXPR){
+            writeReadLine(expr);
+            
+        }
         else if (expr.getRight().getType() == Expression.MATH &&
                 ((MathExpression)expr.getRight()).getMathType() == MathExprType.ADDITION)
             writeAssignWithAdd(expr);
@@ -697,18 +696,80 @@ public class CodeGenerator {
                 loadWriteInt(hasLN);
             }
         }
-        // Если это идентификатор
-        else if (data.getType() == Expression.ID){
+        else if (data.getType() == Expression.ID){  // Если это идентификатор
            
-            // Загружаем значение переменной на стек
-            byteCode.append(BC.ILOAD);
-            byte num = (byte)m_currentMth.getLocalVariables().getNumberByName(((IdExpression)data).getName());
-            byteCode.append(num);
-            
-            // Выводим значение на экран
-            loadWriteInt(hasLN);
+            if (data.getDtype() == DataType.INTEGER || data.getDtype() == DataType.BOOLEAN){
+                
+                byteCode.append(BC.ILOAD);      // Загружаем значение переменной на стек
+                byte num = (byte)m_currentMth.getLocalVariables().getNumberByName(((IdExpression)data).getName());
+                byteCode.append(num);
+
+                if (data.getDtype() == DataType.BOOLEAN)
+                    loadWriteBoolean(hasLN);
+                else
+                    loadWriteInt(hasLN);    // Выводим значение на экран
+            }
+            else if (data.getDtype() == DataType.STRING){
+                
+                // Загружаем значение переменной на стек
+                byteCode.append(BC.ALOAD);
+                byte num = (byte)m_currentMth.getLocalVariables().getNumberByName(((IdExpression)data).getName());
+                byteCode.append(num);
+
+                loadWriteString(hasLN);
+            }              
         }
     }
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     /**
      * Записать в байт код целочисленную константу
@@ -747,35 +808,62 @@ public class CodeGenerator {
         else
             byteCode.appendShort((short)CodeConstants.WRITE_INT);
     }
+    
+    /**
+     * Записать в байт код функцию вывода на экран строки
+     * @param hasLN Нужен ли на конце перенос строки.
+     */
+    public void loadWriteString(boolean hasLN){
+        byteCode.append(BC.INVOKESTATIC);              // Вызов метода
+
+        // Нужен ли перенос строки
+        if (hasLN == true)
+            byteCode.appendShort((short)CodeConstants.WRITE_LINE_STRING);
+        else
+            byteCode.appendShort((short)CodeConstants.WRITE_STRING);
+    }
+    
+    /**
+     * Записать в байт код функцию вывода на экран логического числа 
+     * @param hasLN Нужен ли на конце перенос строки.
+     */
+    public void loadWriteBoolean(boolean hasLN){
+        byteCode.append(BC.INVOKESTATIC);              // Вызов метода
+
+        // Нужен ли перенос строки
+        if (hasLN == true)
+            byteCode.appendShort((short)CodeConstants.WRITE_LINE_BOOLEAN);
+        else
+            byteCode.appendShort((short)CodeConstants.WRITE_BOOLEAN);
+    }
+
+    /**
+     * Записаь в байткод считывание данных из консоли
+     * @param expr Мат. выражение, в котором оно фигурирует
+     */
+    public void writeReadLine(MathExpression expr){
+        
+        IdExpression id = (IdExpression)expr.getLeft();
+              
+        // Вызываем READ_LINE
+        byteCode.append(BC.INVOKESTATIC);
+        byteCode.appendShort((short)CodeConstants.READ_LINE_STRING);
+        
+        // Преобразуем типы
+        if (id.getDtype() == DataType.BOOLEAN || id.getDtype() == DataType.INTEGER){
+            byteCode.append(BC.INVOKESTATIC);
+            byteCode.appendShort((short)CodeConstants.STRING_TO_INT);
+            
+            // Считывание константы в переменную со стека
+            byte num = (byte)m_currentMth.getLocalVariables().getNumberByName(id.getName());
+            byteCode.append(BC.ISTORE);
+            byteCode.append((byte)num);
+        }
+        else if (id.getDtype() == DataType.STRING){
+            // Считывание константы в переменную со стека
+            byte num = (byte)m_currentMth.getLocalVariables().getNumberByName(id.getName());
+            byteCode.append(BC.ASTORE);
+            byteCode.append((byte)num);
+        }
+    }
 }
-
-
-
-
-
-
-
-//           // byteCode.append(BC.ALOAD_0);
-//            byteCode.append(BC.LDC);
-//            byteCode.append((byte)58);
-//            byteCode.append(BC.INVOKESTATIC);
-//            byteCode.appendShort((short)CodeConstants.WRITE_LINE_STRING);
-
-
-//    /**
-//     * Записать тип возвращаемого значения 
-//     * @param type Тип возвращаемого значения проецедуры/функции
-//     */
-//    private void writeReturn(DataType type){         
-//
-//        if (type == DataType.NONE)          // Если это процедура
-//            byteCode.append(BC.RETURN);
-//        
-//        else if (type == DataType.INTEGER || type == DataType.BOOLEAN){  // Целый и булевский тип
-//            byteCode.append(BC.ICONST_0);   // ТЕСТ
-//            byteCode.append(BC.IRETURN);
-//        }
-//        
-//        else if (type == DataType.STRING)   // Если строка
-//            byteCode.append(BC.ARETURN);
-//    }
