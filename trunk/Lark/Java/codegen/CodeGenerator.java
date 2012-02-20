@@ -467,6 +467,10 @@ public class CodeGenerator {
             ConstantExpression ce = (ConstantExpression)me.getLeft();
             if (ce.getDtype() == DataType.INTEGER)
                 loadIntConst(ce);
+        } else if (me.getLeft().getType() == Expression.MATH) {
+             
+            if (((MathExpression)me.getLeft()).getMathType() == MathExprType.ADDITION)
+                writeAdd((MathExpression)me.getLeft());
         }
         
         // Загружаем на стек второй операнд.
@@ -475,6 +479,10 @@ public class CodeGenerator {
             ConstantExpression ce = (ConstantExpression)me.getRight();
             if (ce.getDtype() == DataType.INTEGER)
                 loadIntConst(ce);
+        } else if (me.getRight().getType() == Expression.MATH) {
+             
+            if (((MathExpression)me.getRight()).getMathType() == MathExprType.ADDITION)
+                writeAdd((MathExpression)me.getRight());
         }
         
         // Выполняем сложение.
