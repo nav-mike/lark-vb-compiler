@@ -50,12 +50,16 @@ struct VB_Func_stmt
 	struct VB_Expr*	expr;			//!< Возвращаемое значение
 	struct VB_Param_list*	param_list;	//!< Список параметров
 	struct VB_Stmt*			next;		//!< Следующий оператор
-	       int              line_number; //!< Line of this statement.
+	int					    line_number; //!< Line of this statement.
+
+	int is_array_return;
+
+
 };
 
 
 struct VB_Func_stmt * create_func_stmt(char* id, struct VB_Param_list* params, enum VB_Id_type type,
-									   struct VB_Stmt_list* body)
+									   struct VB_Stmt_list* body, int is_array_ret)
 {
 	struct VB_Func_stmt* result = (struct VB_Func_stmt*)malloc(sizeof(struct VB_Func_stmt));
 	result->id = (char*)malloc(sizeof(char)*strlen(id));
@@ -67,7 +71,7 @@ struct VB_Func_stmt * create_func_stmt(char* id, struct VB_Param_list* params, e
 	result->next = NULL;
 	result->expr = NULL;
 	result->line_number = get_location();
-
+	result->is_array_return = is_array_ret;
     return result;
 }
 

@@ -158,7 +158,7 @@ void VBX_createXML (struct VB_Module_stmt* module){
  */
 void VBX_add_statement_list(xmlNodePtr parent, struct VB_Stmt_list* list){
 	
-	if (list->first != NULL){
+	if (list != NULL){
 		struct VB_Stmt * item = list->first;
 
 	//	xmlNodePtr listNode;
@@ -423,6 +423,11 @@ void VBX_add_func(xmlNodePtr node, struct VB_Func_stmt* stmt){
 
 	itoa(stmt->line_number,buf,10);
 	xmlNewProp(node,(const xmlChar *)"line_number",(const xmlChar *)buf);
+
+	if (stmt->is_array_return == 1)
+		xmlNewProp(node,(const xmlChar *)"is_array_return",(const xmlChar *)"1");
+	else
+		xmlNewProp(node,(const xmlChar *)"is_array_return",(const xmlChar *)"0");
 	
 	param_node = xmlNewTextChild(node,NULL,(const xmlChar *)"VB_Param_stmt_list",NULL);
 
