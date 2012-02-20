@@ -284,13 +284,15 @@ public class FillTables {
             setTypeForExpression(((MathExpression)expr).getLeft());
             setTypeForExpression(((MathExpression)expr).getRight());
             
-            if (((MathExpression)expr).getRight().getType() == Expression.READ_LINE_EXPR) {
+            if (((MathExpression)expr).getRight() != null &&
+                    ((MathExpression)expr).getRight().getType() == Expression.READ_LINE_EXPR) {
                     
                 ((MathExpression)expr).getRight().setValueType(Expression.R_VALUE);
                 ((MathExpression)expr).getRight().setDtype(((MathExpression)expr).getLeft().getDtype());
             }
             
-            if (((MathExpression)expr).getLeft().getDtype() == ((MathExpression)expr).getRight().getDtype()) {
+            if (((MathExpression)expr).getRight() != null &&
+                    ((MathExpression)expr).getLeft().getDtype() == ((MathExpression)expr).getRight().getDtype()) {
                 
                 if (((MathExpression)expr).getRight().getType() == Expression.ID &&
                     curLocValsTable.itemIsArray(((IdExpression)((MathExpression)expr).getRight()).getName()) &&
@@ -314,6 +316,7 @@ public class FillTables {
                 }
             }
             else {
+                if (((MathExpression)expr).getMathType() != MathExprType.UMINUS)
                     errors.add(new CError(curMethName, "Operands have a different types: " +
                         Integer.toString(expr.getLineNumber())));
             }
