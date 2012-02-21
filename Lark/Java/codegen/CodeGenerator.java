@@ -9,6 +9,7 @@ import finderros.FillTables;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -433,15 +434,63 @@ public class CodeGenerator {
                     
             } else {
                 
-                byteCode.append(BC.ICONST_0);
-                byteCode.append(BC.ISTORE);
-                byteCode.append((byte)k);
-                written += 3;
+                if (expr.getArrays().isEmpty()) {
+                    
+                    byteCode.append(BC.ICONST_0);
+                    byteCode.append(BC.ISTORE);
+                    byteCode.append((byte)k);
+                    written += 3;
+                } else {
+                    
+                    declArrays(expr.getArrays(), expr.getType());
+                }
                 
             }
             k++;
         }   
         return written;
+    }
+    
+    /**
+     * Метод объявления массивов без инициализации.
+     * @param arrays Список массивов.
+     * @param type Тип массивов.
+     */
+    private void declArrays(HashMap<String,Integer> arrays, DataType type) {
+        
+        Iterator<String> it = arrays.keySet().iterator();
+        
+        while (it.hasNext()) {
+            
+            String str = it.next();
+            declArray(str, arrays.get(str), type);
+        }
+    }
+    
+    /**
+     * Метод создания массива инициализация его 0.
+     * @param arrName Имя массива.
+     * @param size Размер массива.
+     * @param type Тип массива.
+     */
+    private void declArray (String arrName, int size, DataType type) {
+        
+        byteCode.append((byte)size);
+        byteCode.append(BC.NEWARRAY);
+        byte num = 0;
+        if (type == DataType.INTEGER)
+            num = ArrayType.T_INT;
+        else if (type == DataType.BOOLEAN)
+            num = ArrayType.T_BOOLEAN;
+        else if (type == DataType.CHAR)
+            num = ArrayType.T_CHAR;
+        byteCode.append(num);
+        
+        num = (byte)m_currentMth.getLocalVariables().getNumberByName(arrName);
+        byteCode.append(BC.ASTORE);
+        byteCode.append(num);
+        
+        // TODO: Добавить начальную инициализацию.
     }
     
     /**
