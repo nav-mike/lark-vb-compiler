@@ -11,6 +11,11 @@ import com.sun.corba.se.impl.ior.ByteBuffer;
  * @version 1.0
  */
 public class MyByteBuffer extends ByteBuffer{
+
+    public MyByteBuffer() {
+        super(200);
+    }
+        
     
     /**
      * Добавить в буфер число размером в 2 байта.
@@ -20,7 +25,45 @@ public class MyByteBuffer extends ByteBuffer{
         myEnsureCapacityHelper(elementCount + 2);
 	myDoAppend( value ) ;
     }
+
+    @Override
+    public void append(String value) {
+        super.append(value);
+    }
+
+    @Override
+    public void append(byte value) {
+        super.append(value);
+    }
+
+    @Override
+    public void append(int value) {
+        super.append(value);
+    }
+
+    public int getElementCount() {
+        return elementCount;
+    }
     
+    public void copy(MyByteBuffer other){
+        int current = this.elementCount;
+        
+        for (int i = 0; i < other.elementCount; i++){
+            
+            this.elementData[current++] = other.elementData[i];
+            this.elementCount++;
+            
+        }
+        
+    }
+    
+    public void writeShortFrom(int index, short value){
+	short current = value ;
+	for (int ctr=1; ctr >= 0; ctr--) {
+	    elementData[index+ctr] = (byte)(current & 255) ;
+	    current = (short) (current >> 8);
+	}
+    }
     /**
      * This implements the unsynchronized semantics of ensureCapacity.
      * Synchronized methods in this class can internally call this 
