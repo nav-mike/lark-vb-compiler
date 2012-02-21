@@ -83,7 +83,10 @@ struct VB_For_stmt * create_for_with_step_stmt(char* id, struct VB_Expr* start_e
 	strcpy(result->id,id);
 	result->from_val = start_expr->int_val;
 	result->to_val = end_expr->int_val;
-	result->step_val = step_expr->int_val;
+	if (step_expr->type != EXPR_UMINUS)
+		result->step_val = step_expr->int_val;
+	else
+		result->step_val = step_expr->left_chld->int_val;
 	result->stmt_list = body;
 	result->next = NULL;
 	result->new_id = NULL;

@@ -387,10 +387,10 @@ void solve_div(struct VB_Expr* result, struct VB_Expr* left, struct VB_Expr* rig
 		yyerror("\nIncorrect types!");
 
 	// Если деление на 0
-	if (right->int_val == 0)
-		yyerror("\nDivision by zero!");
+	//if (right->int_val == 0)
+	//	yyerror("\nDivision by zero!");
 
-	result->int_val = left->int_val / right->int_val;
+//	result->int_val = left->int_val / right->int_val;
 
 	result->id_type = left->id_type;
 }
