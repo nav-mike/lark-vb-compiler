@@ -930,7 +930,8 @@ public class CodeGenerator {
     private int parseFor(ForStatement stmt){
         int written = 0;
         
-    
+        MyByteBuffer mbb = new MyByteBuffer();
+        MyByteBuffer body = new MyByteBuffer();
         
         // Шаг 1: иницаилизируем переменную цикла
         loadIntConst(new ConstantExpression(stmt.getStartValue()));
@@ -943,14 +944,20 @@ public class CodeGenerator {
         ie.setName(stmt.getExistedIterator());
         loadIdToStack(ie);
         loadIntConst(new ConstantExpression(stmt.getEndValue()));
-        if (stmt.getEndValue() > 0) {
+        mbb = byteCode;
+        byteCode = body;
+        parseBody(stmt.getBody());
+        body.trimToSize();
+        int shift = body.getElementCount();
+        byteCode = mbb;
+        if (stmt.getStepValue() > 0) {
             
             byteCode.append(BC.IF_ICMPGE);
-            byteCode.appendShort((short)14);
+            byteCode.appendShort((short)(shift + 9)); // 3 - сам if; 3 - goto; 3 - iinc
         } else {
             
             byteCode.append(BC.IF_ICMPLE);
-            byteCode.appendShort((short)14);
+            byteCode.appendShort((short)(shift + 9));
         }
         
         // Шаг 3: загрузка тела цикла
@@ -963,7 +970,7 @@ public class CodeGenerator {
         
         // Шаг 5: загрузка безусловного перехода
         byteCode.append(BC.GOTO);
-        byteCode.appendShort((short)(-15));
+        byteCode.appendShort((short)(-(shift + 10)));
 
         return written;
     }
