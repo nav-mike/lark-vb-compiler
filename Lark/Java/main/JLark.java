@@ -5,6 +5,7 @@
 package main;
 
 import codegen.CodeGenerator;
+import finderros.FillTables;
 import guidebug.IntFrame;
 import guidebug.MainDebugWindow;
 import guidebug.TableConstant;
@@ -331,8 +332,7 @@ public class JLark {
             Logger.getLogger(JLark.class.getName()).log(Level.SEVERE, null, ex);
         }
        
-        
-        m_module = m_module;
+        //m_module = m_module;
 
         MainDebugWindow mWin = null;
         try {
@@ -343,11 +343,9 @@ public class JLark {
             Logger.getLogger(JLark.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        new CodeGenerator(m_module,mWin.getMainClass(),mWin.getRtlClass());
-
-        // cereateTable(); // Создать аблицу
-
-        // showTables();   // Отобразить таблицы
-
+        if (FillTables.getErrors().size() == 0)        
+            new CodeGenerator(m_module,mWin.getMainClass(),mWin.getRtlClass());
+        else
+            System.out.println("Compile failed! See the compiler errors table for details.");
     }
 }

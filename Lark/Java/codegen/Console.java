@@ -95,4 +95,20 @@ public class Console {
     public static boolean StringToBoolean(String str){
         return Boolean.parseBoolean(str);
     }
+    
+    /**
+     * Вывод целочисленного массива в стандартный поток вывода.
+     * @param array Выводимый массив.
+     */
+    public static void WriteLine(int[] array) {
+        
+        System.out.print("{");
+        for (int i = 0; i < array.length; i++) {
+            
+            System.out.print(array[i]);
+            if (i != array.length - 1)
+                System.out.print(", ");
+        }
+        System.out.println("}");
+    }
 }
