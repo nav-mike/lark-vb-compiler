@@ -517,6 +517,9 @@ public class FillTables {
         CodeConstants.STRING_TO_BOOLEAN = addMethodToTable(
                 CodeConstants.CONSOLE_CLASS,
                 "StringToBoolean", "(Ljava/lang/String;)Z", ct);
+        
+        CodeConstants.WRITE_INT_ARRAY = addMethodToTable(
+                CodeConstants.CONSOLE_CLASS, "WriteLine", "([I)V", ct);
     }   
     
     /**

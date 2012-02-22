@@ -1242,10 +1242,12 @@ public class CodeGenerator {
                 IdExpression ie = (IdExpression)data;
                 loadIdToStack(ie);
                 
-                if (ie.isArray() && !ie.getBody().isEmpty())
+                if (ie.isArray() && !ie.getBody().isEmpty()) {
+                    
                     byteCode.append(BC.IALOAD);
-                        
-                if (data.getDtype() == DataType.BOOLEAN)
+                } else if (ie.isArray() && ie.getBody().isEmpty())
+                    loadWriteIntArray(hasLN);
+                else if (data.getDtype() == DataType.BOOLEAN)
                      loadWriteBoolean(hasLN);
                 else
                      loadWriteInt(hasLN);    // Выводим значение на экран
@@ -1380,6 +1382,21 @@ public class CodeGenerator {
         else
             byteCode.appendShort((short)CodeConstants.WRITE_INT);
  
+    }
+    
+    /**
+     * Записать в байт код функцию вывода на экран целочисленного массива.
+     * @param hasLN Нужен ли на конце перенос строки.
+     */
+    public void loadWriteIntArray(boolean hasLN) {
+        
+        byteCode.append(BC.INVOKESTATIC);   // Вызов метода
+        
+        // Нужен ли перенос строки
+        if (hasLN == true)
+            byteCode.appendShort((short)CodeConstants.WRITE_INT_ARRAY);
+        //else
+            //
     }
     
     /**
