@@ -31,7 +31,7 @@ public class MainDebugWindow extends JFrame {
     private ProgramsClass rtlClass;
     /** Главный класс компилируемой программы. */
     private ProgramsClass mainClass;
-    
+                
     /** Панель с вкладками. */
     private JTabbedPane jtp;
     
@@ -77,7 +77,8 @@ public class MainDebugWindow extends JFrame {
             }
         }
         
-        jtp.add("errors", new JScrollPane(new GuiErrorsTable(new ErrorsTable(FillTables.getErrors())).getTable()));
+        jtp.add("errors(" + Integer.toString(FillTables.getErrors().size()) + ")"
+                , new JScrollPane(new GuiErrorsTable(new ErrorsTable(FillTables.getErrors())).getTable()));
         
         this.add(jtp, BorderLayout.CENTER);
         

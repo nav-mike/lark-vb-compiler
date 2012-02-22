@@ -67,13 +67,7 @@ public class CodeGenerator {
     public static short ACC_STATIC = 0x0008;
 
     /** Контейнер байт кода. */
-    public static MyByteBuffer byteCode;
-    
-    public static MyByteBuffer main;
-    
-    public static MyByteBuffer alter;
-    
-    public static MyByteBuffer cond;
+    public static MyByteBuffer byteCode;  
         
     /** Номер локальной переменной. */
     public int k;
@@ -281,21 +275,17 @@ public class CodeGenerator {
     /**
      * Создание конструктора по умолчанию
      */
-    private int createInit(){
+    private void createInit(){
         byteCode.append(BC.ALOAD_0);
         byteCode.append(BC.INVOKESPECIAL);
         byteCode.appendShort((short)CodeConstants.OBJECT_INIT);
-        
-        return 4;
     }
     
     /**
      * Разбор операторов процедуры или функции.
      * @param stmtList Список операторов
      */
-    private int parseBody(ArrayList<AbstractStatement> stmtList){
-        
-        int written = 0;
+    private void parseBody(ArrayList<AbstractStatement> stmtList){
         
         // Создаем итератор для контейнера
         Iterator<AbstractStatement> i = stmtList.iterator();
@@ -309,28 +299,28 @@ public class CodeGenerator {
             stmt = i.next();
             
             if (stmt.getStmtType() == StatementType.DIM)
-                written += parseDim((DimStatement)stmt);
+                 parseDim((DimStatement)stmt);
             
             else if (stmt.getStmtType() == StatementType.DO_LOOP)
-                written += parseDoLoop((DoLoopStatement)stmt);
+                 parseDoLoop((DoLoopStatement)stmt);
             
             else if (stmt.getStmtType() == StatementType.EXPRESSION)
-                written += parseExpr(((ExprStatement)stmt).getExpr());
+                 parseExpr(((ExprStatement)stmt).getExpr());
                 
             else if (stmt.getStmtType() == StatementType.FOR)
-                written += parseFor((ForStatement)stmt);
+                 parseFor((ForStatement)stmt);
                 
             else if (stmt.getStmtType() == StatementType.IF)
-                written += parseIf((IfStatement)stmt);
+                 parseIf((IfStatement)stmt);
                 
             else if (stmt.getStmtType() == StatementType.RETURN)
-                written += parseReturn((ReturnStatement)stmt);
+                 parseReturn((ReturnStatement)stmt);
                 
             else if (stmt.getStmtType() == StatementType.WHILE)
-                written += parseWhile((WhileStatement)stmt);
+                 parseWhile((WhileStatement)stmt);
         }
         
-        return written;
+          
     }
 
 // =========== || =========== ||  =========== ||  =========== ||  =========== || 
@@ -341,9 +331,9 @@ public class CodeGenerator {
      * Разбираем оператор Dim
      * @param stmt Ссылка на оператор
      */
-    private int parseDim(DimStatement stmt){
+    private void parseDim(DimStatement stmt){
         
-        int written = 0;
+         
         
         ArrayList<AsExpression> declList = stmt.getBodyMain();
         Iterator<AsExpression> i = declList.iterator();
@@ -361,11 +351,11 @@ public class CodeGenerator {
                     ConstantExpression cnst = (ConstantExpression)init;
                     
                     if (cnst.getDtype() == DataType.INTEGER){
-                        written += loadIntConst(cnst);
+                         loadIntConst(cnst);
                         byteCode.append(BC.ISTORE);
                         byteCode.append((byte)k);
                         
-                        written += 2;
+                          
                     }
                     else if (cnst.getDtype() == DataType.STRING){
                         
@@ -373,8 +363,7 @@ public class CodeGenerator {
                         byteCode.append((byte)cnst.getConstNum());     // Пишем номер константы
                         byteCode.append(BC.ASTORE);
                         byteCode.append((byte)k);
-                        
-                        written += 4;
+  
                     }
                     else if (cnst.getDtype() == DataType.BOOLEAN){
                         
@@ -387,8 +376,7 @@ public class CodeGenerator {
                         
                         byteCode.append(BC.ISTORE);
                         byteCode.append((byte)k);
-                        
-                        written += 4;
+
                     }
                 }
                 else if (init.getType() == Expression.ID){
@@ -400,19 +388,15 @@ public class CodeGenerator {
                     
                     byteCode.append(BC.ISTORE);
                     byteCode.append((byte)k);
-                    
-                    written += 4;
                 }
                 else if (init.getType() == Expression.MATH){
-                    written += writeAssign((MathExpression)init);
+                     writeAssign((MathExpression)init);
                 }
                 else if (init.getType() == Expression.READ_LINE_EXPR){
                     // Вызываем READ_LINE
                     byteCode.append(BC.INVOKESTATIC);
                     byteCode.appendShort((short)CodeConstants.READ_LINE_STRING);
-
-                    written += 3;
-                            
+         
                     // Преобразуем типы
                     if (init.getDtype() == DataType.BOOLEAN || init.getDtype() == DataType.INTEGER){
                         byteCode.append(BC.INVOKESTATIC);
@@ -420,26 +404,23 @@ public class CodeGenerator {
 
                         byteCode.append(BC.ISTORE);
                         byteCode.append((byte)k);
-                        
-                        written += 5;
                     }
                     else if (init.getDtype() == DataType.STRING){
 
                         byteCode.append(BC.ASTORE);
                         byteCode.append((byte)k);
-                        
-                        written += 2;
+   
                     }
                 }
                     
             } else {
                 
-                if (expr.getArrays().isEmpty()) {
+                if (expr.getArrays() == null) {
                     
                     byteCode.append(BC.ICONST_0);
                     byteCode.append(BC.ISTORE);
                     byteCode.append((byte)k);
-                    written += 3;
+                    
                 } else {
                     
                     declArrays(expr.getArrays(), expr.getType());
@@ -448,7 +429,7 @@ public class CodeGenerator {
             }
             k++;
         }   
-        return written;
+          
     }
     
     /**
@@ -475,7 +456,7 @@ public class CodeGenerator {
      */
     private void declArray (String arrName, int size, DataType type) {
         
-        byteCode.append((byte)size);
+        loadIntConst(new ConstantExpression(size));
         byteCode.append(BC.NEWARRAY);
         byte num = 0;
         if (type == DataType.INTEGER)
@@ -497,73 +478,68 @@ public class CodeGenerator {
      * Разбираем оператор Do .. Loop
      * @param stmt Ссылка на оператор
      */
-    private int parseDoLoop(DoLoopStatement stmt){
-        int written = 0;
-        return written;
+    private void parseDoLoop(DoLoopStatement stmt){
+         
+          
     }
     
     /**
      * Разбираем выражение
      * @param stmt Ссылка на оператор
      */
-    private int parseExpr(Expression expr){
-         
-        int written = 0;
+    private void parseExpr(Expression expr){
         
         // Если это вывод строки на экран с переносом строки
         if (expr.getType() == Expression.WRITE_EXPR)
-            written += writeWriteLine(expr, false);
+             writeWriteLine(expr, false);
         
         // Если это вывод строки на экран
         else if (expr.getType() == Expression.WRITE_LINE_EXPR)
-            written += writeWriteLine(expr, true);
+             writeWriteLine(expr, true);
                     
         // Если это присваивание
         else if (expr.getType() == Expression.MATH &&
                 ((MathExpression)expr).getMathType() == MathExprType.ASSIGN)
-            written += writeAssign((MathExpression)expr);
+             writeAssign((MathExpression)expr);
         
-        return written;
+          
     }
     
     /**
      * Метод записи в байт код присваивания.
      * @param expr Математическое выражение - присваивание.
      */
-    private int writeAssign(MathExpression expr) {
-        
-        int written = 0;
-        
+    private void writeAssign(MathExpression expr) {
+
         if (expr.getRight().getType() == Expression.CONST)
-            written += writeAssignWithConstant(expr);
+             writeAssignWithConstant(expr);
         else if (expr.getRight().getType() == Expression.READ_LINE_EXPR)
-            written += writeReadLine((IdExpression)expr.getLeft());
+             writeReadLine((IdExpression)expr.getLeft());
         else if (expr.getRight().getType() == Expression.MATH &&
                 ((MathExpression)expr.getRight()).getMathType() == MathExprType.ADDITION)
-            written += writeAssignWithAdd(expr);
+             writeAssignWithAdd(expr);
         else if (expr.getRight().getType() == Expression.MATH &&
                 ((MathExpression)expr.getRight()).getMathType() == MathExprType.MULTIPLICATION)
-            written += writeAssignWithMul(expr);
+             writeAssignWithMul(expr);
         else if (expr.getRight().getType() == Expression.MATH &&
                 ((MathExpression)expr.getRight()).getMathType() == MathExprType.SUBTRACTION)
-            written += writeAssignWithSub(expr);
+             writeAssignWithSub(expr);
         else if (expr.getRight().getType() == Expression.MATH &&
                 ((MathExpression)expr.getRight()).getMathType() == MathExprType.DIVISION)
-            written += writeAssignWithDiv(expr);
+             writeAssignWithDiv(expr);
         else if (expr.getRight().getType() == Expression.MATH &&
                 ((MathExpression)expr.getRight()).getMathType() == MathExprType.ASSIGN)
-            written += writeAssignWithAssign(expr);
+             writeAssignWithAssign(expr);
         else if (expr.getRight().getType() == Expression.ID)
-            written += writeAssignWithId(expr);
-        
-        return written;
+             writeAssignWithId(expr);
+
     }
     
     /**
      * Метод загрузки идентификатора на стек.
      * @param id Идентификатор, загружаемый на стек.
      */
-    private int loadIdToStack (IdExpression id) {
+    private void loadIdToStack (IdExpression id) {
         int written =0;
                 
         byte num = (byte)m_currentMth.getLocalVariables().getNumberByName(id.getName());
@@ -571,157 +547,215 @@ public class CodeGenerator {
         if (id.isArray() && id.getBody().isEmpty())
             byteCode.append(BC.ALOAD);
         else if (!id.isArray())
-            byteCode.append(BC.ILOAD); // TODO: необходимо добавить загрузку элемента массива.
+            byteCode.append(BC.ILOAD);
+        else
+            byteCode.append(BC.ALOAD);
         
         byteCode.append((byte)num);
-        written +=  2;
+
+        if (id.isArray() && !id.getBody().isEmpty()) {
+            
+            if (id.getArrayIndex().getType() == Expression.CONST)
+                loadIntConst(new ConstantExpression(((ConstantExpression)id.getArrayIndex()).getIntValue()));
+            else if (id.getArrayIndex().getType() == Expression.ID)
+                loadIdToStack((IdExpression)id.getArrayIndex());
+        }
         
-        return written;
+          
     }
     
     /**
      * Метод преобразования присваивания у которого правый элемент идентификатор.
      * @param me Математический оператор - присваивание.
      */
-    private int writeAssignWithId (MathExpression me) {
+    private void writeAssignWithId (MathExpression me) {
         
         int written =0;
         
         IdExpression ie1 = (IdExpression)me.getLeft();
         IdExpression ie2 = (IdExpression)me.getRight();
         
-        // Загрузка константы в стек.
-        written += loadIdToStack(ie2);
+//        // Загрузка константы в стек.
+//         loadIdToStack(ie2);
+//        
+//        // Считывание константы в переменную со стека
+//        byte num = (byte)m_currentMth.getLocalVariables().getNumberByName(ie1.getName());
+//        byteCode.append(BC.ISTORE);
+//        byteCode.append((byte)num);
         
-        // Считывание константы в переменную со стека
-        byte num = (byte)m_currentMth.getLocalVariables().getNumberByName(ie1.getName());
-        byteCode.append(BC.ISTORE);
-        byteCode.append((byte)num);
         
-        written += 2;
+        if (ie1.getIdType() == IdExpression.VARIABLE) {
+            
+            if (!ie1.isArray())
+              loadIdToStack(ie2);
+            
+            // Считывание константы в переменную со стека
+            byte num = (byte)m_currentMth.getLocalVariables().getNumberByName(ie1.getName());
+            byteCode.append(BC.ISTORE);
+            byteCode.append((byte)num);
+        } else if (ie1.isArray()) {
+            
+            // Считывание константы в массив
+            loadIdToStack(ie1);
+            //loadIntConst(ce);
+            loadIdToStack(ie2);
+            byteCode.append(BC.IASTORE);
+            
+        }
+          
         
-        return written;
+          
     }
     
-    private int  writeAssignWithAssign (MathExpression me) {
-        
-        int written = 0;
+    private void  writeAssignWithAssign (MathExpression me) {
         
         MathExpression ex = (MathExpression)me.getRight();
         IdExpression id = (IdExpression)me.getLeft();
         
         // Выполнение присваивания.
-        written += writeAssign(ex);
+         writeAssign(ex);
         
-        // Загрузка на стек
-        written += loadIdToStack((IdExpression)ex.getLeft());
+//        // Загрузка на стек
+//         loadIdToStack((IdExpression)ex.getLeft());
+//        
+//        // Считывание константы в переменную со стека
+//        byte num = (byte)m_currentMth.getLocalVariables().getNumberByName(id.getName());
+//        byteCode.append(BC.ISTORE);
+//        byteCode.append((byte)num);
         
-        // Считывание константы в переменную со стека
-        byte num = (byte)m_currentMth.getLocalVariables().getNumberByName(id.getName());
-        byteCode.append(BC.ISTORE);
-        byteCode.append((byte)num);
-        written += 2;
-        return  written;
+        if (id.getIdType() == IdExpression.VARIABLE) {
+            
+            if (!id.isArray())
+                loadIdToStack((IdExpression)ex.getLeft());
+            
+            byte num = (byte)m_currentMth.getLocalVariables().getNumberByName(id.getName());
+            byteCode.append(BC.ISTORE);
+            byteCode.append((byte)num);
+        } else if (id.isArray()) {
+            
+            loadIdToStack(id);
+            loadIdToStack((IdExpression)ex.getLeft());
+            byteCode.append(BC.IASTORE);
+        }
+          
     }
     
     /**
      * Метод записи присваивания, если правым операндом является константа.
      * @param expr Математическая операция - присваивание.
      */
-    private int writeAssignWithConstant (MathExpression expr) {
+    private void writeAssignWithConstant (MathExpression expr) {
         
         int  written = 0;
         ConstantExpression ce = (ConstantExpression)expr.getRight();
         IdExpression id = (IdExpression)expr.getLeft();
         
-        if (ce.getDtype() == DataType.INTEGER)
-             written += loadIntConst(ce);
+        if (id.getIdType() == IdExpression.VARIABLE) {
+            
+            if (!id.isArray())
+              loadIntConst(ce);
+            
+            // Считывание константы в переменную со стека
+            byte num = (byte)m_currentMth.getLocalVariables().getNumberByName(id.getName());
+            byteCode.append(BC.ISTORE);
+            byteCode.append((byte)num);
+        } else if (id.isArray()) {
+            
+            // Считывание константы в массив
+            loadIdToStack(id);
+            loadIntConst(ce);
+            byteCode.append(BC.IASTORE);
+            
+        }
         
-        // Считывание константы в переменную со стека
-        byte num = (byte)m_currentMth.getLocalVariables().getNumberByName(id.getName());
-        byteCode.append(BC.ISTORE);
-        byteCode.append((byte)num);
-        
-        written += 2;
+          
                  
-        return written;
+          
     }
     
     /**
      * Метод присваивания, если правым операндом является операция деления.
      * @param expr Математическая операция - присваивание.
      */
-    private int writeAssignWithDiv (MathExpression expr) {
+    private void writeAssignWithDiv (MathExpression expr) {
         
-        int written = 0;
+         
         MathExpression me = (MathExpression)expr.getRight();
         IdExpression id = (IdExpression)expr.getLeft();
         
         // Выполнение деления.
-        written += writeDiv(me);
+         writeDiv(me);
         
         // Считывание константы в переменную со стека.
         byte num = (byte)m_currentMth.getLocalVariables().getNumberByName(id.getName());
         byteCode.append(BC.ISTORE);
         byteCode.append(num);
         
-        written += 2;
+          
         
-        return written;
+          
     }
     
     /**
      * Метод присваивания, если правым операндом является операция сложения.
      * @param expr Математическая операция - присваивание.
      */
-    private int writeAssignWithAdd (MathExpression expr) {
+    private void writeAssignWithAdd (MathExpression expr) {
         
         int  written = 0;
         
         MathExpression me = (MathExpression)expr.getRight();
         IdExpression id = (IdExpression)expr.getLeft();
         
+        if (id.isArray())
+            loadIdToStack(id);
+        
         // Выполнение сложения.
-        written +=writeAdd(me);
+        writeAdd(me);
         
-        // Считывание константы в переменную со стека
-        byte num = (byte)m_currentMth.getLocalVariables().getNumberByName(id.getName());
-        byteCode.append(BC.ISTORE);
-        byteCode.append((byte)num);
+//        // Считывание константы в переменную со стека
+//        byte num = (byte)m_currentMth.getLocalVariables().getNumberByName(id.getName());
+//        byteCode.append(BC.ISTORE);
+//        byteCode.append((byte)num);
        
-        written += 2;
-        
-        return written;
+          
+        if (id.getIdType() == IdExpression.VARIABLE) {
+            
+            byte num = (byte)m_currentMth.getLocalVariables().getNumberByName(id.getName());
+            byteCode.append(BC.ISTORE);
+            byteCode.append(num);
+        } else if (id.isArray()) {
+            
+//            loadIdToStack(id);
+            byteCode.append(BC.IASTORE);
+        }
     }
     
     /**
      * Метод присваивания, если правым операндом является операция умножения.
      * @param expr Математическая операция - присваивание.
      */
-    private int writeAssignWithMul (MathExpression expr) {
+    private void writeAssignWithMul (MathExpression expr) {
         int  written = 0;
         
         MathExpression me = (MathExpression)expr.getRight();
         IdExpression id = (IdExpression)expr.getLeft();
         
         // Выполнения умножения.
-         written += writeMul(me);
+          writeMul(me);
         
         // Считывание константы в переменную со стека
         byte num = (byte)m_currentMth.getLocalVariables().getNumberByName(id.getName());
         byteCode.append(BC.ISTORE);
         byteCode.append((byte)num);
-        
-         written += 2;
-        
-        return  written;
+
     }
     
     /**
      * Метод присваивания, если правым операндом является операция вычитания.
      * @param expr Математическая операция - присваивание.
      */
-    private int writeAssignWithSub (MathExpression expr) {
+    private void writeAssignWithSub (MathExpression expr) {
         
         int  written = 0;
         
@@ -729,16 +763,13 @@ public class CodeGenerator {
         IdExpression id = (IdExpression)expr.getLeft();
         
         // Выполнения умножения.
-         written += writeSub(me);
+          writeSub(me);
         
         // Считывание константы в переменную со стека
         byte num = (byte)m_currentMth.getLocalVariables().getNumberByName(id.getName());
         byteCode.append(BC.ISTORE);
         byteCode.append((byte)num);
         
-         written += 2;
-        
-        return  written;
     }
     
     /**
@@ -746,44 +777,38 @@ public class CodeGenerator {
      * генерации в Java байт-код.
      * @param me Проверяемая математическая операция.
      */
-    private int checkMathType (MathExpression me) {
-        
-        int  written = 0;
+    private void checkMathType (MathExpression me) {
         
         if (me.getMathType() == MathExprType.ADDITION)
-                 written += writeAdd(me);
+                  writeAdd(me);
             else if (me.getMathType() == MathExprType.MULTIPLICATION)
-                 written += writeMul(me);
+                  writeMul(me);
             else if (me.getMathType() == MathExprType.SUBTRACTION)
-                 written += writeSub(me);
+                  writeSub(me);
             else if (me.getMathType() == MathExprType.DIVISION)
-                 written += writeDiv(me);
+                  writeDiv(me);
             else if (me.getMathType() == MathExprType.UMINUS)
-                 written += writeUnarySub(me);
-        
-        return  written;
+                  writeUnarySub(me);
     }
     
     /**
      * Метод записи операции сложения в Java байт-код.
      * @param me Математический оператор - сложение.
      */
-    private int writeAdd (MathExpression me) {
-        
-        int  written = 0;
+    private void writeAdd (MathExpression me) {
 
         // Загружаем на стек первый операнд.
         if (me.getLeft().getType() == Expression.CONST) {
             
             ConstantExpression ce = (ConstantExpression)me.getLeft();
             if (ce.getDtype() == DataType.INTEGER)
-                 written +=loadIntConst(ce);
+                 loadIntConst(ce);
         } else if (me.getLeft().getType() == Expression.MATH) {
              
-             written +=checkMathType((MathExpression)me.getLeft());
+             checkMathType((MathExpression)me.getLeft());
         } else if (me.getLeft().getType() == Expression.ID) {
             
-             written +=loadIdToStack((IdExpression)me.getLeft());
+             loadIdToStack((IdExpression)me.getLeft());
         }
         
         // Загружаем на стек второй операнд.
@@ -791,42 +816,37 @@ public class CodeGenerator {
             
             ConstantExpression ce = (ConstantExpression)me.getRight();
             if (ce.getDtype() == DataType.INTEGER)
-                 written +=loadIntConst(ce);
+                 loadIntConst(ce);
         } else if (me.getRight().getType() == Expression.MATH) {
              
-             written +=checkMathType((MathExpression)me.getRight());
+             checkMathType((MathExpression)me.getRight());
         } else if (me.getRight().getType() == Expression.ID) {
             
-             written +=loadIdToStack((IdExpression)me.getRight());
+             loadIdToStack((IdExpression)me.getRight());
         }
         
         // Выполняем сложение.
         byteCode.append(BC.IADD);
-        
-        written += 1;
-         
-        return  written;
     }
     
     /**
      * Метод записи операции деления в Java байт-код.
      * @param me Математический оператор - деления.
      */
-    private int writeDiv (MathExpression me) {
-        int written = 0;
-        
+    private void writeDiv (MathExpression me) {
+         
         // Загружаем на стек первый операнд.
         if (me.getLeft().getType() == Expression.CONST) {
             
             ConstantExpression ce = (ConstantExpression)me.getLeft();
             if (ce.getDtype() == DataType.INTEGER)
-                written += loadIntConst(ce);
+                 loadIntConst(ce);
         } else if (me.getLeft().getType() == Expression.MATH) {
              
-            written += checkMathType((MathExpression)me.getLeft());
+             checkMathType((MathExpression)me.getLeft());
         } else if (me.getLeft().getType() == Expression.ID) {
             
-            written += loadIdToStack((IdExpression)me.getLeft());
+             loadIdToStack((IdExpression)me.getLeft());
         }
         
         // Загружаем на стек второй операнд.
@@ -834,42 +854,38 @@ public class CodeGenerator {
             
             ConstantExpression ce = (ConstantExpression)me.getRight();
             if (ce.getDtype() == DataType.INTEGER)
-                written += loadIntConst(ce);
+                 loadIntConst(ce);
         } else if (me.getRight().getType() == Expression.MATH) {
              
-            written += checkMathType((MathExpression)me.getRight());
+             checkMathType((MathExpression)me.getRight());
         } else if (me.getRight().getType() == Expression.ID) {
             
-            written += loadIdToStack((IdExpression)me.getRight());
+             loadIdToStack((IdExpression)me.getRight());
         }
         
         // Выполняем деление.
         byteCode.append(BC.IDIV);
-        
-        written +=  1;
-        return written;
+
     }
     
     /**
      * Метод записи операции вычитания в Java байт-код.
      * @param me Математический оператор - вычитания.
      */
-    private int writeSub (MathExpression me) {
-        
-        int written = 0;
-        
+    private void writeSub (MathExpression me) {
+
         // Загружаем на стек первый операнд.
         if (me.getLeft().getType() == Expression.CONST) {
             
             ConstantExpression ce = (ConstantExpression)me.getLeft();
             if (ce.getDtype() == DataType.INTEGER)
-                written += loadIntConst(ce);
+                 loadIntConst(ce);
         } else if (me.getLeft().getType() == Expression.MATH) {
              
-            written += checkMathType((MathExpression)me.getLeft());
+             checkMathType((MathExpression)me.getLeft());
         } else if (me.getLeft().getType() == Expression.ID) {
             
-            written += loadIdToStack((IdExpression)me.getLeft());
+             loadIdToStack((IdExpression)me.getLeft());
         }
         
         // Загружаем на стек второй операнд.
@@ -877,42 +893,39 @@ public class CodeGenerator {
             
             ConstantExpression ce = (ConstantExpression)me.getRight();
             if (ce.getDtype() == DataType.INTEGER)
-                written += loadIntConst(ce);
+                 loadIntConst(ce);
         } else if (me.getRight().getType() == Expression.MATH) {
              
-            written += checkMathType((MathExpression)me.getRight());
+             checkMathType((MathExpression)me.getRight());
         } else if (me.getRight().getType() == Expression.ID) {
             
-            written += loadIdToStack((IdExpression)me.getRight());
+             loadIdToStack((IdExpression)me.getRight());
         }
         
         // Выполняем сложение.
         byteCode.append(BC.ISUB);
-        
-        written += 1;
-        
-        return written;
+
     }
     
     /**
      * Метод записи операции умножения в Java байт-код.
      * @param me Математический оператор - умножение.
      */
-    private int writeMul (MathExpression me) {
-        int written = 0;
+    private void writeMul (MathExpression me) {
+         
         
         // Загружаем на стек первый операнд.
         if (me.getLeft().getType() == Expression.CONST) {
             
             ConstantExpression ce = (ConstantExpression)me.getLeft();
             if (ce.getDtype() == DataType.INTEGER)
-                written += loadIntConst(ce);
+                 loadIntConst(ce);
         } else if (me.getLeft().getType() == Expression.MATH) {
             
-            written += checkMathType((MathExpression)me.getLeft());
+             checkMathType((MathExpression)me.getLeft());
         } else if (me.getLeft().getType() == Expression.ID) {
             
-            written += loadIdToStack((IdExpression)me.getLeft());
+             loadIdToStack((IdExpression)me.getLeft());
         }
         
         // Загружаем на стек второй операнд.
@@ -920,29 +933,26 @@ public class CodeGenerator {
             
             ConstantExpression ce = (ConstantExpression)me.getRight();
             if (ce.getDtype() == DataType.INTEGER)
-                written += loadIntConst(ce);
+                 loadIntConst(ce);
         }else if (me.getRight().getType() == Expression.MATH) {
             
-            written += checkMathType((MathExpression)me.getRight());
+             checkMathType((MathExpression)me.getRight());
         } else if (me.getRight().getType() == Expression.ID) {
             
-            written += loadIdToStack((IdExpression)me.getRight());
+             loadIdToStack((IdExpression)me.getRight());
         }
         
         // Выполняем умножение.
-        byteCode.append(BC.IMUL);
-        
-        written += 1;
-                
-        return written;
+        byteCode.append(BC.IMUL);  
+          
     }
     
     /**
      * Метод записи операции унарного минуса в Java байт-код.
      * @param me Математический оператор - вычитания.
      */
-    private int writeUnarySub (MathExpression me) {
-        int written = 0;
+    private void writeUnarySub (MathExpression me) {
+         
         
         if (me.getLeft() != null) {
             // Загружаем на стек первый операнд.
@@ -950,7 +960,7 @@ public class CodeGenerator {
 
                 ConstantExpression ce = (ConstantExpression)me.getLeft();
                 if (ce.getDtype() == DataType.INTEGER)
-                    written += loadIntConst(ce);
+                     loadIntConst(ce);
             } 
             else if (me.getLeft().getType() == Expression.ID) {
                 
@@ -961,24 +971,21 @@ public class CodeGenerator {
                 // Выполняем сложение.
                 byteCode.append(BC.INEG);
                 
-                written += 3;
             }            
             else if (me.getLeft().getType() == Expression.MATH) {
 
-                written += checkMathType((MathExpression)me.getLeft());
+                 checkMathType((MathExpression)me.getLeft());
             }
         }
-        
-        return written;
+  
     }
     
     /**
      * Разбираем оператор For
      * @param stmt Ссылка на оператор
      */
-    private int parseFor(ForStatement stmt){
-        int written = 0;
-        
+    private void parseFor(ForStatement stmt){
+
         MyByteBuffer mbb = new MyByteBuffer();
         MyByteBuffer body = new MyByteBuffer();
         
@@ -1021,22 +1028,23 @@ public class CodeGenerator {
         byteCode.append(BC.GOTO);
         byteCode.appendShort((short)(-(shift + 10)));
 
-        return written;
+          
     }
     
     /**
      * Разбираем оператор If
      * @param stmt Ссылка на оператор
      */
-    private int parseIf(IfStatement stmt){
-        
-        main = new MyByteBuffer();
+    private void parseIf(IfStatement stmt){    
+ 
+        MyByteBuffer main = new MyByteBuffer();
 
-        alter = new MyByteBuffer();
+        MyByteBuffer alter = new MyByteBuffer();
 
         int alterSize = 0;
 
-        int written = 0;
+         
+        
         Expression expr = stmt.getCondition();  // Условие
         
         MyByteBuffer buf = byteCode;
@@ -1061,11 +1069,11 @@ public class CodeGenerator {
             byteCode = buf;
             
             if (me.getLeft().getType() == Expression.ID)
-                written += loadIdToStack((IdExpression)me.getLeft());
+                 loadIdToStack((IdExpression)me.getLeft());
             
             if (me.getRight().getType() == Expression.CONST &&
                 me.getRight().getDtype() == DataType.INTEGER)
-                written += loadIntConst((ConstantExpression)me.getRight());
+                 loadIntConst((ConstantExpression)me.getRight());
 
             byteCode.append(BC.IF_ICMPNE);
             main.trimToSize();
@@ -1106,11 +1114,11 @@ public class CodeGenerator {
             byteCode = buf;
             
             if (me.getLeft().getType() == Expression.ID)
-                written += loadIdToStack((IdExpression)me.getLeft());
+                 loadIdToStack((IdExpression)me.getLeft());
             
             if (me.getRight().getType() == Expression.CONST &&
                 me.getRight().getDtype() == DataType.INTEGER)
-                written += loadIntConst((ConstantExpression)me.getRight());
+                 loadIntConst((ConstantExpression)me.getRight());
 
             byteCode.append(BC.IF_ICMPEQ);
             main.trimToSize();
@@ -1125,77 +1133,38 @@ public class CodeGenerator {
                 //byteCode.copy(alter);
                 parseBody(stmt.getBodyAlter());
             }
-            //
         }
-        
-        return written;
-    }
-        
-//        , currentCount = 0;
-//                
-//        
-//                    if (stmt.getBodyAlter() != null) {
-
-//            //written += writeEqual((MathExpression)expr, written/*stmt.getBodyAlter().size()*/); //7
-//            
-
-//
-
-//
-
-//        } else if (expr.getType() == Expression.MATH &&
-//                   ((MathExpression)expr).getMathType() == MathExprType.NOT_EQUAL) {
-//            
-//            MathExpression me = (MathExpression)expr;
-//            
-//            if (me.getLeft().getType() == Expression.ID)
-//                written += loadIdToStack((IdExpression)me.getLeft());
-//
-//            if (me.getRight().getType() == Expression.CONST &&
-//                me.getRight().getDtype() == DataType.INTEGER)
-//                written += loadIntConst((ConstantExpression)me.getRight());
-//
-//            byteCode.append(BC.IF_ICMPEQ);
-//            byteCode.appendShort((short)0);
-//            written += 3;
-//        }
-
+    }   
     
-    
-    private int writeEqual (MathExpression me, int posOps) {
-        int written = 0;
+    private void writeEqual (MathExpression me, int posOps) {
 
         if (me.getLeft().getType() == Expression.ID)
-            written += loadIdToStack((IdExpression)me.getLeft());
+             loadIdToStack((IdExpression)me.getLeft());
         
         if (me.getRight().getType() == Expression.CONST &&
             me.getRight().getDtype() == DataType.INTEGER)
-            written += loadIntConst((ConstantExpression)me.getRight());
+             loadIntConst((ConstantExpression)me.getRight());
         
         byteCode.append(BC.IF_ICMPEQ);
         byteCode.appendShort((short)posOps);
-        
-        written += 3;
-                
-        return written;
     }
     
     /**
      * Разбираем оператор Return
      * @param stmt Ссылка на оператор
      */
-    private int parseReturn(ReturnStatement stmt){
-        int written = 0;
-        return written;
+    private void parseReturn(ReturnStatement stmt){
+         
+          
     }
     
     /**
      * Разбираем оператор While
      * @param stmt Ссылка на оператор
      */
-    private int parseWhile(WhileStatement stmt){
-        int written = 0;
-        return written;
+    private void parseWhile(WhileStatement stmt){
+         
+          
     }
     
 // =========== || =========== ||  =========== ||  =========== ||  =========== || 
@@ -1206,9 +1175,7 @@ public class CodeGenerator {
      * Записать в байткод операцию WriteLine
      * @param expr Выражение с операцией
      */
-    private int writeWriteLine(Expression expr, boolean hasLN){
-        
-        int written = 0;
+    private void writeWriteLine(Expression expr, boolean hasLN){
         
         PrintLineExpression prLN;   // Вывод с переносом
         PrintExpression pr;         // Вывод без переноса
@@ -1241,15 +1208,13 @@ public class CodeGenerator {
                     byteCode.appendShort((short)CodeConstants.WRITE_LINE_STRING);
                 else
                     byteCode.appendShort((short)CodeConstants.WRITE_STRING);
-                
-                written += 5;
             }
             // Если целочисленная константа
             else if (constData.getDtype() == DataType.INTEGER){
                 
-                written += loadIntConst(constData);
+                 loadIntConst(constData);
                 
-                written += loadWriteInt(hasLN); 
+                 loadWriteInt(hasLN); 
                         
             }
             // Если логическая константа
@@ -1261,26 +1226,29 @@ public class CodeGenerator {
                     byteCode.append((byte)1);
                 else
                     byteCode.append((byte)0);
-                
-                written += 2;
-                
-                written += loadWriteInt(hasLN);
+
+                 loadWriteInt(hasLN);
             }
         }
         else if (data.getType() == Expression.ID){  // Если это идентификатор
            
             if (data.getDtype() == DataType.INTEGER || data.getDtype() == DataType.BOOLEAN){
                 
-                byteCode.append(BC.ILOAD);      // Загружаем значение переменной на стек
-                byte num = (byte)m_currentMth.getLocalVariables().getNumberByName(((IdExpression)data).getName());
-                byteCode.append(num);
-
-                written += 2;
+//                byteCode.append(BC.ILOAD);      // Загружаем значение переменной на стек
+//                byte num = (byte)m_currentMth.getLocalVariables().getNumberByName(((IdExpression)data).getName());
+//                byteCode.append(num);
+//
+//                written += 2;
+                IdExpression ie = (IdExpression)data;
+                loadIdToStack(ie);
+                
+                if (ie.isArray() && !ie.getBody().isEmpty())
+                    byteCode.append(BC.IALOAD);
                         
                 if (data.getDtype() == DataType.BOOLEAN)
-                    written += loadWriteBoolean(hasLN);
+                     loadWriteBoolean(hasLN);
                 else
-                    written += loadWriteInt(hasLN);    // Выводим значение на экран
+                     loadWriteInt(hasLN);    // Выводим значение на экран
             }
             else if (data.getDtype() == DataType.STRING){
                 
@@ -1288,33 +1256,31 @@ public class CodeGenerator {
                 byteCode.append(BC.ALOAD);
                 byte num = (byte)m_currentMth.getLocalVariables().getNumberByName(((IdExpression)data).getName());
                 byteCode.append(num);
-                
-                written += 2;
 
-                written += loadWriteString(hasLN);
+                loadWriteString(hasLN);
             }              
         }
         else if (data.getType() == Expression.MATH){    // Если это математическая операция
             MathExpression mthExpr = (MathExpression)data;
             
             if (mthExpr.getMathType() == MathExprType.ADDITION)
-                written += writeAdd(mthExpr);
+                 writeAdd(mthExpr);
             
             else if (mthExpr.getMathType() == MathExprType.MULTIPLICATION)
-                written += writeMul(mthExpr);
+                 writeMul(mthExpr);
             
             else if (mthExpr.getMathType() == MathExprType.SUBTRACTION)
-                written += writeSub(mthExpr);
+                 writeSub(mthExpr);
             
             else if (mthExpr.getMathType() == MathExprType.DIVISION)
-                written += writeDiv(mthExpr);
+                 writeDiv(mthExpr);
             
             else if (mthExpr.getMathType() == MathExprType.UMINUS)
-                written += writeUnarySub(mthExpr);
+                 writeUnarySub(mthExpr);
                         
-            written += loadWriteInt(hasLN);
+             loadWriteInt(hasLN);
         }
-        return written;
+          
     }
     
 
@@ -1379,10 +1345,8 @@ public class CodeGenerator {
      * Записать в байт код целочисленную константу
      * @param constData Константа для записи
      */
-    private int loadIntConst(ConstantExpression constData){
-        
-        int written = 0;
-        
+    private void loadIntConst(ConstantExpression constData){
+
         // Если число четырехбайтное
         if (constData.getBytesCount() == 4){
             byteCode.append(BC.LDC);                            // Загружаем константу на стек
@@ -1393,8 +1357,6 @@ public class CodeGenerator {
         else if (constData.getBytesCount() == 2){
             byteCode.append(BC.SIPUSH);                    // Загружаем константу на стек
             byteCode.appendShort((short)constData.getIntValue());
-            
-            written += 1;
         }
 
         // Если число однобайтнеое
@@ -1402,19 +1364,14 @@ public class CodeGenerator {
             byteCode.append(BC.BIPUSH);                    // Загружаем константу на стек
             byteCode.append((byte)constData.getIntValue());
         }
-        written += 2;
-        
-        return written;
     }
     
     /**
      * Записать в байт код функцию вывода на экран целого числа 
      * @param hasLN Нужен ли на конце перенос строки.
      */
-    public int loadWriteInt(boolean hasLN){
-        
-        int written = 0; 
-        
+    public void loadWriteInt(boolean hasLN){
+
         byteCode.append(BC.INVOKESTATIC);              // Вызов метода
                
         // Нужен ли перенос строки
@@ -1422,19 +1379,15 @@ public class CodeGenerator {
             byteCode.appendShort((short)CodeConstants.WRITE_LINE_INT);
         else
             byteCode.appendShort((short)CodeConstants.WRITE_INT);
-        
-        written += 2;
-        
-        return written;
+ 
     }
     
     /**
      * Записать в байт код функцию вывода на экран строки
      * @param hasLN Нужен ли на конце перенос строки.
      */
-    public int loadWriteString(boolean hasLN){
-        int written = 0; 
-        
+    public void loadWriteString(boolean hasLN){
+
         byteCode.append(BC.INVOKESTATIC);              // Вызов метода
 
         // Нужен ли перенос строки
@@ -1442,19 +1395,13 @@ public class CodeGenerator {
             byteCode.appendShort((short)CodeConstants.WRITE_LINE_STRING);
         else
             byteCode.appendShort((short)CodeConstants.WRITE_STRING);
-        
-        written += 2;
-        
-        return written;
     }
     
     /**
      * Записать в байт код функцию вывода на экран логического числа 
      * @param hasLN Нужен ли на конце перенос строки.
      */
-    public int loadWriteBoolean(boolean hasLN){
-        int written = 0; 
-        
+    public void loadWriteBoolean(boolean hasLN){
         byteCode.append(BC.INVOKESTATIC);              // Вызов метода
         
         // Нужен ли перенос строки
@@ -1462,26 +1409,18 @@ public class CodeGenerator {
             byteCode.appendShort((short)CodeConstants.WRITE_LINE_BOOLEAN);
         else
             byteCode.appendShort((short)CodeConstants.WRITE_BOOLEAN);
-        
-        written += 2;
-                
-        return written;
     }
 
     /**
      * Записаь в байткод считывание данных из консоли
      * @param expr Мат. выражение, в котором оно фигурирует
      */
-    public int writeReadLine(IdExpression id){
-        
-        int written = 0;
-        
+    public void writeReadLine(IdExpression id){
+
         // Вызываем READ_LINE
         byteCode.append(BC.INVOKESTATIC);
         byteCode.appendShort((short)CodeConstants.READ_LINE_STRING);
-        
-        written += 3;
-                
+ 
         // Преобразуем типы
         if (id.getDtype() == DataType.BOOLEAN || id.getDtype() == DataType.INTEGER){
             byteCode.append(BC.INVOKESTATIC);
@@ -1491,18 +1430,13 @@ public class CodeGenerator {
             byte num = (byte)m_currentMth.getLocalVariables().getNumberByName(id.getName());
             byteCode.append(BC.ISTORE);
             byteCode.append((byte)num);
-            
-            written += 5;  
+  
         }
         else if (id.getDtype() == DataType.STRING){
             // Считывание константы в переменную со стека
             byte num = (byte)m_currentMth.getLocalVariables().getNumberByName(id.getName());
             byteCode.append(BC.ASTORE);
-            byteCode.append((byte)num);
-            
-            written += 2;  
+            byteCode.append((byte)num);    
         }
-        
-        return written;
     }
 }

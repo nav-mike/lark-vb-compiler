@@ -57,4 +57,7 @@ public class CodeConstants {
     
     /** RTL - Считать булевую переменную. */
     public static int STRING_TO_BOOLEAN;
+    
+    /** RTL - Вывести целочисленный массив в стандартный поток вывода. */
+    public static int WRITE_INT_ARRAY;
 }

@@ -175,7 +175,7 @@ public class FillTables {
 
                     if (curLocValsTable.itemIsArray(ie.getName())) {
 
-                        ie.setType(IdExpression.GETITEM);
+                        ie.setIdType(IdExpression.GETITEM);
                         ie.setValueType(Expression.L_VALUE);
                         ie.setDtype(curLocValsTable.getTypeFor(ie.getName()));
                         ie.setArray(true);
@@ -196,7 +196,7 @@ public class FillTables {
 
                     if (curLocValsTable.itemIsArray(ie.getName())) {
 
-                        ie.setType(IdExpression.GETITEM);
+                        ie.setIdType(IdExpression.GETITEM);
                         ie.setValueType(Expression.L_VALUE);
                         ie.setDtype(curLocValsTable.getTypeFor(ie.getName()));
 
@@ -213,7 +213,7 @@ public class FillTables {
 
                     if (curLocValsTable.itemIsArray(ie.getName())) {
 
-                        ie.setType(IdExpression.GETITEM);
+                        ie.setIdType(IdExpression.GETITEM);
                         ie.setValueType(Expression.L_VALUE);
                         ie.setDtype(curLocValsTable.getTypeFor(ie.getName()));
 
