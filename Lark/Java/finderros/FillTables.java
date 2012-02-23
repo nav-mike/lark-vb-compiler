@@ -725,7 +725,10 @@ public class FillTables {
         
         result += ")";
         
-      //  if (item.getRetType())
+        
+        if (item.isIsArrayReturn() == true)
+                result += "[";
+        
         result += item.getRetType().convertToConstantsTablesString();
         
         if (item.getRetType() == DataType.STRING)

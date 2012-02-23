@@ -255,16 +255,19 @@ public class CodeGenerator {
      */
     private byte [] generateCodeForMethod(MethodsTableItem mt){
         byteCode = new MyByteBuffer();
-                    
+        boolean isStop = false;      
+        
         // Если это конструктор - создаем
         if (mt.getName().equals("<init>"))
             createInit();
   
         else 
-            parseBody(mt.getBody());    // Парсим тело функции
+            isStop = parseBody(mt.getBody());    // Парсим тело функции
         
         if (mt.getType() == DataType.NONE)  // Если это процедура - добавляем пустой return
             byteCode.append(BC.RETURN);
+        else if (isStop == false)           // Если у функции нет return
+            FillTables.addError(0, "Function " + mt.getName() + " have not return statement!");
 
         byteCode.trimToSize();
         
@@ -283,12 +286,14 @@ public class CodeGenerator {
     /**
      * Разбор операторов процедуры или функции.
      * @param stmtList Список операторов
+     * @return Остановилось ли выполнение return-ом
      */
-    private void parseBody(ArrayList<AbstractStatement> stmtList){
+    private boolean parseBody(ArrayList<AbstractStatement> stmtList){
         
         // Создаем итератор для контейнера
         Iterator<AbstractStatement> i = stmtList.iterator();
         AbstractStatement stmt;     // Буфер для следующего оператора
+        boolean isStop = false;     // Флаг окончания разбора блока операций
         
         // Получим номер локальной переменной
         k = m_currentMth.getParamsCount();
@@ -312,12 +317,16 @@ public class CodeGenerator {
             else if (stmt.getStmtType() == StatementType.IF)
                  parseIf((IfStatement)stmt);
                 
-            else if (stmt.getStmtType() == StatementType.RETURN)
+            else if (stmt.getStmtType() == StatementType.RETURN){
                  parseReturn((ReturnStatement)stmt);
-                
+                 isStop = true;
+            }
+
             else if (stmt.getStmtType() == StatementType.WHILE)
                  parseWhile((WhileStatement)stmt);
         }
+        
+        return isStop;
     }
 
     /**
@@ -333,7 +342,23 @@ public class CodeGenerator {
      * @param stmt Ссылка на оператор
      */
     private void parseReturn(ReturnStatement stmt){
-   
+        Expression expr = stmt.getRetData();
+        
+        new_parseExpr(expr, expr);
+        
+        // Если возвращаем массив
+        if (expr.getType() == Expression.ID && ((IdExpression)expr).isArray() == true 
+                && ((IdExpression)expr).getBody().isEmpty())
+            byteCode.append(BC.ARETURN);
+        
+        // Если возвращаем целое число
+        else if (expr.getDtype() == DataType.INTEGER || 
+                expr.getDtype() == DataType.BOOLEAN)
+            byteCode.append(BC.IRETURN);
+        
+        // Если возвращаем строку
+        else if (expr.getDtype() == DataType.STRING)
+            byteCode.append(BC.ARETURN);        
     }
     
     /**
@@ -665,11 +690,25 @@ public class CodeGenerator {
 
             byteCode.append(BC.INVOKESTATIC);                   // Вызов метода
 
+            
             // Вызовем соответствующую перегрузку Write
-            if (data.getType() == Expression.ID && ((IdExpression)data).isArray() == true &&
-                    ((IdExpression)data).getBody().isEmpty() == true && 
-                    data.getDtype() == DataType.INTEGER){
-                byteCode.appendShort((short)CodeConstants.WRITE_INT_ARRAY);
+            if (data.getType() == Expression.ID){
+                int num = this.m_mthdsTable.getTableNumberByName(((IdExpression)data).getName());
+                if ( num != -1){
+//                    DataType ret = this.m_mthdsTable.get(num).getType();
+//                    if ( this.m_mthdsTable.get(num).isIsArrayReturn() == true && ret == DataType.INTEGER){
+//                        byteCode.appendShort((short)CodeConstants.WRITE_INT_ARRAY);
+//                    }
+//                        
+//                    if (ret == DataType.INTEGER){
+//                        
+//                    }
+                }
+                if (((IdExpression)data).isArray() == true &&
+                        ((IdExpression)data).getBody().isEmpty() == true && 
+                        data.getDtype() == DataType.INTEGER){
+                    byteCode.appendShort((short)CodeConstants.WRITE_INT_ARRAY);
+                }
             }
             else if (data.getDtype() == DataType.STRING){
                 // Нужен ли перенос строки
