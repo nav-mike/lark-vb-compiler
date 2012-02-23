@@ -41,6 +41,31 @@ public class MethodsTable {
         
         return flag;
     }
+    
+    /**
+     * Вернуть номер метода из таблицы констант по имени.
+     * @param name Имя метода
+     * @return Номер метода в таблице констант
+     */
+    public int getTableNumberByName(String name){
+        int num = -1;
+        
+        Set<Integer> set = items.keySet();
+        Iterator<Integer> it = set.iterator();
+        
+        while (it.hasNext()) {
+            
+            Integer i = it.next();
+            
+            if (items.get(i).getName().equals(name)) {
+                
+                num = items.get(i).getConstsTableNum();
+                break;
+            }
+        }
+        
+        return num;
+    }
 
     /**
      * Метод преобразования таблицы методов класса в строку.

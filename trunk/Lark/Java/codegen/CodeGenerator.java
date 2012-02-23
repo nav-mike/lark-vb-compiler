@@ -200,7 +200,7 @@ public class CodeGenerator {
         m_writer.writeInt(12 + code.length);            // длина дальнейшей части атрибута + 10 байт на
                                                         // стек, лок. пер, длину БК и табл. исключ.
         
-        m_writer.writeShort(1000);                      // Размер стека
+        m_writer.writeShort(2048);                      // Размер стека
         
         if (mt.getLocalVariables() != null)
             m_writer.writeShort(mt.getLocalVariables().size()); // Количество локальных переменных
@@ -706,20 +706,30 @@ public class CodeGenerator {
      * @param id Идентификатор, загружаемый на стек.
      */
     private void loadIdToStack (IdExpression id) {
-                
-        byte num = (byte)m_currentMth.getLocalVariables().getNumberByName(id.getName());
+       
+        // Проверим, не функция или процелдура это
+        int methNum = this.m_mthdsTable.getTableNumberByName(id.getName());
         
-        if (id.isArray() && id.getBody().isEmpty())
-            byteCode.append(BC.ALOAD);
-        else if (!id.isArray())
-            byteCode.append(BC.ILOAD);
-        else
-            byteCode.append(BC.ALOAD);
-        
-        byteCode.append((byte)num);
+        if (methNum == -1){ // Если это просто id
+            
+            byte num = (byte)m_currentMth.getLocalVariables().getNumberByName(id.getName());
 
-        if (id.isArray() && !id.getBody().isEmpty()) {
-           new_parseExpr(id.getArrayIndex(), id.getArrayIndex());
+            if (id.isArray() && id.getBody().isEmpty())
+                byteCode.append(BC.ALOAD);
+            else if (!id.isArray())
+                byteCode.append(BC.ILOAD);
+            else
+                byteCode.append(BC.ALOAD);
+
+            byteCode.append((byte)num);
+
+            if (id.isArray() && !id.getBody().isEmpty()) {
+            new_parseExpr(id.getArrayIndex(), id.getArrayIndex());
+            }
+        }
+        else{   // Если процедура / функция
+            byteCode.append(BC.INVOKESTATIC);
+            byteCode.appendShort((short)methNum);
         }
     }
     

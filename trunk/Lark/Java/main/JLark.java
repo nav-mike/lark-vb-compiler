@@ -332,7 +332,7 @@ public class JLark {
             Logger.getLogger(JLark.class.getName()).log(Level.SEVERE, null, ex);
         }
        
-        //m_module = m_module;
+        m_module = m_module;
 
         MainDebugWindow mWin = null;
         try {

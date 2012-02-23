@@ -685,10 +685,6 @@ public class FillTables {
                 // Заполняем таблицу локальных переменных метода
                 fillLocalVariablesTable(buf.getParamList(), buf.getBody(), lvt);
 
-                
-                
-
-                        
                 // Создаем элемент таблицы переменных
                 methItem = new MethodsTableItem(buf.getName(),
                     buf.getRetType(), lvt,
