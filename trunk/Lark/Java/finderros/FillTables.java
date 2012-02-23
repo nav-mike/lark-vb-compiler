@@ -522,6 +522,26 @@ public class FillTables {
         
         CodeConstants.WRITE_INT_ARRAY = addMethodToTable(
                 CodeConstants.CONSOLE_CLASS, "WriteLine", "([I)V", ct);
+        
+        CodeConstants.CREATE_INT_ARRAY_DECL = addMethodToTable
+                (CodeConstants.CONSOLE_CLASS, "getIntArray", "([I)[I", ct);
+        
+        CodeConstants.CREATE_INT_ARRAY = addMethodToTable(
+                CodeConstants.CONSOLE_CLASS, "getIntArray", "(I)[I", ct);
+        
+        CodeConstants.CREATE_BOOLEAN_ARRY_DECL = addMethodToTable(
+                CodeConstants.CONSOLE_CLASS, "getBooleanArray", "([Z)[Z", ct);
+        
+        CodeConstants.CREATE_BOOLEAN_ARRAY = addMethodToTable(
+                CodeConstants.CONSOLE_CLASS, "getBooleanArray", "(I)[Z", ct);
+        
+        CodeConstants.CREATE_STRING_ARRAY_DECL = addMethodToTable(
+                CodeConstants.CONSOLE_CLASS, "getStringArray",
+                "([Ljava/lang/String;)[Ljava/lang/String;", ct);
+        
+        CodeConstants.CREATE_STRING_ARRAY = addMethodToTable(
+                CodeConstants.CONSOLE_CLASS, "getStringArray",
+                "(I)[Ljava/lang/String;", ct);
     }   
     
     /**
