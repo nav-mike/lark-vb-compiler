@@ -716,8 +716,12 @@ public class CodeGenerator {
 
             if (id.isArray() && id.getBody().isEmpty())
                 byteCode.append(BC.ALOAD);
-            else if (!id.isArray())
-                byteCode.append(BC.ILOAD);
+            else if (!id.isArray()){
+                if (id.getDtype() == DataType.INTEGER)
+                    byteCode.append(BC.ILOAD);
+                else if (id.getDtype() == DataType.STRING)
+                    byteCode.append(BC.ALOAD);
+            }
             else
                 byteCode.append(BC.ALOAD);
 
@@ -854,7 +858,11 @@ public class CodeGenerator {
             
             // Считывание константы в переменную со стека
             byte num = (byte)m_currentMth.getLocalVariables().getNumberByName(id.getName());
-            byteCode.append(BC.ISTORE);
+            if (id.getDtype() == DataType.INTEGER || id.getDtype() == DataType.BOOLEAN)
+                byteCode.append(BC.ISTORE);
+            else if (id.getDtype() == DataType.STRING)
+                byteCode.append(BC.ASTORE);
+            
             byteCode.append((byte)num);
         }
         else {

@@ -713,8 +713,8 @@ public class FillTables {
                     result += "[";
                 result += item.getFromParamList(i).getType().convertToConstantsTablesString();
 
-                //if (i != item.getParamList().size() - 1)
-                //    result +=";";
+                if (item.getFromParamList(i).getType() == DataType.STRING)
+                    result += ";";
             }
         }
         
