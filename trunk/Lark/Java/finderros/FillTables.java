@@ -192,7 +192,7 @@ public class FillTables {
                 ConstantExpression constExprBuf = (ConstantExpression)exprBuf;
 
                 if (ie.getArrayIndex().getDtype() == DataType.INTEGER
-                        && constExprBuf.getIntValue() > 0) {
+                        && constExprBuf.getIntValue() >= 0) {
 
                     if (curLocValsTable.itemIsArray(ie.getName())) {
 
