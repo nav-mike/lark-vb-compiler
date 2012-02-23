@@ -88,9 +88,9 @@ public class MathExpression extends Expression {
         if (this.mathType == MathExprType.EQUAL         || 
             this.mathType == MathExprType.LESS          ||
             this.mathType == MathExprType.NOT_MORE      ||
-            this.mathType == MathExprType.LESS_OR_EQUAL ||
+            //this.mathType == MathExprType.LESS_OR_EQUAL ||
             this.mathType == MathExprType.NOT_LESS      ||
-            this.mathType == MathExprType.MORE_OR_EQUAL ||
+            //this.mathType == MathExprType.MORE_OR_EQUAL ||
             this.mathType == MathExprType.NOT_EQUAL     ||
             this.mathType == MathExprType.MORE)
             flag = true;
