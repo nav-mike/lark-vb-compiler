@@ -84,7 +84,14 @@ public class Console {
      * @return Полученное число.
      */
     public static int StringToInteger(String str){
-        return Integer.parseInt(str);
+        int result;
+        try {
+            result = Integer.parseInt(str);
+        }
+        catch (Exception io){
+            result = 0;
+        }
+        return result;
     }
     
     /**
@@ -93,7 +100,14 @@ public class Console {
     * @return Пооученное логическое число.
     */
     public static boolean StringToBoolean(String str){
-        return Boolean.parseBoolean(str);
+        boolean result;
+        try {
+            result = Boolean.parseBoolean(str);
+        }
+        catch (Exception io){
+            result = false;
+        }
+        return result;
     }
     
     /**
