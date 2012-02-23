@@ -125,4 +125,76 @@ public class Console {
         }
         System.out.println("}");
     }
+    
+    /**
+     * Создание целочисленного массива с инициализацией.
+     * @param args Аргументы инициализации.
+     * @return Созданный массив.
+     */
+    public static int[] getIntArray (int... args) {
+        
+        int[] result = new int[args.length];
+        
+        System.arraycopy(args, 0, result, 0, args.length);
+        
+        return result;
+    }
+    
+    /**
+     * Создание целочисленного массива без инициализации.
+     * @param size Размер массива.
+     * @return Созданный массив.
+     */
+    public static int[] getIntArray (int size) {
+        
+        return new int[size];
+    }
+    
+    /**
+     * Создание массива логических значений с инициализацией.
+     * @param args Аргументы инициализации.
+     * @return Созданный массив.
+     */
+    public static boolean[] getBooleanArray (boolean... args) {
+        
+        boolean[] result = new boolean[args.length];
+        
+        System.arraycopy(args, 0, result, 0, args.length);
+        
+        return result;
+    }
+    
+    /**
+     * Создание массива логических значений без инициализации.
+     * @param size Размер массива.
+     * @return Созданный массив.
+     */
+    public static boolean[] getBooleanArray (int size) {
+        
+        return new boolean[size];
+    }
+    
+    /**
+     * Создание массива строк с начальной инициализацией.
+     * @param args Размер массива.
+     * @return Созданный массив.
+     */
+    public static String[] getStringArray (String... args) {
+        
+        String[] result = new String[args.length];
+        
+        System.arraycopy(args, 0, result, 0, args.length);
+        
+        return result;
+    }
+    
+    /**
+     * Создание массива строк без начальной инициализации.
+     * @param size Размер массива.
+     * @return Созданный массив.
+     */
+    public static String[] getStringArray (int size) {
+        
+        return new String[size];
+    }
 }
