@@ -603,6 +603,7 @@ public class CodeGenerator {
      * @param forRead Ссылка на правую часть выражения (нужна только для вызова ReadLine)
      */
     private void new_parseExpr(Expression expr, Expression forRead){
+        IdExpression idExpr;
         
         // Определяем тип и вызываем соответствующий метод
         if (expr.getType() == Expression.WRITE_EXPR)
@@ -614,14 +615,24 @@ public class CodeGenerator {
         else if (expr.getType() == Expression.READ_LINE_EXPR)
              new_writeReadLine(expr, forRead);
         
-        else if (expr.getType() == Expression.ID)
-             loadIdToStack((IdExpression)expr);
+        else if (expr.getType() == Expression.ID){
+            idExpr = (IdExpression)expr;
+            
+            loadIdToStack((IdExpression)expr);
+            
+            if (idExpr.isArray() == true){
+                if (idExpr.getBody().isEmpty() ==false)
+                    byteCode.append(BC.IALOAD);
+            }
+
+        }
         
         else if (expr.getType() == Expression.CONST)
              loadConstToStack((ConstantExpression)expr);
         
         else if (expr.getType() == Expression.MATH)   
-             loadMathToStack((MathExpression)expr);         
+             loadMathToStack((MathExpression)expr); 
+        
     }
     
    /**
@@ -653,9 +664,10 @@ public class CodeGenerator {
             new_parseExpr(data,null);
 
             byteCode.append(BC.INVOKESTATIC);                   // Вызов метода
-            
+
             // Вызовем соответствующую перегрузку Write
             if (data.getType() == Expression.ID && ((IdExpression)data).isArray() == true &&
+                    ((IdExpression)data).getBody().isEmpty() == true && 
                     data.getDtype() == DataType.INTEGER){
                 byteCode.appendShort((short)CodeConstants.WRITE_INT_ARRAY);
             }
@@ -707,11 +719,7 @@ public class CodeGenerator {
         byteCode.append((byte)num);
 
         if (id.isArray() && !id.getBody().isEmpty()) {
-            
-            if (id.getArrayIndex().getType() == Expression.CONST)
-                loadIntConst(new ConstantExpression(((ConstantExpression)id.getArrayIndex()).getIntValue()));
-            else if (id.getArrayIndex().getType() == Expression.ID)
-                loadIdToStack((IdExpression)id.getArrayIndex());
+           new_parseExpr(id.getArrayIndex(), id.getArrayIndex());
         }
     }
     
