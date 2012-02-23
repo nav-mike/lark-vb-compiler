@@ -13,7 +13,7 @@ import com.sun.corba.se.impl.ior.ByteBuffer;
 public class MyByteBuffer extends ByteBuffer{
 
     public MyByteBuffer() {
-        super(200);
+        super(2048);
     }
         
     
@@ -47,11 +47,17 @@ public class MyByteBuffer extends ByteBuffer{
     
     public void copy(MyByteBuffer other){
         int current = this.elementCount;
+        int range = this.elementCount;
         
         for (int i = 0; i < other.elementCount; i++){
             
-            this.elementData[current++] = other.elementData[i];
-            this.elementCount++;
+            if (range == 0)
+                this.append(other.elementData[i]);
+            else{
+                this.elementData[current++] = other.elementData[i];
+                this.elementCount++;
+                range--;
+            }
             
         }
         
