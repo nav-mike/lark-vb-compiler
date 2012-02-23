@@ -728,6 +728,12 @@ public class CodeGenerator {
             }
         }
         else{   // Если процедура / функция
+            Iterator<Expression> i = id.getBody().iterator();
+            
+            while(i.hasNext()){
+                new_parseExpr(i.next(), null);
+            }
+            
             byteCode.append(BC.INVOKESTATIC);
             byteCode.appendShort((short)methNum);
         }
