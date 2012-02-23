@@ -33,11 +33,11 @@ public enum MathExprType {
     
      NOT_MORE,
 
-     LESS_OR_EQUAL,
+    // LESS_OR_EQUAL,
     
      NOT_LESS,
 
-     MORE_OR_EQUAL,
+    //MORE_OR_EQUAL,
     
      NOT_EQUAL,
      
