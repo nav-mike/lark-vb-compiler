@@ -67,8 +67,11 @@ public class CodeConstants {
     /** RTL - Создать целочисленный массив без инициализации. */
     public static int CREATE_INT_ARRAY;
     
-    /** RTL - Создать массив логический значений с инициализацией. */
+    /** RTL - Создать массив логических значений с инициализацией. */
     public static int CREATE_BOOLEAN_ARRY_DECL;
+    
+    /** RTL - Создать массив логических значений с инициализацией целыми числами. */
+    public static int CREATE_BOOLEAN_ARRAY_DECL_INT;
     
     /** RTL - Создать массив логических значений без инициализации. */
     public static int CREATE_BOOLEAN_ARRAY;

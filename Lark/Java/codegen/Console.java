@@ -165,6 +165,20 @@ public class Console {
     }
     
     /**
+     * Создание массива логических значений с инициализацией.
+     * @param args Аргументы инициализации.
+     * @return Созданный массив.
+     */
+    public static boolean[] getBooleanArray (int... args) {
+        
+        boolean[] result = new boolean[args.length];
+        
+        System.arraycopy(args, 0, result, 0, args.length);
+        
+        return result;
+    }
+    
+    /**
      * Создание массива логических значений без инициализации.
      * @param size Размер массива.
      * @return Созданный массив.
