@@ -68,6 +68,9 @@ public class CodeGenerator {
 
     /** Контейнер байт кода. */
     public static MyByteBuffer byteCode;  
+    
+    /** Буфер для контейнера кода. */
+    //public static MyByteBuffer byteCodeBuffer;
         
     /** Номер локальной переменной. */
     public int k;
@@ -1036,105 +1039,201 @@ public class CodeGenerator {
      * @param stmt Ссылка на оператор
      */
     private void parseIf(IfStatement stmt){    
- 
-        MyByteBuffer main = new MyByteBuffer();
-
-        MyByteBuffer alter = new MyByteBuffer();
-
-        int alterSize = 0;
-
-         
+        Expression expr = stmt.getCondition();      // Условие
         
-        Expression expr = stmt.getCondition();  // Условие
-        
-        MyByteBuffer buf = byteCode;
-        
-        if (expr.getType() == Expression.MATH &&
-            ((MathExpression)expr).getMathType() == MathExprType.EQUAL){
+        // Если логическое выражение
+        if (expr.getType() == Expression.MATH){
             
-            MathExpression me = (MathExpression)expr;
-                    
-            byteCode = main;
-            parseBody(stmt.getBodyMain());
-            int mainSize = byteCode.getElementCount();
-            main = byteCode;
-            
-            if (stmt.getBodyAlter() != null) {
-                byteCode = alter;
-                parseBody(stmt.getBodyAlter());
-                alterSize = byteCode.getElementCount();
-                alter = byteCode;
+            // Проверим тип сравнивания
+            if (((MathExpression)expr).getMathType() == MathExprType.EQUAL){            // Если равно (=)
+                createIfStmt(stmt,BC.IF_ICMPNE);
             }
-            
-            byteCode = buf;
-            
-            if (me.getLeft().getType() == Expression.ID)
-                 loadIdToStack((IdExpression)me.getLeft());
-            
-            if (me.getRight().getType() == Expression.CONST &&
-                me.getRight().getDtype() == DataType.INTEGER)
-                 loadIntConst((ConstantExpression)me.getRight());
-
-            byteCode.append(BC.IF_ICMPNE);
-            main.trimToSize();
-            
-            int shift = 3;
-            if (stmt.getBodyAlter() != null)
-                shift +=3;
-            
-            byteCode.appendShort((short)(mainSize + shift));   
-            //byteCode.copy(main);
-            parseBody(stmt.getBodyMain());
-            
-            if (stmt.getBodyAlter() != null) {
-                byteCode.append(BC.GOTO);
-                alter.trimToSize();
-                byteCode.appendShort((short)(alterSize + 3));
-                //byteCode.copy(alter);
-                parseBody(stmt.getBodyAlter());
+            else if (((MathExpression)expr).getMathType() == MathExprType.NOT_EQUAL){   // Если неравно (<>)
+                createIfStmt(stmt,BC.IF_ICMPEQ);
             }
-            
-        } else if (expr.getType() == Expression.MATH &&
-            ((MathExpression)expr).getMathType() == MathExprType.NOT_EQUAL){
-            
-            MathExpression me = (MathExpression)expr;
-                    
-            byteCode = main;
-            parseBody(stmt.getBodyMain());
-            int mainSize = byteCode.getElementCount();
-            main = byteCode;
-            
-            if (stmt.getBodyAlter() != null) {
-                byteCode = alter;
-                parseBody(stmt.getBodyAlter());
-                alterSize = byteCode.getElementCount();
-                alter = byteCode;
+            else if (((MathExpression)expr).getMathType() == MathExprType.MORE){        // Если больше (>)
+                createIfStmt(stmt,BC.IF_ICMPLE);
             }
-            
-            byteCode = buf;
-            
-            if (me.getLeft().getType() == Expression.ID)
-                 loadIdToStack((IdExpression)me.getLeft());
-            
-            if (me.getRight().getType() == Expression.CONST &&
-                me.getRight().getDtype() == DataType.INTEGER)
-                 loadIntConst((ConstantExpression)me.getRight());
-
-            byteCode.append(BC.IF_ICMPEQ);
-            main.trimToSize();
-            byteCode.appendShort((short)(mainSize + 3 + 3));   
-            //byteCode.copy(main);
-            parseBody(stmt.getBodyMain());
-            
-            if (stmt.getBodyAlter() != null) {
-                byteCode.append(BC.GOTO);
-                alter.trimToSize();
-                byteCode.appendShort((short)(alterSize + 3));
-                //byteCode.copy(alter);
-                parseBody(stmt.getBodyAlter());
+            else if (((MathExpression)expr).getMathType() == MathExprType.LESS){        // Если меньше (<)
+                createIfStmt(stmt,BC.IF_ICMPGE);
+            }
+            else if (((MathExpression)expr).getMathType() == MathExprType.NOT_MORE){    // Если небольше (<=)
+                createIfStmt(stmt,BC.IF_ICMPGT);
+            }
+            else if (((MathExpression)expr).getMathType() == MathExprType.NOT_LESS){    // Если неменьше (>=)
+                createIfStmt(stmt,BC.IF_ICMPLT);
             }
         }
+        
+        // Если константа
+        else if (expr.getType() == Expression.CONST){
+            
+            // Создаем новое условие
+            stmt.setCondition(new MathExpression((ConstantExpression)expr,
+                    new ConstantExpression(0),
+                    MathExprType.NOT_EQUAL));
+            
+            createIfStmt(stmt,BC.IF_ICMPEQ);       // Сравниваем константу с нулем
+        }
+        
+        // Если переменная
+        else if (expr.getType() == Expression.ID){
+            
+            // Создаем новое условие
+            stmt.setCondition(new MathExpression(new ConstantExpression(0),
+                    (IdExpression)expr,
+                    MathExprType.NOT_EQUAL));
+            
+            createIfStmt(stmt,BC.IF_ICMPEQ);       // Сравниваем константу с нулем
+        }
     }   
+            
+    /**
+     * Занесение в байт-код условного оператора
+     * @param stmt Данный оператор из дерева
+     * @param condition Условие данного оператора
+     */
+    private void createIfStmt(IfStatement stmt, byte condition){
+        MyByteBuffer main = new MyByteBuffer();     // Буфер для главной части
+        MyByteBuffer alter = new MyByteBuffer();    // Буфер для альтернативной части
+        
+        int mainSize = 0;
+        int alterSize = 0;
+        int shift = 3; 
+        
+        MathExpression me = (MathExpression)stmt.getCondition();
+                
+        // Сохраняем текущую ссылку на байткод
+        MyByteBuffer byteCodeBuffer = byteCode;
+        byteCode = null;
+        
+        byteCode = main;                // Записываем в текущуу ссылку объект главного тела
+        parseBody(stmt.getBodyMain());  // Разбираем
+        mainSize = byteCode.getElementCount();  // Получаем число записанных байт
+        main = byteCode;    byteCode = null;
+        
+        // Если есть альтернатива 
+        if (stmt.getBodyAlter() != null) {
+            byteCode = alter;                   // Записываем в текущуу ссылку объект альтернативного тела
+            parseBody(stmt.getBodyAlter());     // Разбираем
+            alterSize = byteCode.getElementCount(); // ПОлучаем число записанных байт
+            alter = byteCode;    byteCode = null;
+            
+            shift +=3;
+        }
+        
+        // Возвращаем ссылку на байт-код на место
+        byteCode = byteCodeBuffer;
+        byteCodeBuffer = null;
+        
+        // Загружаем операнды условия
+        loadParameter(me.getLeft());
+        
+        loadParameter(me.getRight());
+        
+        //Заружаем команду условного перехода
+        byteCode.append(condition);
+        byteCode.appendShort((short)(mainSize + shift));   
+        byteCode.copy(main);
+        //parseBody(stmt.getBodyMain());
+
+        // Если есть альтернатива, то 
+        if (stmt.getBodyAlter() != null) {
+            byteCode.append(BC.GOTO);
+            alter.trimToSize();
+            byteCode.appendShort((short)(alterSize + 3));
+            byteCode.copy(alter);
+            //parseBody(stmt.getBodyAlter());
+        }
+    }            
+             
+    /**
+     * Загрузить операнды условия оператора If
+     * @param expr Операнд условия
+     */
+    private void loadParameter(Expression expr) {
+        
+        // Если это идентификатор
+        if (expr.getType() == Expression.ID)
+                loadIdToStack((IdExpression)expr);
+
+        // Если это константа
+        else if (expr.getType() == Expression.CONST){
+            ConstantExpression constExpr = (ConstantExpression)expr;
+            
+            if (constExpr.getDtype() == DataType.INTEGER)
+                loadIntConst(constExpr);
+            else if (constExpr.getDtype() == DataType.BOOLEAN){
+                
+                byteCode.append(BC.BIPUSH);                    // Загружаем константу на стек
+                
+                // Преобразуем в int
+                if (constExpr.getBooleanValue() == true)
+                    byteCode.append((byte)1);
+                else
+                    byteCode.append((byte)0);
+            }
+            else if (constExpr.getDtype() == DataType.STRING){
+                loadIntConst(new ConstantExpression(constExpr.getStringValue().length()));
+            }
+        }
+        // Если это математическое выражение
+        else if (expr.getType() == Expression.MATH){
+            checkMathType((MathExpression)expr);
+        }
+    }
+        
+        
+        
+        
+        
+
+//            
+//        } else if (expr.getType() == Expression.MATH &&
+//            ((MathExpression)expr).getMathType() == MathExprType.NOT_EQUAL){
+//            
+//            MathExpression me = (MathExpression)expr;
+//                    
+//            byteCode = main;
+//            parseBody(stmt.getBodyMain());
+//            int mainSize = byteCode.getElementCount();
+//            main = byteCode;
+//            
+//            if (stmt.getBodyAlter() != null) {
+//                byteCode = alter;
+//                parseBody(stmt.getBodyAlter());
+//                alterSize = byteCode.getElementCount();
+//                alter = byteCode;
+//            }
+//            
+//            byteCode = buf;
+//            
+//            if (me.getLeft().getType() == Expression.ID)
+//                 loadIdToStack((IdExpression)me.getLeft());
+//            
+//            if (me.getRight().getType() == Expression.CONST &&
+//                me.getRight().getDtype() == DataType.INTEGER)
+//                 loadIntConst((ConstantExpression)me.getRight());
+//
+//            byteCode.append(BC.IF_ICMPEQ);
+//            main.trimToSize();
+//            byteCode.appendShort((short)(mainSize + 3 + 3));   
+//            //byteCode.copy(main);
+//            parseBody(stmt.getBodyMain());
+//            
+//            if (stmt.getBodyAlter() != null) {
+//                byteCode.append(BC.GOTO);
+//                alter.trimToSize();
+//                byteCode.appendShort((short)(alterSize + 3));
+//                //byteCode.copy(alter);
+//                parseBody(stmt.getBodyAlter());
+//            }
+//        }
+
+
+
+
+
     
     private void writeEqual (MathExpression me, int posOps) {
 
