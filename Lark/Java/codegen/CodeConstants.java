@@ -60,4 +60,22 @@ public class CodeConstants {
     
     /** RTL - Вывести целочисленный массив в стандартный поток вывода. */
     public static int WRITE_INT_ARRAY;
+    
+    /** RTL - Создать целочисленный массив с инициализацией. */
+    public static int CREATE_INT_ARRAY_DECL;
+    
+    /** RTL - Создать целочисленный массив без инициализации. */
+    public static int CREATE_INT_ARRAY;
+    
+    /** RTL - Создать массив логический значений с инициализацией. */
+    public static int CREATE_BOOLEAN_ARRY_DECL;
+    
+    /** RTL - Создать массив логических значений без инициализации. */
+    public static int CREATE_BOOLEAN_ARRAY;
+    
+    /** RTL - Создать массив строк с инициализацией. */
+    public static int CREATE_STRING_ARRAY_DECL;
+    
+    /** RTL - Создать массив строк без инициализации. */
+    public static int CREATE_STRING_ARRAY;
 }
