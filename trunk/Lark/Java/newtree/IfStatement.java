@@ -1,5 +1,6 @@
 package newtree;
 
+import finderros.FillTables;
 import java.util.ArrayList;
 import java.util.Arrays;
 import org.w3c.dom.NamedNodeMap;
@@ -303,24 +304,18 @@ public class IfStatement extends AbstractStatement {
         NodeList nodes = node.getChildNodes();
         
         for (int i = 0; i < nodes.getLength(); i++) {
-//            switch (nodes.item(i).getNodeName()) {
-//                case "VB_Expr":
-//                    this.condition = Expression.createExpr(nodes.item(i));
-//                    break;
-//                    
-//                case "VB_Stmt_list__stmt_list":
-//                    this.bodyMain = new ArrayList();
-//                    AbstractDeclaration.readBody(bodyMain, nodes.item(i));
-//                    break;
-//                    
-//                case "VB_Stmt_list__else_list":
-//                    this.bodyAlter = new ArrayList();
-//                    AbstractDeclaration.readBody(bodyAlter, nodes.item(i));
-//                    break;
-//            }
             if ("VB_Expr".equals(nodes.item(i).getNodeName())) {
                 
                 this.condition = Expression.createExpr(nodes.item(i));
+                
+                if (this.condition.getType() != Expression.MATH)
+                    if (this.condition.getType() != Expression.CONST && 
+                            this.condition.getType() != Expression.ID)
+                        if (this.condition.getDtype() != DataType.BOOLEAN &&
+                                this.condition.getDtype() != DataType.INTEGER)
+                    FillTables.addError(this.condition.getLineNumber(), "Must be logical expression!");
+                
+                    
             } else if ("VB_Stmt_list__stmt_list".equals(nodes.item(i).getNodeName())) {
                 
                 this.bodyMain = new ArrayList<AbstractStatement>();
