@@ -420,22 +420,20 @@ public class CodeGenerator {
      */
     private void declArray (String arrName, int size, DataType type) {
         
-        loadIntConst(new ConstantExpression(size));
-        byteCode.append(BC.NEWARRAY);
-        byte num = 0;
-        if (type == DataType.INTEGER)
-            num = ArrayType.T_INT;
-        else if (type == DataType.BOOLEAN)
-            num = ArrayType.T_BOOLEAN;
-        else if (type == DataType.CHAR)
-            num = ArrayType.T_CHAR;
-        byteCode.append(num);
+        loadConstToStack(new ConstantExpression(size));
+        byteCode.append(BC.INVOKESTATIC);
         
-        num = (byte)m_currentMth.getLocalVariables().getNumberByName(arrName);
+        if (type == DataType.BOOLEAN)
+            byteCode.appendShort((short)CodeConstants.CREATE_BOOLEAN_ARRAY);
+        else if (type == DataType.INTEGER)
+            byteCode.appendShort((short)CodeConstants.CREATE_INT_ARRAY);
+        else if (type == DataType.STRING)
+            byteCode.appendShort((short)CodeConstants.CREATE_STRING_ARRAY);
+        
+        byte num = (byte)m_currentMth.getLocalVariables().getNumberByName(arrName);
         byteCode.append(BC.ASTORE);
         byteCode.append(num);
         
-        // TODO: Добавить начальную инициализацию.
     }
     
     
@@ -663,7 +661,10 @@ public class CodeGenerator {
             }
             else if (data.getDtype() == DataType.STRING){
                 // Нужен ли перенос строки
-                if (hasLN == true)
+                if (data.getType() == Expression.ID && ((IdExpression)data).isArray() == true &&
+                    data.getDtype() == DataType.STRING)
+                    byteCode.appendShort((short)CodeConstants.WRITE_STRING_ARRAY);
+                else if (hasLN == true)
                     byteCode.appendShort((short)CodeConstants.WRITE_LINE_STRING);
                 else
                     byteCode.appendShort((short)CodeConstants.WRITE_STRING);
@@ -677,7 +678,10 @@ public class CodeGenerator {
             }
             else if (data.getDtype() == DataType.BOOLEAN){
                 // Нужен ли перенос строки
-                if (hasLN == true)
+                if (data.getType() == Expression.ID && ((IdExpression)data).isArray() == true &&
+                    data.getDtype() == DataType.BOOLEAN)
+                    byteCode.appendShort((short)CodeConstants.WRITE_BOOLEAN_ARRAY);
+                else if (hasLN == true)
                     byteCode.appendShort((short)CodeConstants.WRITE_LINE_BOOLEAN);
                 else
                     byteCode.appendShort((short)CodeConstants.WRITE_BOOLEAN);
