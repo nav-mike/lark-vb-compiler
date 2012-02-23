@@ -324,11 +324,11 @@ public class FillTables {
                                 Integer.toString(expr.getLineNumber())));
                 }
             }
-            else {
-                if (((MathExpression)expr).getMathType() != MathExprType.UMINUS)
-                    errors.add(new CError(curMethName, "Operands have a different types: " +
-                        Integer.toString(expr.getLineNumber())));
-            }
+//            else {
+//                if (((MathExpression)expr).getMathType() != MathExprType.UMINUS)
+//                    errors.add(new CError(curMethName, "Operands have a different types: " +
+//                        Integer.toString(expr.getLineNumber())));
+//            }
             expr.setValueType(Expression.R_VALUE);
         } else if (expr.getType() == Expression.ID){
             
