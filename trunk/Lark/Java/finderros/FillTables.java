@@ -545,6 +545,12 @@ public class FillTables {
         
         CodeConstants.CREATE_BOOLEAN_ARRAY_DECL_INT = addMethodToTable(
                 CodeConstants.CONSOLE_CLASS, "getBooleanArray", "([I)[Z", ct);
+        
+        CodeConstants.WRITE_BOOLEAN_ARRAY = addMethodToTable(
+                CodeConstants.CONSOLE_CLASS, "WriteLine", "([Z)V", ct);
+        
+        CodeConstants.WRITE_STRING_ARRAY = addMethodToTable(
+                CodeConstants.CONSOLE_CLASS, "WriteLine", "([Ljava/lang/String;)V", ct);
     }   
     
     /**

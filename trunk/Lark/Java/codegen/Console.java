@@ -127,6 +127,38 @@ public class Console {
     }
     
     /**
+     * Вывод массива логических значений в стандартный поток вывода.
+     * @param array Выводимый массив.
+     */
+    public static void WriteLine(boolean[] array) {
+        
+        System.out.print("{");
+        for (int i = 0; i < array.length; i++) {
+            
+            System.out.print(array[i]);
+            if (i != array.length - 1)
+                System.out.print(", ");
+        }
+        System.out.println("}");
+    }
+    
+    /**
+     * Вывод массива строк в стандартный поток вывода.
+     * @param array Выводимый массив.
+     */
+    public static void WriteLine(String[] array) {
+        
+        System.out.print("{");
+        for (int i = 0; i < array.length; i++) {
+            
+            System.out.print(array[i]);
+            if (i != array.length - 1)
+                System.out.print(", ");
+        }
+        System.out.println("}");
+    }
+    
+    /**
      * Создание целочисленного массива с инициализацией.
      * @param args Аргументы инициализации.
      * @return Созданный массив.

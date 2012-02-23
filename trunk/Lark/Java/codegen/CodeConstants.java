@@ -61,6 +61,12 @@ public class CodeConstants {
     /** RTL - Вывести целочисленный массив в стандартный поток вывода. */
     public static int WRITE_INT_ARRAY;
     
+    /** RTL - Вывести массив логических значений в стандартный поток вывода. */
+    public static int WRITE_BOOLEAN_ARRAY;
+    
+    /** RTL - Вывести массив строк в стандартный поток вывода. */
+    public static int WRITE_STRING_ARRAY;
+    
     /** RTL - Создать целочисленный массив с инициализацией. */
     public static int CREATE_INT_ARRAY_DECL;
     
