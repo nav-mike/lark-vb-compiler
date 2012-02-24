@@ -261,4 +261,15 @@ public class Console {
         
         return str1 + str2;
     }
+    
+    /**
+     * Функция сравнения EQUAL двух строк.
+     * @param str1 Первая сравниваемая строка.
+     * @param str2 Вторая сравниваемая строка.
+     * @return true, если строки эквивалентны.
+     */
+    public static boolean stringEqualString (String str1, String str2) {
+        
+        return str1.equals(str2);
+    }
 }

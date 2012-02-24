@@ -302,12 +302,12 @@ public class FillTables {
             if (((MathExpression)expr).getRight() != null &&
                     ((MathExpression)expr).getLeft().getDtype() == ((MathExpression)expr).getRight().getDtype()) {
                 
-                if (((MathExpression)expr).getRight().getType() == Expression.ID &&
-                    curLocValsTable.itemIsArray(((IdExpression)((MathExpression)expr).getRight()).getName()) &&
-                    ((IdExpression)((MathExpression)expr).getRight()).getBody().isEmpty())
-                    errors.add(new CError(curMethName, "Expressions have different types: " +
-                    Integer.toString(((MathExpression)expr).getLineNumber())));
-                else {
+//                if (((MathExpression)expr).getRight().getType() == Expression.ID &&
+//                    curLocValsTable.itemIsArray(((IdExpression)((MathExpression)expr).getRight()).getName()) &&
+//                    ((IdExpression)((MathExpression)expr).getRight()).getBody().isEmpty())
+//                    errors.add(new CError(curMethName, "Expressions have different types: " +
+//                    Integer.toString(((MathExpression)expr).getLineNumber())));
+                //else {
                 
                     if (((MathExpression)expr).isBooleanOperation())
                         expr.setDtype(DataType.BOOLEAN);
@@ -317,12 +317,12 @@ public class FillTables {
                         ((MathExpression)expr).getLeft().getValueType() != Expression.L_VALUE)
                         errors.add(new CError(curMethName, "Left operand isn't l-value: " + 
                                 Integer.toString(expr.getLineNumber())));
-                    else if (((MathExpression)expr).getLeft().getType() == Expression.ID &&
-                            ((IdExpression)((MathExpression)expr).getLeft()).isArray()
-                            && ((IdExpression)((MathExpression)expr).getLeft()).getBody().isEmpty())
-                        errors.add(new CError(curMethName, "Left operand isn't l-value: " + 
-                                Integer.toString(expr.getLineNumber())));
-                }
+//                    else if (((MathExpression)expr).getLeft().getType() == Expression.ID &&
+//                            ((IdExpression)((MathExpression)expr).getLeft()).isArray()
+//                            && ((IdExpression)((MathExpression)expr).getLeft()).getBody().isEmpty())
+//                        errors.add(new CError(curMethName, "Left operand isn't l-value: " + 
+//                                Integer.toString(expr.getLineNumber())));
+                //}
             }
             else {
                 if (((MathExpression)expr).getMathType() != MathExprType.UMINUS)
@@ -555,6 +555,10 @@ public class FillTables {
         CodeConstants.CONCAT_STRINGS = addMethodToTable(
                 CodeConstants.CONSOLE_CLASS, "addString",
                 "(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;", ct);
+        
+        CodeConstants.EQUAL_STRINGS = addMethodToTable(
+                CodeConstants.CONSOLE_CLASS, "stringEqualString",
+                "(Ljava/lang/String;Ljava/lang/String;)Z", ct);
     }   
     
     /**
