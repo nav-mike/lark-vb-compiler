@@ -1097,13 +1097,26 @@ public class CodeGenerator {
      * @param me Операция присваивания
      */
     private void new_writeAdd(MathExpression me){
-           
-        new_parseExpr(me.getLeft(), me.getRight());
         
-        new_parseExpr(me.getRight(), me.getLeft());
+        if (me.getLeft().getDtype() == DataType.STRING &&
+            me.getRight().getDtype() == DataType.STRING) {
+            
+            new_parseExpr(me.getLeft(), me.getRight());
+            new_parseExpr(me.getRight(), me.getLeft());
+            
+            byteCode.append(BC.INVOKESTATIC);
+            
+            byteCode.appendShort((short)CodeConstants.CONCAT_STRINGS);
+            
+        } else {
         
-        // Выполняем сложение.
-        byteCode.append(BC.IADD);
+            new_parseExpr(me.getLeft(), me.getRight());
+        
+            new_parseExpr(me.getRight(), me.getLeft());
+        
+            // Выполняем сложение.
+            byteCode.append(BC.IADD);
+        }
     }
     
     /**
