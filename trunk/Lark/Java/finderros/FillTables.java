@@ -551,6 +551,10 @@ public class FillTables {
         
         CodeConstants.WRITE_STRING_ARRAY = addMethodToTable(
                 CodeConstants.CONSOLE_CLASS, "WriteLine", "([Ljava/lang/String;)V", ct);
+        
+        CodeConstants.CONCAT_STRINGS = addMethodToTable(
+                CodeConstants.CONSOLE_CLASS, "addString",
+                "(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;", ct);
     }   
     
     /**

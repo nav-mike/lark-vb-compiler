@@ -87,4 +87,7 @@ public class CodeConstants {
     
     /** RTL - Создать массив строк без инициализации. */
     public static int CREATE_STRING_ARRAY;
+    
+    /** RTL - Сложение строк. */
+    public static int CONCAT_STRINGS;
 }

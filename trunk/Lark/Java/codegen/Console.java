@@ -250,4 +250,15 @@ public class Console {
         
         return new String[size];
     }
+    
+    /**
+     * Функция сложения строк.
+     * @param str1 Первое слагаемое.
+     * @param str2 Второе слагаемое.
+     * @return Сумма двух строк.
+     */
+    public static String addString (String str1, String str2) {
+        
+        return str1 + str2;
+    }
 }
