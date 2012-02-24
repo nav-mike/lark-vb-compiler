@@ -455,6 +455,7 @@ public class CodeGenerator {
                         byteCode.append(BC.ISTORE);
                         byteCode.append((byte)(k++));
                     }
+                    k--;
                 } else {
                     
                     if (expr.getArrayInit() == null)
@@ -1104,11 +1105,12 @@ public class CodeGenerator {
             }
             else{
                 // Вначале загрузим массив
-                loadIdToStack((IdExpression)me.getLeft());
-                
                 new_parseExpr(me.getRight(), me.getLeft());
                 
                 byteCode.append(BC.ASTORE);
+                
+                byte num = (byte)m_currentMth.getLocalVariables().getNumberByName(id.getName());
+                byteCode.append((byte)num);
             }
         }  
     }
