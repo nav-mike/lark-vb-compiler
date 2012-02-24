@@ -520,7 +520,7 @@ public class FillTables {
                 CodeConstants.CONSOLE_CLASS,
                 "StringToBoolean", "(Ljava/lang/String;)Z", ct);
         
-        CodeConstants.WRITE_INT_ARRAY = addMethodToTable(
+        CodeConstants.WRITE_LINE_INT_ARRAY = addMethodToTable(
                 CodeConstants.CONSOLE_CLASS, "WriteLine", "([I)V", ct);
         
         CodeConstants.CREATE_INT_ARRAY_DECL = addMethodToTable
@@ -549,7 +549,7 @@ public class FillTables {
         CodeConstants.WRITE_BOOLEAN_ARRAY = addMethodToTable(
                 CodeConstants.CONSOLE_CLASS, "WriteLine", "([Z)V", ct);
         
-        CodeConstants.WRITE_STRING_ARRAY = addMethodToTable(
+        CodeConstants.WRITE_LINE_STRING_ARRAY = addMethodToTable(
                 CodeConstants.CONSOLE_CLASS, "WriteLine", "([Ljava/lang/String;)V", ct);
         
         CodeConstants.CONCAT_STRINGS = addMethodToTable(
@@ -559,6 +559,12 @@ public class FillTables {
         CodeConstants.EQUAL_STRINGS = addMethodToTable(
                 CodeConstants.CONSOLE_CLASS, "stringEqualString",
                 "(Ljava/lang/String;Ljava/lang/String;)Z", ct);
+        
+        CodeConstants.WRITE_INT_ARRAY = addMethodToTable(
+                CodeConstants.CONSOLE_CLASS, "Write", "([I)V", ct);
+        
+        CodeConstants.WRITE_STRING_ARRAY = addMethodToTable(
+                CodeConstants.CONSOLE_CLASS, "Write", "([Ljava/lang/String;)V", ct);
     }   
     
     /**

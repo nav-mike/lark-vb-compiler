@@ -75,7 +75,7 @@ public class CodeGenerator {
     /** Количество записанных байт. */
     public int bytePassed; 
     
-    private int m_shift = 0;
+    public static byte m_condition;
     
     /**
      * Записать заголовок файла.
@@ -341,7 +341,6 @@ public class CodeGenerator {
                 
             else if (stmt.getStmtType() == StatementType.IF) {
                 
-                m_shift = 0;
                  parseIf((IfStatement)stmt,0);
             }
                 
@@ -352,7 +351,6 @@ public class CodeGenerator {
 
             else if (stmt.getStmtType() == StatementType.WHILE) {
              
-                m_shift = 3;
                  parseWhile((WhileStatement)stmt);
             }
         }
@@ -683,6 +681,8 @@ public class CodeGenerator {
             
             // Проверим тип сравнивания
             if (((MathExpression)expr).getMathType() == MathExprType.EQUAL){            // Если равно (=)
+                
+                m_condition = BC.IF_ICMPNE;
                 createIfStmt(stmt,BC.IF_ICMPNE,gshift);
             }
             else if (((MathExpression)expr).getMathType() == MathExprType.NOT_EQUAL){   // Если неравно (<>)
@@ -770,9 +770,15 @@ public class CodeGenerator {
         new_parseExpr(me.getRight(),me.getLeft());
         
         //Заружаем команду условного перехода
-        byteCode.append(condition);
-        byteCode.appendShort((short)(mainSize + shift + gshift));   
-        byteCode.copy(main);
+        if (me.getLeft().getDtype() != DataType.STRING) {
+            
+            byteCode.append(condition);
+            byteCode.appendShort((short)(mainSize + shift + gshift));   
+            byteCode.copy(main);
+        } else {
+            
+            parseStringIf(condition,gshift);
+        }
 
         // Если есть альтернатива, то 
         if (stmt.getBodyAlter() != null) {
@@ -781,7 +787,21 @@ public class CodeGenerator {
             byteCode.appendShort((short)(alterSize + 3));
             byteCode.copy(alter);
         }
-    }            
+    }
+    
+    /**
+     * Метод сравнения строк.
+     * @param condition Условие.
+     * @param gshift Сдвиг.
+     */
+    private void parseStringIf (byte condition, int gshift) {
+        
+        if (m_condition == BC.IF_ICMPNE) {
+            
+            byteCode.append(BC.INVOKESTATIC);
+            byteCode.appendShort((short)CodeConstants.EQUAL_STRINGS);
+        }
+    }
    
     /**
      * Разбираем выражение.
@@ -858,7 +878,7 @@ public class CodeGenerator {
                 if (data.getType() == Expression.ID && ((((IdExpression)data).isArray() == true &&
                         ((IdExpression)data).getBody().isEmpty() ) || 
                         ((IdExpression)data).getIdType() == IdExpression.CALLFUNCTIONARR))
-                    byteCode.appendShort((short)CodeConstants.WRITE_STRING_ARRAY);
+                    byteCode.appendShort((short)CodeConstants.WRITE_LINE_STRING_ARRAY);
                 
                 else if (hasLN == true)
                     byteCode.appendShort((short)CodeConstants.WRITE_LINE_STRING);
@@ -870,7 +890,7 @@ public class CodeGenerator {
                 if (data.getType() == Expression.ID && ((((IdExpression)data).isArray() == true &&
                         ((IdExpression)data).getBody().isEmpty() )|| 
                         ((IdExpression)data).getIdType() == IdExpression.CALLFUNCTIONARR))
-                    byteCode.appendShort((short)CodeConstants.WRITE_INT_ARRAY);
+                    byteCode.appendShort((short)CodeConstants.WRITE_LINE_INT_ARRAY);
                 
                 // Нужен ли перенос строки
                 else if (hasLN == true)
