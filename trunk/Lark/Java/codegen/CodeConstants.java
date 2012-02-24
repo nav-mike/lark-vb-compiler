@@ -90,4 +90,7 @@ public class CodeConstants {
     
     /** RTL - Сложение строк. */
     public static int CONCAT_STRINGS;
+    
+    /** RTL - Сравнение EQUAL для строк. */
+    public static int EQUAL_STRINGS;
 }
