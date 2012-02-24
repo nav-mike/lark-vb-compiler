@@ -311,8 +311,8 @@ void solve_plus(struct VB_Expr* result, struct VB_Expr* left, struct VB_Expr* ri
 	printf("\n + \n");
 
 	// Проверим типы, если кто-то из детей строкового типа и типы не равны, то ошибка
-	if ((left->id_type == DATA_STRING || right->id_type == DATA_STRING) && left->id_type != right->id_type)
-		yyerror("\nIncorrect types!");
+	//if ((left->id_type == DATA_STRING || right->id_type == DATA_STRING) && left->id_type != right->id_type)
+	//	yyerror("\nIncorrect types!");
 
 	// Если тип строковый, то складываем строки
 	if (left->id_type == DATA_STRING){
@@ -383,7 +383,7 @@ void solve_div(struct VB_Expr* result, struct VB_Expr* left, struct VB_Expr* rig
 	printf("\n / \n");
 
 	// Строки делить нельзя и логический тип
-	if (left->id_type == DATA_STRING || right->id_type == DATA_STRING || left->id_type == DATA_BOOLEAN)
+	if (/*left->id_type == DATA_STRING || right->id_type == DATA_STRING || */left->id_type == DATA_BOOLEAN)
 		yyerror("\nIncorrect types!");
 
 	// Если деление на 0
