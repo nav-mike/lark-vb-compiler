@@ -26,6 +26,14 @@ public class AsExpression implements XMLInterface{
     private HashMap<String, Integer> arrays;
     
     private ArrayList<Expression> arrayInit = null;
+
+    /**
+     * Метод получения списка инициализации массива.
+     * @return Список инициализации массива.
+     */
+    public ArrayList<Expression> getArrayInit() {
+        return arrayInit;
+    }
     
     private DataType type;
 

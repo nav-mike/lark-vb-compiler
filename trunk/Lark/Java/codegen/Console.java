@@ -2,6 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package codegen;
 
 import java.util.Scanner;
@@ -163,11 +164,14 @@ public class Console {
      * @param args Аргументы инициализации.
      * @return Созданный массив.
      */
-    public static int[] getIntArray (int... args) {
+    public static int[] getIntArgsArray (int... args) {
         
         int[] result = new int[args.length];
         
         System.arraycopy(args, 0, result, 0, args.length);
+        
+        for (int i = 0; i < result.length; i++)
+            System.out.println(result[i]);
         
         return result;
     }
@@ -187,7 +191,7 @@ public class Console {
      * @param args Аргументы инициализации.
      * @return Созданный массив.
      */
-    public static boolean[] getBooleanArray (boolean... args) {
+    public static boolean[] getBooleanArgsArray (boolean... args) {
         
         boolean[] result = new boolean[args.length];
         
@@ -201,7 +205,7 @@ public class Console {
      * @param args Аргументы инициализации.
      * @return Созданный массив.
      */
-    public static boolean[] getBooleanArray (int... args) {
+    public static boolean[] getBooleanArgsArray (int... args) {
         
         boolean[] result = new boolean[args.length];
         
@@ -225,7 +229,7 @@ public class Console {
      * @param args Размер массива.
      * @return Созданный массив.
      */
-    public static String[] getStringArray (String... args) {
+    public static String[] getStringArgsArray (String... args) {
         
         String[] result = new String[args.length];
         

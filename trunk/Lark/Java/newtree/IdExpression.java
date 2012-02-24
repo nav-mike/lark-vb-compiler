@@ -13,10 +13,10 @@ public class IdExpression extends Expression {
     /** Передаваемые параметры функции/процедуры или индекс массива. */
     private ArrayList<Expression> body;
     /** Тип идентификатора. */
-    //private int idType;
+    private int idType;
     /** Если идентификатор является массивом. */
     private boolean array = false;
-
+    
     /**
      * Указаение, является ли идентификатор массивом.
      * @param array Флаг, является ли идентификатор массивом.
@@ -38,16 +38,16 @@ public class IdExpression extends Expression {
      * @param idType Тип идентифкатора.
      */
     public void setIdType(int idType) {
-  //      this.idType = idType;
+        this.idType = idType;
     }
 
     /**
      * Метод получения типа идентификатора.
      * @return Тип идентификатора.
      */
-  //  public int getIdType() {
-  //      return idType;
-  //  }
+    public int getIdType() {
+        return idType;
+    }
     
     /* Тип текущего идентификатора. */
     /** Идентификатор - вызов функции. */
@@ -56,6 +56,8 @@ public class IdExpression extends Expression {
     public static final int GETITEM = 0x4;
     /** Идентификатор - переменная. */
     public static final int VARIABLE = 0x5;
+    
+    public static final int CALLFUNCTIONARR = 0x7;
     
     /** Имя идентификатора. */
     private String name;
