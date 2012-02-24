@@ -452,10 +452,11 @@ public class CodeGenerator {
                 
                 if (expr.getArrays() == null) {
                     
-                    byteCode.append(BC.ICONST_0);
-                    byteCode.append(BC.ISTORE);
-                    byteCode.append((byte)k);
-                    
+                    for (int j = 0; j < expr.getVariables().size(); j++){
+                        byteCode.append(BC.ICONST_0);
+                        byteCode.append(BC.ISTORE);
+                        byteCode.append((byte)(k++));
+                    }
                 } else {
                     
                     if (expr.getArrayInit() == null)
@@ -1018,7 +1019,7 @@ public class CodeGenerator {
     }
     
     /**
-     * Загрузить математическую операцию на стек
+     * Загрузить математическую операцию fна стек
      * @param me Сама математическая операция
      */
     private void loadMathToStack(MathExpression me){
