@@ -311,8 +311,8 @@ void solve_plus(struct VB_Expr* result, struct VB_Expr* left, struct VB_Expr* ri
 	printf("\n + \n");
 
 	// Проверим типы, если кто-то из детей строкового типа и типы не равны, то ошибка
-	//if ((left->id_type == DATA_STRING || right->id_type == DATA_STRING) && left->id_type != right->id_type)
-	//	yyerror("\nIncorrect types!");
+	if ((left->id_type == DATA_STRING || right->id_type == DATA_STRING) && left->id_type != right->id_type)
+		yyerror("\nIncorrect types!");
 
 	// Если тип строковый, то складываем строки
 	if (left->id_type == DATA_STRING){
@@ -383,7 +383,7 @@ void solve_div(struct VB_Expr* result, struct VB_Expr* left, struct VB_Expr* rig
 	printf("\n / \n");
 
 	// Строки делить нельзя и логический тип
-	if (/*left->id_type == DATA_STRING || right->id_type == DATA_STRING || */left->id_type == DATA_BOOLEAN)
+	if (left->id_type == DATA_STRING || right->id_type == DATA_STRING || left->id_type == DATA_BOOLEAN)
 		yyerror("\nIncorrect types!");
 
 	// Если деление на 0
@@ -588,41 +588,41 @@ struct VB_Expr* create_operator_expr(enum VB_Expr_type type,
 	result->id_type = DATA_INTEGER;
 	result->int_val = 0;
 
-	if (type == EXPR_ASSIGN)
-		solve_assign(result,left,right);
+	//if (type == EXPR_ASSIGN)
+	//	solve_assign(result,left,right);
 
-	else if (type == EXPR_PLUS)
-		solve_plus(result,left,right);
+	//else if (type == EXPR_PLUS)
+	//	solve_plus(result,left,right);
 
-	else if (type == EXPR_MINUS)
-		solve_minus(result,left,right);
+	//else if (type == EXPR_MINUS)
+	//	solve_minus(result,left,right);
 
-	else if (type == EXPR_MUL)
-		solve_mul(result,left,right);
+	//else if (type == EXPR_MUL)
+	//	solve_mul(result,left,right);
 
-	else if (type == EXPR_DIV)
-		solve_div(result,left,right);
+	//else if (type == EXPR_DIV)
+	//	solve_div(result,left,right);
 
-	else if (type == EXPR_POWER)
-		solve_pow(result,left,right);
+	//else if (type == EXPR_POWER)
+	//	solve_pow(result,left,right);
 
-	else if (type == EXPR_MORE)
-		solve_more(result,left,right);
+	//else if (type == EXPR_MORE)
+	//	solve_more(result,left,right);
 
-	else if (type == EXPR_LESS)
-		solve_less(result,left,right);
+	//else if (type == EXPR_LESS)
+	//	solve_less(result,left,right);
 
-	else if (type == EXPR_MORE_OR_EQUAL)
-		solve_more_or_equal(result,left,right);
+	//else if (type == EXPR_MORE_OR_EQUAL)
+	//	solve_more_or_equal(result,left,right);
 
-	else if (type == EXPR_LESS_OR_EQUAL)
-		solve_less_or_equal(result,left,right);
+	//else if (type == EXPR_LESS_OR_EQUAL)
+	//	solve_less_or_equal(result,left,right);
 
-	else if (type == EXPR_NONEQUAL)
-		solve_nonqeual(result,left,right);
+	//else if (type == EXPR_NONEQUAL)
+	//	solve_nonqeual(result,left,right);
 
-	else if (type == EXPR_UMINUS)
-		solve_uminus(result,left);
+	//else if (type == EXPR_UMINUS)
+	//	solve_uminus(result,left);
 
 	result->line_number = get_location();
 
