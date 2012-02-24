@@ -5,6 +5,8 @@
 
 package codegen;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 /**
@@ -137,6 +139,7 @@ public class Console {
         for (int i = 0; i < array.length; i++) {
             
             System.out.print(array[i]);
+            
             if (i != array.length - 1)
                 System.out.print(", ");
         }
