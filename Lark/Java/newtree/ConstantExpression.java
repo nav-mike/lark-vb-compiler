@@ -1,5 +1,7 @@
 package newtree;
 
+import finderros.FillTables;
+
 /**
  * Класс выражения - константы.
  * @version 1.0
@@ -52,9 +54,10 @@ public class ConstantExpression extends Expression {
         this.charValue = 0;
         this.intValue = intValue;
         this.stringValue = null;
-        
+        if (intValue > 2147483647 || intValue < -2147483648)
+            FillTables.addError(this.lineNumber, "Integer constant can't contains more 4 bytes!");
         // Определяем число байт данной целочисленной константы.
-        if (intValue > 32767 || intValue < -32768)
+        else if (intValue > 32767 || intValue < -32768)
             bytesCount = 4;
         else if (intValue > 127 || intValue < -128)
             bytesCount = 2;

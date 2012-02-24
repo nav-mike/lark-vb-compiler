@@ -75,6 +75,8 @@ public class CodeGenerator {
     /** Количество записанных байт. */
     public int bytePassed; 
     
+    private int m_shift = 0;
+    
     /**
      * Записать заголовок файла.
      * @param writer Дескриптор
@@ -160,6 +162,25 @@ public class CodeGenerator {
     }
     
     /**
+     * Метод опеределения метода, которому нужен флаг VARARGS.
+     * @param name Имя метода.
+     * @return True, если флаг нужен.
+     */
+    private static boolean isVarargs (String name) {
+        
+        if ("getStringArgsArray".equals(name))
+            return true;
+        else if ("getBooleanArgsArray".equals(name))
+            return true;
+        else if ("getBooleanArgsArray".equals(name))
+            return true;
+        else if ("getIntArgsArray".equals(name))
+            return true;
+        
+        return false;
+    }
+    
+    /**
      * Записать таблицу методов в файл.
      */
     private void writeMethodsTable() throws IOException{
@@ -172,6 +193,8 @@ public class CodeGenerator {
             // Пишем флаги доступа
             if (m_currentMth.getName().equals("<init>"))
                 m_writer.writeShort(0x0001);    //ACC_PUBLIC);
+            else if (isVarargs(m_currentMth.getName()))
+                m_writer.writeShort(0x0089);
             else
                 m_writer.writeShort(0x0009);    //ACC_PUBLIC | ACC_STATIC);
             
@@ -290,6 +313,8 @@ public class CodeGenerator {
      */
     private boolean parseBody(ArrayList<AbstractStatement> stmtList){
         
+        if (stmtList == null) return false;
+        
         // Создаем итератор для контейнера
         Iterator<AbstractStatement> i = stmtList.iterator();
         AbstractStatement stmt;     // Буфер для следующего оператора
@@ -314,16 +339,22 @@ public class CodeGenerator {
             else if (stmt.getStmtType() == StatementType.FOR)
                  parseFor((ForStatement)stmt);
                 
-            else if (stmt.getStmtType() == StatementType.IF)
-                 parseIf((IfStatement)stmt);
+            else if (stmt.getStmtType() == StatementType.IF) {
+                
+                m_shift = 0;
+                 parseIf((IfStatement)stmt,0);
+            }
                 
             else if (stmt.getStmtType() == StatementType.RETURN){
                  parseReturn((ReturnStatement)stmt);
                  isStop = true;
             }
 
-            else if (stmt.getStmtType() == StatementType.WHILE)
+            else if (stmt.getStmtType() == StatementType.WHILE) {
+             
+                m_shift = 3;
                  parseWhile((WhileStatement)stmt);
+            }
         }
         
         return isStop;
@@ -366,6 +397,19 @@ public class CodeGenerator {
      * @param stmt Ссылка на оператор
      */
     private void parseWhile(WhileStatement stmt){
+        
+        MyByteBuffer mbb = new MyByteBuffer();
+        // Превращение while в if.
+        IfStatement is = new IfStatement(stmt.getCondition(), stmt.getBody(), null);
+        mbb = byteCode;
+        MyByteBuffer body = new MyByteBuffer();
+        byteCode = body;
+        parseIf(is,3);
+        byteCode = mbb;
+        body.trimToSize();
+        byteCode.copy(body);
+        byteCode.append(BC.GOTO);
+        byteCode.appendShort((short)(-body.getElementCount()));
    
     }
     
@@ -413,7 +457,14 @@ public class CodeGenerator {
                     byteCode.append((byte)k);
                     
                 } else {
-                    declArrays(expr.getArrays(), expr.getType());
+                    
+                    if (expr.getArrayInit() == null)
+                        declArrays(expr.getArrays(), expr.getType());
+                    else {
+                     
+                        Iterator<String> it = expr.getArrays().keySet().iterator();
+                        declArrayWithInit(it.next(), expr.getType(), expr.getArrayInit());
+                    }
                 }
             }
             k++;
@@ -461,6 +512,109 @@ public class CodeGenerator {
         
     }
     
+    /**
+     * Создание массива с инициализацией.
+     * @param name Имя массива.
+     * @param type Тип массива.
+     * @param init Список инициализации.
+     */
+    private void declArrayWithInit (String name, DataType type,
+            ArrayList<Expression> init) {
+        
+        if (type == DataType.INTEGER)
+            declArrayWithIntInit(name, init);
+        else if (type == DataType.BOOLEAN)
+            declArrayWithIntInit(name, init);
+        else if (type == DataType.STRING)
+            declArrayWithStringInit(name, init);
+    }
+    
+    private void declArrayWithStringInit (String name, ArrayList<Expression> init) {
+        
+        // Создаем массив.
+        declArray(name, init.size(), DataType.STRING);
+        
+        // Загрузка массива на стек для инициализации.
+        byte num = (byte)m_currentMth.getLocalVariables().getNumberByName(name);
+        byteCode.append(BC.ALOAD);
+        byteCode.append(num);
+        
+        // Инициализация массива.
+        for (int i = 0; i < init.size(); i++) {
+            
+            // 1. Дублирование ссылки на массив на вершине стека.
+            byteCode.append(BC.DUP);
+            // 2. Записывание на стек текущий индекс массива.
+            loadConstToStack(new ConstantExpression(i));
+            // 3. Записывание на стек элемента массива.
+            new_parseExpr(init.get(i), init.get(i));
+            // 4. Заполнение массива по индксу инициализируемым значением
+            byteCode.append(BC.AASTORE);
+        }
+    }
+    
+    private void declArrayWithBoolInit (String name, ArrayList<Expression> init) {
+        
+        // Создаем массив.
+        declArray(name, init.size(), DataType.INTEGER);
+        
+        // Загрузка массива на стек для инициализации.
+        byte num = (byte)m_currentMth.getLocalVariables().getNumberByName(name);
+        byteCode.append(BC.ALOAD);
+        byteCode.append(num);
+        
+        // Инициализируем массив.
+        for (int i = 0; i < init.size(); i++) {
+            
+            // 1. Дублируем ссылку на массив на вершине стека.
+            byteCode.append(BC.DUP);
+            // 2. Записываем на стек текущий индекс массива.
+            loadConstToStack(new ConstantExpression(i));
+            // 3. Записываем на стек значение элемента массива.
+            new_parseExpr(init.get(i), init.get(i));
+            // 4. Заполняем массив по индексу инициализируемым значением.
+            byteCode.append(BC.IASTORE);
+        }
+    }
+    
+    /**
+     * Создание целочисленного массива с инициализацией.
+     * @param name Имя массива.
+     * @param init Список инициализации.
+     */
+    private void declArrayWithIntInit (String name, ArrayList<Expression> init) {
+        
+        // Создаем массив.
+        declArray(name, init.size(), DataType.INTEGER);
+        
+        // Загрузка массива на стек для инициализации.
+        byte num = (byte)m_currentMth.getLocalVariables().getNumberByName(name);
+        byteCode.append(BC.ALOAD);
+        byteCode.append(num);
+        
+        // Инициализируем массив.
+        for (int i = 0; i < init.size(); i++) {
+            
+            // 1. Дублируем ссылку на массив на вершине стека.
+            byteCode.append(BC.DUP);
+            // 2. Записываем на стек текущий индекс массива.
+            loadConstToStack(new ConstantExpression(i));
+            // 3. Записываем на стек значение элемента массива.
+            loadIntInitArrayDataToStack(init.get(i));
+            // 4. Заполняем массив по индексу инициализируемым значением.
+            byteCode.append(BC.IASTORE);
+        }
+    }
+    
+    /**
+     * Загрзука инициализирующего значения на стек.
+     * @param expr Инициализирующее выражение.
+     */
+    private void loadIntInitArrayDataToStack (Expression expr) {
+        
+        new_parseExpr(expr, expr);
+    }
+    
     
     /**
      * Разбираем оператор For
@@ -480,8 +634,12 @@ public class CodeGenerator {
         // Шаг 2: проверка условия цикла
         IdExpression ie = new IdExpression();
         ie.setName(stmt.getExistedIterator());
+        ie.setDtype(DataType.INTEGER);
+
         loadIdToStack(ie);
+        
         loadIntConst(new ConstantExpression(stmt.getEndValue()));
+        
         mbb = byteCode;
         byteCode = body;
         parseBody(stmt.getBody());
@@ -514,8 +672,9 @@ public class CodeGenerator {
     /**
      * Разбираем оператор If
      * @param stmt Ссылка на оператор
+     * @param gshift Глобальный сдвиг (используется для while).
      */
-    private void parseIf(IfStatement stmt){    
+    private void parseIf(IfStatement stmt, int gshift){    
         Expression expr = stmt.getCondition();      // Условие
         
         // Если логическое выражение
@@ -523,22 +682,22 @@ public class CodeGenerator {
             
             // Проверим тип сравнивания
             if (((MathExpression)expr).getMathType() == MathExprType.EQUAL){            // Если равно (=)
-                createIfStmt(stmt,BC.IF_ICMPNE);
+                createIfStmt(stmt,BC.IF_ICMPNE,gshift);
             }
             else if (((MathExpression)expr).getMathType() == MathExprType.NOT_EQUAL){   // Если неравно (<>)
-                createIfStmt(stmt,BC.IF_ICMPEQ);
+                createIfStmt(stmt,BC.IF_ICMPEQ,gshift);
             }
             else if (((MathExpression)expr).getMathType() == MathExprType.MORE){        // Если больше (>)
-                createIfStmt(stmt,BC.IF_ICMPLE);
+                createIfStmt(stmt,BC.IF_ICMPLE,gshift);
             }
             else if (((MathExpression)expr).getMathType() == MathExprType.LESS){        // Если меньше (<)
-                createIfStmt(stmt,BC.IF_ICMPGE);
+                createIfStmt(stmt,BC.IF_ICMPGE,gshift);
             }
             else if (((MathExpression)expr).getMathType() == MathExprType.NOT_MORE){    // Если небольше (<=)
-                createIfStmt(stmt,BC.IF_ICMPGT);
+                createIfStmt(stmt,BC.IF_ICMPGT,gshift);
             }
             else if (((MathExpression)expr).getMathType() == MathExprType.NOT_LESS){    // Если неменьше (>=)
-                createIfStmt(stmt,BC.IF_ICMPLT);
+                createIfStmt(stmt,BC.IF_ICMPLT,gshift);
             }
         }
         
@@ -550,7 +709,7 @@ public class CodeGenerator {
                     new ConstantExpression(0),
                     MathExprType.NOT_EQUAL));
             
-            createIfStmt(stmt,BC.IF_ICMPEQ);       // Сравниваем константу с нулем
+            createIfStmt(stmt,BC.IF_ICMPEQ,gshift);       // Сравниваем константу с нулем
         }
         
         // Если переменная
@@ -561,7 +720,7 @@ public class CodeGenerator {
                     (IdExpression)expr,
                     MathExprType.NOT_EQUAL));
             
-            createIfStmt(stmt,BC.IF_ICMPEQ);       // Сравниваем константу с нулем
+            createIfStmt(stmt,BC.IF_ICMPEQ,gshift);       // Сравниваем константу с нулем
         }
     }   
             
@@ -569,8 +728,9 @@ public class CodeGenerator {
      * Занесение в байт-код условного оператора
      * @param stmt Данный оператор из дерева
      * @param condition Условие данного оператора
+     * @param gshift Глобальный сдвиг, используется в while.
      */
-    private void createIfStmt(IfStatement stmt, byte condition){
+    private void createIfStmt(IfStatement stmt, byte condition, int gshift){
         MyByteBuffer main = new MyByteBuffer();     // Буфер для главной части
         MyByteBuffer alter = new MyByteBuffer();    // Буфер для альтернативной части
         
@@ -610,7 +770,7 @@ public class CodeGenerator {
         
         //Заружаем команду условного перехода
         byteCode.append(condition);
-        byteCode.appendShort((short)(mainSize + shift));   
+        byteCode.appendShort((short)(mainSize + shift + gshift));   
         byteCode.copy(main);
 
         // Если есть альтернатива, то 
@@ -692,53 +852,45 @@ public class CodeGenerator {
 
             
             // Вызовем соответствующую перегрузку Write
-            if (data.getType() == Expression.ID){
-                int num = this.m_mthdsTable.getTableNumberByName(((IdExpression)data).getName());
-                if ( num != -1){
-//                    DataType ret = this.m_mthdsTable.get(num).getType();
-//                    if ( this.m_mthdsTable.get(num).isIsArrayReturn() == true && ret == DataType.INTEGER){
-//                        byteCode.appendShort((short)CodeConstants.WRITE_INT_ARRAY);
-//                    }
-//                        
-//                    if (ret == DataType.INTEGER){
-//                        
-//                    }
-                }
-                if (((IdExpression)data).isArray() == true &&
-                        ((IdExpression)data).getBody().isEmpty() == true && 
-                        data.getDtype() == DataType.INTEGER){
-                    byteCode.appendShort((short)CodeConstants.WRITE_INT_ARRAY);
-                }
-            }
-            else if (data.getDtype() == DataType.STRING){
+            if (data.getDtype() == DataType.STRING){
                 // Нужен ли перенос строки
-                if (data.getType() == Expression.ID && ((IdExpression)data).isArray() == true &&
-                    data.getDtype() == DataType.STRING)
+                if (data.getType() == Expression.ID && ((((IdExpression)data).isArray() == true &&
+                        ((IdExpression)data).getBody().isEmpty() ) || 
+                        ((IdExpression)data).getIdType() == IdExpression.CALLFUNCTIONARR))
                     byteCode.appendShort((short)CodeConstants.WRITE_STRING_ARRAY);
+                
                 else if (hasLN == true)
                     byteCode.appendShort((short)CodeConstants.WRITE_LINE_STRING);
                 else
                     byteCode.appendShort((short)CodeConstants.WRITE_STRING);
             }
             else if (data.getDtype() == DataType.INTEGER){
+                
+                if (data.getType() == Expression.ID && ((((IdExpression)data).isArray() == true &&
+                        ((IdExpression)data).getBody().isEmpty() )|| 
+                        ((IdExpression)data).getIdType() == IdExpression.CALLFUNCTIONARR))
+                    byteCode.appendShort((short)CodeConstants.WRITE_INT_ARRAY);
+                
                 // Нужен ли перенос строки
-                if (hasLN == true)
+                else if (hasLN == true)
                     byteCode.appendShort((short)CodeConstants.WRITE_LINE_INT);
                 else
                     byteCode.appendShort((short)CodeConstants.WRITE_INT);
             }
             else if (data.getDtype() == DataType.BOOLEAN){
                 // Нужен ли перенос строки
-                if (data.getType() == Expression.ID && ((IdExpression)data).isArray() == true &&
-                    data.getDtype() == DataType.BOOLEAN)
+                if (data.getType() == Expression.ID && ((((IdExpression)data).isArray() == true &&
+                        ((IdExpression)data).getBody().isEmpty() ) || 
+                        ((IdExpression)data).getIdType() == IdExpression.CALLFUNCTIONARR))
                     byteCode.appendShort((short)CodeConstants.WRITE_BOOLEAN_ARRAY);
+                
                 else if (hasLN == true)
                     byteCode.appendShort((short)CodeConstants.WRITE_LINE_BOOLEAN);
                 else
                     byteCode.appendShort((short)CodeConstants.WRITE_BOOLEAN);
             }
         }
-    }
+    }    
     
     /**
      * Метод загрузки идентификатора на стек.
@@ -751,34 +903,47 @@ public class CodeGenerator {
         
         if (methNum == -1){ // Если это просто id
             
+            // Получим номер локальой переменной
             byte num = (byte)m_currentMth.getLocalVariables().getNumberByName(id.getName());
 
+            // Если это массив и берется его элемент
             if (id.isArray() && id.getBody().isEmpty())
                 byteCode.append(BC.ALOAD);
+            
+            // Если это просто айдишник
             else if (!id.isArray()){
+                
+                // Пишем функцию в соответствии с типом
                 if (id.getDtype() == DataType.INTEGER)
                     byteCode.append(BC.ILOAD);
+                
                 else if (id.getDtype() == DataType.STRING)
                     byteCode.append(BC.ALOAD);
             }
-            else
+            else    // Если целиком массив
                 byteCode.append(BC.ALOAD);
 
             byteCode.append((byte)num);
 
+            // Если это массив, то заносим и его индекс
             if (id.isArray() && !id.getBody().isEmpty()) {
-            new_parseExpr(id.getArrayIndex(), id.getArrayIndex());
+                new_parseExpr(id.getArrayIndex(), id.getArrayIndex());
             }
         }
-        else{   // Если процедура / функция
+        else{  // Если процедура / функция            
             Iterator<Expression> i = id.getBody().iterator();
             
+            // Заносим параметры функции
             while(i.hasNext()){
                 new_parseExpr(i.next(), null);
             }
             
             byteCode.append(BC.INVOKESTATIC);
             byteCode.appendShort((short)methNum);
+            
+            
+           if (this.m_mthdsTable.getMethodByName(id.getName()).isIsArrayReturn() == true)
+                id.setIdType(IdExpression.CALLFUNCTIONARR);
         }
     }
     
@@ -905,13 +1070,25 @@ public class CodeGenerator {
             byteCode.append((byte)num);
         }
         else {
-            
-            // Вначале загрузим массив
-            loadIdToStack((IdExpression)me.getLeft());
+            if (!id.getBody().isEmpty()){
+                // Вначале загрузим массив
+                loadIdToStack((IdExpression)me.getLeft());
 
-            new_parseExpr(me.getRight(), me.getLeft());
-            
-            byteCode.append(BC.IASTORE);
+                new_parseExpr(me.getRight(), me.getLeft());
+
+                if (id.getDtype() == DataType.INTEGER || id.getDtype() == DataType.BOOLEAN)
+                    byteCode.append(BC.IASTORE);
+                else if (id.getDtype() == DataType.STRING)
+                    byteCode.append(BC.AASTORE);
+            }
+            else{
+                // Вначале загрузим массив
+                loadIdToStack((IdExpression)me.getLeft());
+                
+                new_parseExpr(me.getRight(), me.getLeft());
+                
+                byteCode.append(BC.ASTORE);
+            }
         }  
     }
      

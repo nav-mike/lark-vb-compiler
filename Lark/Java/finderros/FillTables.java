@@ -524,19 +524,19 @@ public class FillTables {
                 CodeConstants.CONSOLE_CLASS, "WriteLine", "([I)V", ct);
         
         CodeConstants.CREATE_INT_ARRAY_DECL = addMethodToTable
-                (CodeConstants.CONSOLE_CLASS, "getIntArray", "([I)[I", ct);
+                (CodeConstants.CONSOLE_CLASS, "getIntArgsArray", "([I)[I", ct);
         
         CodeConstants.CREATE_INT_ARRAY = addMethodToTable(
                 CodeConstants.CONSOLE_CLASS, "getIntArray", "(I)[I", ct);
         
         CodeConstants.CREATE_BOOLEAN_ARRY_DECL = addMethodToTable(
-                CodeConstants.CONSOLE_CLASS, "getBooleanArray", "([Z)[Z", ct);
+                CodeConstants.CONSOLE_CLASS, "getBooleanArgsArray", "([Z)[Z", ct);
         
         CodeConstants.CREATE_BOOLEAN_ARRAY = addMethodToTable(
                 CodeConstants.CONSOLE_CLASS, "getBooleanArray", "(I)[Z", ct);
         
         CodeConstants.CREATE_STRING_ARRAY_DECL = addMethodToTable(
-                CodeConstants.CONSOLE_CLASS, "getStringArray",
+                CodeConstants.CONSOLE_CLASS, "getStringArgsArray",
                 "([Ljava/lang/String;)[Ljava/lang/String;", ct);
         
         CodeConstants.CREATE_STRING_ARRAY = addMethodToTable(
@@ -544,7 +544,7 @@ public class FillTables {
                 "(I)[Ljava/lang/String;", ct);
         
         CodeConstants.CREATE_BOOLEAN_ARRAY_DECL_INT = addMethodToTable(
-                CodeConstants.CONSOLE_CLASS, "getBooleanArray", "([I)[Z", ct);
+                CodeConstants.CONSOLE_CLASS, "getBooleanArgsArray", "([I)[Z", ct);
         
         CodeConstants.WRITE_BOOLEAN_ARRAY = addMethodToTable(
                 CodeConstants.CONSOLE_CLASS, "WriteLine", "([Z)V", ct);
@@ -802,7 +802,7 @@ public class FillTables {
                         ArrayList<AbstractStatement> t = new ArrayList<AbstractStatement>();
                         t.add(ex);
                         editAssignEqualSituation(ex);
-                        fillLocalVariablesTable(paramList, t, lvt);
+                        fillLocalVariablesTable(null, t, lvt);
                         fillLocalVariablesTable(null,
                                 ((DoLoopStatement)body.get(i)).getBody(),lvt);
                     } else if (body.get(i).getStmtType() == StatementType.FOR) {
@@ -815,7 +815,7 @@ public class FillTables {
                             DimStatement dim = new DimStatement(new AsExpression(DataType.INTEGER, var));
                             ArrayList<AbstractStatement> abs = new ArrayList<AbstractStatement>();
                             abs.add(dim);
-                            fillLocalVariablesTable(paramList, abs, lvt);
+                            fillLocalVariablesTable(null, abs, lvt);
                         } else {
                             
                             ExprStatement ex = new ExprStatement();
@@ -835,7 +835,7 @@ public class FillTables {
                         ArrayList<AbstractStatement> t = new ArrayList<AbstractStatement>();
                         t.add(ex);
                         editAssignEqualSituation(ex);
-                        fillLocalVariablesTable(paramList, t, lvt);
+                        fillLocalVariablesTable(null, t, lvt);
                         fillLocalVariablesTable(null,
                                 ((WhileStatement)body.get(i)).getBody(),lvt);
                     } else if (body.get(i).getStmtType() == StatementType.IF) {
@@ -845,7 +845,7 @@ public class FillTables {
                         ArrayList<AbstractStatement> t = new ArrayList<AbstractStatement>();
                         t.add(ex);
                         editAssignEqualSituation(ex);
-                        fillLocalVariablesTable(paramList, t, lvt);
+                        fillLocalVariablesTable(null, t, lvt);
                         fillLocalVariablesTable(null,
                                 ((IfStatement)body.get(i)).getBodyMain(),lvt);
                         fillLocalVariablesTable(null,
@@ -954,8 +954,21 @@ public class FillTables {
                 }
             }
         }
-        
+        if (item.getArrayInit() != null){
+            ArrayList<Expression>initArr = item.getArrayInit();
+            Iterator<Expression>i = item.getArrayInit().iterator();
+            Expression buf;
+            while(i.hasNext()){
+                buf = i.next();
+                if (buf.getDtype() != item.getType())
+                    addError(buf.getLineNumber(), "Initialization data has incorrect type!");
+                else
+                    addCostantInfoToTable((ConstantExpression)buf);
+            }
+        }
     }
+}    
+    
      
     
     
@@ -1093,4 +1106,4 @@ public class FillTables {
 //            
 //        }
 //    }
-}
+
