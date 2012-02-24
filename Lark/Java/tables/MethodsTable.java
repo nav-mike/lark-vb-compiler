@@ -66,6 +66,31 @@ public class MethodsTable {
         
         return num;
     }
+    
+    /**
+     * Вернуть метод по имени.
+     * @param name Имя метода
+     * @return Номер метода в таблице констант
+     */
+    public MethodsTableItem getMethodByName(String name){
+        MethodsTableItem result = null;
+        
+        Set<Integer> set = items.keySet();
+        Iterator<Integer> it = set.iterator();
+        
+        while (it.hasNext()) {
+            
+            Integer i = it.next();
+            
+            if (items.get(i).getName().equals(name)) {
+                
+                result = items.get(i);
+                break;
+            }
+        }
+        
+        return result;
+    }
 
     /**
      * Метод преобразования таблицы методов класса в строку.
