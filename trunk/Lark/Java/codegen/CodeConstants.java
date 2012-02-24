@@ -59,13 +59,13 @@ public class CodeConstants {
     public static int STRING_TO_BOOLEAN;
     
     /** RTL - Вывести целочисленный массив в стандартный поток вывода. */
-    public static int WRITE_INT_ARRAY;
+    public static int WRITE_LINE_INT_ARRAY;
     
     /** RTL - Вывести массив логических значений в стандартный поток вывода. */
     public static int WRITE_BOOLEAN_ARRAY;
     
     /** RTL - Вывести массив строк в стандартный поток вывода. */
-    public static int WRITE_STRING_ARRAY;
+    public static int WRITE_LINE_STRING_ARRAY;
     
     /** RTL - Создать целочисленный массив с инициализацией. */
     public static int CREATE_INT_ARRAY_DECL;
@@ -93,4 +93,10 @@ public class CodeConstants {
     
     /** RTL - Сравнение EQUAL для строк. */
     public static int EQUAL_STRINGS;
+    
+    /** RTL - Вывод целочисленного массива. */
+    public static int WRITE_INT_ARRAY;
+    
+    /** RTL - Вывод массива строк. */
+    public static int WRITE_STRING_ARRAY;
 }

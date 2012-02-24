@@ -272,4 +272,22 @@ public class Console {
         
         return str1.equals(str2);
     }
+    
+    /**
+     * Функция вывода массива в стандартный поток вывода.
+     * @param array Выводимый массив.
+     */
+    public static void Write (int[] array) {
+        
+        WriteLine(array);
+    }
+    
+    /**
+     * Функция вывода строкового массива в стандартный поток вывода.
+     * @param array Выводимый массив.
+     */
+    public static void Write (String[] array) {
+        
+        WriteLine(array);
+    }
 }
