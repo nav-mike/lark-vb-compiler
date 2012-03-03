@@ -625,8 +625,14 @@ public class CodeGenerator {
         MyByteBuffer mbb = new MyByteBuffer();
         MyByteBuffer body = new MyByteBuffer();
         
+        int shiftForGT;
+        
         // Шаг 1: иницаилизируем переменную цикла
-        loadIntConst(new ConstantExpression(stmt.getStartValue()));
+        //loadIntConst(new ConstantExpression(stmt.getStartValue()));
+        new_parseExpr(stmt.getStartExpr(), stmt.getStartExpr());
+
+
+        
         byte num = (byte)m_currentMth.getLocalVariables().getNumberByName(stmt.getExistedIterator());
         byteCode.append(BC.ISTORE);
         byteCode.append((byte)num);
@@ -638,7 +644,18 @@ public class CodeGenerator {
 
         loadIdToStack(ie);
         
-        loadIntConst(new ConstantExpression(stmt.getEndValue()));
+        //loadIntConst(new ConstantExpression(stmt.getEndValue()));
+        //new_parseExpr(stmt.getEndExpr(), stmt.getEndExpr());
+        
+        mbb = byteCode;
+        byteCode = body;
+        new_parseExpr(stmt.getEndExpr(), stmt.getEndExpr());
+        body.trimToSize();
+        shiftForGT = body.getElementCount();
+        byteCode = mbb;
+        byteCode.copy(body);
+        
+        body = new MyByteBuffer();
         
         mbb = byteCode;
         byteCode = body;
@@ -646,14 +663,18 @@ public class CodeGenerator {
         body.trimToSize();
         int shift = body.getElementCount();
         byteCode = mbb;
-        if (stmt.getStepValue() > 0) {
-            
+        
+        
+        if (stmt.isDown() != true) {
+           
             byteCode.append(BC.IF_ICMPGE);
             byteCode.appendShort((short)(shift + 9)); // 3 - сам if; 3 - goto; 3 - iinc
+            //byteCode.appendShort((short)(shift + 3));
         } else {
             
             byteCode.append(BC.IF_ICMPLE);
             byteCode.appendShort((short)(shift + 9));
+            //byteCode.appendShort((short)(shift + 3));
         }
         
         // Шаг 3: загрузка тела цикла
@@ -662,12 +683,19 @@ public class CodeGenerator {
         // Шаг 4: загрузка изменения переменной цикла
         byteCode.append(BC.IINC);
         byteCode.append(num);
-        byteCode.append((byte)stmt.getStepValue());
+        
+        int buf = ((ConstantExpression)stmt.getStepExpr()).getIntValue();
+        
+        if (!stmt.isDown())
+            byteCode.append((byte)buf);
+        else 
+            byteCode.append((byte)(-buf));
         
         // Шаг 5: загрузка безусловного перехода
         byteCode.append(BC.GOTO);
-        byteCode.appendShort((short)(-(shift + 10)));    
-    }
+
+        byteCode.appendShort((short)(-(shift + 8 + shiftForGT)));  
+    }    
     
     /**
      * Разбираем оператор If

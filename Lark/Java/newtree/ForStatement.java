@@ -17,17 +17,69 @@ public class ForStatement extends AbstractStatement {
     private String existedIterator;
     /** Новый итератор. */
     private Expression newIterator;
+    
+//    /** Стартовое значение счетчика цикла. */
+//    private int startValue;
+//    /** Конечное значение счетчика цикла. */
+//    private int endValue;
+//    /** Величина шага счетчика цикла. */
+//    private int stepValue;
+    
     /** Стартовое значение счетчика цикла. */
-    private int startValue;
+    private Expression startExpr;
     /** Конечное значение счетчика цикла. */
-    private int endValue;
+    private Expression endExpr;
     /** Величина шага счетчика цикла. */
-    private int stepValue;
+    private Expression stepExpr;
+    
+    private boolean m_isDown;
+    
     /** Тело цикла. */
     private ArrayList<AbstractStatement> body;
     /** Тип цикла. */
     private ForStmtType type;
 
+    
+    
+    
+    
+    
+    public Expression getStartExpr() {
+        return startExpr;
+    }
+
+    public Expression getEndExpr() {
+        return endExpr;
+    }
+
+    public Expression getStepExpr() {
+        return stepExpr;
+    }
+
+    public void setStartExpr(Expression startExpr) {
+        this.startExpr = startExpr;
+    }
+
+    public void setEndExpr(Expression endExpr) {
+        this.endExpr = endExpr;
+    }
+
+    public void setStepExpr(Expression stepExpr) {
+        this.stepExpr = stepExpr;
+    }
+
+    public boolean isDown() {
+        return m_isDown;
+    }
+
+    public void setIsDown(boolean isDown) {
+        this.m_isDown = isDown;
+    }
+
+    
+    
+    
+    
     /**
      * Получить тип цикла.
      * @return Тип.
@@ -43,7 +95,6 @@ public class ForStatement extends AbstractStatement {
     public void setType(ForStmtType type) {
         this.type = type;
     }
-    
     
     
     /**
@@ -68,11 +119,11 @@ public class ForStatement extends AbstractStatement {
         
         super(StatementType.FOR);
         this.body = new ArrayList(); this.body.add(item);
-        this.endValue = endValue;
         this.existedIterator = existedIterator;
         this.newIterator = null;
-        this.startValue = startValue;
-        this.stepValue = stepValue;
+//        this.startValue = startValue;
+//        this.stepValue = stepValue;
+//        this.endValue = endValue;
     }
     
     /**
@@ -91,9 +142,9 @@ public class ForStatement extends AbstractStatement {
         super(StatementType.FOR);
         this.existedIterator = existedIterator;
         this.newIterator = null;
-        this.startValue = startValue;
-        this.endValue = endValue;
-        this.stepValue = stepValue;
+//        this.startValue = startValue;
+//        this.endValue = endValue;
+//        this.stepValue = stepValue;
         this.body = new ArrayList(Arrays.asList(body));
     }
     
@@ -113,9 +164,9 @@ public class ForStatement extends AbstractStatement {
         super(StatementType.FOR);
         this.existedIterator = existedIterator;
         this.newIterator = null;
-        this.startValue = startValue;
-        this.endValue = endValue;
-        this.stepValue = stepValue;
+//        this.startValue = startValue;
+//        this.endValue = endValue;
+//        this.stepValue = stepValue;
         this.body = body;
     }
     
@@ -133,11 +184,11 @@ public class ForStatement extends AbstractStatement {
         
         super(StatementType.FOR);
         this.body = new ArrayList(); this.body.add(item);
-        this.endValue = endValue;
         this.existedIterator = null;
         this.newIterator = newIterator;
-        this.startValue = startValue;
-        this.stepValue = stepValue;
+//        this.startValue = startValue;
+//        this.stepValue = stepValue;
+//        this.endValue = endValue;
     }
     
     /**
@@ -155,9 +206,9 @@ public class ForStatement extends AbstractStatement {
         super(StatementType.FOR);
         this.existedIterator = null;
         this.newIterator = newIterator;
-        this.startValue = startValue;
-        this.endValue = endValue;
-        this.stepValue = stepValue;
+//        this.startValue = startValue;
+//        this.endValue = endValue;
+//        this.stepValue = stepValue;
         this.body = new ArrayList(Arrays.asList(body));
     }
 
@@ -176,9 +227,9 @@ public class ForStatement extends AbstractStatement {
         super(StatementType.FOR);
         this.existedIterator = null;
         this.newIterator = newIterator;
-        this.startValue = startValue;
-        this.endValue = endValue;
-        this.stepValue = stepValue;
+//        this.startValue = startValue;
+//        this.endValue = endValue;
+//        this.stepValue = stepValue;
         this.body = body;
     }
 
@@ -186,17 +237,17 @@ public class ForStatement extends AbstractStatement {
      * Метод задания величны шага счетчика.
      * @param stepValue Велична шага счетчика.
      */
-    public void setStepValue(int stepValue) {
-        this.stepValue = stepValue;
-    }
+//    public void setStepValue(int stepValue) {
+//        this.stepValue = stepValue;
+//    }
 
     /**
      * Метод задания начального значения счетчика.
      * @param startValue Начальное значение счетчика.
      */
-    public void setStartValue(int startValue) {
-        this.startValue = startValue;
-    }
+//    public void setStartValue(int startValue) {
+//        this.startValue = startValue;
+//    }
 
     /**
      * Метод задания новой счетчика, созданного в цикле.
@@ -218,9 +269,9 @@ public class ForStatement extends AbstractStatement {
      * Метод задания ограничения счетчика.
      * @param endValue Ограничение счетчика.
      */
-    public void setEndValue(int endValue) {
-        this.endValue = endValue;
-    }
+//    public void setEndValue(int endValue) {
+//        this.endValue = endValue;
+//    }
 
     /**
      * Метод задания тела цикла.
@@ -267,17 +318,17 @@ public class ForStatement extends AbstractStatement {
      * Метод получения величины шага счетчика.
      * @return Величина шага счетчика.
      */
-    public int getStepValue() {
-        return stepValue;
-    }
+//    public int getStepValue() {
+//        return stepValue;
+//    }
 
     /**
      * Метод получения начального значения счетчика.
      * @return Начальное значение счетчика.
      */
-    public int getStartValue() {
-        return startValue;
-    }
+//    public int getStartValue() {
+//        return startValue;
+//    }
 
     /**
      * Метод получения счетчика, созданного внутри цикла.
@@ -316,9 +367,9 @@ public class ForStatement extends AbstractStatement {
      * Метод получения конечного значения переменной цкла - счетчика.
      * @return Конечное значение счетчика.
      */
-    public int getEndValue() {
-        return endValue;
-    }
+//    public int getEndValue() {
+//        return endValue;
+//    }
 
     /**
      * Считать данные из XML файла.
@@ -328,21 +379,25 @@ public class ForStatement extends AbstractStatement {
     public void readData(Node node) {
         
         NamedNodeMap attributes = node.getAttributes();
-        Node attr = attributes.getNamedItem("type");
+        
+        Node attr = attributes.getNamedItem("isDown");
+        this.m_isDown = attr.getNodeValue().equals("1");
+        
+         attr = attributes.getNamedItem("type");
         this.setType(ForStmtType.fromString(attr.getNodeValue()));
          
         attr = attributes.getNamedItem("id");
         this.existedIterator = attr.getNodeValue();
         
-        attr = attributes.getNamedItem("to_val");
-        this.endValue = Integer.parseInt(attr.getNodeValue());
-                
-        attr = attributes.getNamedItem("from_val");
-        this.startValue = Integer.parseInt(attr.getNodeValue());
-        
-        attr = attributes.getNamedItem("step_val");
-        this.stepValue = Integer.parseInt(attr.getNodeValue());
-        
+//        attr = attributes.getNamedItem("to_val");
+//        this.endValue = Integer.parseInt(attr.getNodeValue());
+//                
+//        attr = attributes.getNamedItem("from_val");
+//        this.startValue = Integer.parseInt(attr.getNodeValue());
+//        
+//        attr = attributes.getNamedItem("step_val");
+//        this.stepValue = Integer.parseInt(attr.getNodeValue());
+               
         attr = attributes.getNamedItem("line_number");
         this.lineNumber = Integer.parseInt(attr.getNodeValue());
         
@@ -366,18 +421,30 @@ public class ForStatement extends AbstractStatement {
         NodeList nodes = node.getChildNodes();
         
         for (int i = 0; i < nodes.getLength(); i++) {
+            if ("VB_Stmt_list".equals(nodes.item(i).getNodeName())) {
+                
+                this.body = new ArrayList<AbstractStatement>();
+                AbstractDeclaration.readBody(this.body, nodes.item(i));
+            }
+            else if ("VB_Expr__from_expr".equals(nodes.item(i).getNodeName())) {
+                this.startExpr = Expression.createExpr(nodes.item(i));
+            }
+            else if ("VB_Expr__to_expr".equals(nodes.item(i).getNodeName())) {
+                this.endExpr = Expression.createExpr(nodes.item(i));
+            }
+            else if ("VB_Expr__step_expr".equals(nodes.item(i).getNodeName())) {
+                this.stepExpr = Expression.createExpr(nodes.item(i));
+            }
+        }
+    }
+    
+}
+
+
+
 //            switch (nodes.item(i).getNodeName()) {                    
 //                case "VB_Stmt_list":
 //                    this.body = new ArrayList();
 //                    AbstractDeclaration.readBody(this.body, nodes.item(i));
 //                    break;
 //            }
-            if ("VB_Stmt_list".equals(nodes.item(i).getNodeName())) {
-                
-                this.body = new ArrayList<AbstractStatement>();
-                AbstractDeclaration.readBody(this.body, nodes.item(i));
-            }
-        }
-    }
-    
-}

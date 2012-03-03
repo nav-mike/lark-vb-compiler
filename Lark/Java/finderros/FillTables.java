@@ -821,6 +821,16 @@ public class FillTables {
                                 ((DoLoopStatement)body.get(i)).getBody(),lvt);
                     } else if (body.get(i).getStmtType() == StatementType.FOR) {
 
+                        ForStatement forStmt = (ForStatement)body.get(i);
+                        
+//                        forStmt.getStartExpr().setDtype(DataType.INTEGER);
+//                        forStmt.getEndExpr().setDtype(DataType.INTEGER);
+//                        forStmt.getStepExpr().setDtype(DataType.INTEGER);
+                        
+                        setTypeForForExprs(forStmt.getStartExpr());
+                        setTypeForForExprs(forStmt.getEndExpr());
+                        setTypeForForExprs(forStmt.getStepExpr());
+                        
                         if (((ForStatement)body.get(i)).getType() == ForStmtType.WITH_DECL ||
                             ((ForStatement)body.get(i)).getType() == ForStmtType.WITH_DECL_AND_STEP) {
                             
@@ -835,7 +845,7 @@ public class FillTables {
                             ExprStatement ex = new ExprStatement();
                             IdExpression ie = new IdExpression();
                             ie.setName(((ForStatement)body.get(i)).getExistedIterator());
-                            ex.setExpr(ie);
+                             ex.setExpr(ie);
                             ArrayList<AbstractStatement> t = new ArrayList<AbstractStatement>();
                             t.add(ex);
                             fillLocalVariablesTable(null,t,lvt);
@@ -892,6 +902,20 @@ public class FillTables {
         }
         
         return lvt;
+    }
+    
+    /**
+     * 
+     * @param expr 
+     */
+    public static void setTypeForForExprs(Expression expr){
+        
+        if (expr.getType() == Expression.MATH){
+            setTypeForForExprs(((MathExpression)expr).getLeft());
+            setTypeForForExprs(((MathExpression)expr).getRight());
+        }
+        
+        expr.setDtype(DataType.INTEGER);
     }
     
     /**
